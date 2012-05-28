@@ -1,0 +1,114 @@
+<?xml version="1.0"?>
+
+<project name="jopenmetaverse" basedir="." default="usage">
+    <property file="build.properties"/>
+
+    <property name="src.dir" value="src/main/java"/>
+    <property name="jar.dir" value="bin"/>
+	<property name="test.dir" value="test"/>
+	<property name="lib.dir" value="lib"/>
+    <property name="build.dir" value="build"/>
+    <property name="build.classes.dir" value="${build.dir}/classes"/>
+    <property name="build.src.dir" value="${build.dir}/src"/>	
+    <property name="name" value="jopenmetaverse"/>
+
+    <path id="master-classpath">
+    	
+        <fileset dir="${appserver.lib}">
+            <include name="servlet*.jar"/>
+        </fileset>
+    	
+        <fileset dir="lib">
+            <include name="*.jar"/>
+        </fileset>
+    </path>
+
+    <path id="test-classpath">
+        <fileset dir="lib">
+            <include name="*.jar"/>
+        </fileset>
+    </path>
+	
+    <target name="usage">
+        <echo message=""/>
+        <echo message="${name} build file"/>
+        <echo message="-----------------------------------"/>
+        <echo message=""/>
+        <echo message="Available targets are:"/>
+        <echo message=""/>
+        <echo message="build     --> Build the application"/>
+    	<echo message="tests     --> Run tests"/>
+    	<echo message="buildtests --> Compile test tree java files"/>
+    	<echo message="clean 	--> Clean output directories" />
+        <echo message=""/>
+    </target>
+
+    <target name="build" description="Compile main source tree java files">
+        <mkdir dir="${build.classes.dir}"/>
+        <javac destdir="${build.classes.dir}" source="1.5" target="1.5" debug="true"
+               deprecation="false" optimize="false" failonerror="true">
+            <src path="${src.dir}"/>
+            <classpath refid="master-classpath"/>
+        </javac>
+    </target>
+    
+	<target name="pre-jar">
+	  <copy todir="${build.src.dir}">
+	    <fileset dir="${src.dir}">
+	      <include name="**/*"/>
+	    </fileset>
+	  </copy>
+	</target>
+	
+    <target name="jar" depends="build,pre-jar" description="Compile main source tree java files">
+        <mkdir dir="${jar.dir}"/>
+        	 <jar destfile="${jar.dir}/${name}.jar"
+        	       basedir="${build.classes.dir}"/>
+     	 	<jar destfile="${jar.dir}/${name}-src.jar"
+       	       basedir="${build.src.dir}"/>
+    </target>
+	
+    <target name="buildtests" description="Compile test tree java files">
+        <javac destdir="${build.classes.dir}" source="1.5" target="1.5" debug="true"
+            deprecation="false" optimize="false" failonerror="true">
+            <src path="${test.dir}"/>
+            <classpath refid="master-classpath"/>
+            <classpath refid="test-classpath"/>
+        </javac>
+    </target>
+    <target name="tests" depends="build, buildtests" description="Run tests">
+        <junit printsummary="on"
+            fork="false"
+            haltonfailure="false"
+            failureproperty="tests.failed"
+            showoutput="true">
+        	<classpath refid="test-classpath"/>
+            <formatter type="brief" usefile="false"/>
+            <batchtest>
+                <fileset dir="${build.dir}">
+                    <include name="**/*Tests.*"/>
+                	<exclude name="**/Jdbc*Tests.*"/>
+                </fileset>
+            </batchtest>
+            
+        </junit>
+        <fail if="tests.failed">
+            tests.failed=${tests.failed}
+            ***********************************************************
+            ***********************************************************
+            ****  One or more tests failed!  Check the output ...  ****
+            ***********************************************************
+            ***********************************************************
+        </fail>
+    	</target>
+	
+
+    <target name="clean" description="Clean output directories">
+        <delete>
+            <fileset dir="${build.dir}" />
+            <fileset dir="${jar.dir}">
+            </fileset>
+        </delete>
+    </target>
+
+</project>
