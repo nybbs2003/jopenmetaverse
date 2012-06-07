@@ -1,71 +1,7 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
  
-    /// <exclude/>
-    public sealed class EconomyDataRequestPacket : Packet
-    {
-        public override int Length
-        {
-            get
-            {
-                int length = 10;
-                return length;
-            }
-        }
-
-        public EconomyDataRequestPacket()
-        {
-            HasVariableBlocks = false;
-            Type = PacketType.EconomyDataRequest;
-            Header = new Header();
-            Header.Frequency = PacketFrequency.Low;
-            Header.ID = 24;
-            Header.Reliable = true;
-        }
-
-        public EconomyDataRequestPacket(byte[] bytes, ref int i) : this()
-        {
-            int packetEnd = bytes.Length - 1;
-            FromBytes(bytes, ref i, ref packetEnd, null);
-        }
-
-        override public void FromBytes(byte[] bytes, ref int i, ref int packetEnd, byte[] zeroBuffer)
-        {
-            Header.FromBytes(bytes, ref i, ref packetEnd);
-            if (Header.Zerocoded && zeroBuffer != null)
-            {
-                packetEnd = Helpers.ZeroDecode(bytes, packetEnd + 1, zeroBuffer) - 1;
-                bytes = zeroBuffer;
-            }
-        }
-
-        public EconomyDataRequestPacket(Header head, byte[] bytes, ref int i): this()
-        {
-            int packetEnd = bytes.Length - 1;
-            FromBytes(head, bytes, ref i, ref packetEnd);
-        }
-
-        override public void FromBytes(Header header, byte[] bytes, ref int i, ref int packetEnd)
-        {
-            Header = header;
-        }
-
-        public override byte[] ToBytes()
-        {
-            int length = 10;
-            if (Header.AckList != null && Header.AckList.Length > 0) { length += Header.AckList.Length * 4 + 1; }
-            byte[] bytes = new byte[length];
-            int i = 0;
-            Header.ToBytes(bytes, ref i);
-            if (Header.AckList != null && Header.AckList.Length > 0) { Header.AcksToBytes(bytes, ref i); }
-            return bytes;
-        }
-
-        public override byte[][] ToBytesMultiple()
-        {
-            return new byte[][] { ToBytes() };
-        }
-    }
+  
 
     /// <exclude/>
     public sealed class EconomyDataPacket : Packet
