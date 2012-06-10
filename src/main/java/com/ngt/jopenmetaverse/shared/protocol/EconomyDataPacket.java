@@ -33,13 +33,13 @@ public final class EconomyDataPacket extends Packet
 
             public InfoBlock() { }
             
-            public InfoBlock(byte[] bytes, int[] i)
+            public InfoBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
 
             @Override
-            public void FromBytes(byte[] bytes, int[] i)
+            public void FromBytes(byte[] bytes, int[] i) throws MalformedDataException
             {
                 try
                 {
