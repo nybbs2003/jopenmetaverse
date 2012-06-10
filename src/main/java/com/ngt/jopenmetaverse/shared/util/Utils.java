@@ -973,7 +973,7 @@ public class Utils
 		//        bytes[2] = (byte)((value >> 8) % 256);
 		//        bytes[3] = (byte)(value % 256);
 
-		return ByteBuffer.allocate(8).order(ByteOrder.BIG_ENDIAN).putLong(value).array();
+		return ArrayUtils.subarray(ByteBuffer.allocate(8).order(ByteOrder.BIG_ENDIAN).putLong(value).array(), 4, 7);
 	}
 	
 	public static void uintToBytes(long value, byte[] dest, int pos)
@@ -983,7 +983,7 @@ public class Utils
 		//        dest[pos + 2] = (byte)((value >> 16) % 256);
 		//        dest[pos + 3] = (byte)((value >> 24) % 256);
 		byte[] bytes= uintToBytes(value);
-		System.arraycopy(bytes, 0, dest, pos, 4);
+		System.arraycopy(bytes, 4, dest, pos, 4);
 	}
 	
 	//    public static byte[] UIntToBytes(uint value)
