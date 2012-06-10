@@ -1,5 +1,11 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+
 
     public final class ViewerStatsPacket extends Packet
     {
@@ -8,8 +14,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             public UUID AgentID;
             public UUID SessionID;
-            public uint IP;
-            public uint StartTime;
+            public long IP;
+            public long StartTime;
             public float RunTime;
             public float SimFPS;
             public float FPS;
@@ -17,7 +23,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             public float Ping;
             public double MetersTraveled;
             public int RegionsVisited;
-            public uint SysRAM;
+            public long SysRAM;
             public byte[] SysOS;
             public byte[] SysCPU;
             public byte[] SysGPU;
@@ -25,18 +31,15 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public int getLength()
             {
-                get
-                {
                     int length = 76;
                     if (SysOS != null) { length += SysOS.length; }
                     if (SysCPU != null) { length += SysCPU.length; }
                     if (SysGPU != null) { length += SysGPU.length; }
                     return length;
-                }
             }
 
             public AgentDataBlock() { }
-            public AgentDataBlock(byte[] bytes, int[] i)
+            public AgentDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -47,27 +50,28 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    AgentID.FromBytes(bytes, i); i += 16;
-                    SessionID.FromBytes(bytes, i); i += 16;
-                    IP = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    StartTime = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    RunTime = Utils.BytesToFloat(bytes, i); i += 4;
-                    SimFPS = Utils.BytesToFloat(bytes, i); i += 4;
-                    FPS = Utils.BytesToFloat(bytes, i); i += 4;
-                    AgentsInView = (byte)bytes[i++];
-                    Ping = Utils.BytesToFloat(bytes, i); i += 4;
-                    MetersTraveled = Utils.BytesToDouble(bytes, i); i += 8;
-                    RegionsVisited = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    SysRAM = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    length = bytes[i++];
+                    AgentID.FromBytes(bytes, i[0]); i[0] += 16;
+                    SessionID.FromBytes(bytes, i[0]); i[0] += 16;
+                    IP = (long)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    StartTime = (long)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    RunTime = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
+                    SimFPS = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
+                    FPS = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
+                    AgentsInView = (byte)bytes[i[0]++];
+                    Ping = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
+                    MetersTraveled = Utils.bytesToDouble(bytes, i[0]); i[0] += 8;
+                    RegionsVisited = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    SysRAM = (long)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    length = bytes[i[0]++];
                     SysOS = new byte[length];
-                    Buffer.BlockCopy(bytes, i, SysOS, 0, length); i += length;
-                    length = bytes[i++];
+                   
+                    Utils.arraycopy(bytes, i[0], SysOS, 0, length); i[0] += length;
+                    length = bytes[i[0]++];
                     SysCPU = new byte[length];
-                    Buffer.BlockCopy(bytes, i, SysCPU, 0, length); i += length;
-                    length = bytes[i++];
+                    Utils.arraycopy(bytes, i[0], SysCPU, 0, length); i[0] += length;
+                    length = bytes[i[0]++];
                     SysGPU = new byte[length];
-                    Buffer.BlockCopy(bytes, i, SysGPU, 0, length); i += length;
+                    Utils.arraycopy(bytes, i[0], SysGPU, 0, length); i[0] += length;
                 }
                 catch (Exception e)
                 {
@@ -78,24 +82,24 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                AgentID.ToBytes(bytes, i); i += 16;
-                SessionID.ToBytes(bytes, i); i += 16;
-                Utils.UIntToBytes(IP, bytes, i); i += 4;
-                Utils.UIntToBytes(StartTime, bytes, i); i += 4;
-                Utils.FloatToBytes(RunTime, bytes, i); i += 4;
-                Utils.FloatToBytes(SimFPS, bytes, i); i += 4;
-                Utils.FloatToBytes(FPS, bytes, i); i += 4;
-                bytes[i++] = AgentsInView;
-                Utils.FloatToBytes(Ping, bytes, i); i += 4;
-                Utils.DoubleToBytes(MetersTraveled, bytes, i); i += 8;
-                Utils.IntToBytes(RegionsVisited, bytes, i); i += 4;
-                Utils.UIntToBytes(SysRAM, bytes, i); i += 4;
-                bytes[i++] = (byte)SysOS.length;
-                Buffer.BlockCopy(SysOS, 0, bytes, i, SysOS.length); i += SysOS.length;
-                bytes[i++] = (byte)SysCPU.length;
-                Buffer.BlockCopy(SysCPU, 0, bytes, i, SysCPU.length); i += SysCPU.length;
-                bytes[i++] = (byte)SysGPU.length;
-                Buffer.BlockCopy(SysGPU, 0, bytes, i, SysGPU.length); i += SysGPU.length;
+                AgentID.ToBytes(bytes, i[0]); i[0] += 16;
+                SessionID.ToBytes(bytes, i[0]); i[0] += 16;
+                Utils.uintToBytes(IP, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(StartTime, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytes(RunTime, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytes(SimFPS, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytes(FPS, bytes, i[0]); i[0] += 4;
+                bytes[i[0]++] = AgentsInView;
+                Utils.floatToBytes(Ping, bytes, i[0]); i[0] += 4;
+                Utils.doubleToBytes(MetersTraveled, bytes, i[0]); i[0] += 8;
+                Utils.intToBytes(RegionsVisited, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(SysRAM, bytes, i[0]); i[0] += 4;
+                bytes[i[0]++] = (byte)SysOS.length;
+                Utils.arraycopy(SysOS, 0, bytes, i[0], SysOS.length); i[0] += SysOS.length;
+                bytes[i[0]++] = (byte)SysCPU.length;
+                Utils.arraycopy(SysCPU, 0, bytes, i[0], SysCPU.length); i[0] += SysCPU.length;
+                bytes[i[0]++] = (byte)SysGPU.length;
+                Utils.arraycopy(SysGPU, 0, bytes, i[0], SysGPU.length); i[0] += SysGPU.length;
             }
 
         }
@@ -103,21 +107,18 @@ package com.ngt.jopenmetaverse.shared.protocol;
         /// <exclude/>
         public final class DownloadTotalsBlock extends PacketBlock
         {
-            public uint World;
-            public uint Objects;
-            public uint Textures;
+            public long World;
+            public long Objects;
+            public long Textures;
 
             @Override
 			public int getLength()
             {
-                get
-                {
                     return 12;
-                }
             }
 
             public DownloadTotalsBlock() { }
-            public DownloadTotalsBlock(byte[] bytes, int[] i)
+            public DownloadTotalsBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -127,9 +128,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    World = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    Objects = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    Textures = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
+                    World = (long)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    Objects = (long)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    Textures = (long)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                 }
                 catch (Exception e)
                 {
@@ -140,9 +141,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.UIntToBytes(World, bytes, i); i += 4;
-                Utils.UIntToBytes(Objects, bytes, i); i += 4;
-                Utils.UIntToBytes(Textures, bytes, i); i += 4;
+                Utils.uintToBytes(World, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(Objects, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(Textures, bytes, i[0]); i[0] += 4;
             }
 
         }
@@ -150,22 +151,19 @@ package com.ngt.jopenmetaverse.shared.protocol;
         /// <exclude/>
         public final class NetStatsBlock extends PacketBlock
         {
-            public uint Bytes;
-            public uint Packets;
-            public uint Compressed;
-            public uint Savings;
+            public long Bytes;
+            public long Packets;
+            public long Compressed;
+            public long Savings;
 
             @Override
 			public int getLength()
             {
-                get
-                {
                     return 16;
-                }
             }
 
             public NetStatsBlock() { }
-            public NetStatsBlock(byte[] bytes, int[] i)
+            public NetStatsBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -175,10 +173,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    Bytes = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    Packets = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    Compressed = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    Savings = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
+                    Bytes = (long)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    Packets = (long)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    Compressed = (long)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    Savings = (long)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                 }
                 catch (Exception e)
                 {
@@ -189,10 +187,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.UIntToBytes(Bytes, bytes, i); i += 4;
-                Utils.UIntToBytes(Packets, bytes, i); i += 4;
-                Utils.UIntToBytes(Compressed, bytes, i); i += 4;
-                Utils.UIntToBytes(Savings, bytes, i); i += 4;
+                Utils.uintToBytes(Bytes, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(Packets, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(Compressed, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(Savings, bytes, i[0]); i[0] += 4;
             }
 
         }
@@ -200,24 +198,21 @@ package com.ngt.jopenmetaverse.shared.protocol;
         /// <exclude/>
         public final class FailStatsBlock extends PacketBlock
         {
-            public uint SendPacket;
-            public uint Dropped;
-            public uint Resent;
-            public uint FailedResends;
-            public uint OffCircuit;
-            public uint Invalid;
+            public long SendPacket;
+            public long Dropped;
+            public long Resent;
+            public long FailedResends;
+            public long OffCircuit;
+            public long Invalid;
 
             @Override
 			public int getLength()
             {
-                get
-                {
                     return 24;
-                }
             }
 
             public FailStatsBlock() { }
-            public FailStatsBlock(byte[] bytes, int[] i)
+            public FailStatsBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -227,12 +222,12 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    SendPacket = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    Dropped = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    Resent = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    FailedResends = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    OffCircuit = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    Invalid = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
+                    SendPacket = (long)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    Dropped = (long)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    Resent = (long)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    FailedResends = (long)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    OffCircuit = (long)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    Invalid = (long)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                 }
                 catch (Exception e)
                 {
@@ -243,12 +238,12 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.UIntToBytes(SendPacket, bytes, i); i += 4;
-                Utils.UIntToBytes(Dropped, bytes, i); i += 4;
-                Utils.UIntToBytes(Resent, bytes, i); i += 4;
-                Utils.UIntToBytes(FailedResends, bytes, i); i += 4;
-                Utils.UIntToBytes(OffCircuit, bytes, i); i += 4;
-                Utils.UIntToBytes(Invalid, bytes, i); i += 4;
+                Utils.uintToBytes(SendPacket, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(Dropped, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(Resent, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(FailedResends, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(OffCircuit, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(Invalid, bytes, i[0]); i[0] += 4;
             }
 
         }
@@ -256,20 +251,17 @@ package com.ngt.jopenmetaverse.shared.protocol;
         /// <exclude/>
         public final class MiscStatsBlock extends PacketBlock
         {
-            public uint Type;
+            public long Type;
             public double Value;
 
             @Override
 			public int getLength()
             {
-                get
-                {
                     return 12;
-                }
             }
 
             public MiscStatsBlock() { }
-            public MiscStatsBlock(byte[] bytes, int[] i)
+            public MiscStatsBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -279,8 +271,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    Type = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    Value = Utils.BytesToDouble(bytes, i); i += 8;
+                    Type = (long)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    Value = Utils.bytesToDouble(bytes, i[0]); i[0] += 8;
                 }
                 catch (Exception e)
                 {
@@ -291,8 +283,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.UIntToBytes(Type, bytes, i); i += 4;
-                Utils.DoubleToBytes(Value, bytes, i); i += 8;
+                Utils.uintToBytes(Type, bytes, i[0]); i[0] += 4;
+                Utils.doubleToBytes(Value, bytes, i[0]); i[0] += 8;
             }
 
         }
@@ -300,18 +292,15 @@ package com.ngt.jopenmetaverse.shared.protocol;
         @Override
 			public int getLength()
         {
-            get
-            {
                 int length = 11;
                 length += AgentData.getLength();
-                length += DownloadTotals.length;
+                length += DownloadTotals.getLength();
                 for (int j = 0; j < 2; j++)
-                    length += NetStats[j].length;
-                length += FailStats.length;
+                    length += NetStats[j].getLength();
+                length += FailStats.getLength();
                 for (int j = 0; j < MiscStats.length; j++)
-                    length += MiscStats[j].length;
+                    length += MiscStats[j].getLength();
                 return length;
-            }
         }
         public AgentDataBlock AgentData;
         public DownloadTotalsBlock DownloadTotals;
@@ -335,7 +324,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             MiscStats = null;
         }
 
-        public ViewerStatsPacket(byte[] bytes, int[] i) 
+        public ViewerStatsPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -343,12 +332,12 @@ package com.ngt.jopenmetaverse.shared.protocol;
         }
 
         @Override
-		public void FromBytes(byte[] bytes, int[] i, int[] packetEnd, byte[] zeroBuffer)
+		public void FromBytes(byte[] bytes, int[] i, int[] packetEnd, byte[] zeroBuffer) throws MalformedDataException
         {
             header.FromBytes(bytes, i, packetEnd);
             if (header.Zerocoded && zeroBuffer != null)
             {
-                packetEnd = Helpers.ZeroDecode(bytes, packetEnd + 1, zeroBuffer) - 1;
+                packetEnd[0] = Helpers.ZeroDecode(bytes, packetEnd[0] + 1, zeroBuffer) - 1;
                 bytes = zeroBuffer;
             }
             AgentData.FromBytes(bytes, i);
@@ -361,7 +350,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             for (int j = 0; j < 2; j++)
             { NetStats[j].FromBytes(bytes, i); }
             FailStats.FromBytes(bytes, i);
-            int count = (int)bytes[i++];
+            int count = (int)bytes[i[0]++];
             if(MiscStats == null || MiscStats.length != -1) {
                 MiscStats = new MiscStatsBlock[count];
                 for(int j = 0; j < count; j++)
@@ -371,7 +360,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             { MiscStats[j].FromBytes(bytes, i); }
         }
 
-        public ViewerStatsPacket(Header head, byte[] bytes, int[] i)
+        public ViewerStatsPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -379,7 +368,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         }
 
         @Override
-		public void FromBytes(Header header, byte[] bytes, int[] i, int[] packetEnd)
+		public void FromBytes(Header header, byte[] bytes, int[] i, int[] packetEnd) throws MalformedDataException
         {
             this.header =  header;
             AgentData.FromBytes(bytes, i);
@@ -392,7 +381,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             for (int j = 0; j < 2; j++)
             { NetStats[j].FromBytes(bytes, i); }
             FailStats.FromBytes(bytes, i);
-            int count = (int)bytes[i++];
+            int count = (int)bytes[i[0]++];
             if(MiscStats == null || MiscStats.length != count) {
                 MiscStats = new MiscStatsBlock[count];
                 for(int j = 0; j < count; j++)
@@ -407,20 +396,20 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             int length = 10;
             length += AgentData.getLength();
-            length += DownloadTotals.length;
-            length += FailStats.length;
-            for (int j = 0; j < 2; j++) { length += NetStats[j].length; }
+            length += DownloadTotals.getLength();
+            length += FailStats.getLength();
+            for (int j = 0; j < 2; j++) { length += NetStats[j].getLength(); }
             length++;
-            for (int j = 0; j < MiscStats.length; j++) { length += MiscStats[j].length; }
+            for (int j = 0; j < MiscStats.length; j++) { length += MiscStats[j].getLength(); }
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
-            int i = 0;
+            int[] i = new int[]{0};
             header.ToBytes(bytes, i);
             AgentData.ToBytes(bytes, i);
             DownloadTotals.ToBytes(bytes, i);
             for (int j = 0; j < 2; j++) { NetStats[j].ToBytes(bytes, i); }
             FailStats.ToBytes(bytes, i);
-            bytes[i++] = (byte)MiscStats.length;
+            bytes[i[0]++] = (byte)MiscStats.length;
             for (int j = 0; j < MiscStats.length; j++) { MiscStats[j].ToBytes(bytes, i); }
             if (header.AckList != null && header.AckList.length > 0) { header.AcksToBytes(bytes, i); }
             return bytes;
@@ -429,22 +418,22 @@ package com.ngt.jopenmetaverse.shared.protocol;
         @Override
 			public byte[][] ToBytesMultiple()
         {
-            System.Collections.Generic.List<byte[]> packets = new System.Collections.Generic.List<byte[]>();
-            int i = 0;
+        	List<byte[]> packets = new ArrayList<byte[]>();
+            int[] i = new int[] {0};
             int fixedLength = 10;
 
             byte[] ackBytes = null;
-            int acksLength = 0;
+            int[] acksLength = new int[]{0};
             if (header.AckList != null && header.AckList.length > 0) {
                 header.AppendedAcks = true;
                 ackBytes = new byte[header.AckList.length * 4 + 1];
-                header.AcksToBytes(ackBytes, ref acksLength);
+                header.AcksToBytes(ackBytes, acksLength);
             }
 
             fixedLength += AgentData.getLength();
-            fixedLength += DownloadTotals.length;
-            for (int j = 0; j < 2; j++) { fixedLength += NetStats[j].length; }
-            fixedLength += FailStats.length;
+            fixedLength += DownloadTotals.getLength();
+            for (int j = 0; j < 2; j++) { fixedLength += NetStats[j].getLength(); }
+            fixedLength += FailStats.getLength();
             byte[] fixedBytes = new byte[fixedLength];
             header.ToBytes(fixedBytes, i);
             AgentData.ToBytes(fixedBytes, i);
@@ -459,36 +448,36 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int variableLength = 0;
                 int MiscStatsCount = 0;
 
-                i = MiscStatsStart;
-                while (fixedLength + variableLength + acksLength < Packet.MTU && i < MiscStats.length) {
-                    int blockLength = MiscStats[i].length;
-                    if (fixedLength + variableLength + blockLength + acksLength <= MTU) {
+                i[0] = MiscStatsStart;
+                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i[0] < MiscStats.length) {
+                    int blockLength = MiscStats[i[0]].getLength();
+                    if (fixedLength + variableLength + blockLength + acksLength[0] <= MTU) {
                         variableLength += blockLength;
                         ++MiscStatsCount;
                     }
                     else { break; }
-                    ++i;
+                    ++i[0];
                 }
 
-                byte[] packet = new byte[fixedLength + variableLength + acksLength];
-                int length = fixedBytes.length;
-                Buffer.BlockCopy(fixedBytes, 0, packet, 0, length);
-                if (packets.Count > 0) { packet[0] = (byte)(packet[0] & ~0x10); }
+                byte[] packet = new byte[fixedLength + variableLength + acksLength[0]];
+                int[] length = new int[] {fixedBytes.length};
+                Utils.arraycopy(fixedBytes, 0, packet, 0, length[0]);
+                if (packets.size() > 0) { packet[0] = (byte)(packet[0] & ~0x10); }
 
-                packet[length++] = (byte)MiscStatsCount;
-                for (i = MiscStatsStart; i < MiscStatsStart + MiscStatsCount; i++) { MiscStats[i].ToBytes(packet, ref length); }
+                packet[length[0]++] = (byte)MiscStatsCount;
+                for (i[0] = MiscStatsStart; i[0] < MiscStatsStart + MiscStatsCount; i[0]++) { MiscStats[i[0]].ToBytes(packet, length); }
                 MiscStatsStart += MiscStatsCount;
 
-                if (acksLength > 0) {
-                    Buffer.BlockCopy(ackBytes, 0, packet, length, acksLength);
-                    acksLength = 0;
+                if (acksLength[0] > 0) {
+                    Utils.arraycopy(ackBytes, 0, packet, length[0], acksLength[0]);
+                    acksLength[0] = 0;
                 }
 
-                packets.Add(packet);
+                packets.add(packet);
             } while (
                 MiscStatsStart < MiscStats.length);
 
-            return packets.ToArray();
+            return packets.toArray(new byte[0][0]);
         }
     }
 

@@ -953,7 +953,7 @@ public class Utils
 		byte[] bytes= intToBytes(value);
 		System.arraycopy(bytes, 0, dest, pos, 4);
 	}
-	
+		
 	public static void intToBytesLit(int value, byte[] dest, int pos)
 	{
 		//        dest[pos] = (byte)(value % 256);
@@ -964,6 +964,28 @@ public class Utils
 		System.arraycopy(bytes, 0, dest, pos, 4);
 	}
 
+	public static byte[] uintToBytes(long value)
+	{
+		//        byte[] bytes = new byte[4];
+		//
+		//        bytes[0] = (byte)((value >> 24) % 256);
+		//        bytes[1] = (byte)((value >> 16) % 256);
+		//        bytes[2] = (byte)((value >> 8) % 256);
+		//        bytes[3] = (byte)(value % 256);
+
+		return ByteBuffer.allocate(8).order(ByteOrder.BIG_ENDIAN).putLong(value).array();
+	}
+	
+	public static void uintToBytes(long value, byte[] dest, int pos)
+	{
+		//        dest[pos] = (byte)(value % 256);
+		//        dest[pos + 1] = (byte)((value >> 8) % 256);
+		//        dest[pos + 2] = (byte)((value >> 16) % 256);
+		//        dest[pos + 3] = (byte)((value >> 24) % 256);
+		byte[] bytes= uintToBytes(value);
+		System.arraycopy(bytes, 0, dest, pos, 4);
+	}
+	
 	//    public static byte[] UIntToBytes(uint value)
 	//    {
 	//        byte[] bytes = new byte[4];
@@ -1021,7 +1043,6 @@ public class Utils
 		byte[] bytes = int64ToBytes(value);
 		System.arraycopy(bytes, 0, dest, pos, 8);
 	}
-
 
 
 	//    /// <summary>
@@ -1897,6 +1918,10 @@ public class Utils
 		return j;
 	}
 	
+	public static void 	arraycopy(byte[] bytes, int srcPos, byte[] dest, int destPos, int length)
+	{
+		System.arraycopy(bytes, srcPos, dest, destPos, length);
+	}
 	
 	public static void reverse(byte[] array)
 	{
