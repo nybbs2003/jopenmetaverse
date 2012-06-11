@@ -340,4 +340,3 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             return packets.ToArray();
         }
     }
-
