@@ -9,8 +9,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         
         public final class AgentDataBlock extends PacketBlock
         {
-            public UUID agentID;
-            public UUID sessionID;
+            public UUID AgentID;
+            public UUID SessionID;
 
             @Override
 			public int getLength()
@@ -19,43 +19,31 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             }
 
             public AgentDataBlock() { }
-            public AgentDataBlock(byte[] bytes, int[] i)
+            public AgentDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
-                try {
 					FromBytes(bytes, i);
-				} catch (MalformedDataException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
             }
 
             @Override
 			public void FromBytes(byte[] bytes, int[] i) throws MalformedDataException
             {
-                try
-                {
-                    agentID.FromBytes(bytes, i[0]); i[0] += 16;
-                    sessionID.FromBytes(bytes, i[0]); i[0] += 16;
-                }
-                catch (Exception e)
-                {
-                    throw new MalformedDataException();
-                }
+                    AgentID.FromBytes(bytes, i[0]); i[0] += 16;
+                    SessionID.FromBytes(bytes, i[0]); i[0] += 16;
             }
 
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                agentID.ToBytes(bytes, i[0]); i[0] += 16;
-                sessionID.ToBytes(bytes, i[0]); i[0] += 16;
+                AgentID.ToBytes(bytes, i[0]); i[0] += 16;
+                SessionID.ToBytes(bytes, i[0]); i[0] += 16;
             }
 
         }
 
         public final class DataBlock extends PacketBlock
         {
-            public UUID groupID;
-            public int localID;
+            public UUID GroupID;
+            public int LocalID;
 
             @Override
 			public int getLength()
@@ -64,35 +52,24 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             }
 
             public DataBlock() { }
-            public DataBlock(byte[] bytes, int[] i)
+            public DataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
-                try {
 					FromBytes(bytes, i);
-				} catch (MalformedDataException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
             }
 
             @Override
 			public void FromBytes(byte[] bytes, int[] i) throws MalformedDataException
             {
-                try
-                {
-                    groupID.FromBytes(bytes, i[0]); i[0] += 16;
-                    localID = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                }
-                catch (Exception e)
-                {
-                    throw new MalformedDataException();
-                }
+                    GroupID.FromBytes(bytes, i[0]); i[0] += 16;
+                    LocalID = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                
             }
 
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                groupID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.intToBytes(localID, bytes, i[0]); i[0] += 4;
+                GroupID.ToBytes(bytes, i[0]); i[0] += 16;
+                Utils.intToBytes(LocalID, bytes, i[0]); i[0] += 4;
             }
 
         }
@@ -120,7 +97,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             data = new DataBlock();
         }
 
-        public ParcelDeedToGroupPacket(byte[] bytes, int[] i) 
+        public ParcelDeedToGroupPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -128,7 +105,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         @Override
-		public void FromBytes(byte[] bytes, int[] i, int[] packetEnd, byte[] zeroBuffer)
+		public void FromBytes(byte[] bytes, int[] i, int[] packetEnd, byte[] zeroBuffer) throws MalformedDataException
         {
             header.FromBytes(bytes, i, packetEnd);
             if (header.Zerocoded && zeroBuffer != null)
@@ -136,17 +113,12 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 packetEnd[0] = Helpers.ZeroDecode(bytes, packetEnd[0] + 1, zeroBuffer) - 1;
                 bytes = zeroBuffer;
             }
-            try {
 				agentData.FromBytes(bytes, i);
 				data.FromBytes(bytes, i);
-			} catch (MalformedDataException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
             
         }
 
-        public ParcelDeedToGroupPacket(Header head, byte[] bytes, int[] i)
+        public ParcelDeedToGroupPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -154,17 +126,12 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         @Override
-		public void FromBytes(Header header, byte[] bytes, int[] i, int[] packetEnd)
+		public void FromBytes(Header header, byte[] bytes, int[] i, int[] packetEnd) throws MalformedDataException
         {
             this.header =  header;
             
-            try {
             	agentData.FromBytes(bytes, i);
             	data.FromBytes(bytes, i);
-			} catch (MalformedDataException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
         }
 
         @Override

@@ -1,9 +1,11 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+
 
     public final class ParcelDisableObjectsPacket extends Packet
     {
-        /// <exclude/>
         public final class AgentDataBlock extends PacketBlock
         {
             public UUID AgentID;
@@ -12,16 +14,13 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public int getLength()
             {
-                get
-                {
                     return 32;
-                }
             }
 
             public AgentDataBlock() { }
-            public AgentDataBlock(byte[] bytes, int[] i)
+            public AgentDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
-                FromBytes(bytes, i);
+					FromBytes(bytes, i);
             }
 
             @Override
@@ -29,8 +28,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    AgentID.FromBytes(bytes, i); i += 16;
-                    SessionID.FromBytes(bytes, i); i += 16;
+                    AgentID.FromBytes(bytes, i[0]); i[0] += 16;
+                    SessionID.FromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)
                 {
@@ -41,13 +40,12 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                AgentID.ToBytes(bytes, i); i += 16;
-                SessionID.ToBytes(bytes, i); i += 16;
+                AgentID.ToBytes(bytes, i[0]); i[0] += 16;
+                SessionID.ToBytes(bytes, i[0]); i[0] += 16;
             }
 
         }
 
-        /// <exclude/>
         public final class ParcelDataBlock extends PacketBlock
         {
             public int LocalID;
@@ -56,10 +54,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public int getLength()
             {
-                get
-                {
                     return 8;
-                }
             }
 
             public ParcelDataBlock() { }
@@ -73,8 +68,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    LocalID = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    ReturnType = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
+                    LocalID = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    ReturnType = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                 }
                 catch (Exception e)
                 {
@@ -85,13 +80,13 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.IntToBytes(LocalID, bytes, i); i += 4;
-                Utils.UIntToBytes(ReturnType, bytes, i); i += 4;
+                Utils.intToBytes(LocalID, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(ReturnType, bytes, i[0]); i[0] += 4;
             }
 
         }
 
-        /// <exclude/>
+       
         public final class TaskIDsBlock extends PacketBlock
         {
             public UUID TaskID;
@@ -99,16 +94,18 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public int getLength()
             {
-                get
-                {
                     return 16;
-                }
             }
 
             public TaskIDsBlock() { }
             public TaskIDsBlock(byte[] bytes, int[] i)
             {
-                FromBytes(bytes, i);
+                try {
+					FromBytes(bytes, i);
+				} catch (MalformedDataException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
             }
 
             @Override
@@ -116,7 +113,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    TaskID.FromBytes(bytes, i); i += 16;
+                    TaskID.FromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)
                 {
@@ -127,7 +124,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                TaskID.ToBytes(bytes, i); i += 16;
+                TaskID.ToBytes(bytes, i[0]); i[0] += 16;
             }
 
         }
@@ -140,16 +137,18 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public int getLength()
             {
-                get
-                {
                     return 16;
-                }
             }
 
             public OwnerIDsBlock() { }
             public OwnerIDsBlock(byte[] bytes, int[] i)
             {
-                FromBytes(bytes, i);
+                try {
+					FromBytes(bytes, i);
+				} catch (MalformedDataException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
             }
 
             @Override
@@ -157,7 +156,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    OwnerID.FromBytes(bytes, i); i += 16;
+                    OwnerID.FromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)
                 {
@@ -168,7 +167,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                OwnerID.ToBytes(bytes, i); i += 16;
+                OwnerID.ToBytes(bytes, i[0]); i[0] += 16;
             }
 
         }
@@ -176,17 +175,14 @@ package com.ngt.jopenmetaverse.shared.protocol;
         @Override
 			public int getLength()
         {
-            get
-            {
                 int length = 12;
                 length += AgentData.getLength();
-                length += ParcelData.length;
+                length += ParcelData.getlength();
                 for (int j = 0; j < TaskIDs.length; j++)
-                    length += TaskIDs[j].length;
+                    length += TaskIDs[j].getlength();
                 for (int j = 0; j < OwnerIDs.length; j++)
-                    length += OwnerIDs[j].length;
+                    length += OwnerIDs[j].getlength();
                 return length;
-            }
         }
         public AgentDataBlock AgentData;
         public ParcelDataBlock ParcelData;
