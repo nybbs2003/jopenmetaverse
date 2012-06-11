@@ -26,15 +26,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             @Override
 			public void FromBytes(byte[] bytes, int[] i) throws MalformedDataException
             {
-                try
-                {
                     AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
-                }
-                catch (Exception e)
-                {
-                    throw new MalformedDataException();
-                }
             }
 
             @Override
@@ -49,7 +42,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         public final class ParcelDataBlock extends PacketBlock
         {
             public int LocalID;
-            public uint ReturnType;
+            public long ReturnType;
 
             @Override
 			public int getLength()
@@ -58,7 +51,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             }
 
             public ParcelDataBlock() { }
-            public ParcelDataBlock(byte[] bytes, int[] i)
+            public ParcelDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -66,15 +59,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             @Override
 			public void FromBytes(byte[] bytes, int[] i) throws MalformedDataException
             {
-                try
-                {
                     LocalID = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    ReturnType = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                }
-                catch (Exception e)
-                {
-                    throw new MalformedDataException();
-                }
+                    ReturnType = (long)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
             }
 
             @Override
@@ -98,27 +84,15 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             }
 
             public TaskIDsBlock() { }
-            public TaskIDsBlock(byte[] bytes, int[] i)
+            public TaskIDsBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
-                try {
 					FromBytes(bytes, i);
-				} catch (MalformedDataException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
             }
 
             @Override
 			public void FromBytes(byte[] bytes, int[] i) throws MalformedDataException
             {
-                try
-                {
                     TaskID.FromBytes(bytes, i[0]); i[0] += 16;
-                }
-                catch (Exception e)
-                {
-                    throw new MalformedDataException();
-                }
             }
 
             @Override
@@ -141,27 +115,15 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             }
 
             public OwnerIDsBlock() { }
-            public OwnerIDsBlock(byte[] bytes, int[] i)
+            public OwnerIDsBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
-                try {
 					FromBytes(bytes, i);
-				} catch (MalformedDataException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
             }
 
             @Override
 			public void FromBytes(byte[] bytes, int[] i) throws MalformedDataException
             {
-                try
-                {
                     OwnerID.FromBytes(bytes, i[0]); i[0] += 16;
-                }
-                catch (Exception e)
-                {
-                    throw new MalformedDataException();
-                }
             }
 
             @Override
@@ -177,11 +139,11 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         {
                 int length = 12;
                 length += AgentData.getLength();
-                length += ParcelData.getlength();
+                length += ParcelData.getLength();
                 for (int j = 0; j < TaskIDs.length; j++)
-                    length += TaskIDs[j].getlength();
+                    length += TaskIDs[j].getLength();
                 for (int j = 0; j < OwnerIDs.length; j++)
-                    length += OwnerIDs[j].getlength();
+                    length += OwnerIDs[j].getLength();
                 return length;
         }
         public AgentDataBlock AgentData;
@@ -204,7 +166,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             OwnerIDs = null;
         }
 
-        public ParcelDisableObjectsPacket(byte[] bytes, int[] i) 
+        public ParcelDisableObjectsPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -212,17 +174,17 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         @Override
-		public void FromBytes(byte[] bytes, int[] i, int[] packetEnd, byte[] zeroBuffer)
+		public void FromBytes(byte[] bytes, int[] i, int[] packetEnd, byte[] zeroBuffer) throws MalformedDataException
         {
             header.FromBytes(bytes, i, packetEnd);
             if (header.Zerocoded && zeroBuffer != null)
             {
-                packetEnd = Helpers.ZeroDecode(bytes, packetEnd + 1, zeroBuffer) - 1;
+                packetEnd[0] = Helpers.ZeroDecode(bytes, packetEnd[0] + 1, zeroBuffer) - 1;
                 bytes = zeroBuffer;
             }
             AgentData.FromBytes(bytes, i);
             ParcelData.FromBytes(bytes, i);
-            int count = (int)bytes[i++];
+            int count = (int)bytes[i[0]++];
             if(TaskIDs == null || TaskIDs.length != -1) {
                 TaskIDs = new TaskIDsBlock[count];
                 for(int j = 0; j < count; j++)
@@ -230,7 +192,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             }
             for (int j = 0; j < count; j++)
             { TaskIDs[j].FromBytes(bytes, i); }
-            count = (int)bytes[i++];
+            count = (int)bytes[i[0]++];
             if(OwnerIDs == null || OwnerIDs.length != -1) {
                 OwnerIDs = new OwnerIDsBlock[count];
                 for(int j = 0; j < count; j++)
@@ -240,7 +202,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             { OwnerIDs[j].FromBytes(bytes, i); }
         }
 
-        public ParcelDisableObjectsPacket(Header head, byte[] bytes, int[] i)
+        public ParcelDisableObjectsPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -248,12 +210,12 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         @Override
-		public void FromBytes(Header header, byte[] bytes, int[] i, int[] packetEnd)
+		public void FromBytes(Header header, byte[] bytes, int[] i, int[] packetEnd) throws MalformedDataException
         {
             this.header =  header;
             AgentData.FromBytes(bytes, i);
             ParcelData.FromBytes(bytes, i);
-            int count = (int)bytes[i++];
+            int count = (int)bytes[i[0]++];
             if(TaskIDs == null || TaskIDs.length != count) {
                 TaskIDs = new TaskIDsBlock[count];
                 for(int j = 0; j < count; j++)
@@ -261,7 +223,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             }
             for (int j = 0; j < count; j++)
             { TaskIDs[j].FromBytes(bytes, i); }
-            count = (int)bytes[i++];
+            count = (int)bytes[i[0]++];
             if(OwnerIDs == null || OwnerIDs.length != count) {
                 OwnerIDs = new OwnerIDsBlock[count];
                 for(int j = 0; j < count; j++)
@@ -276,42 +238,45 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         {
             int length = 10;
             length += AgentData.getLength();
-            length += ParcelData.length;
+            length += ParcelData.getLength();
             length++;
-            for (int j = 0; j < TaskIDs.length; j++) { length += TaskIDs[j].length; }
+            for (int j = 0; j < TaskIDs.length; j++) { length += TaskIDs[j].getLength(); }
             length++;
-            for (int j = 0; j < OwnerIDs.length; j++) { length += OwnerIDs[j].length; }
+            for (int j = 0; j < OwnerIDs.length; j++) { length += OwnerIDs[j].getLength(); }
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
-            int i = 0;
+            int[] i = new int[1];
+            i[0] = 0;
             header.ToBytes(bytes, i);
             AgentData.ToBytes(bytes, i);
             ParcelData.ToBytes(bytes, i);
-            bytes[i++] = (byte)TaskIDs.length;
+            bytes[i[0]++] = (byte)TaskIDs.length;
             for (int j = 0; j < TaskIDs.length; j++) { TaskIDs[j].ToBytes(bytes, i); }
-            bytes[i++] = (byte)OwnerIDs.length;
+            bytes[i[0]++] = (byte)OwnerIDs.length;
             for (int j = 0; j < OwnerIDs.length; j++) { OwnerIDs[j].ToBytes(bytes, i); }
             if (header.AckList != null && header.AckList.length > 0) { header.AcksToBytes(bytes, i); }
             return bytes;
         }
 
         @Override
-			public byte[][] ToBytesMultiple()
+		public byte[][] ToBytesMultiple()
         {
             System.Collections.Generic.List<byte[]> packets = new System.Collections.Generic.List<byte[]>();
-            int i = 0;
+            int[] i = new int[1];
+            i[0] = 0;
             int fixedLength = 10;
 
             byte[] ackBytes = null;
-            int acksLength = 0;
+            int[] acksLength = new int[1];
+            acksLength[0] = 0;
             if (header.AckList != null && header.AckList.length > 0) {
                 header.AppendedAcks = true;
                 ackBytes = new byte[header.AckList.length * 4 + 1];
-                header.AcksToBytes(ackBytes, ref acksLength);
+                header.AcksToBytes(ackBytes, acksLength);
             }
 
             fixedLength += AgentData.getLength();
-            fixedLength += ParcelData.length;
+            fixedLength += ParcelData.getLength();
             byte[] fixedBytes = new byte[fixedLength];
             header.ToBytes(fixedBytes, i);
             AgentData.ToBytes(fixedBytes, i);
@@ -326,44 +291,45 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 int TaskIDsCount = 0;
                 int OwnerIDsCount = 0;
 
-                i = TaskIDsStart;
-                while (fixedLength + variableLength + acksLength < Packet.MTU && i < TaskIDs.length) {
-                    int blockLength = TaskIDs[i].length;
-                    if (fixedLength + variableLength + blockLength + acksLength <= MTU) {
+                i[0] = TaskIDsStart;
+                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i[0] < TaskIDs.length) {
+                    int blockLength = TaskIDs[i[0]].getLength();
+                    if (fixedLength + variableLength + blockLength + acksLength[0] <= MTU) {
                         variableLength += blockLength;
                         ++TaskIDsCount;
                     }
                     else { break; }
-                    ++i;
+                    ++i[0];
                 }
 
-                i = OwnerIDsStart;
-                while (fixedLength + variableLength + acksLength < Packet.MTU && i < OwnerIDs.length) {
-                    int blockLength = OwnerIDs[i].length;
-                    if (fixedLength + variableLength + blockLength + acksLength <= MTU) {
+                i[0] = OwnerIDsStart;
+                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i[0] < OwnerIDs.length) {
+                    int blockLength = OwnerIDs[i[0]].getLength();
+                    if (fixedLength + variableLength + blockLength + acksLength[0] <= MTU) {
                         variableLength += blockLength;
                         ++OwnerIDsCount;
                     }
                     else { break; }
-                    ++i;
+                    ++i[0];
                 }
 
-                byte[] packet = new byte[fixedLength + variableLength + acksLength];
-                int length = fixedBytes.length;
-                Buffer.BlockCopy(fixedBytes, 0, packet, 0, length);
+                byte[] packet = new byte[fixedLength + variableLength + acksLength[0]];
+                int[] length = new int[1];
+                length[0] = fixedBytes.length;
+                Buffer.BlockCopy(fixedBytes, 0, packet, 0, length[0]);
                 if (packets.Count > 0) { packet[0] = (byte)(packet[0] & ~0x10); }
 
-                packet[length++] = (byte)TaskIDsCount;
-                for (i = TaskIDsStart; i < TaskIDsStart + TaskIDsCount; i++) { TaskIDs[i].ToBytes(packet, ref length); }
+                packet[length[0]++] = (byte)TaskIDsCount;
+                for (i[0] = TaskIDsStart; i[0] < TaskIDsStart + TaskIDsCount; i[0]++) { TaskIDs[i[0]].ToBytes(packet, length); }
                 TaskIDsStart += TaskIDsCount;
 
-                packet[length++] = (byte)OwnerIDsCount;
-                for (i = OwnerIDsStart; i < OwnerIDsStart + OwnerIDsCount; i++) { OwnerIDs[i].ToBytes(packet, ref length); }
+                packet[length[0]++] = (byte)OwnerIDsCount;
+                for (i[0] = OwnerIDsStart; i[0] < OwnerIDsStart + OwnerIDsCount; i[0]++) { OwnerIDs[i[0]].ToBytes(packet, length); }
                 OwnerIDsStart += OwnerIDsCount;
 
-                if (acksLength > 0) {
+                if (acksLength[0] > 0) {
                     Buffer.BlockCopy(ackBytes, 0, packet, length, acksLength);
-                    acksLength = 0;
+                    acksLength[0] = 0;
                 }
 
                 packets.Add(packet);
@@ -375,4 +341,3 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
     }
 
-    /// <exclude/>
