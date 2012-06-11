@@ -129,7 +129,12 @@ public final class EconomyDataPacket extends Packet
                 packetEnd[0] = Helpers.ZeroDecode(bytes, packetEnd[0] + 1, zeroBuffer) - 1;
                 bytes = zeroBuffer;
             }
-            info.FromBytes(bytes, i);
+            try {
+				info.FromBytes(bytes, i);
+			} catch (MalformedDataException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
         }
 
         public EconomyDataPacket(Header head, byte[] bytes, int[] i)
@@ -144,7 +149,12 @@ public final class EconomyDataPacket extends Packet
         public void FromBytes(Header header, byte[] bytes, int[] i, int[] packetEnd)
         {
             this.header = header;
-            info.FromBytes(bytes, i);
+            try {
+				info.FromBytes(bytes, i);
+			} catch (MalformedDataException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
         }
 
         @Override

@@ -1,27 +1,32 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+
 
     public final class ParcelDeedToGroupPacket extends Packet
     {
-        /// <exclude/>
+        
         public final class AgentDataBlock extends PacketBlock
         {
-            public UUID AgentID;
-            public UUID SessionID;
+            public UUID agentID;
+            public UUID sessionID;
 
             @Override
 			public int getLength()
             {
-                get
-                {
                     return 32;
-                }
             }
 
             public AgentDataBlock() { }
             public AgentDataBlock(byte[] bytes, int[] i)
             {
-                FromBytes(bytes, i);
+                try {
+					FromBytes(bytes, i);
+				} catch (MalformedDataException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
             }
 
             @Override
@@ -29,8 +34,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    AgentID.FromBytes(bytes, i); i += 16;
-                    SessionID.FromBytes(bytes, i); i += 16;
+                    agentID.FromBytes(bytes, i[0]); i[0] += 16;
+                    sessionID.FromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)
                 {
@@ -41,31 +46,32 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                AgentID.ToBytes(bytes, i); i += 16;
-                SessionID.ToBytes(bytes, i); i += 16;
+                agentID.ToBytes(bytes, i[0]); i[0] += 16;
+                sessionID.ToBytes(bytes, i[0]); i[0] += 16;
             }
 
         }
 
-        /// <exclude/>
         public final class DataBlock extends PacketBlock
         {
-            public UUID GroupID;
-            public int LocalID;
+            public UUID groupID;
+            public int localID;
 
             @Override
 			public int getLength()
             {
-                get
-                {
                     return 20;
-                }
             }
 
             public DataBlock() { }
             public DataBlock(byte[] bytes, int[] i)
             {
-                FromBytes(bytes, i);
+                try {
+					FromBytes(bytes, i);
+				} catch (MalformedDataException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
             }
 
             @Override
@@ -73,8 +79,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    GroupID.FromBytes(bytes, i); i += 16;
-                    LocalID = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
+                    groupID.FromBytes(bytes, i[0]); i[0] += 16;
+                    localID = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                 }
                 catch (Exception e)
                 {
@@ -85,8 +91,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                GroupID.ToBytes(bytes, i); i += 16;
-                Utils.IntToBytes(LocalID, bytes, i); i += 4;
+                groupID.ToBytes(bytes, i[0]); i[0] += 16;
+                Utils.intToBytes(localID, bytes, i[0]); i[0] += 4;
             }
 
         }
@@ -94,16 +100,13 @@ package com.ngt.jopenmetaverse.shared.protocol;
         @Override
 			public int getLength()
         {
-            get
-            {
                 int length = 10;
-                length += AgentData.getLength();
-                length += Data.getLength();
+                length += agentData.getLength();
+                length += data.getLength();
                 return length;
-            }
         }
-        public AgentDataBlock AgentData;
-        public DataBlock Data;
+        public AgentDataBlock agentData;
+        public DataBlock data;
 
         public ParcelDeedToGroupPacket()
         {
@@ -113,8 +116,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             header.Frequency = PacketFrequency.Low;
             header.ID = 207;
             header.Reliable = true;
-            AgentData = new AgentDataBlock();
-            Data = new DataBlock();
+            agentData = new AgentDataBlock();
+            data = new DataBlock();
         }
 
         public ParcelDeedToGroupPacket(byte[] bytes, int[] i) 
@@ -130,11 +133,17 @@ package com.ngt.jopenmetaverse.shared.protocol;
             header.FromBytes(bytes, i, packetEnd);
             if (header.Zerocoded && zeroBuffer != null)
             {
-                packetEnd = Helpers.ZeroDecode(bytes, packetEnd + 1, zeroBuffer) - 1;
+                packetEnd[0] = Helpers.ZeroDecode(bytes, packetEnd[0] + 1, zeroBuffer) - 1;
                 bytes = zeroBuffer;
             }
-            AgentData.FromBytes(bytes, i);
-            Data.FromBytes(bytes, i);
+            try {
+				agentData.FromBytes(bytes, i);
+				data.FromBytes(bytes, i);
+			} catch (MalformedDataException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+            
         }
 
         public ParcelDeedToGroupPacket(Header head, byte[] bytes, int[] i)
@@ -148,22 +157,29 @@ package com.ngt.jopenmetaverse.shared.protocol;
 		public void FromBytes(Header header, byte[] bytes, int[] i, int[] packetEnd)
         {
             this.header =  header;
-            AgentData.FromBytes(bytes, i);
-            Data.FromBytes(bytes, i);
+            
+            try {
+            	agentData.FromBytes(bytes, i);
+            	data.FromBytes(bytes, i);
+			} catch (MalformedDataException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
         }
 
         @Override
 			public byte[] ToBytes()
         {
             int length = 10;
-            length += AgentData.getLength();
-            length += Data.getLength();
+            length += agentData.getLength();
+            length += data.getLength();
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
-            int i = 0;
+            int[] i = new int[1];
+            i[0]= 0;
             header.ToBytes(bytes, i);
-            AgentData.ToBytes(bytes, i);
-            Data.ToBytes(bytes, i);
+            agentData.ToBytes(bytes, i);
+            data.ToBytes(bytes, i);
             if (header.AckList != null && header.AckList.length > 0) { header.AcksToBytes(bytes, i); }
             return bytes;
         }
@@ -174,5 +190,3 @@ package com.ngt.jopenmetaverse.shared.protocol;
             return new byte[][] { ToBytes() };
         }
     }
-
-    /// <exclude/>
