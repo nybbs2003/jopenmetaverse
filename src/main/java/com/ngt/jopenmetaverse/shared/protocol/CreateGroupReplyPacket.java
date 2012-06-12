@@ -11,8 +11,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public int getLength()
             {
-                get
-                {
+                                {
                     return 16;
                 }
             }
@@ -39,7 +38,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                AgentID.ToBytes(bytes, i); i += 16;
+                AgentID.ToBytes(bytes, i[0]); i[0] += 16;
             }
 
         }
@@ -54,8 +53,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public int getLength()
             {
-                get
-                {
+                                {
                     int length = 18;
                     if (Message != null) { length += Message.length; }
                     return length;
@@ -78,7 +76,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     Success = (bytes[i++] != 0) ? (bool)true : (bool)false;
                     length = bytes[i++];
                     Message = new byte[length];
-                    Buffer.BlockCopy(bytes, i, Message, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, Message, 0, length); i += length;
                 }
                 catch (Exception e)
                 {
@@ -92,7 +90,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 GroupID.ToBytes(bytes, i); i += 16;
                 bytes[i++] = (byte)((Success) ? 1 : 0);
                 bytes[i++] = (byte)Message.length;
-                Buffer.BlockCopy(Message, 0, bytes, i, Message.length); i += Message.length;
+                Utils.arraycopy(Message, 0, bytes, i, Message.length); i += Message.length;
             }
 
         }
@@ -100,8 +98,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         @Override
 			public int getLength()
         {
-            get
-            {
+                        {
                 int length = 10;
                 length += AgentData.getLength();
                 length += ReplyData.length;
@@ -136,7 +133,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             header.FromBytes(bytes, i, packetEnd);
             if (header.Zerocoded && zeroBuffer != null)
             {
-                packetEnd = Helpers.ZeroDecode(bytes, packetEnd + 1, zeroBuffer) - 1;
+                packetEnd[0] = Helpers.ZeroDecode(bytes, packetEnd[0] + 1, zeroBuffer) - 1;
                 bytes = zeroBuffer;
             }
             AgentData.FromBytes(bytes, i);

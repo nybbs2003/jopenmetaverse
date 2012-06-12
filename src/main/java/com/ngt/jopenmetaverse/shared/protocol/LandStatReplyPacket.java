@@ -13,8 +13,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public int getLength()
             {
-                get
-                {
+                                {
                     return 12;
                 }
             }
@@ -65,8 +64,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public int getLength()
             {
-                get
-                {
+                                {
                     int length = 38;
                     if (TaskName != null) { length += TaskName.length; }
                     if (OwnerName != null) { length += OwnerName.length; }
@@ -94,10 +92,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     Score = Utils.BytesToFloat(bytes, i); i += 4;
                     length = bytes[i++];
                     TaskName = new byte[length];
-                    Buffer.BlockCopy(bytes, i, TaskName, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, TaskName, 0, length); i += length;
                     length = bytes[i++];
                     OwnerName = new byte[length];
-                    Buffer.BlockCopy(bytes, i, OwnerName, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, OwnerName, 0, length); i += length;
                 }
                 catch (Exception e)
                 {
@@ -115,9 +113,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 Utils.FloatToBytes(LocationZ, bytes, i); i += 4;
                 Utils.FloatToBytes(Score, bytes, i); i += 4;
                 bytes[i++] = (byte)TaskName.length;
-                Buffer.BlockCopy(TaskName, 0, bytes, i, TaskName.length); i += TaskName.length;
+                Utils.arraycopy(TaskName, 0, bytes, i, TaskName.length); i += TaskName.length;
                 bytes[i++] = (byte)OwnerName.length;
-                Buffer.BlockCopy(OwnerName, 0, bytes, i, OwnerName.length); i += OwnerName.length;
+                Utils.arraycopy(OwnerName, 0, bytes, i, OwnerName.length); i += OwnerName.length;
             }
 
         }
@@ -125,8 +123,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         @Override
 			public int getLength()
         {
-            get
-            {
+                        {
                 int length = 11;
                 length += RequestData.length;
                 for (int j = 0; j < ReportData.length; j++)
@@ -162,7 +159,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             header.FromBytes(bytes, i, packetEnd);
             if (header.Zerocoded && zeroBuffer != null)
             {
-                packetEnd = Helpers.ZeroDecode(bytes, packetEnd + 1, zeroBuffer) - 1;
+                packetEnd[0] = Helpers.ZeroDecode(bytes, packetEnd[0] + 1, zeroBuffer) - 1;
                 bytes = zeroBuffer;
             }
             RequestData.FromBytes(bytes, i);
@@ -219,7 +216,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         @Override
 			public byte[][] ToBytesMultiple()
         {
-            System.Collections.Generic.List<byte[]> packets = new System.Collections.Generic.List<byte[]>();
+            List<byte[]> packets = new ArrayList<byte[]>();
             int i = 0;
             int fixedLength = 10;
 
@@ -256,23 +253,23 @@ package com.ngt.jopenmetaverse.shared.protocol;
 
                 byte[] packet = new byte[fixedLength + variableLength + acksLength];
                 int length = fixedBytes.length;
-                Buffer.BlockCopy(fixedBytes, 0, packet, 0, length);
-                if (packets.Count > 0) { packet[0] = (byte)(packet[0] & ~0x10); }
+                Utils.arraycopy(fixedBytes, 0, packet, 0, length);
+                if (packets.size() > 0) { packet[0] = (byte)(packet[0] & ~0x10); }
 
                 packet[length++] = (byte)ReportDataCount;
                 for (i = ReportDataStart; i < ReportDataStart + ReportDataCount; i++) { ReportData[i].ToBytes(packet, ref length); }
                 ReportDataStart += ReportDataCount;
 
                 if (acksLength > 0) {
-                    Buffer.BlockCopy(ackBytes, 0, packet, length, acksLength);
+                    Utils.arraycopy(ackBytes, 0, packet, length, acksLength);
                     acksLength = 0;
                 }
 
-                packets.Add(packet);
+                packets.add(packet);
             } while (
                 ReportDataStart < ReportData.length);
 
-            return packets.ToArray();
+            return packets.toArray(new byte[0][0]);
         }
     }
 

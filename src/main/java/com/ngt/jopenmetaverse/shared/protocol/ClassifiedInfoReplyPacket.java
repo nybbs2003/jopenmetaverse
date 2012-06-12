@@ -11,8 +11,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public int getLength()
             {
-                get
-                {
+                                {
                     return 16;
                 }
             }
@@ -39,7 +38,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                AgentID.ToBytes(bytes, i); i += 16;
+                AgentID.ToBytes(bytes, i[0]); i[0] += 16;
             }
 
         }
@@ -66,8 +65,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public int getLength()
             {
-                get
-                {
+                                {
                     int length = 114;
                     if (Name != null) { length += Name.length; }
                     if (Desc != null) { length += Desc.length; }
@@ -96,20 +94,20 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     Category = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
                     length = bytes[i++];
                     Name = new byte[length];
-                    Buffer.BlockCopy(bytes, i, Name, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, Name, 0, length); i += length;
                     length = (bytes[i++] + (bytes[i++] << 8));
                     Desc = new byte[length];
-                    Buffer.BlockCopy(bytes, i, Desc, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, Desc, 0, length); i += length;
                     ParcelID.FromBytes(bytes, i); i += 16;
                     ParentEstate = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
                     SnapshotID.FromBytes(bytes, i); i += 16;
                     length = bytes[i++];
                     SimName = new byte[length];
-                    Buffer.BlockCopy(bytes, i, SimName, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, SimName, 0, length); i += length;
                     PosGlobal.FromBytes(bytes, i); i += 24;
                     length = bytes[i++];
                     ParcelName = new byte[length];
-                    Buffer.BlockCopy(bytes, i, ParcelName, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, ParcelName, 0, length); i += length;
                     ClassifiedFlags = (byte)bytes[i++];
                     PriceForListing = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
                 }
@@ -128,18 +126,18 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 Utils.UIntToBytes(ExpirationDate, bytes, i); i += 4;
                 Utils.UIntToBytes(Category, bytes, i); i += 4;
                 bytes[i++] = (byte)Name.length;
-                Buffer.BlockCopy(Name, 0, bytes, i, Name.length); i += Name.length;
+                Utils.arraycopy(Name, 0, bytes, i, Name.length); i += Name.length;
                 bytes[i++] = (byte)(Desc.length % 256);
                 bytes[i++] = (byte)((Desc.length >> 8) % 256);
-                Buffer.BlockCopy(Desc, 0, bytes, i, Desc.length); i += Desc.length;
+                Utils.arraycopy(Desc, 0, bytes, i, Desc.length); i += Desc.length;
                 ParcelID.ToBytes(bytes, i); i += 16;
                 Utils.UIntToBytes(ParentEstate, bytes, i); i += 4;
                 SnapshotID.ToBytes(bytes, i); i += 16;
                 bytes[i++] = (byte)SimName.length;
-                Buffer.BlockCopy(SimName, 0, bytes, i, SimName.length); i += SimName.length;
+                Utils.arraycopy(SimName, 0, bytes, i, SimName.length); i += SimName.length;
                 PosGlobal.ToBytes(bytes, i); i += 24;
                 bytes[i++] = (byte)ParcelName.length;
-                Buffer.BlockCopy(ParcelName, 0, bytes, i, ParcelName.length); i += ParcelName.length;
+                Utils.arraycopy(ParcelName, 0, bytes, i, ParcelName.length); i += ParcelName.length;
                 bytes[i++] = ClassifiedFlags;
                 Utils.IntToBytes(PriceForListing, bytes, i); i += 4;
             }
@@ -149,8 +147,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         @Override
 			public int getLength()
         {
-            get
-            {
+                        {
                 int length = 10;
                 length += AgentData.getLength();
                 length += Data.getLength();
@@ -185,7 +182,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             header.FromBytes(bytes, i, packetEnd);
             if (header.Zerocoded && zeroBuffer != null)
             {
-                packetEnd = Helpers.ZeroDecode(bytes, packetEnd + 1, zeroBuffer) - 1;
+                packetEnd[0] = Helpers.ZeroDecode(bytes, packetEnd[0] + 1, zeroBuffer) - 1;
                 bytes = zeroBuffer;
             }
             AgentData.FromBytes(bytes, i);

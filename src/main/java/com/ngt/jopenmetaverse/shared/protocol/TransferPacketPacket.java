@@ -15,8 +15,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public int getLength()
             {
-                get
-                {
+                                {
                     int length = 30;
                     if (Data != null) { length += Data.getLength(); }
                     return length;
@@ -41,7 +40,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     Status = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
                     length = (bytes[i++] + (bytes[i++] << 8));
                     Data = new byte[length];
-                    Buffer.BlockCopy(bytes, i, Data, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, Data, 0, length); i += length;
                 }
                 catch (Exception e)
                 {
@@ -58,7 +57,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 Utils.IntToBytes(Status, bytes, i); i += 4;
                 bytes[i++] = (byte)(Data.length % 256);
                 bytes[i++] = (byte)((Data.length >> 8) % 256);
-                Buffer.BlockCopy(Data, 0, bytes, i, Data.getLength()); i += Data.getLength();
+                Utils.arraycopy(Data, 0, bytes, i, Data.getLength()); i += Data.getLength();
             }
 
         }
@@ -66,8 +65,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         @Override
 			public int getLength()
         {
-            get
-            {
+                        {
                 int length = 7;
                 length += TransferData.length;
                 return length;
@@ -99,7 +97,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             header.FromBytes(bytes, i, packetEnd);
             if (header.Zerocoded && zeroBuffer != null)
             {
-                packetEnd = Helpers.ZeroDecode(bytes, packetEnd + 1, zeroBuffer) - 1;
+                packetEnd[0] = Helpers.ZeroDecode(bytes, packetEnd[0] + 1, zeroBuffer) - 1;
                 bytes = zeroBuffer;
             }
             TransferData.FromBytes(bytes, i);

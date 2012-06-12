@@ -11,8 +11,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public int getLength()
             {
-                get
-                {
+                                {
                     return 16;
                 }
             }
@@ -39,7 +38,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                AgentID.ToBytes(bytes, i); i += 16;
+                AgentID.ToBytes(bytes, i[0]); i[0] += 16;
             }
 
         }
@@ -67,8 +66,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public int getLength()
             {
-                get
-                {
+                                {
                     int length = 96;
                     if (Name != null) { length += Name.length; }
                     if (Charter != null) { length += Charter.length; }
@@ -92,14 +90,14 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     GroupID.FromBytes(bytes, i); i += 16;
                     length = bytes[i++];
                     Name = new byte[length];
-                    Buffer.BlockCopy(bytes, i, Name, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, Name, 0, length); i += length;
                     length = (bytes[i++] + (bytes[i++] << 8));
                     Charter = new byte[length];
-                    Buffer.BlockCopy(bytes, i, Charter, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, Charter, 0, length); i += length;
                     ShowInList = (bytes[i++] != 0) ? (bool)true : (bool)false;
                     length = bytes[i++];
                     MemberTitle = new byte[length];
-                    Buffer.BlockCopy(bytes, i, MemberTitle, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, MemberTitle, 0, length); i += length;
                     PowersMask = (ulong)((ulong)bytes[i++] + ((ulong)bytes[i++] << 8) + ((ulong)bytes[i++] << 16) + ((ulong)bytes[i++] << 24) + ((ulong)bytes[i++] << 32) + ((ulong)bytes[i++] << 40) + ((ulong)bytes[i++] << 48) + ((ulong)bytes[i++] << 56));
                     InsigniaID.FromBytes(bytes, i); i += 16;
                     FounderID.FromBytes(bytes, i); i += 16;
@@ -123,13 +121,13 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 GroupID.ToBytes(bytes, i); i += 16;
                 bytes[i++] = (byte)Name.length;
-                Buffer.BlockCopy(Name, 0, bytes, i, Name.length); i += Name.length;
+                Utils.arraycopy(Name, 0, bytes, i, Name.length); i += Name.length;
                 bytes[i++] = (byte)(Charter.length % 256);
                 bytes[i++] = (byte)((Charter.length >> 8) % 256);
-                Buffer.BlockCopy(Charter, 0, bytes, i, Charter.length); i += Charter.length;
+                Utils.arraycopy(Charter, 0, bytes, i, Charter.length); i += Charter.length;
                 bytes[i++] = (byte)((ShowInList) ? 1 : 0);
                 bytes[i++] = (byte)MemberTitle.length;
-                Buffer.BlockCopy(MemberTitle, 0, bytes, i, MemberTitle.length); i += MemberTitle.length;
+                Utils.arraycopy(MemberTitle, 0, bytes, i, MemberTitle.length); i += MemberTitle.length;
                 Utils.UInt64ToBytes(PowersMask, bytes, i); i += 8;
                 InsigniaID.ToBytes(bytes, i); i += 16;
                 FounderID.ToBytes(bytes, i); i += 16;
@@ -148,8 +146,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         @Override
 			public int getLength()
         {
-            get
-            {
+                        {
                 int length = 10;
                 length += AgentData.getLength();
                 length += GroupData.length;
@@ -185,7 +182,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             header.FromBytes(bytes, i, packetEnd);
             if (header.Zerocoded && zeroBuffer != null)
             {
-                packetEnd = Helpers.ZeroDecode(bytes, packetEnd + 1, zeroBuffer) - 1;
+                packetEnd[0] = Helpers.ZeroDecode(bytes, packetEnd[0] + 1, zeroBuffer) - 1;
                 bytes = zeroBuffer;
             }
             AgentData.FromBytes(bytes, i);

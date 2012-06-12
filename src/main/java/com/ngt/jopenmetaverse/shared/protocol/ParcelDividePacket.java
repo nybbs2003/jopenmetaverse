@@ -29,6 +29,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 try
                 {
                     AgentID.FromBytes(bytes, i[0]); i[0] += 16;
+                    AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)
@@ -115,7 +116,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             ParcelData = new ParcelDataBlock();
         }
 
-        public ParcelDividePacket(byte[] bytes, int[] i) 
+        public ParcelDividePacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

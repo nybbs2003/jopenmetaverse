@@ -12,8 +12,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public int getLength()
             {
-                get
-                {
+                                {
                     return 6;
                 }
             }
@@ -62,8 +61,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public int getLength()
             {
-                get
-                {
+                                {
                     int length = 46;
                     if (Description != null) { length += Description.length; }
                     return length;
@@ -90,7 +88,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     SquareMetersCommitted = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
                     length = bytes[i++];
                     Description = new byte[length];
-                    Buffer.BlockCopy(bytes, i, Description, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, Description, 0, length); i += length;
                 }
                 catch (Exception e)
                 {
@@ -101,14 +99,14 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                AgentID.ToBytes(bytes, i); i += 16;
+                AgentID.ToBytes(bytes, i[0]); i[0] += 16;
                 TransactionID.ToBytes(bytes, i); i += 16;
                 bytes[i++] = (byte)((TransactionSuccess) ? 1 : 0);
                 Utils.IntToBytes(MoneyBalance, bytes, i); i += 4;
                 Utils.IntToBytes(SquareMetersCredit, bytes, i); i += 4;
                 Utils.IntToBytes(SquareMetersCommitted, bytes, i); i += 4;
                 bytes[i++] = (byte)Description.length;
-                Buffer.BlockCopy(Description, 0, bytes, i, Description.length); i += Description.length;
+                Utils.arraycopy(Description, 0, bytes, i, Description.length); i += Description.length;
             }
 
         }
@@ -127,8 +125,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public int getLength()
             {
-                get
-                {
+                                {
                     int length = 43;
                     if (ItemDescription != null) { length += ItemDescription.length; }
                     return length;
@@ -155,7 +152,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     Amount = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
                     length = bytes[i++];
                     ItemDescription = new byte[length];
-                    Buffer.BlockCopy(bytes, i, ItemDescription, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, ItemDescription, 0, length); i += length;
                 }
                 catch (Exception e)
                 {
@@ -173,7 +170,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 bytes[i++] = (byte)((IsDestGroup) ? 1 : 0);
                 Utils.IntToBytes(Amount, bytes, i); i += 4;
                 bytes[i++] = (byte)ItemDescription.length;
-                Buffer.BlockCopy(ItemDescription, 0, bytes, i, ItemDescription.length); i += ItemDescription.length;
+                Utils.arraycopy(ItemDescription, 0, bytes, i, ItemDescription.length); i += ItemDescription.length;
             }
 
         }
@@ -181,8 +178,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         @Override
 			public int getLength()
         {
-            get
-            {
+                        {
                 int length = 10;
                 length += TargetBlock.length;
                 length += MoneyData.length;
@@ -221,7 +217,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             header.FromBytes(bytes, i, packetEnd);
             if (header.Zerocoded && zeroBuffer != null)
             {
-                packetEnd = Helpers.ZeroDecode(bytes, packetEnd + 1, zeroBuffer) - 1;
+                packetEnd[0] = Helpers.ZeroDecode(bytes, packetEnd[0] + 1, zeroBuffer) - 1;
                 bytes = zeroBuffer;
             }
             TargetBlock.FromBytes(bytes, i);

@@ -11,8 +11,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public int getLength()
             {
-                get
-                {
+                                {
                     return 16;
                 }
             }
@@ -39,7 +38,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                AgentID.ToBytes(bytes, i); i += 16;
+                AgentID.ToBytes(bytes, i[0]); i[0] += 16;
             }
 
         }
@@ -53,8 +52,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public int getLength()
             {
-                get
-                {
+                                {
                     int length = 2;
                     if (SimFilename != null) { length += SimFilename.length; }
                     if (ViewerFilename != null) { length += ViewerFilename.length; }
@@ -76,10 +74,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 {
                     length = bytes[i++];
                     SimFilename = new byte[length];
-                    Buffer.BlockCopy(bytes, i, SimFilename, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, SimFilename, 0, length); i += length;
                     length = bytes[i++];
                     ViewerFilename = new byte[length];
-                    Buffer.BlockCopy(bytes, i, ViewerFilename, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, ViewerFilename, 0, length); i += length;
                 }
                 catch (Exception e)
                 {
@@ -91,9 +89,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 bytes[i++] = (byte)SimFilename.length;
-                Buffer.BlockCopy(SimFilename, 0, bytes, i, SimFilename.length); i += SimFilename.length;
+                Utils.arraycopy(SimFilename, 0, bytes, i, SimFilename.length); i += SimFilename.length;
                 bytes[i++] = (byte)ViewerFilename.length;
-                Buffer.BlockCopy(ViewerFilename, 0, bytes, i, ViewerFilename.length); i += ViewerFilename.length;
+                Utils.arraycopy(ViewerFilename, 0, bytes, i, ViewerFilename.length); i += ViewerFilename.length;
             }
 
         }
@@ -101,8 +99,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         @Override
 			public int getLength()
         {
-            get
-            {
+                        {
                 int length = 10;
                 length += AgentData.getLength();
                 length += FileData.length;
@@ -137,7 +134,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             header.FromBytes(bytes, i, packetEnd);
             if (header.Zerocoded && zeroBuffer != null)
             {
-                packetEnd = Helpers.ZeroDecode(bytes, packetEnd + 1, zeroBuffer) - 1;
+                packetEnd[0] = Helpers.ZeroDecode(bytes, packetEnd[0] + 1, zeroBuffer) - 1;
                 bytes = zeroBuffer;
             }
             AgentData.FromBytes(bytes, i);

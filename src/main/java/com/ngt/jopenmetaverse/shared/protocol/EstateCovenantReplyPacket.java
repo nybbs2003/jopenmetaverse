@@ -14,8 +14,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public int getLength()
             {
-                get
-                {
+                                {
                     int length = 37;
                     if (EstateName != null) { length += EstateName.length; }
                     return length;
@@ -38,7 +37,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     CovenantTimestamp = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
                     length = bytes[i++];
                     EstateName = new byte[length];
-                    Buffer.BlockCopy(bytes, i, EstateName, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, EstateName, 0, length); i += length;
                     EstateOwnerID.FromBytes(bytes, i); i += 16;
                 }
                 catch (Exception e)
@@ -53,7 +52,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 CovenantID.ToBytes(bytes, i); i += 16;
                 Utils.UIntToBytes(CovenantTimestamp, bytes, i); i += 4;
                 bytes[i++] = (byte)EstateName.length;
-                Buffer.BlockCopy(EstateName, 0, bytes, i, EstateName.length); i += EstateName.length;
+                Utils.arraycopy(EstateName, 0, bytes, i, EstateName.length); i += EstateName.length;
                 EstateOwnerID.ToBytes(bytes, i); i += 16;
             }
 
@@ -62,8 +61,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         @Override
 			public int getLength()
         {
-            get
-            {
+                        {
                 int length = 10;
                 length += Data.getLength();
                 return length;
@@ -95,7 +93,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             header.FromBytes(bytes, i, packetEnd);
             if (header.Zerocoded && zeroBuffer != null)
             {
-                packetEnd = Helpers.ZeroDecode(bytes, packetEnd + 1, zeroBuffer) - 1;
+                packetEnd[0] = Helpers.ZeroDecode(bytes, packetEnd[0] + 1, zeroBuffer) - 1;
                 bytes = zeroBuffer;
             }
             Data.FromBytes(bytes, i);

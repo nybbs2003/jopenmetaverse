@@ -17,8 +17,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public int getLength()
             {
-                get
-                {
+                                {
                     int length = 30;
                     if (Filename != null) { length += Filename.length; }
                     return length;
@@ -40,7 +39,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     ID = (ulong)((ulong)bytes[i++] + ((ulong)bytes[i++] << 8) + ((ulong)bytes[i++] << 16) + ((ulong)bytes[i++] << 24) + ((ulong)bytes[i++] << 32) + ((ulong)bytes[i++] << 40) + ((ulong)bytes[i++] << 48) + ((ulong)bytes[i++] << 56));
                     length = bytes[i++];
                     Filename = new byte[length];
-                    Buffer.BlockCopy(bytes, i, Filename, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, Filename, 0, length); i += length;
                     FilePath = (byte)bytes[i++];
                     DeleteOnCompletion = (bytes[i++] != 0) ? (bool)true : (bool)false;
                     UseBigPackets = (bytes[i++] != 0) ? (bool)true : (bool)false;
@@ -58,7 +57,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 Utils.UInt64ToBytes(ID, bytes, i); i += 8;
                 bytes[i++] = (byte)Filename.length;
-                Buffer.BlockCopy(Filename, 0, bytes, i, Filename.length); i += Filename.length;
+                Utils.arraycopy(Filename, 0, bytes, i, Filename.length); i += Filename.length;
                 bytes[i++] = FilePath;
                 bytes[i++] = (byte)((DeleteOnCompletion) ? 1 : 0);
                 bytes[i++] = (byte)((UseBigPackets) ? 1 : 0);
@@ -72,8 +71,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         @Override
 			public int getLength()
         {
-            get
-            {
+                        {
                 int length = 10;
                 length += XferID.length;
                 return length;
@@ -106,7 +104,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             header.FromBytes(bytes, i, packetEnd);
             if (header.Zerocoded && zeroBuffer != null)
             {
-                packetEnd = Helpers.ZeroDecode(bytes, packetEnd + 1, zeroBuffer) - 1;
+                packetEnd[0] = Helpers.ZeroDecode(bytes, packetEnd[0] + 1, zeroBuffer) - 1;
                 bytes = zeroBuffer;
             }
             XferID.FromBytes(bytes, i);

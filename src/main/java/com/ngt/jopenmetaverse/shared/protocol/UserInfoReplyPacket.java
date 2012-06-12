@@ -11,8 +11,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public int getLength()
             {
-                get
-                {
+                                {
                     return 16;
                 }
             }
@@ -39,7 +38,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                AgentID.ToBytes(bytes, i); i += 16;
+                AgentID.ToBytes(bytes, i[0]); i[0] += 16;
             }
 
         }
@@ -54,8 +53,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public int getLength()
             {
-                get
-                {
+                                {
                     int length = 4;
                     if (DirectoryVisibility != null) { length += DirectoryVisibility.length; }
                     if (EMail != null) { length += EMail.length; }
@@ -78,10 +76,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     IMViaEMail = (bytes[i++] != 0) ? (bool)true : (bool)false;
                     length = bytes[i++];
                     DirectoryVisibility = new byte[length];
-                    Buffer.BlockCopy(bytes, i, DirectoryVisibility, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, DirectoryVisibility, 0, length); i += length;
                     length = (bytes[i++] + (bytes[i++] << 8));
                     EMail = new byte[length];
-                    Buffer.BlockCopy(bytes, i, EMail, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, EMail, 0, length); i += length;
                 }
                 catch (Exception e)
                 {
@@ -94,10 +92,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 bytes[i++] = (byte)((IMViaEMail) ? 1 : 0);
                 bytes[i++] = (byte)DirectoryVisibility.length;
-                Buffer.BlockCopy(DirectoryVisibility, 0, bytes, i, DirectoryVisibility.length); i += DirectoryVisibility.length;
+                Utils.arraycopy(DirectoryVisibility, 0, bytes, i, DirectoryVisibility.length); i += DirectoryVisibility.length;
                 bytes[i++] = (byte)(EMail.length % 256);
                 bytes[i++] = (byte)((EMail.length >> 8) % 256);
-                Buffer.BlockCopy(EMail, 0, bytes, i, EMail.length); i += EMail.length;
+                Utils.arraycopy(EMail, 0, bytes, i, EMail.length); i += EMail.length;
             }
 
         }
@@ -105,8 +103,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         @Override
 			public int getLength()
         {
-            get
-            {
+                        {
                 int length = 10;
                 length += AgentData.getLength();
                 length += UserData.length;
@@ -141,7 +138,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             header.FromBytes(bytes, i, packetEnd);
             if (header.Zerocoded && zeroBuffer != null)
             {
-                packetEnd = Helpers.ZeroDecode(bytes, packetEnd + 1, zeroBuffer) - 1;
+                packetEnd[0] = Helpers.ZeroDecode(bytes, packetEnd[0] + 1, zeroBuffer) - 1;
                 bytes = zeroBuffer;
             }
             AgentData.FromBytes(bytes, i);

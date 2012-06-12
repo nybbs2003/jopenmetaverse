@@ -34,8 +34,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public int getLength()
             {
-                get
-                {
+                                {
                     int length = 207;
                     if (SimName != null) { length += SimName.length; }
                     return length;
@@ -58,7 +57,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     SimAccess = (byte)bytes[i++];
                     length = bytes[i++];
                     SimName = new byte[length];
-                    Buffer.BlockCopy(bytes, i, SimName, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, SimName, 0, length); i += length;
                     SimOwner.FromBytes(bytes, i); i += 16;
                     IsEstateManager = (bytes[i++] != 0) ? (bool)true : (bool)false;
                     WaterHeight = Utils.BytesToFloat(bytes, i); i += 4;
@@ -93,7 +92,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 Utils.UIntToBytes(RegionFlags, bytes, i); i += 4;
                 bytes[i++] = SimAccess;
                 bytes[i++] = (byte)SimName.length;
-                Buffer.BlockCopy(SimName, 0, bytes, i, SimName.length); i += SimName.length;
+                Utils.arraycopy(SimName, 0, bytes, i, SimName.length); i += SimName.length;
                 SimOwner.ToBytes(bytes, i); i += 16;
                 bytes[i++] = (byte)((IsEstateManager) ? 1 : 0);
                 Utils.FloatToBytes(WaterHeight, bytes, i); i += 4;
@@ -127,8 +126,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public int getLength()
             {
-                get
-                {
+                                {
                     return 16;
                 }
             }
@@ -172,8 +170,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public int getLength()
             {
-                get
-                {
+                                {
                     int length = 11;
                     if (ColoName != null) { length += ColoName.length; }
                     if (ProductSKU != null) { length += ProductSKU.length; }
@@ -198,13 +195,13 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     CPURatio = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
                     length = bytes[i++];
                     ColoName = new byte[length];
-                    Buffer.BlockCopy(bytes, i, ColoName, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, ColoName, 0, length); i += length;
                     length = bytes[i++];
                     ProductSKU = new byte[length];
-                    Buffer.BlockCopy(bytes, i, ProductSKU, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, ProductSKU, 0, length); i += length;
                     length = bytes[i++];
                     ProductName = new byte[length];
-                    Buffer.BlockCopy(bytes, i, ProductName, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, ProductName, 0, length); i += length;
                 }
                 catch (Exception e)
                 {
@@ -218,11 +215,11 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 Utils.IntToBytes(CPUClassID, bytes, i); i += 4;
                 Utils.IntToBytes(CPURatio, bytes, i); i += 4;
                 bytes[i++] = (byte)ColoName.length;
-                Buffer.BlockCopy(ColoName, 0, bytes, i, ColoName.length); i += ColoName.length;
+                Utils.arraycopy(ColoName, 0, bytes, i, ColoName.length); i += ColoName.length;
                 bytes[i++] = (byte)ProductSKU.length;
-                Buffer.BlockCopy(ProductSKU, 0, bytes, i, ProductSKU.length); i += ProductSKU.length;
+                Utils.arraycopy(ProductSKU, 0, bytes, i, ProductSKU.length); i += ProductSKU.length;
                 bytes[i++] = (byte)ProductName.length;
-                Buffer.BlockCopy(ProductName, 0, bytes, i, ProductName.length); i += ProductName.length;
+                Utils.arraycopy(ProductName, 0, bytes, i, ProductName.length); i += ProductName.length;
             }
 
         }
@@ -230,8 +227,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         @Override
 			public int getLength()
         {
-            get
-            {
+                        {
                 int length = 10;
                 length += RegionInfo.length;
                 length += RegionInfo2.length;
@@ -270,7 +266,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             header.FromBytes(bytes, i, packetEnd);
             if (header.Zerocoded && zeroBuffer != null)
             {
-                packetEnd = Helpers.ZeroDecode(bytes, packetEnd + 1, zeroBuffer) - 1;
+                packetEnd[0] = Helpers.ZeroDecode(bytes, packetEnd[0] + 1, zeroBuffer) - 1;
                 bytes = zeroBuffer;
             }
             RegionInfo.FromBytes(bytes, i);

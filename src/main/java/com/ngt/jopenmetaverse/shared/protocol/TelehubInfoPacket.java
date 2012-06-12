@@ -251,6 +251,6 @@ import com.ngt.jopenmetaverse.shared.types.Vector3;
             } while (
                 SpawnPointBlockStart < SpawnPointBlock.length);
 
-            return (byte[][]) packets.toArray();
+            return (byte[][]) packets.toArray(new byte[0][0]);
         }
     }

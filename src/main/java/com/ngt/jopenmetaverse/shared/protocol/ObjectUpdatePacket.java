@@ -12,8 +12,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public int getLength()
             {
-                get
-                {
+                                {
                     return 10;
                 }
             }
@@ -101,8 +100,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public int getLength()
             {
-                get
-                {
+                                {
                     int length = 153;
                     if (ObjectData != null) { length += ObjectData.length; }
                     if (TextureEntry != null) { length += TextureEntry.length; }
@@ -139,7 +137,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     Scale.FromBytes(bytes, i); i += 12;
                     length = bytes[i++];
                     ObjectData = new byte[length];
-                    Buffer.BlockCopy(bytes, i, ObjectData, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, ObjectData, 0, length); i += length;
                     ParentID = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
                     UpdateFlags = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
                     PathCurve = (byte)bytes[i++];
@@ -162,30 +160,30 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     ProfileHollow = (ushort)(bytes[i++] + (bytes[i++] << 8));
                     length = (bytes[i++] + (bytes[i++] << 8));
                     TextureEntry = new byte[length];
-                    Buffer.BlockCopy(bytes, i, TextureEntry, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, TextureEntry, 0, length); i += length;
                     length = bytes[i++];
                     TextureAnim = new byte[length];
-                    Buffer.BlockCopy(bytes, i, TextureAnim, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, TextureAnim, 0, length); i += length;
                     length = (bytes[i++] + (bytes[i++] << 8));
                     NameValue = new byte[length];
-                    Buffer.BlockCopy(bytes, i, NameValue, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, NameValue, 0, length); i += length;
                     length = (bytes[i++] + (bytes[i++] << 8));
                     Data = new byte[length];
-                    Buffer.BlockCopy(bytes, i, Data, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, Data, 0, length); i += length;
                     length = bytes[i++];
                     Text = new byte[length];
-                    Buffer.BlockCopy(bytes, i, Text, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, Text, 0, length); i += length;
                     TextColor = new byte[4];
-                    Buffer.BlockCopy(bytes, i, TextColor, 0, 4); i += 4;
+                    Utils.arraycopy(bytes, i, TextColor, 0, 4); i += 4;
                     length = bytes[i++];
                     MediaURL = new byte[length];
-                    Buffer.BlockCopy(bytes, i, MediaURL, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, MediaURL, 0, length); i += length;
                     length = bytes[i++];
                     PSBlock = new byte[length];
-                    Buffer.BlockCopy(bytes, i, PSBlock, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, PSBlock, 0, length); i += length;
                     length = bytes[i++];
                     ExtraParams = new byte[length];
-                    Buffer.BlockCopy(bytes, i, ExtraParams, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, ExtraParams, 0, length); i += length;
                     Sound.FromBytes(bytes, i); i += 16;
                     OwnerID.FromBytes(bytes, i); i += 16;
                     Gain = Utils.BytesToFloat(bytes, i); i += 4;
@@ -213,7 +211,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 bytes[i++] = ClickAction;
                 Scale.ToBytes(bytes, i); i += 12;
                 bytes[i++] = (byte)ObjectData.length;
-                Buffer.BlockCopy(ObjectData, 0, bytes, i, ObjectData.length); i += ObjectData.length;
+                Utils.arraycopy(ObjectData, 0, bytes, i, ObjectData.length); i += ObjectData.length;
                 Utils.UIntToBytes(ParentID, bytes, i); i += 4;
                 Utils.UIntToBytes(UpdateFlags, bytes, i); i += 4;
                 bytes[i++] = PathCurve;
@@ -241,24 +239,24 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 bytes[i++] = (byte)((ProfileHollow >> 8) % 256);
                 bytes[i++] = (byte)(TextureEntry.length % 256);
                 bytes[i++] = (byte)((TextureEntry.length >> 8) % 256);
-                Buffer.BlockCopy(TextureEntry, 0, bytes, i, TextureEntry.length); i += TextureEntry.length;
+                Utils.arraycopy(TextureEntry, 0, bytes, i, TextureEntry.length); i += TextureEntry.length;
                 bytes[i++] = (byte)TextureAnim.length;
-                Buffer.BlockCopy(TextureAnim, 0, bytes, i, TextureAnim.length); i += TextureAnim.length;
+                Utils.arraycopy(TextureAnim, 0, bytes, i, TextureAnim.length); i += TextureAnim.length;
                 bytes[i++] = (byte)(NameValue.length % 256);
                 bytes[i++] = (byte)((NameValue.length >> 8) % 256);
-                Buffer.BlockCopy(NameValue, 0, bytes, i, NameValue.length); i += NameValue.length;
+                Utils.arraycopy(NameValue, 0, bytes, i, NameValue.length); i += NameValue.length;
                 bytes[i++] = (byte)(Data.length % 256);
                 bytes[i++] = (byte)((Data.length >> 8) % 256);
-                Buffer.BlockCopy(Data, 0, bytes, i, Data.getLength()); i += Data.getLength();
+                Utils.arraycopy(Data, 0, bytes, i, Data.getLength()); i += Data.getLength();
                 bytes[i++] = (byte)Text.length;
-                Buffer.BlockCopy(Text, 0, bytes, i, Text.length); i += Text.length;
-                Buffer.BlockCopy(TextColor, 0, bytes, i, 4);i += 4;
+                Utils.arraycopy(Text, 0, bytes, i, Text.length); i += Text.length;
+                Utils.arraycopy(TextColor, 0, bytes, i, 4);i += 4;
                 bytes[i++] = (byte)MediaURL.length;
-                Buffer.BlockCopy(MediaURL, 0, bytes, i, MediaURL.length); i += MediaURL.length;
+                Utils.arraycopy(MediaURL, 0, bytes, i, MediaURL.length); i += MediaURL.length;
                 bytes[i++] = (byte)PSBlock.length;
-                Buffer.BlockCopy(PSBlock, 0, bytes, i, PSBlock.length); i += PSBlock.length;
+                Utils.arraycopy(PSBlock, 0, bytes, i, PSBlock.length); i += PSBlock.length;
                 bytes[i++] = (byte)ExtraParams.length;
-                Buffer.BlockCopy(ExtraParams, 0, bytes, i, ExtraParams.length); i += ExtraParams.length;
+                Utils.arraycopy(ExtraParams, 0, bytes, i, ExtraParams.length); i += ExtraParams.length;
                 Sound.ToBytes(bytes, i); i += 16;
                 OwnerID.ToBytes(bytes, i); i += 16;
                 Utils.FloatToBytes(Gain, bytes, i); i += 4;
@@ -274,8 +272,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         @Override
 			public int getLength()
         {
-            get
-            {
+                        {
                 int length = 8;
                 length += RegionData.length;
                 for (int j = 0; j < ObjectData.length; j++)
@@ -312,7 +309,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             header.FromBytes(bytes, i, packetEnd);
             if (header.Zerocoded && zeroBuffer != null)
             {
-                packetEnd = Helpers.ZeroDecode(bytes, packetEnd + 1, zeroBuffer) - 1;
+                packetEnd[0] = Helpers.ZeroDecode(bytes, packetEnd[0] + 1, zeroBuffer) - 1;
                 bytes = zeroBuffer;
             }
             RegionData.FromBytes(bytes, i);
@@ -369,7 +366,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         @Override
 			public byte[][] ToBytesMultiple()
         {
-            System.Collections.Generic.List<byte[]> packets = new System.Collections.Generic.List<byte[]>();
+            List<byte[]> packets = new ArrayList<byte[]>();
             int i = 0;
             int fixedLength = 7;
 
@@ -406,23 +403,23 @@ package com.ngt.jopenmetaverse.shared.protocol;
 
                 byte[] packet = new byte[fixedLength + variableLength + acksLength];
                 int length = fixedBytes.length;
-                Buffer.BlockCopy(fixedBytes, 0, packet, 0, length);
-                if (packets.Count > 0) { packet[0] = (byte)(packet[0] & ~0x10); }
+                Utils.arraycopy(fixedBytes, 0, packet, 0, length);
+                if (packets.size() > 0) { packet[0] = (byte)(packet[0] & ~0x10); }
 
                 packet[length++] = (byte)ObjectDataCount;
                 for (i = ObjectDataStart; i < ObjectDataStart + ObjectDataCount; i++) { ObjectData[i].ToBytes(packet, ref length); }
                 ObjectDataStart += ObjectDataCount;
 
                 if (acksLength > 0) {
-                    Buffer.BlockCopy(ackBytes, 0, packet, length, acksLength);
+                    Utils.arraycopy(ackBytes, 0, packet, length, acksLength);
                     acksLength = 0;
                 }
 
-                packets.Add(packet);
+                packets.add(packet);
             } while (
                 ObjectDataStart < ObjectData.length);
 
-            return packets.ToArray();
+            return packets.toArray(new byte[0][0]);
         }
     }
 
