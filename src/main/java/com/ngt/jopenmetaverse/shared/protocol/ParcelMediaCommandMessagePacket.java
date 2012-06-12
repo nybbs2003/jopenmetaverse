@@ -1,25 +1,24 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
+import com.ngt.jopenmetaverse.shared.util.Utils;
+
 
     public final class ParcelMediaCommandMessagePacket extends Packet
     {
-        /// <exclude/>
         public final class CommandBlockBlock extends PacketBlock
         {
-            public uint Flags;
-            public uint Command;
+            public long Flags;
+            public long Command;
             public float Time;
 
             @Override
 			public int getLength()
             {
-                                {
                     return 12;
-                }
             }
 
             public CommandBlockBlock() { }
-            public CommandBlockBlock(byte[] bytes, int[] i)
+            public CommandBlockBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -29,9 +28,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    Flags = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    Command = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    Time = Utils.BytesToFloat(bytes, i); i += 4;
+                    Flags = (long)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    Command = (long)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    Time = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -42,9 +41,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.UIntToBytes(Flags, bytes, i); i += 4;
-                Utils.UIntToBytes(Command, bytes, i); i += 4;
-                Utils.FloatToBytes(Time, bytes, i); i += 4;
+                Utils.uintToBytes(Flags, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(Command, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytes(Time, bytes, i[0]); i[0] += 4;
             }
 
         }
@@ -54,7 +53,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
                         {
                 int length = 10;
-                length += CommandBlock.length;
+                length += CommandBlock.getLength();
                 return length;
             }
         }
@@ -71,7 +70,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             CommandBlock = new CommandBlockBlock();
         }
 
-        public ParcelMediaCommandMessagePacket(byte[] bytes, int[] i) 
+        public ParcelMediaCommandMessagePacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -79,7 +78,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         }
 
         @Override
-		public void FromBytes(byte[] bytes, int[] i, int[] packetEnd, byte[] zeroBuffer)
+		public void FromBytes(byte[] bytes, int[] i, int[] packetEnd, byte[] zeroBuffer) throws MalformedDataException
         {
             header.FromBytes(bytes, i, packetEnd);
             if (header.Zerocoded && zeroBuffer != null)
@@ -90,7 +89,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             CommandBlock.FromBytes(bytes, i);
         }
 
-        public ParcelMediaCommandMessagePacket(Header head, byte[] bytes, int[] i)
+        public ParcelMediaCommandMessagePacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -98,7 +97,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         }
 
         @Override
-		public void FromBytes(Header header, byte[] bytes, int[] i, int[] packetEnd)
+		public void FromBytes(Header header, byte[] bytes, int[] i, int[] packetEnd) throws MalformedDataException
         {
             this.header =  header;
             CommandBlock.FromBytes(bytes, i);
@@ -108,10 +107,11 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public byte[] ToBytes()
         {
             int length = 10;
-            length += CommandBlock.length;
+            length += CommandBlock.getLength();
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
-            int i = 0;
+            int[] i = new int[1];
+            i[0] = 0;
             header.ToBytes(bytes, i);
             CommandBlock.ToBytes(bytes, i);
             if (header.AckList != null && header.AckList.length > 0) { header.AcksToBytes(bytes, i); }
@@ -124,5 +124,3 @@ package com.ngt.jopenmetaverse.shared.protocol;
             return new byte[][] { ToBytes() };
         }
     }
-
-    /// <exclude/>
