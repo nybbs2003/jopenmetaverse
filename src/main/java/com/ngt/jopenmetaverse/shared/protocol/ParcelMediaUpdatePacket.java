@@ -1,9 +1,11 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+
 
     public final class ParcelMediaUpdatePacket extends Packet
     {
-        /// <exclude/>
         public final class DataBlockBlock extends PacketBlock
         {
             public byte[] MediaURL;
@@ -13,15 +15,13 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public int getLength()
             {
-                                {
                     int length = 18;
                     if (MediaURL != null) { length += MediaURL.length; }
                     return length;
-                }
             }
 
             public DataBlockBlock() { }
-            public DataBlockBlock(byte[] bytes, int[] i)
+            public DataBlockBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -32,11 +32,11 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    length = bytes[i++];
+                    length = bytes[i[0]++];
                     MediaURL = new byte[length];
-                    Utils.arraycopy(bytes, i, MediaURL, 0, length); i += length;
-                    MediaID.FromBytes(bytes, i); i += 16;
-                    MediaAutoScale = (byte)bytes[i++];
+                    Utils.arraycopy(bytes, i[0], MediaURL, 0, length); i[0] += length;
+                    MediaID.FromBytes(bytes, i[0]); i[0] += 16;
+                    MediaAutoScale = (byte)bytes[i[0]++];
                 }
                 catch (Exception e)
                 {
@@ -47,10 +47,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                bytes[i++] = (byte)MediaURL.length;
-                Utils.arraycopy(MediaURL, 0, bytes, i, MediaURL.length); i += MediaURL.length;
-                MediaID.ToBytes(bytes, i); i += 16;
-                bytes[i++] = MediaAutoScale;
+                bytes[i[0]++] = (byte)MediaURL.length;
+                Utils.arraycopy(MediaURL, 0, bytes, i[0], MediaURL.length); i[0] += MediaURL.length;
+                MediaID.ToBytes(bytes, i[0]); i[0] += 16;
+                bytes[i[0]++] = MediaAutoScale;
             }
 
         }
@@ -76,7 +76,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public DataBlockExtendedBlock() { }
-            public DataBlockExtendedBlock(byte[] bytes, int[] i)
+            public DataBlockExtendedBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -87,15 +87,15 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    length = bytes[i++];
+                    length = bytes[i[0]++];
                     MediaType = new byte[length];
-                    Utils.arraycopy(bytes, i, MediaType, 0, length); i += length;
-                    length = bytes[i++];
+                    Utils.arraycopy(bytes, i[0], MediaType, 0, length); i[0] += length;
+                    length = bytes[i[0]++];
                     MediaDesc = new byte[length];
-                    Utils.arraycopy(bytes, i, MediaDesc, 0, length); i += length;
-                    MediaWidth = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    MediaHeight = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    MediaLoop = (byte)bytes[i++];
+                    Utils.arraycopy(bytes, i[0], MediaDesc, 0, length); i[0] += length;
+                    MediaWidth = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    MediaHeight = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    MediaLoop = (byte)bytes[i[0]++];
                 }
                 catch (Exception e)
                 {
@@ -106,13 +106,13 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                bytes[i++] = (byte)MediaType.length;
-                Utils.arraycopy(MediaType, 0, bytes, i, MediaType.length); i += MediaType.length;
-                bytes[i++] = (byte)MediaDesc.length;
-                Utils.arraycopy(MediaDesc, 0, bytes, i, MediaDesc.length); i += MediaDesc.length;
-                Utils.IntToBytes(MediaWidth, bytes, i); i += 4;
-                Utils.IntToBytes(MediaHeight, bytes, i); i += 4;
-                bytes[i++] = MediaLoop;
+                bytes[i[0]++] = (byte)MediaType.length;
+                Utils.arraycopy(MediaType, 0, bytes, i[0], MediaType.length); i[0] += MediaType.length;
+                bytes[i[0]++] = (byte)MediaDesc.length;
+                Utils.arraycopy(MediaDesc, 0, bytes, i[0], MediaDesc.length); i[0] += MediaDesc.length;
+                Utils.intToBytes(MediaWidth, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(MediaHeight, bytes, i[0]); i[0] += 4;
+                bytes[i[0]++] = MediaLoop;
             }
 
         }
@@ -122,8 +122,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
                         {
                 int length = 10;
-                length += DataBlock.length;
-                length += DataBlockExtended.length;
+                length += DataBlock.getLength();
+                length += DataBlockExtended.getLength();
                 return length;
             }
         }
@@ -142,7 +142,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             DataBlockExtended = new DataBlockExtendedBlock();
         }
 
-        public ParcelMediaUpdatePacket(byte[] bytes, int[] i) 
+        public ParcelMediaUpdatePacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -150,7 +150,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         }
 
         @Override
-		public void FromBytes(byte[] bytes, int[] i, int[] packetEnd, byte[] zeroBuffer)
+		public void FromBytes(byte[] bytes, int[] i, int[] packetEnd, byte[] zeroBuffer) throws MalformedDataException
         {
             header.FromBytes(bytes, i, packetEnd);
             if (header.Zerocoded && zeroBuffer != null)
@@ -162,7 +162,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             DataBlockExtended.FromBytes(bytes, i);
         }
 
-        public ParcelMediaUpdatePacket(Header head, byte[] bytes, int[] i)
+        public ParcelMediaUpdatePacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -170,7 +170,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         }
 
         @Override
-		public void FromBytes(Header header, byte[] bytes, int[] i, int[] packetEnd)
+		public void FromBytes(Header header, byte[] bytes, int[] i, int[] packetEnd) throws MalformedDataException
         {
             this.header =  header;
             DataBlock.FromBytes(bytes, i);
@@ -181,11 +181,12 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public byte[] ToBytes()
         {
             int length = 10;
-            length += DataBlock.length;
-            length += DataBlockExtended.length;
+            length += DataBlock.getLength();
+            length += DataBlockExtended.getLength();
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
-            int i = 0;
+            int[] i = new int[1];
+            i[0] = 0;
             header.ToBytes(bytes, i);
             DataBlock.ToBytes(bytes, i);
             DataBlockExtended.ToBytes(bytes, i);
@@ -199,5 +200,3 @@ package com.ngt.jopenmetaverse.shared.protocol;
             return new byte[][] { ToBytes() };
         }
     }
-
-    /// <exclude/>
