@@ -134,7 +134,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             Data.FromBytes(bytes, i);
         }
 
-        public ParcelDwellReplyPacket(Header head, byte[] bytes, int[] i)
+        public ParcelDwellReplyPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
