@@ -1,6 +1,7 @@
 package com.ngt.jopenmetaverse.shared.util;
 
 import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
@@ -1044,6 +1045,18 @@ public class Utils
 		System.arraycopy(bytes, 0, dest, pos, 8);
 	}
 
+	public static byte[] ulongToBytes(BigInteger value)
+	{
+		byte[] bytes = value.toByteArray();
+		ArrayUtils.subarray(bytes, bytes.length-8, bytes.length-1);
+	}
+
+	public static void ulongToBytes(BigInteger value, byte[] dest, int pos)
+	{
+		byte[] bytes = ulongToBytes(value);
+		System.arraycopy(bytes, 0, dest, pos, 8);
+	}
+	
 
 	//    /// <summary>
 	//    /// Convert a 64-bit unsigned integer to a byte array in little endian
