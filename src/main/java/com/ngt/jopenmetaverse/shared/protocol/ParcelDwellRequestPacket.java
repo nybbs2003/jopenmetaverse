@@ -1,5 +1,8 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+
 
     public final class ParcelDwellRequestPacket extends Packet
     {
@@ -18,7 +21,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public AgentDataBlock() { }
-            public AgentDataBlock(byte[] bytes, int[] i)
+            public AgentDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -28,7 +31,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    AgentID.FromBytes(bytes, i); i += 16;
+                    AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)
@@ -61,7 +64,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public DataBlock() { }
-            public DataBlock(byte[] bytes, int[] i)
+            public DataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -71,8 +74,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    LocalID = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    ParcelID.FromBytes(bytes, i); i += 16;
+                    LocalID = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    ParcelID.FromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)
                 {
@@ -83,8 +86,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.IntToBytes(LocalID, bytes, i); i += 4;
-                ParcelID.ToBytes(bytes, i); i += 16;
+                Utils.intToBytes(LocalID, bytes, i[0]); i[0] += 4;
+                ParcelID.ToBytes(bytes, i[0]); i[0] += 16;
             }
 
         }
@@ -114,7 +117,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             Data = new DataBlock();
         }
 
-        public ParcelDwellRequestPacket(byte[] bytes, int[] i) 
+        public ParcelDwellRequestPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -122,7 +125,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         }
 
         @Override
-		public void FromBytes(byte[] bytes, int[] i, int[] packetEnd, byte[] zeroBuffer)
+		public void FromBytes(byte[] bytes, int[] i, int[] packetEnd, byte[] zeroBuffer) throws MalformedDataException
         {
             header.FromBytes(bytes, i, packetEnd);
             if (header.Zerocoded && zeroBuffer != null)
@@ -134,7 +137,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             Data.FromBytes(bytes, i);
         }
 
-        public ParcelDwellRequestPacket(Header head, byte[] bytes, int[] i)
+        public ParcelDwellRequestPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -142,7 +145,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         }
 
         @Override
-		public void FromBytes(Header header, byte[] bytes, int[] i, int[] packetEnd)
+		public void FromBytes(Header header, byte[] bytes, int[] i, int[] packetEnd) throws MalformedDataException
         {
             this.header =  header;
             AgentData.FromBytes(bytes, i);
@@ -157,7 +160,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             length += Data.getLength();
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
-            int i = 0;
+            int[] i = new int[1];
+            i[0] = 0;
             header.ToBytes(bytes, i);
             AgentData.ToBytes(bytes, i);
             Data.ToBytes(bytes, i);
