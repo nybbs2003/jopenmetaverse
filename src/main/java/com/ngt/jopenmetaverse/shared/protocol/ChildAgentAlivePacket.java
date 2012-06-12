@@ -14,8 +14,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public int getLength()
             {
-                get
-                {
+                                {
                     return 44;
                 }
             }
@@ -34,7 +33,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     RegionHandle = (ulong)((ulong)bytes[i++] + ((ulong)bytes[i++] << 8) + ((ulong)bytes[i++] << 16) + ((ulong)bytes[i++] << 24) + ((ulong)bytes[i++] << 32) + ((ulong)bytes[i++] << 40) + ((ulong)bytes[i++] << 48) + ((ulong)bytes[i++] << 56));
                     ViewerCircuitCode = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
                     AgentID.FromBytes(bytes, i); i += 16;
-                    SessionID.FromBytes(bytes, i); i += 16;
+                    SessionID.FromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)
                 {
@@ -47,8 +46,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 Utils.UInt64ToBytes(RegionHandle, bytes, i); i += 8;
                 Utils.UIntToBytes(ViewerCircuitCode, bytes, i); i += 4;
-                AgentID.ToBytes(bytes, i); i += 16;
-                SessionID.ToBytes(bytes, i); i += 16;
+                AgentID.ToBytes(bytes, i[0]); i[0] += 16;
+                SessionID.ToBytes(bytes, i[0]); i[0] += 16;
             }
 
         }
@@ -56,8 +55,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         @Override
 			public int getLength()
         {
-            get
-            {
+                        {
                 int length = 7;
                 length += AgentData.getLength();
                 return length;
@@ -89,7 +87,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             header.FromBytes(bytes, i, packetEnd);
             if (header.Zerocoded && zeroBuffer != null)
             {
-                packetEnd = Helpers.ZeroDecode(bytes, packetEnd + 1, zeroBuffer) - 1;
+                packetEnd[0] = Helpers.ZeroDecode(bytes, packetEnd[0] + 1, zeroBuffer) - 1;
                 bytes = zeroBuffer;
             }
             AgentData.FromBytes(bytes, i);

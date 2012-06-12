@@ -15,8 +15,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public int getLength()
             {
-                get
-                {
+                                {
                     int length = 21;
                     if (AssetData != null) { length += AssetData.length; }
                     return length;
@@ -41,7 +40,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     StoreLocal = (bytes[i++] != 0) ? (bool)true : (bool)false;
                     length = (bytes[i++] + (bytes[i++] << 8));
                     AssetData = new byte[length];
-                    Buffer.BlockCopy(bytes, i, AssetData, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, AssetData, 0, length); i += length;
                 }
                 catch (Exception e)
                 {
@@ -58,7 +57,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 bytes[i++] = (byte)((StoreLocal) ? 1 : 0);
                 bytes[i++] = (byte)(AssetData.length % 256);
                 bytes[i++] = (byte)((AssetData.length >> 8) % 256);
-                Buffer.BlockCopy(AssetData, 0, bytes, i, AssetData.length); i += AssetData.length;
+                Utils.arraycopy(AssetData, 0, bytes, i, AssetData.length); i += AssetData.length;
             }
 
         }
@@ -66,8 +65,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         @Override
 			public int getLength()
         {
-            get
-            {
+                        {
                 int length = 10;
                 length += AssetBlock.length;
                 return length;
@@ -99,7 +97,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             header.FromBytes(bytes, i, packetEnd);
             if (header.Zerocoded && zeroBuffer != null)
             {
-                packetEnd = Helpers.ZeroDecode(bytes, packetEnd + 1, zeroBuffer) - 1;
+                packetEnd[0] = Helpers.ZeroDecode(bytes, packetEnd[0] + 1, zeroBuffer) - 1;
                 bytes = zeroBuffer;
             }
             AssetBlock.FromBytes(bytes, i);

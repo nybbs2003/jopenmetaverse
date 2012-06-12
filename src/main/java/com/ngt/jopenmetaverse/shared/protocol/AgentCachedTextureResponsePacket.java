@@ -13,8 +13,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public int getLength()
             {
-                get
-                {
+                                {
                     return 36;
                 }
             }
@@ -31,7 +30,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     AgentID.FromBytes(bytes, i); i += 16;
-                    SessionID.FromBytes(bytes, i); i += 16;
+                    SessionID.FromBytes(bytes, i[0]); i[0] += 16;
                     SerialNum = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
                 }
                 catch (Exception e)
@@ -43,8 +42,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                AgentID.ToBytes(bytes, i); i += 16;
-                SessionID.ToBytes(bytes, i); i += 16;
+                AgentID.ToBytes(bytes, i[0]); i[0] += 16;
+                SessionID.ToBytes(bytes, i[0]); i[0] += 16;
                 Utils.IntToBytes(SerialNum, bytes, i); i += 4;
             }
 
@@ -60,8 +59,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public int getLength()
             {
-                get
-                {
+                                {
                     int length = 18;
                     if (HostName != null) { length += HostName.length; }
                     return length;
@@ -84,7 +82,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     TextureIndex = (byte)bytes[i++];
                     length = bytes[i++];
                     HostName = new byte[length];
-                    Buffer.BlockCopy(bytes, i, HostName, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, HostName, 0, length); i += length;
                 }
                 catch (Exception e)
                 {
@@ -98,7 +96,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 TextureID.ToBytes(bytes, i); i += 16;
                 bytes[i++] = TextureIndex;
                 bytes[i++] = (byte)HostName.length;
-                Buffer.BlockCopy(HostName, 0, bytes, i, HostName.length); i += HostName.length;
+                Utils.arraycopy(HostName, 0, bytes, i, HostName.length); i += HostName.length;
             }
 
         }
@@ -106,8 +104,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         @Override
 			public int getLength()
         {
-            get
-            {
+                        {
                 int length = 11;
                 length += AgentData.getLength();
                 for (int j = 0; j < WearableData.length; j++)
@@ -143,7 +140,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             header.FromBytes(bytes, i, packetEnd);
             if (header.Zerocoded && zeroBuffer != null)
             {
-                packetEnd = Helpers.ZeroDecode(bytes, packetEnd + 1, zeroBuffer) - 1;
+                packetEnd[0] = Helpers.ZeroDecode(bytes, packetEnd[0] + 1, zeroBuffer) - 1;
                 bytes = zeroBuffer;
             }
             AgentData.FromBytes(bytes, i);
@@ -200,7 +197,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         @Override
 			public byte[][] ToBytesMultiple()
         {
-            System.Collections.Generic.List<byte[]> packets = new System.Collections.Generic.List<byte[]>();
+            List<byte[]> packets = new ArrayList<byte[]>();
             int i = 0;
             int fixedLength = 10;
 
@@ -237,23 +234,23 @@ package com.ngt.jopenmetaverse.shared.protocol;
 
                 byte[] packet = new byte[fixedLength + variableLength + acksLength];
                 int length = fixedBytes.length;
-                Buffer.BlockCopy(fixedBytes, 0, packet, 0, length);
-                if (packets.Count > 0) { packet[0] = (byte)(packet[0] & ~0x10); }
+                Utils.arraycopy(fixedBytes, 0, packet, 0, length);
+                if (packets.size() > 0) { packet[0] = (byte)(packet[0] & ~0x10); }
 
                 packet[length++] = (byte)WearableDataCount;
                 for (i = WearableDataStart; i < WearableDataStart + WearableDataCount; i++) { WearableData[i].ToBytes(packet, ref length); }
                 WearableDataStart += WearableDataCount;
 
                 if (acksLength > 0) {
-                    Buffer.BlockCopy(ackBytes, 0, packet, length, acksLength);
+                    Utils.arraycopy(ackBytes, 0, packet, length, acksLength);
                     acksLength = 0;
                 }
 
-                packets.Add(packet);
+                packets.add(packet);
             } while (
                 WearableDataStart < WearableData.length);
 
-            return packets.ToArray();
+            return packets.toArray(new byte[0][0]);
         }
     }
 

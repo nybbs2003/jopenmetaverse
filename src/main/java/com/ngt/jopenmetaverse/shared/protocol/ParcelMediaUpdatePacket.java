@@ -13,8 +13,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public int getLength()
             {
-                get
-                {
+                                {
                     int length = 18;
                     if (MediaURL != null) { length += MediaURL.length; }
                     return length;
@@ -35,7 +34,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 {
                     length = bytes[i++];
                     MediaURL = new byte[length];
-                    Buffer.BlockCopy(bytes, i, MediaURL, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, MediaURL, 0, length); i += length;
                     MediaID.FromBytes(bytes, i); i += 16;
                     MediaAutoScale = (byte)bytes[i++];
                 }
@@ -49,7 +48,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 bytes[i++] = (byte)MediaURL.length;
-                Buffer.BlockCopy(MediaURL, 0, bytes, i, MediaURL.length); i += MediaURL.length;
+                Utils.arraycopy(MediaURL, 0, bytes, i, MediaURL.length); i += MediaURL.length;
                 MediaID.ToBytes(bytes, i); i += 16;
                 bytes[i++] = MediaAutoScale;
             }
@@ -68,8 +67,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public int getLength()
             {
-                get
-                {
+                                {
                     int length = 11;
                     if (MediaType != null) { length += MediaType.length; }
                     if (MediaDesc != null) { length += MediaDesc.length; }
@@ -91,10 +89,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 {
                     length = bytes[i++];
                     MediaType = new byte[length];
-                    Buffer.BlockCopy(bytes, i, MediaType, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, MediaType, 0, length); i += length;
                     length = bytes[i++];
                     MediaDesc = new byte[length];
-                    Buffer.BlockCopy(bytes, i, MediaDesc, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, MediaDesc, 0, length); i += length;
                     MediaWidth = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
                     MediaHeight = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
                     MediaLoop = (byte)bytes[i++];
@@ -109,9 +107,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 bytes[i++] = (byte)MediaType.length;
-                Buffer.BlockCopy(MediaType, 0, bytes, i, MediaType.length); i += MediaType.length;
+                Utils.arraycopy(MediaType, 0, bytes, i, MediaType.length); i += MediaType.length;
                 bytes[i++] = (byte)MediaDesc.length;
-                Buffer.BlockCopy(MediaDesc, 0, bytes, i, MediaDesc.length); i += MediaDesc.length;
+                Utils.arraycopy(MediaDesc, 0, bytes, i, MediaDesc.length); i += MediaDesc.length;
                 Utils.IntToBytes(MediaWidth, bytes, i); i += 4;
                 Utils.IntToBytes(MediaHeight, bytes, i); i += 4;
                 bytes[i++] = MediaLoop;
@@ -122,8 +120,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         @Override
 			public int getLength()
         {
-            get
-            {
+                        {
                 int length = 10;
                 length += DataBlock.length;
                 length += DataBlockExtended.length;
@@ -158,7 +155,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             header.FromBytes(bytes, i, packetEnd);
             if (header.Zerocoded && zeroBuffer != null)
             {
-                packetEnd = Helpers.ZeroDecode(bytes, packetEnd + 1, zeroBuffer) - 1;
+                packetEnd[0] = Helpers.ZeroDecode(bytes, packetEnd[0] + 1, zeroBuffer) - 1;
                 bytes = zeroBuffer;
             }
             DataBlock.FromBytes(bytes, i);

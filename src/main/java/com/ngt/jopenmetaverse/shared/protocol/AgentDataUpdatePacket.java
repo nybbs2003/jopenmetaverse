@@ -17,8 +17,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public int getLength()
             {
-                get
-                {
+                                {
                     int length = 44;
                     if (FirstName != null) { length += FirstName.length; }
                     if (LastName != null) { length += LastName.length; }
@@ -43,18 +42,18 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     AgentID.FromBytes(bytes, i); i += 16;
                     length = bytes[i++];
                     FirstName = new byte[length];
-                    Buffer.BlockCopy(bytes, i, FirstName, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, FirstName, 0, length); i += length;
                     length = bytes[i++];
                     LastName = new byte[length];
-                    Buffer.BlockCopy(bytes, i, LastName, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, LastName, 0, length); i += length;
                     length = bytes[i++];
                     GroupTitle = new byte[length];
-                    Buffer.BlockCopy(bytes, i, GroupTitle, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, GroupTitle, 0, length); i += length;
                     ActiveGroupID.FromBytes(bytes, i); i += 16;
                     GroupPowers = (ulong)((ulong)bytes[i++] + ((ulong)bytes[i++] << 8) + ((ulong)bytes[i++] << 16) + ((ulong)bytes[i++] << 24) + ((ulong)bytes[i++] << 32) + ((ulong)bytes[i++] << 40) + ((ulong)bytes[i++] << 48) + ((ulong)bytes[i++] << 56));
                     length = bytes[i++];
                     GroupName = new byte[length];
-                    Buffer.BlockCopy(bytes, i, GroupName, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, GroupName, 0, length); i += length;
                 }
                 catch (Exception e)
                 {
@@ -65,17 +64,17 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                AgentID.ToBytes(bytes, i); i += 16;
+                AgentID.ToBytes(bytes, i[0]); i[0] += 16;
                 bytes[i++] = (byte)FirstName.length;
-                Buffer.BlockCopy(FirstName, 0, bytes, i, FirstName.length); i += FirstName.length;
+                Utils.arraycopy(FirstName, 0, bytes, i, FirstName.length); i += FirstName.length;
                 bytes[i++] = (byte)LastName.length;
-                Buffer.BlockCopy(LastName, 0, bytes, i, LastName.length); i += LastName.length;
+                Utils.arraycopy(LastName, 0, bytes, i, LastName.length); i += LastName.length;
                 bytes[i++] = (byte)GroupTitle.length;
-                Buffer.BlockCopy(GroupTitle, 0, bytes, i, GroupTitle.length); i += GroupTitle.length;
+                Utils.arraycopy(GroupTitle, 0, bytes, i, GroupTitle.length); i += GroupTitle.length;
                 ActiveGroupID.ToBytes(bytes, i); i += 16;
                 Utils.UInt64ToBytes(GroupPowers, bytes, i); i += 8;
                 bytes[i++] = (byte)GroupName.length;
-                Buffer.BlockCopy(GroupName, 0, bytes, i, GroupName.length); i += GroupName.length;
+                Utils.arraycopy(GroupName, 0, bytes, i, GroupName.length); i += GroupName.length;
             }
 
         }
@@ -83,8 +82,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         @Override
 			public int getLength()
         {
-            get
-            {
+                        {
                 int length = 10;
                 length += AgentData.getLength();
                 return length;
@@ -117,7 +115,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             header.FromBytes(bytes, i, packetEnd);
             if (header.Zerocoded && zeroBuffer != null)
             {
-                packetEnd = Helpers.ZeroDecode(bytes, packetEnd + 1, zeroBuffer) - 1;
+                packetEnd[0] = Helpers.ZeroDecode(bytes, packetEnd[0] + 1, zeroBuffer) - 1;
                 bytes = zeroBuffer;
             }
             AgentData.FromBytes(bytes, i);

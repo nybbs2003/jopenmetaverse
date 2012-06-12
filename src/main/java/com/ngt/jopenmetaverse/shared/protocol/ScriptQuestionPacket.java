@@ -15,8 +15,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public int getLength()
             {
-                get
-                {
+                                {
                     int length = 38;
                     if (ObjectName != null) { length += ObjectName.length; }
                     if (ObjectOwner != null) { length += ObjectOwner.length; }
@@ -40,10 +39,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     ItemID.FromBytes(bytes, i); i += 16;
                     length = bytes[i++];
                     ObjectName = new byte[length];
-                    Buffer.BlockCopy(bytes, i, ObjectName, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, ObjectName, 0, length); i += length;
                     length = bytes[i++];
                     ObjectOwner = new byte[length];
-                    Buffer.BlockCopy(bytes, i, ObjectOwner, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, ObjectOwner, 0, length); i += length;
                     Questions = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
                 }
                 catch (Exception e)
@@ -58,9 +57,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 TaskID.ToBytes(bytes, i); i += 16;
                 ItemID.ToBytes(bytes, i); i += 16;
                 bytes[i++] = (byte)ObjectName.length;
-                Buffer.BlockCopy(ObjectName, 0, bytes, i, ObjectName.length); i += ObjectName.length;
+                Utils.arraycopy(ObjectName, 0, bytes, i, ObjectName.length); i += ObjectName.length;
                 bytes[i++] = (byte)ObjectOwner.length;
-                Buffer.BlockCopy(ObjectOwner, 0, bytes, i, ObjectOwner.length); i += ObjectOwner.length;
+                Utils.arraycopy(ObjectOwner, 0, bytes, i, ObjectOwner.length); i += ObjectOwner.length;
                 Utils.IntToBytes(Questions, bytes, i); i += 4;
             }
 
@@ -69,8 +68,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         @Override
 			public int getLength()
         {
-            get
-            {
+                        {
                 int length = 10;
                 length += Data.getLength();
                 return length;
@@ -102,7 +100,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             header.FromBytes(bytes, i, packetEnd);
             if (header.Zerocoded && zeroBuffer != null)
             {
-                packetEnd = Helpers.ZeroDecode(bytes, packetEnd + 1, zeroBuffer) - 1;
+                packetEnd[0] = Helpers.ZeroDecode(bytes, packetEnd[0] + 1, zeroBuffer) - 1;
                 bytes = zeroBuffer;
             }
             Data.FromBytes(bytes, i);

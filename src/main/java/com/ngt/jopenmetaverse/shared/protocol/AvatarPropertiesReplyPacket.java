@@ -12,8 +12,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public int getLength()
             {
-                get
-                {
+                                {
                     return 32;
                 }
             }
@@ -41,7 +40,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                AgentID.ToBytes(bytes, i); i += 16;
+                AgentID.ToBytes(bytes, i[0]); i[0] += 16;
                 AvatarID.ToBytes(bytes, i); i += 16;
             }
 
@@ -63,8 +62,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public int getLength()
             {
-                get
-                {
+                                {
                     int length = 58;
                     if (AboutText != null) { length += AboutText.length; }
                     if (FLAboutText != null) { length += FLAboutText.length; }
@@ -92,19 +90,19 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     PartnerID.FromBytes(bytes, i); i += 16;
                     length = (bytes[i++] + (bytes[i++] << 8));
                     AboutText = new byte[length];
-                    Buffer.BlockCopy(bytes, i, AboutText, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, AboutText, 0, length); i += length;
                     length = bytes[i++];
                     FLAboutText = new byte[length];
-                    Buffer.BlockCopy(bytes, i, FLAboutText, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, FLAboutText, 0, length); i += length;
                     length = bytes[i++];
                     BornOn = new byte[length];
-                    Buffer.BlockCopy(bytes, i, BornOn, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, BornOn, 0, length); i += length;
                     length = bytes[i++];
                     ProfileURL = new byte[length];
-                    Buffer.BlockCopy(bytes, i, ProfileURL, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, ProfileURL, 0, length); i += length;
                     length = bytes[i++];
                     CharterMember = new byte[length];
-                    Buffer.BlockCopy(bytes, i, CharterMember, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, CharterMember, 0, length); i += length;
                     Flags = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
                 }
                 catch (Exception e)
@@ -121,15 +119,15 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 PartnerID.ToBytes(bytes, i); i += 16;
                 bytes[i++] = (byte)(AboutText.length % 256);
                 bytes[i++] = (byte)((AboutText.length >> 8) % 256);
-                Buffer.BlockCopy(AboutText, 0, bytes, i, AboutText.length); i += AboutText.length;
+                Utils.arraycopy(AboutText, 0, bytes, i, AboutText.length); i += AboutText.length;
                 bytes[i++] = (byte)FLAboutText.length;
-                Buffer.BlockCopy(FLAboutText, 0, bytes, i, FLAboutText.length); i += FLAboutText.length;
+                Utils.arraycopy(FLAboutText, 0, bytes, i, FLAboutText.length); i += FLAboutText.length;
                 bytes[i++] = (byte)BornOn.length;
-                Buffer.BlockCopy(BornOn, 0, bytes, i, BornOn.length); i += BornOn.length;
+                Utils.arraycopy(BornOn, 0, bytes, i, BornOn.length); i += BornOn.length;
                 bytes[i++] = (byte)ProfileURL.length;
-                Buffer.BlockCopy(ProfileURL, 0, bytes, i, ProfileURL.length); i += ProfileURL.length;
+                Utils.arraycopy(ProfileURL, 0, bytes, i, ProfileURL.length); i += ProfileURL.length;
                 bytes[i++] = (byte)CharterMember.length;
-                Buffer.BlockCopy(CharterMember, 0, bytes, i, CharterMember.length); i += CharterMember.length;
+                Utils.arraycopy(CharterMember, 0, bytes, i, CharterMember.length); i += CharterMember.length;
                 Utils.UIntToBytes(Flags, bytes, i); i += 4;
             }
 
@@ -138,8 +136,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         @Override
 			public int getLength()
         {
-            get
-            {
+                        {
                 int length = 10;
                 length += AgentData.getLength();
                 length += PropertiesData.length;
@@ -175,7 +172,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             header.FromBytes(bytes, i, packetEnd);
             if (header.Zerocoded && zeroBuffer != null)
             {
-                packetEnd = Helpers.ZeroDecode(bytes, packetEnd + 1, zeroBuffer) - 1;
+                packetEnd[0] = Helpers.ZeroDecode(bytes, packetEnd[0] + 1, zeroBuffer) - 1;
                 bytes = zeroBuffer;
             }
             AgentData.FromBytes(bytes, i);

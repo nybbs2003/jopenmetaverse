@@ -12,8 +12,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public int getLength()
             {
-                get
-                {
+                                {
                     return 32;
                 }
             }
@@ -41,7 +40,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                AgentID.ToBytes(bytes, i); i += 16;
+                AgentID.ToBytes(bytes, i[0]); i[0] += 16;
                 GroupID.ToBytes(bytes, i); i += 16;
             }
 
@@ -74,8 +73,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public int getLength()
             {
-                get
-                {
+                                {
                     int length = 83;
                     if (StartDate != null) { length += StartDate.length; }
                     if (LastTaxDate != null) { length += LastTaxDate.length; }
@@ -101,7 +99,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     CurrentInterval = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
                     length = bytes[i++];
                     StartDate = new byte[length];
-                    Buffer.BlockCopy(bytes, i, StartDate, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, StartDate, 0, length); i += length;
                     Balance = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
                     TotalCredits = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
                     TotalDebits = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
@@ -118,10 +116,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     NonExemptMembers = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
                     length = bytes[i++];
                     LastTaxDate = new byte[length];
-                    Buffer.BlockCopy(bytes, i, LastTaxDate, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, LastTaxDate, 0, length); i += length;
                     length = bytes[i++];
                     TaxDate = new byte[length];
-                    Buffer.BlockCopy(bytes, i, TaxDate, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, TaxDate, 0, length); i += length;
                 }
                 catch (Exception e)
                 {
@@ -136,7 +134,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 Utils.IntToBytes(IntervalDays, bytes, i); i += 4;
                 Utils.IntToBytes(CurrentInterval, bytes, i); i += 4;
                 bytes[i++] = (byte)StartDate.length;
-                Buffer.BlockCopy(StartDate, 0, bytes, i, StartDate.length); i += StartDate.length;
+                Utils.arraycopy(StartDate, 0, bytes, i, StartDate.length); i += StartDate.length;
                 Utils.IntToBytes(Balance, bytes, i); i += 4;
                 Utils.IntToBytes(TotalCredits, bytes, i); i += 4;
                 Utils.IntToBytes(TotalDebits, bytes, i); i += 4;
@@ -152,9 +150,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 Utils.IntToBytes(ParcelDirFeeEstimate, bytes, i); i += 4;
                 Utils.IntToBytes(NonExemptMembers, bytes, i); i += 4;
                 bytes[i++] = (byte)LastTaxDate.length;
-                Buffer.BlockCopy(LastTaxDate, 0, bytes, i, LastTaxDate.length); i += LastTaxDate.length;
+                Utils.arraycopy(LastTaxDate, 0, bytes, i, LastTaxDate.length); i += LastTaxDate.length;
                 bytes[i++] = (byte)TaxDate.length;
-                Buffer.BlockCopy(TaxDate, 0, bytes, i, TaxDate.length); i += TaxDate.length;
+                Utils.arraycopy(TaxDate, 0, bytes, i, TaxDate.length); i += TaxDate.length;
             }
 
         }
@@ -162,8 +160,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         @Override
 			public int getLength()
         {
-            get
-            {
+                        {
                 int length = 10;
                 length += AgentData.getLength();
                 length += MoneyData.length;
@@ -199,7 +196,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             header.FromBytes(bytes, i, packetEnd);
             if (header.Zerocoded && zeroBuffer != null)
             {
-                packetEnd = Helpers.ZeroDecode(bytes, packetEnd + 1, zeroBuffer) - 1;
+                packetEnd[0] = Helpers.ZeroDecode(bytes, packetEnd[0] + 1, zeroBuffer) - 1;
                 bytes = zeroBuffer;
             }
             AgentData.FromBytes(bytes, i);

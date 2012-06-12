@@ -21,8 +21,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public int getLength()
             {
-                get
-                {
+                                {
                     int length = 94;
                     if (SearchName != null) { length += SearchName.length; }
                     return length;
@@ -48,7 +47,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     SearchDir.FromBytes(bytes, i, true); i += 12;
                     length = bytes[i++];
                     SearchName = new byte[length];
-                    Buffer.BlockCopy(bytes, i, SearchName, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, SearchName, 0, length); i += length;
                     Type = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
                     Range = Utils.BytesToFloat(bytes, i); i += 4;
                     Arc = Utils.BytesToFloat(bytes, i); i += 4;
@@ -70,7 +69,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 SearchPos.ToBytes(bytes, i); i += 12;
                 SearchDir.ToBytes(bytes, i); i += 12;
                 bytes[i++] = (byte)SearchName.length;
-                Buffer.BlockCopy(SearchName, 0, bytes, i, SearchName.length); i += SearchName.length;
+                Utils.arraycopy(SearchName, 0, bytes, i, SearchName.length); i += SearchName.length;
                 Utils.IntToBytes(Type, bytes, i); i += 4;
                 Utils.FloatToBytes(Range, bytes, i); i += 4;
                 Utils.FloatToBytes(Arc, bytes, i); i += 4;
@@ -83,8 +82,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         @Override
 			public int getLength()
         {
-            get
-            {
+                        {
                 int length = 10;
                 length += Requester.length;
                 return length;
@@ -117,7 +115,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             header.FromBytes(bytes, i, packetEnd);
             if (header.Zerocoded && zeroBuffer != null)
             {
-                packetEnd = Helpers.ZeroDecode(bytes, packetEnd + 1, zeroBuffer) - 1;
+                packetEnd[0] = Helpers.ZeroDecode(bytes, packetEnd[0] + 1, zeroBuffer) - 1;
                 bytes = zeroBuffer;
             }
             Requester.FromBytes(bytes, i);

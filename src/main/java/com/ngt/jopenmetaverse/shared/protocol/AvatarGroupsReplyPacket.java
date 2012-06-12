@@ -12,8 +12,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public int getLength()
             {
-                get
-                {
+                                {
                     return 32;
                 }
             }
@@ -41,7 +40,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                AgentID.ToBytes(bytes, i); i += 16;
+                AgentID.ToBytes(bytes, i[0]); i[0] += 16;
                 AvatarID.ToBytes(bytes, i); i += 16;
             }
 
@@ -60,8 +59,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public int getLength()
             {
-                get
-                {
+                                {
                     int length = 43;
                     if (GroupTitle != null) { length += GroupTitle.length; }
                     if (GroupName != null) { length += GroupName.length; }
@@ -85,11 +83,11 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     AcceptNotices = (bytes[i++] != 0) ? (bool)true : (bool)false;
                     length = bytes[i++];
                     GroupTitle = new byte[length];
-                    Buffer.BlockCopy(bytes, i, GroupTitle, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, GroupTitle, 0, length); i += length;
                     GroupID.FromBytes(bytes, i); i += 16;
                     length = bytes[i++];
                     GroupName = new byte[length];
-                    Buffer.BlockCopy(bytes, i, GroupName, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, GroupName, 0, length); i += length;
                     GroupInsigniaID.FromBytes(bytes, i); i += 16;
                 }
                 catch (Exception e)
@@ -104,10 +102,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 Utils.UInt64ToBytes(GroupPowers, bytes, i); i += 8;
                 bytes[i++] = (byte)((AcceptNotices) ? 1 : 0);
                 bytes[i++] = (byte)GroupTitle.length;
-                Buffer.BlockCopy(GroupTitle, 0, bytes, i, GroupTitle.length); i += GroupTitle.length;
+                Utils.arraycopy(GroupTitle, 0, bytes, i, GroupTitle.length); i += GroupTitle.length;
                 GroupID.ToBytes(bytes, i); i += 16;
                 bytes[i++] = (byte)GroupName.length;
-                Buffer.BlockCopy(GroupName, 0, bytes, i, GroupName.length); i += GroupName.length;
+                Utils.arraycopy(GroupName, 0, bytes, i, GroupName.length); i += GroupName.length;
                 GroupInsigniaID.ToBytes(bytes, i); i += 16;
             }
 
@@ -121,8 +119,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public int getLength()
             {
-                get
-                {
+                                {
                     return 1;
                 }
             }
@@ -157,8 +154,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         @Override
 			public int getLength()
         {
-            get
-            {
+                        {
                 int length = 11;
                 length += AgentData.getLength();
                 for (int j = 0; j < GroupData.length; j++)
@@ -198,7 +194,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             header.FromBytes(bytes, i, packetEnd);
             if (header.Zerocoded && zeroBuffer != null)
             {
-                packetEnd = Helpers.ZeroDecode(bytes, packetEnd + 1, zeroBuffer) - 1;
+                packetEnd[0] = Helpers.ZeroDecode(bytes, packetEnd[0] + 1, zeroBuffer) - 1;
                 bytes = zeroBuffer;
             }
             AgentData.FromBytes(bytes, i);

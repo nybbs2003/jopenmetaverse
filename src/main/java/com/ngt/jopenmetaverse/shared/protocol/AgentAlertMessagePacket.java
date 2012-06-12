@@ -1,5 +1,8 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+
 
     public final class AgentAlertMessagePacket extends Packet
     {
@@ -11,14 +14,14 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public int getLength()
             {
-                get
+                
                 {
                     return 16;
                 }
             }
 
             public AgentDataBlock() { }
-            public AgentDataBlock(byte[] bytes, int[] i)
+            public AgentDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -28,7 +31,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    AgentID.FromBytes(bytes, i); i += 16;
+                    AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)
                 {
@@ -39,7 +42,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                AgentID.ToBytes(bytes, i); i += 16;
+                AgentID.ToBytes(bytes, i[0]); i[0] += 16;
             }
 
         }
@@ -47,13 +50,12 @@ package com.ngt.jopenmetaverse.shared.protocol;
         /// <exclude/>
         public final class AlertDataBlock extends PacketBlock
         {
-            public bool Modal;
+            public boolean Modal;
             public byte[] Message;
 
             @Override
 			public int getLength()
             {
-                get
                 {
                     int length = 2;
                     if (Message != null) { length += Message.length; }
@@ -62,7 +64,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public AlertDataBlock() { }
-            public AlertDataBlock(byte[] bytes, int[] i)
+            public AlertDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -73,10 +75,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    Modal = (bytes[i++] != 0) ? (bool)true : (bool)false;
-                    length = bytes[i++];
+                    Modal = (bytes[i[0]++] != 0) ? true : false;
+                    length = bytes[i[0]++];
                     Message = new byte[length];
-                    Buffer.BlockCopy(bytes, i, Message, 0, length); i += length;
+                    Utils.arraycopy(bytes, i[0], Message, 0, length); i[0] += length;
                 }
                 catch (Exception e)
                 {
@@ -87,9 +89,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                bytes[i++] = (byte)((Modal) ? 1 : 0);
-                bytes[i++] = (byte)Message.length;
-                Buffer.BlockCopy(Message, 0, bytes, i, Message.length); i += Message.length;
+                bytes[i[0]++] = (byte)((Modal) ? 1 : 0);
+                bytes[i[0]++] = (byte)Message.length;
+                Utils.arraycopy(Message, 0, bytes, i[0], Message.length); i[0] += Message.length;
             }
 
         }
@@ -97,11 +99,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
         @Override
 			public int getLength()
         {
-            get
             {
                 int length = 10;
                 length += AgentData.getLength();
-                length += AlertData.length;
+                length += AlertData.getLength();
                 return length;
             }
         }
@@ -120,7 +121,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             AlertData = new AlertDataBlock();
         }
 
-        public AgentAlertMessagePacket(byte[] bytes, int[] i) 
+        public AgentAlertMessagePacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -128,19 +129,19 @@ package com.ngt.jopenmetaverse.shared.protocol;
         }
 
         @Override
-		public void FromBytes(byte[] bytes, int[] i, int[] packetEnd, byte[] zeroBuffer)
+		public void FromBytes(byte[] bytes, int[] i, int[] packetEnd, byte[] zeroBuffer) throws MalformedDataException
         {
             header.FromBytes(bytes, i, packetEnd);
             if (header.Zerocoded && zeroBuffer != null)
             {
-                packetEnd = Helpers.ZeroDecode(bytes, packetEnd + 1, zeroBuffer) - 1;
+                packetEnd[0] = Helpers.ZeroDecode(bytes, packetEnd[0] + 1, zeroBuffer) - 1;
                 bytes = zeroBuffer;
             }
             AgentData.FromBytes(bytes, i);
             AlertData.FromBytes(bytes, i);
         }
 
-        public AgentAlertMessagePacket(Header head, byte[] bytes, int[] i)
+        public AgentAlertMessagePacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -148,7 +149,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         }
 
         @Override
-		public void FromBytes(Header header, byte[] bytes, int[] i, int[] packetEnd)
+		public void FromBytes(Header header, byte[] bytes, int[] i, int[] packetEnd) throws MalformedDataException
         {
             this.header =  header;
             AgentData.FromBytes(bytes, i);
@@ -160,10 +161,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             int length = 10;
             length += AgentData.getLength();
-            length += AlertData.length;
+            length += AlertData.getLength();
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
-            int i = 0;
+            int[] i = new int[]{0};
             header.ToBytes(bytes, i);
             AgentData.ToBytes(bytes, i);
             AlertData.ToBytes(bytes, i);

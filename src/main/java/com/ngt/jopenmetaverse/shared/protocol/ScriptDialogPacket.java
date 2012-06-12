@@ -17,8 +17,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public int getLength()
             {
-                get
-                {
+                                {
                     int length = 41;
                     if (FirstName != null) { length += FirstName.length; }
                     if (LastName != null) { length += LastName.length; }
@@ -43,16 +42,16 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     ObjectID.FromBytes(bytes, i); i += 16;
                     length = bytes[i++];
                     FirstName = new byte[length];
-                    Buffer.BlockCopy(bytes, i, FirstName, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, FirstName, 0, length); i += length;
                     length = bytes[i++];
                     LastName = new byte[length];
-                    Buffer.BlockCopy(bytes, i, LastName, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, LastName, 0, length); i += length;
                     length = bytes[i++];
                     ObjectName = new byte[length];
-                    Buffer.BlockCopy(bytes, i, ObjectName, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, ObjectName, 0, length); i += length;
                     length = (bytes[i++] + (bytes[i++] << 8));
                     Message = new byte[length];
-                    Buffer.BlockCopy(bytes, i, Message, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, Message, 0, length); i += length;
                     ChatChannel = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
                     ImageID.FromBytes(bytes, i); i += 16;
                 }
@@ -67,14 +66,14 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 ObjectID.ToBytes(bytes, i); i += 16;
                 bytes[i++] = (byte)FirstName.length;
-                Buffer.BlockCopy(FirstName, 0, bytes, i, FirstName.length); i += FirstName.length;
+                Utils.arraycopy(FirstName, 0, bytes, i, FirstName.length); i += FirstName.length;
                 bytes[i++] = (byte)LastName.length;
-                Buffer.BlockCopy(LastName, 0, bytes, i, LastName.length); i += LastName.length;
+                Utils.arraycopy(LastName, 0, bytes, i, LastName.length); i += LastName.length;
                 bytes[i++] = (byte)ObjectName.length;
-                Buffer.BlockCopy(ObjectName, 0, bytes, i, ObjectName.length); i += ObjectName.length;
+                Utils.arraycopy(ObjectName, 0, bytes, i, ObjectName.length); i += ObjectName.length;
                 bytes[i++] = (byte)(Message.length % 256);
                 bytes[i++] = (byte)((Message.length >> 8) % 256);
-                Buffer.BlockCopy(Message, 0, bytes, i, Message.length); i += Message.length;
+                Utils.arraycopy(Message, 0, bytes, i, Message.length); i += Message.length;
                 Utils.IntToBytes(ChatChannel, bytes, i); i += 4;
                 ImageID.ToBytes(bytes, i); i += 16;
             }
@@ -89,8 +88,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public int getLength()
             {
-                get
-                {
+                                {
                     int length = 1;
                     if (ButtonLabel != null) { length += ButtonLabel.length; }
                     return length;
@@ -111,7 +109,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 {
                     length = bytes[i++];
                     ButtonLabel = new byte[length];
-                    Buffer.BlockCopy(bytes, i, ButtonLabel, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, ButtonLabel, 0, length); i += length;
                 }
                 catch (Exception e)
                 {
@@ -123,7 +121,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 bytes[i++] = (byte)ButtonLabel.length;
-                Buffer.BlockCopy(ButtonLabel, 0, bytes, i, ButtonLabel.length); i += ButtonLabel.length;
+                Utils.arraycopy(ButtonLabel, 0, bytes, i, ButtonLabel.length); i += ButtonLabel.length;
             }
 
         }
@@ -136,8 +134,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public int getLength()
             {
-                get
-                {
+                                {
                     return 16;
                 }
             }
@@ -172,8 +169,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         @Override
 			public int getLength()
         {
-            get
-            {
+                        {
                 int length = 12;
                 length += Data.getLength();
                 for (int j = 0; j < Buttons.length; j++)
@@ -214,7 +210,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             header.FromBytes(bytes, i, packetEnd);
             if (header.Zerocoded && zeroBuffer != null)
             {
-                packetEnd = Helpers.ZeroDecode(bytes, packetEnd + 1, zeroBuffer) - 1;
+                packetEnd[0] = Helpers.ZeroDecode(bytes, packetEnd[0] + 1, zeroBuffer) - 1;
                 bytes = zeroBuffer;
             }
             Data.FromBytes(bytes, i);
@@ -291,7 +287,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         @Override
 			public byte[][] ToBytesMultiple()
         {
-            System.Collections.Generic.List<byte[]> packets = new System.Collections.Generic.List<byte[]>();
+            List<byte[]> packets = new ArrayList<byte[]>();
             int i = 0;
             int fixedLength = 10;
 
@@ -341,8 +337,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
 
                 byte[] packet = new byte[fixedLength + variableLength + acksLength];
                 int length = fixedBytes.length;
-                Buffer.BlockCopy(fixedBytes, 0, packet, 0, length);
-                if (packets.Count > 0) { packet[0] = (byte)(packet[0] & ~0x10); }
+                Utils.arraycopy(fixedBytes, 0, packet, 0, length);
+                if (packets.size() > 0) { packet[0] = (byte)(packet[0] & ~0x10); }
 
                 packet[length++] = (byte)ButtonsCount;
                 for (i = ButtonsStart; i < ButtonsStart + ButtonsCount; i++) { Buttons[i].ToBytes(packet, ref length); }
@@ -353,16 +349,16 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 OwnerDataStart += OwnerDataCount;
 
                 if (acksLength > 0) {
-                    Buffer.BlockCopy(ackBytes, 0, packet, length, acksLength);
+                    Utils.arraycopy(ackBytes, 0, packet, length, acksLength);
                     acksLength = 0;
                 }
 
-                packets.Add(packet);
+                packets.add(packet);
             } while (
                 ButtonsStart < Buttons.length ||
                 OwnerDataStart < OwnerData.length);
 
-            return packets.ToArray();
+            return packets.toArray(new byte[0][0]);
         }
     }
 

@@ -59,8 +59,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public int getLength()
             {
-                get
-                {
+                                {
                     int length = 244;
                     if (Bitmap != null) { length += Bitmap.length; }
                     if (Name != null) { length += Name.length; }
@@ -100,7 +99,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     AABBMax.FromBytes(bytes, i); i += 12;
                     length = (bytes[i++] + (bytes[i++] << 8));
                     Bitmap = new byte[length];
-                    Buffer.BlockCopy(bytes, i, Bitmap, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, Bitmap, 0, length); i += length;
                     Area = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
                     Status = (byte)bytes[i++];
                     SimWideMaxPrims = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
@@ -117,16 +116,16 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     SalePrice = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
                     length = bytes[i++];
                     Name = new byte[length];
-                    Buffer.BlockCopy(bytes, i, Name, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, Name, 0, length); i += length;
                     length = bytes[i++];
                     Desc = new byte[length];
-                    Buffer.BlockCopy(bytes, i, Desc, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, Desc, 0, length); i += length;
                     length = bytes[i++];
                     MusicURL = new byte[length];
-                    Buffer.BlockCopy(bytes, i, MusicURL, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, MusicURL, 0, length); i += length;
                     length = bytes[i++];
                     MediaURL = new byte[length];
-                    Buffer.BlockCopy(bytes, i, MediaURL, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, MediaURL, 0, length); i += length;
                     MediaID.FromBytes(bytes, i); i += 16;
                     MediaAutoScale = (byte)bytes[i++];
                     GroupID.FromBytes(bytes, i); i += 16;
@@ -169,7 +168,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 AABBMax.ToBytes(bytes, i); i += 12;
                 bytes[i++] = (byte)(Bitmap.length % 256);
                 bytes[i++] = (byte)((Bitmap.length >> 8) % 256);
-                Buffer.BlockCopy(Bitmap, 0, bytes, i, Bitmap.length); i += Bitmap.length;
+                Utils.arraycopy(Bitmap, 0, bytes, i, Bitmap.length); i += Bitmap.length;
                 Utils.IntToBytes(Area, bytes, i); i += 4;
                 bytes[i++] = Status;
                 Utils.IntToBytes(SimWideMaxPrims, bytes, i); i += 4;
@@ -185,13 +184,13 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 Utils.UIntToBytes(ParcelFlags, bytes, i); i += 4;
                 Utils.IntToBytes(SalePrice, bytes, i); i += 4;
                 bytes[i++] = (byte)Name.length;
-                Buffer.BlockCopy(Name, 0, bytes, i, Name.length); i += Name.length;
+                Utils.arraycopy(Name, 0, bytes, i, Name.length); i += Name.length;
                 bytes[i++] = (byte)Desc.length;
-                Buffer.BlockCopy(Desc, 0, bytes, i, Desc.length); i += Desc.length;
+                Utils.arraycopy(Desc, 0, bytes, i, Desc.length); i += Desc.length;
                 bytes[i++] = (byte)MusicURL.length;
-                Buffer.BlockCopy(MusicURL, 0, bytes, i, MusicURL.length); i += MusicURL.length;
+                Utils.arraycopy(MusicURL, 0, bytes, i, MusicURL.length); i += MusicURL.length;
                 bytes[i++] = (byte)MediaURL.length;
-                Buffer.BlockCopy(MediaURL, 0, bytes, i, MediaURL.length); i += MediaURL.length;
+                Utils.arraycopy(MediaURL, 0, bytes, i, MediaURL.length); i += MediaURL.length;
                 MediaID.ToBytes(bytes, i); i += 16;
                 bytes[i++] = MediaAutoScale;
                 GroupID.ToBytes(bytes, i); i += 16;
@@ -219,8 +218,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public int getLength()
             {
-                get
-                {
+                                {
                     return 1;
                 }
             }
@@ -255,8 +253,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         @Override
 			public int getLength()
         {
-            get
-            {
+                        {
                 int length = 7;
                 length += ParcelData.length;
                 length += AgeVerificationBlock.length;
@@ -292,7 +289,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             header.FromBytes(bytes, i, packetEnd);
             if (header.Zerocoded && zeroBuffer != null)
             {
-                packetEnd = Helpers.ZeroDecode(bytes, packetEnd + 1, zeroBuffer) - 1;
+                packetEnd[0] = Helpers.ZeroDecode(bytes, packetEnd[0] + 1, zeroBuffer) - 1;
                 bytes = zeroBuffer;
             }
             ParcelData.FromBytes(bytes, i);

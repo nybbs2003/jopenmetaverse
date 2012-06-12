@@ -18,8 +18,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public int getLength()
             {
-                get
-                {
+                                {
                     int length = 41;
                     if (SeedCapability != null) { length += SeedCapability.length; }
                     return length;
@@ -45,7 +44,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     RegionHandle = (ulong)((ulong)bytes[i++] + ((ulong)bytes[i++] << 8) + ((ulong)bytes[i++] << 16) + ((ulong)bytes[i++] << 24) + ((ulong)bytes[i++] << 32) + ((ulong)bytes[i++] << 40) + ((ulong)bytes[i++] << 48) + ((ulong)bytes[i++] << 56));
                     length = (bytes[i++] + (bytes[i++] << 8));
                     SeedCapability = new byte[length];
-                    Buffer.BlockCopy(bytes, i, SeedCapability, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, SeedCapability, 0, length); i += length;
                     SimAccess = (byte)bytes[i++];
                     TeleportFlags = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
                 }
@@ -58,7 +57,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                AgentID.ToBytes(bytes, i); i += 16;
+                AgentID.ToBytes(bytes, i[0]); i[0] += 16;
                 Utils.UIntToBytes(LocationID, bytes, i); i += 4;
                 Utils.UIntToBytes(SimIP, bytes, i); i += 4;
                 bytes[i++] = (byte)((SimPort >> 8) % 256);
@@ -66,7 +65,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 Utils.UInt64ToBytes(RegionHandle, bytes, i); i += 8;
                 bytes[i++] = (byte)(SeedCapability.length % 256);
                 bytes[i++] = (byte)((SeedCapability.length >> 8) % 256);
-                Buffer.BlockCopy(SeedCapability, 0, bytes, i, SeedCapability.length); i += SeedCapability.length;
+                Utils.arraycopy(SeedCapability, 0, bytes, i, SeedCapability.length); i += SeedCapability.length;
                 bytes[i++] = SimAccess;
                 Utils.UIntToBytes(TeleportFlags, bytes, i); i += 4;
             }
@@ -76,8 +75,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         @Override
 			public int getLength()
         {
-            get
-            {
+                        {
                 int length = 10;
                 length += Info.length;
                 return length;
@@ -109,7 +107,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             header.FromBytes(bytes, i, packetEnd);
             if (header.Zerocoded && zeroBuffer != null)
             {
-                packetEnd = Helpers.ZeroDecode(bytes, packetEnd + 1, zeroBuffer) - 1;
+                packetEnd[0] = Helpers.ZeroDecode(bytes, packetEnd[0] + 1, zeroBuffer) - 1;
                 bytes = zeroBuffer;
             }
             Info.FromBytes(bytes, i);

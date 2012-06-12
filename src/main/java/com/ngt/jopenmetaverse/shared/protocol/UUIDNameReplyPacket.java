@@ -13,8 +13,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public int getLength()
             {
-                get
-                {
+                                {
                     int length = 18;
                     if (FirstName != null) { length += FirstName.length; }
                     if (LastName != null) { length += LastName.length; }
@@ -37,10 +36,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     ID.FromBytes(bytes, i); i += 16;
                     length = bytes[i++];
                     FirstName = new byte[length];
-                    Buffer.BlockCopy(bytes, i, FirstName, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, FirstName, 0, length); i += length;
                     length = bytes[i++];
                     LastName = new byte[length];
-                    Buffer.BlockCopy(bytes, i, LastName, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, LastName, 0, length); i += length;
                 }
                 catch (Exception e)
                 {
@@ -53,9 +52,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 ID.ToBytes(bytes, i); i += 16;
                 bytes[i++] = (byte)FirstName.length;
-                Buffer.BlockCopy(FirstName, 0, bytes, i, FirstName.length); i += FirstName.length;
+                Utils.arraycopy(FirstName, 0, bytes, i, FirstName.length); i += FirstName.length;
                 bytes[i++] = (byte)LastName.length;
-                Buffer.BlockCopy(LastName, 0, bytes, i, LastName.length); i += LastName.length;
+                Utils.arraycopy(LastName, 0, bytes, i, LastName.length); i += LastName.length;
             }
 
         }
@@ -63,8 +62,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         @Override
 			public int getLength()
         {
-            get
-            {
+                        {
                 int length = 11;
                 for (int j = 0; j < UUIDNameBlock.length; j++)
                     length += UUIDNameBlock[j].length;
@@ -97,7 +95,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             header.FromBytes(bytes, i, packetEnd);
             if (header.Zerocoded && zeroBuffer != null)
             {
-                packetEnd = Helpers.ZeroDecode(bytes, packetEnd + 1, zeroBuffer) - 1;
+                packetEnd[0] = Helpers.ZeroDecode(bytes, packetEnd[0] + 1, zeroBuffer) - 1;
                 bytes = zeroBuffer;
             }
             int count = (int)bytes[i++];
@@ -150,7 +148,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         @Override
 			public byte[][] ToBytesMultiple()
         {
-            System.Collections.Generic.List<byte[]> packets = new System.Collections.Generic.List<byte[]>();
+            List<byte[]> packets = new ArrayList<byte[]>();
             int i = 0;
             int fixedLength = 10;
 
@@ -185,23 +183,23 @@ package com.ngt.jopenmetaverse.shared.protocol;
 
                 byte[] packet = new byte[fixedLength + variableLength + acksLength];
                 int length = fixedBytes.length;
-                Buffer.BlockCopy(fixedBytes, 0, packet, 0, length);
-                if (packets.Count > 0) { packet[0] = (byte)(packet[0] & ~0x10); }
+                Utils.arraycopy(fixedBytes, 0, packet, 0, length);
+                if (packets.size() > 0) { packet[0] = (byte)(packet[0] & ~0x10); }
 
                 packet[length++] = (byte)UUIDNameBlockCount;
                 for (i = UUIDNameBlockStart; i < UUIDNameBlockStart + UUIDNameBlockCount; i++) { UUIDNameBlock[i].ToBytes(packet, ref length); }
                 UUIDNameBlockStart += UUIDNameBlockCount;
 
                 if (acksLength > 0) {
-                    Buffer.BlockCopy(ackBytes, 0, packet, length, acksLength);
+                    Utils.arraycopy(ackBytes, 0, packet, length, acksLength);
                     acksLength = 0;
                 }
 
-                packets.Add(packet);
+                packets.add(packet);
             } while (
                 UUIDNameBlockStart < UUIDNameBlock.length);
 
-            return packets.ToArray();
+            return packets.toArray(new byte[0][0]);
         }
     }
 

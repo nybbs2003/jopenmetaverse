@@ -12,8 +12,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public int getLength()
             {
-                get
-                {
+                                {
                     return 32;
                 }
             }
@@ -30,7 +29,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     AgentID.FromBytes(bytes, i); i += 16;
-                    SessionID.FromBytes(bytes, i); i += 16;
+                    SessionID.FromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)
                 {
@@ -41,8 +40,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                AgentID.ToBytes(bytes, i); i += 16;
-                SessionID.ToBytes(bytes, i); i += 16;
+                AgentID.ToBytes(bytes, i[0]); i[0] += 16;
+                SessionID.ToBytes(bytes, i[0]); i[0] += 16;
             }
 
         }
@@ -70,8 +69,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public int getLength()
             {
-                get
-                {
+                                {
                     int length = 52;
                     if (SimName != null) { length += SimName.length; }
                     return length;
@@ -92,7 +90,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 {
                     length = bytes[i++];
                     SimName = new byte[length];
-                    Buffer.BlockCopy(bytes, i, SimName, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, SimName, 0, length); i += length;
                     EstateID = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
                     ParentEstateID = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
                     RegionFlags = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
@@ -119,7 +117,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 bytes[i++] = (byte)SimName.length;
-                Buffer.BlockCopy(SimName, 0, bytes, i, SimName.length); i += SimName.length;
+                Utils.arraycopy(SimName, 0, bytes, i, SimName.length); i += SimName.length;
                 Utils.UIntToBytes(EstateID, bytes, i); i += 4;
                 Utils.UIntToBytes(ParentEstateID, bytes, i); i += 4;
                 Utils.UIntToBytes(RegionFlags, bytes, i); i += 4;
@@ -151,8 +149,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public int getLength()
             {
-                get
-                {
+                                {
                     int length = 14;
                     if (ProductSKU != null) { length += ProductSKU.length; }
                     if (ProductName != null) { length += ProductName.length; }
@@ -174,10 +171,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 {
                     length = bytes[i++];
                     ProductSKU = new byte[length];
-                    Buffer.BlockCopy(bytes, i, ProductSKU, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, ProductSKU, 0, length); i += length;
                     length = bytes[i++];
                     ProductName = new byte[length];
-                    Buffer.BlockCopy(bytes, i, ProductName, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, ProductName, 0, length); i += length;
                     MaxAgents32 = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
                     HardMaxAgents = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
                     HardMaxObjects = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
@@ -192,9 +189,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 bytes[i++] = (byte)ProductSKU.length;
-                Buffer.BlockCopy(ProductSKU, 0, bytes, i, ProductSKU.length); i += ProductSKU.length;
+                Utils.arraycopy(ProductSKU, 0, bytes, i, ProductSKU.length); i += ProductSKU.length;
                 bytes[i++] = (byte)ProductName.length;
-                Buffer.BlockCopy(ProductName, 0, bytes, i, ProductName.length); i += ProductName.length;
+                Utils.arraycopy(ProductName, 0, bytes, i, ProductName.length); i += ProductName.length;
                 Utils.UIntToBytes(MaxAgents32, bytes, i); i += 4;
                 Utils.UIntToBytes(HardMaxAgents, bytes, i); i += 4;
                 Utils.UIntToBytes(HardMaxObjects, bytes, i); i += 4;
@@ -205,8 +202,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         @Override
 			public int getLength()
         {
-            get
-            {
+                        {
                 int length = 10;
                 length += AgentData.getLength();
                 length += RegionInfo.length;
@@ -245,7 +241,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             header.FromBytes(bytes, i, packetEnd);
             if (header.Zerocoded && zeroBuffer != null)
             {
-                packetEnd = Helpers.ZeroDecode(bytes, packetEnd + 1, zeroBuffer) - 1;
+                packetEnd[0] = Helpers.ZeroDecode(bytes, packetEnd[0] + 1, zeroBuffer) - 1;
                 bytes = zeroBuffer;
             }
             AgentData.FromBytes(bytes, i);

@@ -12,8 +12,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public int getLength()
             {
-                get
-                {
+                                {
                     return 32;
                 }
             }
@@ -41,7 +40,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                AgentID.ToBytes(bytes, i); i += 16;
+                AgentID.ToBytes(bytes, i[0]); i[0] += 16;
                 GroupID.ToBytes(bytes, i); i += 16;
             }
 
@@ -56,8 +55,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public int getLength()
             {
-                get
-                {
+                                {
                     return 20;
                 }
             }
@@ -108,8 +106,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public int getLength()
             {
-                get
-                {
+                                {
                     int length = 47;
                     if (TerseDateID != null) { length += TerseDateID.length; }
                     if (StartDateTime != null) { length += StartDateTime.length; }
@@ -136,25 +133,25 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     VoteID.FromBytes(bytes, i); i += 16;
                     length = bytes[i++];
                     TerseDateID = new byte[length];
-                    Buffer.BlockCopy(bytes, i, TerseDateID, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, TerseDateID, 0, length); i += length;
                     length = bytes[i++];
                     StartDateTime = new byte[length];
-                    Buffer.BlockCopy(bytes, i, StartDateTime, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, StartDateTime, 0, length); i += length;
                     length = bytes[i++];
                     EndDateTime = new byte[length];
-                    Buffer.BlockCopy(bytes, i, EndDateTime, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, EndDateTime, 0, length); i += length;
                     VoteInitiator.FromBytes(bytes, i); i += 16;
                     length = bytes[i++];
                     VoteType = new byte[length];
-                    Buffer.BlockCopy(bytes, i, VoteType, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, VoteType, 0, length); i += length;
                     length = bytes[i++];
                     VoteResult = new byte[length];
-                    Buffer.BlockCopy(bytes, i, VoteResult, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, VoteResult, 0, length); i += length;
                     Majority = Utils.BytesToFloat(bytes, i); i += 4;
                     Quorum = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
                     length = (bytes[i++] + (bytes[i++] << 8));
                     ProposalText = new byte[length];
-                    Buffer.BlockCopy(bytes, i, ProposalText, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, ProposalText, 0, length); i += length;
                 }
                 catch (Exception e)
                 {
@@ -167,21 +164,21 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 VoteID.ToBytes(bytes, i); i += 16;
                 bytes[i++] = (byte)TerseDateID.length;
-                Buffer.BlockCopy(TerseDateID, 0, bytes, i, TerseDateID.length); i += TerseDateID.length;
+                Utils.arraycopy(TerseDateID, 0, bytes, i, TerseDateID.length); i += TerseDateID.length;
                 bytes[i++] = (byte)StartDateTime.length;
-                Buffer.BlockCopy(StartDateTime, 0, bytes, i, StartDateTime.length); i += StartDateTime.length;
+                Utils.arraycopy(StartDateTime, 0, bytes, i, StartDateTime.length); i += StartDateTime.length;
                 bytes[i++] = (byte)EndDateTime.length;
-                Buffer.BlockCopy(EndDateTime, 0, bytes, i, EndDateTime.length); i += EndDateTime.length;
+                Utils.arraycopy(EndDateTime, 0, bytes, i, EndDateTime.length); i += EndDateTime.length;
                 VoteInitiator.ToBytes(bytes, i); i += 16;
                 bytes[i++] = (byte)VoteType.length;
-                Buffer.BlockCopy(VoteType, 0, bytes, i, VoteType.length); i += VoteType.length;
+                Utils.arraycopy(VoteType, 0, bytes, i, VoteType.length); i += VoteType.length;
                 bytes[i++] = (byte)VoteResult.length;
-                Buffer.BlockCopy(VoteResult, 0, bytes, i, VoteResult.length); i += VoteResult.length;
+                Utils.arraycopy(VoteResult, 0, bytes, i, VoteResult.length); i += VoteResult.length;
                 Utils.FloatToBytes(Majority, bytes, i); i += 4;
                 Utils.IntToBytes(Quorum, bytes, i); i += 4;
                 bytes[i++] = (byte)(ProposalText.length % 256);
                 bytes[i++] = (byte)((ProposalText.length >> 8) % 256);
-                Buffer.BlockCopy(ProposalText, 0, bytes, i, ProposalText.length); i += ProposalText.length;
+                Utils.arraycopy(ProposalText, 0, bytes, i, ProposalText.length); i += ProposalText.length;
             }
 
         }
@@ -196,8 +193,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public int getLength()
             {
-                get
-                {
+                                {
                     int length = 21;
                     if (VoteCast != null) { length += VoteCast.length; }
                     return length;
@@ -219,7 +215,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     CandidateID.FromBytes(bytes, i); i += 16;
                     length = bytes[i++];
                     VoteCast = new byte[length];
-                    Buffer.BlockCopy(bytes, i, VoteCast, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, VoteCast, 0, length); i += length;
                     NumVotes = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
                 }
                 catch (Exception e)
@@ -233,7 +229,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 CandidateID.ToBytes(bytes, i); i += 16;
                 bytes[i++] = (byte)VoteCast.length;
-                Buffer.BlockCopy(VoteCast, 0, bytes, i, VoteCast.length); i += VoteCast.length;
+                Utils.arraycopy(VoteCast, 0, bytes, i, VoteCast.length); i += VoteCast.length;
                 Utils.IntToBytes(NumVotes, bytes, i); i += 4;
             }
 
@@ -242,8 +238,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         @Override
 			public int getLength()
         {
-            get
-            {
+                        {
                 int length = 11;
                 length += AgentData.getLength();
                 length += TransactionData.length;
@@ -286,7 +281,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             header.FromBytes(bytes, i, packetEnd);
             if (header.Zerocoded && zeroBuffer != null)
             {
-                packetEnd = Helpers.ZeroDecode(bytes, packetEnd + 1, zeroBuffer) - 1;
+                packetEnd[0] = Helpers.ZeroDecode(bytes, packetEnd[0] + 1, zeroBuffer) - 1;
                 bytes = zeroBuffer;
             }
             AgentData.FromBytes(bytes, i);
@@ -351,7 +346,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         @Override
 			public byte[][] ToBytesMultiple()
         {
-            System.Collections.Generic.List<byte[]> packets = new System.Collections.Generic.List<byte[]>();
+            List<byte[]> packets = new ArrayList<byte[]>();
             int i = 0;
             int fixedLength = 10;
 
@@ -392,23 +387,23 @@ package com.ngt.jopenmetaverse.shared.protocol;
 
                 byte[] packet = new byte[fixedLength + variableLength + acksLength];
                 int length = fixedBytes.length;
-                Buffer.BlockCopy(fixedBytes, 0, packet, 0, length);
-                if (packets.Count > 0) { packet[0] = (byte)(packet[0] & ~0x10); }
+                Utils.arraycopy(fixedBytes, 0, packet, 0, length);
+                if (packets.size() > 0) { packet[0] = (byte)(packet[0] & ~0x10); }
 
                 packet[length++] = (byte)VoteItemCount;
                 for (i = VoteItemStart; i < VoteItemStart + VoteItemCount; i++) { VoteItem[i].ToBytes(packet, ref length); }
                 VoteItemStart += VoteItemCount;
 
                 if (acksLength > 0) {
-                    Buffer.BlockCopy(ackBytes, 0, packet, length, acksLength);
+                    Utils.arraycopy(ackBytes, 0, packet, length, acksLength);
                     acksLength = 0;
                 }
 
-                packets.Add(packet);
+                packets.add(packet);
             } while (
                 VoteItemStart < VoteItem.length);
 
-            return packets.ToArray();
+            return packets.toArray(new byte[0][0]);
         }
     }
 

@@ -12,8 +12,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public int getLength()
             {
-                get
-                {
+                                {
                     return 32;
                 }
             }
@@ -30,7 +29,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     AgentID.FromBytes(bytes, i); i += 16;
-                    SessionID.FromBytes(bytes, i); i += 16;
+                    SessionID.FromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)
                 {
@@ -41,8 +40,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                AgentID.ToBytes(bytes, i); i += 16;
-                SessionID.ToBytes(bytes, i); i += 16;
+                AgentID.ToBytes(bytes, i[0]); i[0] += 16;
+                SessionID.ToBytes(bytes, i[0]); i[0] += 16;
             }
 
         }
@@ -58,8 +57,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public int getLength()
             {
-                get
-                {
+                                {
                     int length = 13;
                     if (Filter != null) { length += Filter.length; }
                     return length;
@@ -82,7 +80,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     RequestFlags = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
                     length = bytes[i++];
                     Filter = new byte[length];
-                    Buffer.BlockCopy(bytes, i, Filter, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, Filter, 0, length); i += length;
                     ParcelLocalID = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
                 }
                 catch (Exception e)
@@ -97,7 +95,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 Utils.UIntToBytes(ReportType, bytes, i); i += 4;
                 Utils.UIntToBytes(RequestFlags, bytes, i); i += 4;
                 bytes[i++] = (byte)Filter.length;
-                Buffer.BlockCopy(Filter, 0, bytes, i, Filter.length); i += Filter.length;
+                Utils.arraycopy(Filter, 0, bytes, i, Filter.length); i += Filter.length;
                 Utils.IntToBytes(ParcelLocalID, bytes, i); i += 4;
             }
 
@@ -106,8 +104,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         @Override
 			public int getLength()
         {
-            get
-            {
+                        {
                 int length = 10;
                 length += AgentData.getLength();
                 length += RequestData.length;
@@ -142,7 +139,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             header.FromBytes(bytes, i, packetEnd);
             if (header.Zerocoded && zeroBuffer != null)
             {
-                packetEnd = Helpers.ZeroDecode(bytes, packetEnd + 1, zeroBuffer) - 1;
+                packetEnd[0] = Helpers.ZeroDecode(bytes, packetEnd[0] + 1, zeroBuffer) - 1;
                 bytes = zeroBuffer;
             }
             AgentData.FromBytes(bytes, i);
