@@ -1,9 +1,11 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+
 
     public final class ParcelInfoReplyPacket extends Packet
     {
-        /// <exclude/>
         public final class AgentDataBlock extends PacketBlock
         {
             public UUID AgentID;
@@ -17,7 +19,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public AgentDataBlock() { }
-            public AgentDataBlock(byte[] bytes, int[] i)
+            public AgentDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -27,7 +29,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    AgentID.FromBytes(bytes, i); i += 16;
+                    AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)
                 {
@@ -43,7 +45,6 @@ package com.ngt.jopenmetaverse.shared.protocol;
 
         }
 
-        /// <exclude/>
         public final class DataBlock extends PacketBlock
         {
             public UUID ParcelID;
@@ -75,7 +76,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public DataBlock() { }
-            public DataBlock(byte[] bytes, int[] i)
+            public DataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -86,27 +87,27 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    ParcelID.FromBytes(bytes, i); i += 16;
-                    OwnerID.FromBytes(bytes, i); i += 16;
-                    length = bytes[i++];
+                    ParcelID.FromBytes(bytes, i[0]); i[0] += 16;
+                    OwnerID.FromBytes(bytes, i[0]); i[0] += 16;
+                    length = bytes[i[0]++];
                     Name = new byte[length];
-                    Utils.arraycopy(bytes, i, Name, 0, length); i += length;
-                    length = bytes[i++];
+                    Utils.arraycopy(bytes, i[0], Name, 0, length); i[0] += length;
+                    length = bytes[i[0]++];
                     Desc = new byte[length];
-                    Utils.arraycopy(bytes, i, Desc, 0, length); i += length;
-                    ActualArea = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    BillableArea = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    Flags = (byte)bytes[i++];
-                    GlobalX = Utils.BytesToFloat(bytes, i); i += 4;
-                    GlobalY = Utils.BytesToFloat(bytes, i); i += 4;
-                    GlobalZ = Utils.BytesToFloat(bytes, i); i += 4;
-                    length = bytes[i++];
+                    Utils.arraycopy(bytes, i[0], Desc, 0, length); i[0] += length;
+                    ActualArea = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    BillableArea = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    Flags = (byte)bytes[i[0]++];
+                    GlobalX = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
+                    GlobalY = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
+                    GlobalZ = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
+                    length = bytes[i[0]++];
                     SimName = new byte[length];
-                    Utils.arraycopy(bytes, i, SimName, 0, length); i += length;
-                    SnapshotID.FromBytes(bytes, i); i += 16;
-                    Dwell = Utils.BytesToFloat(bytes, i); i += 4;
-                    SalePrice = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    AuctionID = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
+                    Utils.arraycopy(bytes, i[0], SimName, 0, length); i[0] += length;
+                    SnapshotID.FromBytes(bytes, i[0]); i[0] += 16;
+                    Dwell = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
+                    SalePrice = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    AuctionID = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                 }
                 catch (Exception e)
                 {
@@ -117,24 +118,24 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                ParcelID.ToBytes(bytes, i); i += 16;
-                OwnerID.ToBytes(bytes, i); i += 16;
-                bytes[i++] = (byte)Name.length;
-                Utils.arraycopy(Name, 0, bytes, i, Name.length); i += Name.length;
-                bytes[i++] = (byte)Desc.length;
-                Utils.arraycopy(Desc, 0, bytes, i, Desc.length); i += Desc.length;
-                Utils.IntToBytes(ActualArea, bytes, i); i += 4;
-                Utils.IntToBytes(BillableArea, bytes, i); i += 4;
-                bytes[i++] = Flags;
-                Utils.FloatToBytes(GlobalX, bytes, i); i += 4;
-                Utils.FloatToBytes(GlobalY, bytes, i); i += 4;
-                Utils.FloatToBytes(GlobalZ, bytes, i); i += 4;
-                bytes[i++] = (byte)SimName.length;
-                Utils.arraycopy(SimName, 0, bytes, i, SimName.length); i += SimName.length;
-                SnapshotID.ToBytes(bytes, i); i += 16;
-                Utils.FloatToBytes(Dwell, bytes, i); i += 4;
-                Utils.IntToBytes(SalePrice, bytes, i); i += 4;
-                Utils.IntToBytes(AuctionID, bytes, i); i += 4;
+                ParcelID.ToBytes(bytes, i[0]); i[0] += 16;
+                OwnerID.ToBytes(bytes, i[0]); i[0] += 16;
+                bytes[i[0]++] = (byte)Name.length;
+                Utils.arraycopy(Name, 0, bytes, i[0], Name.length); i[0] += Name.length;
+                bytes[i[0]++] = (byte)Desc.length;
+                Utils.arraycopy(Desc, 0, bytes, i[0], Desc.length); i[0] += Desc.length;
+                Utils.intToBytes(ActualArea, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(BillableArea, bytes, i[0]); i[0] += 4;
+                bytes[i[0]++] = Flags;
+                Utils.floatToBytes(GlobalX, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytes(GlobalY, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytes(GlobalZ, bytes, i[0]); i[0] += 4;
+                bytes[i[0]++] = (byte)SimName.length;
+                Utils.arraycopy(SimName, 0, bytes, i[0], SimName.length); i[0] += SimName.length;
+                SnapshotID.ToBytes(bytes, i[0]); i[0] += 16;
+                Utils.floatToBytes(Dwell, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(SalePrice, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(AuctionID, bytes, i[0]); i[0] += 4;
             }
 
         }
@@ -165,7 +166,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             Data = new DataBlock();
         }
 
-        public ParcelInfoReplyPacket(byte[] bytes, int[] i) 
+        public ParcelInfoReplyPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -173,7 +174,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         }
 
         @Override
-		public void FromBytes(byte[] bytes, int[] i, int[] packetEnd, byte[] zeroBuffer)
+		public void FromBytes(byte[] bytes, int[] i, int[] packetEnd, byte[] zeroBuffer) throws MalformedDataException
         {
             header.FromBytes(bytes, i, packetEnd);
             if (header.Zerocoded && zeroBuffer != null)
@@ -185,7 +186,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             Data.FromBytes(bytes, i);
         }
 
-        public ParcelInfoReplyPacket(Header head, byte[] bytes, int[] i)
+        public ParcelInfoReplyPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -193,7 +194,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         }
 
         @Override
-		public void FromBytes(Header header, byte[] bytes, int[] i, int[] packetEnd)
+		public void FromBytes(Header header, byte[] bytes, int[] i, int[] packetEnd) throws MalformedDataException
         {
             this.header =  header;
             AgentData.FromBytes(bytes, i);
@@ -208,7 +209,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             length += Data.getLength();
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
-            int i = 0;
+            int[] i = new int[1];
+            i[0] = 0;
             header.ToBytes(bytes, i);
             AgentData.ToBytes(bytes, i);
             Data.ToBytes(bytes, i);
@@ -222,5 +224,3 @@ package com.ngt.jopenmetaverse.shared.protocol;
             return new byte[][] { ToBytes() };
         }
     }
-
-    /// <exclude/>
