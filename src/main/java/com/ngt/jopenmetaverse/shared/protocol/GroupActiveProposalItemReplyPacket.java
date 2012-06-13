@@ -72,7 +72,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     TransactionID.FromBytes(bytes, i[0]); i[0] += 16;
-                    TotalNumItems = Utils.bytesToUInt(bytes); i[0] += 4;
+                    TotalNumItems = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {

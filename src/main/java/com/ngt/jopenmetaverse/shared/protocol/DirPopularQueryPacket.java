@@ -72,7 +72,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     QueryID.FromBytes(bytes, i[0]); i[0] += 16;
-                    QueryFlags = Utils.bytesToUInt(bytes); i[0] += 4;
+                    QueryFlags = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {

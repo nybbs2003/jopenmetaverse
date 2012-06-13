@@ -73,9 +73,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    ID = Utils.bytesToUInt(bytes); i[0] += 4;
-                    CRC = Utils.bytesToUInt(bytes); i[0] += 4;
-                    UpdateFlags = Utils.bytesToUInt(bytes); i[0] += 4;
+                    ID = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    CRC = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    UpdateFlags = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {

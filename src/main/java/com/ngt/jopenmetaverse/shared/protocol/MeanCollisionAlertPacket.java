@@ -33,7 +33,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 {
                     Victim.FromBytes(bytes, i[0]); i[0] += 16;
                     Perp.FromBytes(bytes, i[0]); i[0] += 16;
-                    Time = Utils.bytesToUInt(bytes); i[0] += 4;
+                    Time = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                     Mag = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
                     Type = (byte)bytes[i[0]++];
                 }

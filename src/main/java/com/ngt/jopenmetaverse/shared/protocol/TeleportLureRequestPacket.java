@@ -33,7 +33,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
                     LureID.FromBytes(bytes, i[0]); i[0] += 16;
-                    TeleportFlags = Utils.bytesToUInt(bytes); i[0] += 4;
+                    TeleportFlags = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {

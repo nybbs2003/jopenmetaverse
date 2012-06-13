@@ -127,10 +127,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    ID = Utils.bytesToUInt(bytes); i[0] += 4;
+                    ID = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                     State = (byte)bytes[i[0]++];
                     FullID.FromBytes(bytes, i[0]); i[0] += 16;
-                    CRC = Utils.bytesToUInt(bytes); i[0] += 4;
+                    CRC = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                     PCode = (byte)bytes[i[0]++];
                     Material = (byte)bytes[i[0]++];
                     ClickAction = (byte)bytes[i[0]++];
@@ -138,8 +138,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     length = bytes[i[0]++];
                     ObjectData = new byte[length];
                     Utils.arraycopy(bytes, i[0], ObjectData, 0, length); i[0] +=  length;
-                    ParentID = Utils.bytesToUInt(bytes); i[0] += 4;
-                    UpdateFlags = Utils.bytesToUInt(bytes); i[0] += 4;
+                    ParentID = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    UpdateFlags = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                     PathCurve = (byte)bytes[i[0]++];
                     ProfileCurve = (byte)bytes[i[0]++];
                     PathBegin = (ushort)(bytes[i[0]++] + (bytes[i[0]++] << 8));

@@ -76,7 +76,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     Position.FromBytes(bytes, i[0]); i[0] += 12;
                     LookAt.FromBytes(bytes, i[0]); i[0] += 12;
                     RegionHandle = Utils.bytesToULong(bytes, i[0]); i[0] += 8;
-                    Timestamp = Utils.bytesToUInt(bytes); i[0] += 4;
+                    Timestamp = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {

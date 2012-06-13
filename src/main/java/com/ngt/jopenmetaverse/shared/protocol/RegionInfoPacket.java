@@ -91,9 +91,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     length = bytes[i[0]++];
                     SimName = new byte[length];
                     Utils.arraycopy(bytes, i[0], SimName, 0, length); i[0] +=  length;
-                    EstateID = Utils.bytesToUInt(bytes); i[0] += 4;
-                    ParentEstateID = Utils.bytesToUInt(bytes); i[0] += 4;
-                    RegionFlags = Utils.bytesToUInt(bytes); i[0] += 4;
+                    EstateID = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    ParentEstateID = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    RegionFlags = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                     SimAccess = (byte)bytes[i[0]++];
                     MaxAgents = (byte)bytes[i[0]++];
                     BillableFactor = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
@@ -175,9 +175,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     length = bytes[i[0]++];
                     ProductName = new byte[length];
                     Utils.arraycopy(bytes, i[0], ProductName, 0, length); i[0] +=  length;
-                    MaxAgents32 = Utils.bytesToUInt(bytes); i[0] += 4;
-                    HardMaxAgents = Utils.bytesToUInt(bytes); i[0] += 4;
-                    HardMaxObjects = Utils.bytesToUInt(bytes); i[0] += 4;
+                    MaxAgents32 = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    HardMaxAgents = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    HardMaxObjects = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {

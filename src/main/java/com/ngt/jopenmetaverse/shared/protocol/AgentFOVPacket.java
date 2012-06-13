@@ -34,7 +34,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 {
                     AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
-                    CircuitCode = Utils.bytesToUInt(bytes); i[0] += 4;;
+                    CircuitCode = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;;
                 }
                 catch (Exception e)
                 {
@@ -77,7 +77,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 try
                 {
-                    GenCounter = Utils.bytesToUInt(bytes); i[0] += 4;
+                    GenCounter = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                     VerticalAngle = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)

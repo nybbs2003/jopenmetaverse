@@ -33,8 +33,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 {
                     AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
-                    Flags = Utils.bytesToUInt(bytes); i[0] += 4;
-                    EstateID = Utils.bytesToUInt(bytes); i[0] += 4;
+                    Flags = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    EstateID = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                     Godlike = (bytes[i[0]++] != 0) ? true : false;
                 }
                 catch (Exception e)
@@ -80,7 +80,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    ItemType = Utils.bytesToUInt(bytes); i[0] += 4;
+                    ItemType = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                     RegionHandle = Utils.bytesToULong(bytes, i[0]); i[0] += 8;
                 }
                 catch (Exception e)

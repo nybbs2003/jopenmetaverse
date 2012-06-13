@@ -37,7 +37,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     GodID.FromBytes(bytes, i[0]); i[0] += 16;
                     GodSessionID.FromBytes(bytes, i[0]); i[0] += 16;
                     AgentID.FromBytes(bytes, i[0]); i[0] += 16;
-                    KickFlags = Utils.bytesToUInt(bytes); i[0] += 4;
+                    KickFlags = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                     length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
                     Reason = new byte[length];
                     Utils.arraycopy(bytes, i[0], Reason, 0, length); i[0] +=  length;

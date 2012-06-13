@@ -165,7 +165,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    Status = Utils.bytesToUInt(bytes); i[0] += 4;
+                    Status = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {

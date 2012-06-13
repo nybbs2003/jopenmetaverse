@@ -76,7 +76,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    SimIP = Utils.bytesToUInt(bytes); i[0] += 4;
+                    SimIP = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                     SimPort = (ushort)((bytes[i[0]++] << 8) + bytes[i[0]++]);
                     RegionHandle = Utils.bytesToULong(bytes, i[0]); i[0] += 8;
                     length = (bytes[i[0]++] + (bytes[i[0]++] << 8));

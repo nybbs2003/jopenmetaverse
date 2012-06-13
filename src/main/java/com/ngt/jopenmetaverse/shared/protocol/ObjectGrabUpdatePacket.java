@@ -76,7 +76,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     ObjectID.FromBytes(bytes, i[0]); i[0] += 16;
                     GrabOffsetInitial.FromBytes(bytes, i[0]); i[0] += 12;
                     GrabPosition.FromBytes(bytes, i[0]); i[0] += 12;
-                    TimeSinceLast = Utils.bytesToUInt(bytes); i[0] += 4;
+                    TimeSinceLast = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {

@@ -80,7 +80,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     length = bytes[i[0]++];
                     QueryText = new byte[length];
                     Utils.arraycopy(bytes, i[0], QueryText, 0, length); i[0] +=  length;
-                    QueryFlags = Utils.bytesToUInt(bytes); i[0] += 4;
+                    QueryFlags = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                     QueryStart = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                 }
                 catch (Exception e)

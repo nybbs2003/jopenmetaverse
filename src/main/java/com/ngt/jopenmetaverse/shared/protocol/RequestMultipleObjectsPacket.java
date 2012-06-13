@@ -72,7 +72,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     CacheMissType = (byte)bytes[i[0]++];
-                    ID = Utils.bytesToUInt(bytes); i[0] += 4;
+                    ID = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {

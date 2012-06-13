@@ -33,7 +33,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 try
                 {
                     ID = Utils.bytesToULong(bytes, i[0]); i[0] += 8;
-                    Packet = Utils.bytesToUInt(bytes); i[0] += 4;
+                    Packet = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {

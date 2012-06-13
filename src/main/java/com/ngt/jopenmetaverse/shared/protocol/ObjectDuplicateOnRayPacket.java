@@ -47,7 +47,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     CopyCenters = (bytes[i[0]++] != 0) ? true : false;
                     CopyRotates = (bytes[i[0]++] != 0) ? true : false;
                     RayTargetID.FromBytes(bytes, i[0]); i[0] += 16;
-                    DuplicateFlags = Utils.bytesToUInt(bytes); i[0] += 4;
+                    DuplicateFlags = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -97,7 +97,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    ObjectLocalID = Utils.bytesToUInt(bytes); i[0] += 4;
+                    ObjectLocalID = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {

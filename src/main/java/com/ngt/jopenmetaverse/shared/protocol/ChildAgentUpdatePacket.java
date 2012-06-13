@@ -57,7 +57,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     RegionHandle = Utils.bytesToULong(bytes, i[0]); i[0] += 8;
-                    ViewerCircuitCode = Utils.bytesToUInt(bytes); i[0] += 4;
+                    ViewerCircuitCode = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                     AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
                     AgentPos.FromBytes(bytes, i[0]); i[0] += 12;
@@ -73,10 +73,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     length = bytes[i[0]++];
                     Throttles = new byte[length];
                     Utils.arraycopy(bytes, i[0], Throttles, 0, length); i[0] +=  length;
-                    LocomotionState = Utils.bytesToUInt(bytes); i[0] += 4;
+                    LocomotionState = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                     HeadRotation.FromBytes(bytes, i, true); i += 12;
                     BodyRotation.FromBytes(bytes, i, true); i += 12;
-                    ControlFlags = Utils.bytesToUInt(bytes); i[0] += 4;
+                    ControlFlags = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                     EnergyLevel = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
                     GodLevel = (byte)bytes[i[0]++];
                     AlwaysRun = (bytes[i[0]++] != 0) ? true : false;
@@ -412,7 +412,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    Flags = Utils.bytesToUInt(bytes); i[0] += 4;
+                    Flags = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {

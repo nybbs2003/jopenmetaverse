@@ -70,7 +70,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    ViewerCircuitCode = Utils.bytesToUInt(bytes); i[0] += 4;
+                    ViewerCircuitCode = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {

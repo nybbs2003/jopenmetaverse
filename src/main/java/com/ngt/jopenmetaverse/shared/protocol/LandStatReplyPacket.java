@@ -29,9 +29,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    ReportType = Utils.bytesToUInt(bytes); i[0] += 4;
-                    RequestFlags = Utils.bytesToUInt(bytes); i[0] += 4;
-                    TotalObjectCount = Utils.bytesToUInt(bytes); i[0] += 4;
+                    ReportType = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    RequestFlags = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    TotalObjectCount = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -84,7 +84,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    TaskLocalID = Utils.bytesToUInt(bytes); i[0] += 4;
+                    TaskLocalID = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                     TaskID.FromBytes(bytes, i[0]); i[0] += 16;
                     LocationX = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
                     LocationY = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;

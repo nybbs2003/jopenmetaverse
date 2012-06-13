@@ -77,7 +77,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     Image.FromBytes(bytes, i[0]); i[0] += 16;
                     DiscardLevel = (sbyte)bytes[i[0]++];
                     DownloadPriority = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
-                    Packet = Utils.bytesToUInt(bytes); i[0] += 4;
+                    Packet = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                     Type = (byte)bytes[i[0]++];
                 }
                 catch (Exception e)

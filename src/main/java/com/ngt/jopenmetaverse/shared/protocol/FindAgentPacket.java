@@ -31,7 +31,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 {
                     Hunter.FromBytes(bytes, i[0]); i[0] += 16;
                     Prey.FromBytes(bytes, i[0]); i[0] += 16;
-                    SpaceIP = Utils.bytesToUInt(bytes); i[0] += 4;
+                    SpaceIP = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {

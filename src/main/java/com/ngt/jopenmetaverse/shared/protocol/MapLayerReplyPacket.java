@@ -29,7 +29,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     AgentID.FromBytes(bytes, i[0]); i[0] += 16;
-                    Flags = Utils.bytesToUInt(bytes); i[0] += 4;
+                    Flags = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -74,10 +74,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    Left = Utils.bytesToUInt(bytes); i[0] += 4;
-                    Right = Utils.bytesToUInt(bytes); i[0] += 4;
-                    Top = Utils.bytesToUInt(bytes); i[0] += 4;
-                    Bottom = Utils.bytesToUInt(bytes); i[0] += 4;
+                    Left = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    Right = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    Top = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    Bottom = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                     ImageID.FromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)

@@ -30,7 +30,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     TakeControls = (bytes[i[0]++] != 0) ? true : false;
-                    Controls = Utils.bytesToUInt(bytes); i[0] += 4;
+                    Controls = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                     PassToAgent = (bytes[i[0]++] != 0) ? true : false;
                 }
                 catch (Exception e)

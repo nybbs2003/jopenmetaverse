@@ -31,7 +31,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 {
                     AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
-                    CircuitCode = Utils.bytesToUInt(bytes); i[0] += 4;
+                    CircuitCode = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -75,7 +75,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    GenCounter = Utils.bytesToUInt(bytes); i[0] += 4;
+                    GenCounter = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                     Height = (ushort)(bytes[i[0]++] + (bytes[i[0]++] << 8));
                     Width = (ushort)(bytes[i[0]++] + (bytes[i[0]++] << 8));
                 }

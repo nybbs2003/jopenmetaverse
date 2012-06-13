@@ -29,7 +29,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     AgentID.FromBytes(bytes, i[0]); i[0] += 16;
-                    Flags = Utils.bytesToUInt(bytes); i[0] += 4;
+                    Flags = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -86,7 +86,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     Name = new byte[length];
                     Utils.arraycopy(bytes, i[0], Name, 0, length); i[0] +=  length;
                     Access = (byte)bytes[i[0]++];
-                    RegionFlags = Utils.bytesToUInt(bytes); i[0] += 4;
+                    RegionFlags = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                     WaterHeight = (byte)bytes[i[0]++];
                     Agents = (byte)bytes[i[0]++];
                     MapImageID.FromBytes(bytes, i[0]); i[0] += 16;

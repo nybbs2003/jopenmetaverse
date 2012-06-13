@@ -75,7 +75,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    UpdateFlags = Utils.bytesToUInt(bytes); i[0] += 4;
+                    UpdateFlags = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                     length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
                     Data = new byte[length];
                     Utils.arraycopy(bytes, i[0], Data, 0, length); i[0] +=  length;

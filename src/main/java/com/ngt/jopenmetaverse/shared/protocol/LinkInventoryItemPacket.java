@@ -81,7 +81,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    CallbackID = Utils.bytesToUInt(bytes); i[0] += 4;
+                    CallbackID = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                     FolderID.FromBytes(bytes, i[0]); i[0] += 16;
                     TransactionID.FromBytes(bytes, i[0]); i[0] += 16;
                     OldItemID.FromBytes(bytes, i[0]); i[0] += 16;

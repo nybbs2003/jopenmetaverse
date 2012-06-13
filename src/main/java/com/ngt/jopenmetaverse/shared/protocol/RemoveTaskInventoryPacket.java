@@ -71,7 +71,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    LocalID = Utils.bytesToUInt(bytes); i[0] += 4;
+                    LocalID = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                     ItemID.FromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)

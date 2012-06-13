@@ -71,7 +71,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    ObjectLocalID = Utils.bytesToUInt(bytes); i[0] += 4;
+                    ObjectLocalID = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                     IncludeInSearch = (bytes[i[0]++] != 0) ? true : false;
                 }
                 catch (Exception e)

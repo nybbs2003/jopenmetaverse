@@ -46,19 +46,19 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    RequestFlags = Utils.bytesToUInt(bytes); i[0] += 4;
+                    RequestFlags = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                     ObjectID.FromBytes(bytes, i[0]); i[0] += 16;
                     OwnerID.FromBytes(bytes, i[0]); i[0] += 16;
                     GroupID.FromBytes(bytes, i[0]); i[0] += 16;
-                    BaseMask = Utils.bytesToUInt(bytes); i[0] += 4;
-                    OwnerMask = Utils.bytesToUInt(bytes); i[0] += 4;
-                    GroupMask = Utils.bytesToUInt(bytes); i[0] += 4;
-                    EveryoneMask = Utils.bytesToUInt(bytes); i[0] += 4;
-                    NextOwnerMask = Utils.bytesToUInt(bytes); i[0] += 4;
+                    BaseMask = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    OwnerMask = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    GroupMask = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    EveryoneMask = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    NextOwnerMask = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                     OwnershipCost = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     SaleType = (byte)bytes[i[0]++];
                     SalePrice = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    Category = Utils.bytesToUInt(bytes); i[0] += 4;
+                    Category = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                     LastOwnerID.FromBytes(bytes, i[0]); i[0] += 16;
                     length = bytes[i[0]++];
                     Name = new byte[length];

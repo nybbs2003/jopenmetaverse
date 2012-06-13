@@ -31,7 +31,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     RegionHandle = Utils.bytesToULong(bytes, i[0]); i[0] += 8;
-                    ViewerCircuitCode = Utils.bytesToUInt(bytes); i[0] += 4;
+                    ViewerCircuitCode = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                     AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
                 }

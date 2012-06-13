@@ -71,7 +71,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    TeleportFlags = Utils.bytesToUInt(bytes); i[0] += 4;
+                    TeleportFlags = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                     length = bytes[i[0]++];
                     Message = new byte[length];
                     Utils.arraycopy(bytes, i[0], Message, 0, length); i[0] +=  length;

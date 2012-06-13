@@ -30,7 +30,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     Handle = Utils.bytesToULong(bytes, i[0]); i[0] += 8;
-                    IP = Utils.bytesToUInt(bytes); i[0] += 4;
+                    IP = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                     Port = (ushort)((bytes[i[0]++] << 8) + bytes[i[0]++]);
                 }
                 catch (Exception e)

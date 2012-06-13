@@ -92,10 +92,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     RayEndIsIntersection = (bytes[i[0]++] != 0) ? true : false;
                     RezSelected = (bytes[i[0]++] != 0) ? true : false;
                     RemoveItem = (bytes[i[0]++] != 0) ? true : false;
-                    ItemFlags = Utils.bytesToUInt(bytes); i[0] += 4;
-                    GroupMask = Utils.bytesToUInt(bytes); i[0] += 4;
-                    EveryoneMask = Utils.bytesToUInt(bytes); i[0] += 4;
-                    NextOwnerMask = Utils.bytesToUInt(bytes); i[0] += 4;
+                    ItemFlags = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    GroupMask = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    EveryoneMask = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    NextOwnerMask = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {

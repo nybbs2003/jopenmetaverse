@@ -77,7 +77,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 {
                     RoleID.FromBytes(bytes, i[0]); i[0] += 16;
                     MemberID.FromBytes(bytes, i[0]); i[0] += 16;
-                    Change = Utils.bytesToUInt(bytes); i[0] += 4;
+                    Change = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {

@@ -96,16 +96,16 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     CreatorID.FromBytes(bytes, i[0]); i[0] += 16;
                     OwnerID.FromBytes(bytes, i[0]); i[0] += 16;
                     GroupID.FromBytes(bytes, i[0]); i[0] += 16;
-                    BaseMask = Utils.bytesToUInt(bytes); i[0] += 4;
-                    OwnerMask = Utils.bytesToUInt(bytes); i[0] += 4;
-                    GroupMask = Utils.bytesToUInt(bytes); i[0] += 4;
-                    EveryoneMask = Utils.bytesToUInt(bytes); i[0] += 4;
-                    NextOwnerMask = Utils.bytesToUInt(bytes); i[0] += 4;
+                    BaseMask = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    OwnerMask = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    GroupMask = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    EveryoneMask = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    NextOwnerMask = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                     GroupOwned = (bytes[i[0]++] != 0) ? true : false;
                     AssetID.FromBytes(bytes, i[0]); i[0] += 16;
                     Type = (sbyte)bytes[i[0]++];
                     InvType = (sbyte)bytes[i[0]++];
-                    Flags = Utils.bytesToUInt(bytes); i[0] += 4;
+                    Flags = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                     SaleType = (byte)bytes[i[0]++];
                     SalePrice = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     length = bytes[i[0]++];
@@ -115,7 +115,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     Description = new byte[length];
                     Utils.arraycopy(bytes, i[0], Description, 0, length); i[0] +=  length;
                     CreationDate = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    CRC = Utils.bytesToUInt(bytes); i[0] += 4;
+                    CRC = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {

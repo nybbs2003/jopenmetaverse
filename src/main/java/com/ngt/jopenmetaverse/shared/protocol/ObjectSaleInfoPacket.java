@@ -72,7 +72,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    LocalID = Utils.bytesToUInt(bytes); i[0] += 4;
+                    LocalID = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                     SaleType = (byte)bytes[i[0]++];
                     SalePrice = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                 }

@@ -80,7 +80,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     NoticeID.FromBytes(bytes, i[0]); i[0] += 16;
-                    Timestamp = Utils.bytesToUInt(bytes); i[0] += 4;
+                    Timestamp = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                     length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
                     FromName = new byte[length];
                     Utils.arraycopy(bytes, i[0], FromName, 0, length); i[0] +=  length;

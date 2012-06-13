@@ -33,8 +33,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     UsecSinceStart = Utils.bytesToULong(bytes, i[0]); i[0] += 8;
-                    SecPerDay = Utils.bytesToUInt(bytes); i[0] += 4;
-                    SecPerYear = Utils.bytesToUInt(bytes); i[0] += 4;
+                    SecPerDay = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    SecPerYear = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                     SunDirection.FromBytes(bytes, i[0]); i[0] += 12;
                     SunPhase = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
                     SunAngVelocity.FromBytes(bytes, i[0]); i[0] += 12;

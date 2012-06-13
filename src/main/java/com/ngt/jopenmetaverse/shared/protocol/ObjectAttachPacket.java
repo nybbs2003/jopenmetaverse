@@ -74,7 +74,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    ObjectLocalID = Utils.bytesToUInt(bytes); i[0] += 4;
+                    ObjectLocalID = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                     Rotation.FromBytes(bytes, i, true); i += 12;
                 }
                 catch (Exception e)

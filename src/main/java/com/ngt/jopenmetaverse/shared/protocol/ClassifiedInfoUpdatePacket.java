@@ -84,7 +84,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     ClassifiedID.FromBytes(bytes, i[0]); i[0] += 16;
-                    Category = Utils.bytesToUInt(bytes); i[0] += 4;
+                    Category = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                     length = bytes[i[0]++];
                     Name = new byte[length];
                     Utils.arraycopy(bytes, i[0], Name, 0, length); i[0] +=  length;
@@ -92,7 +92,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     Desc = new byte[length];
                     Utils.arraycopy(bytes, i[0], Desc, 0, length); i[0] +=  length;
                     ParcelID.FromBytes(bytes, i[0]); i[0] += 16;
-                    ParentEstate = Utils.bytesToUInt(bytes); i[0] += 4;
+                    ParentEstate = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                     SnapshotID.FromBytes(bytes, i[0]); i[0] += 16;
                     PosGlobal.FromBytes(bytes, i[0]); i[0] += 24;
                     ClassifiedFlags = (byte)bytes[i[0]++];

@@ -32,10 +32,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     AgentID.FromBytes(bytes, i[0]); i[0] += 16;
-                    LocationID = Utils.bytesToUInt(bytes); i[0] += 4;
+                    LocationID = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                     Position.FromBytes(bytes, i[0]); i[0] += 12;
                     LookAt.FromBytes(bytes, i[0]); i[0] += 12;
-                    TeleportFlags = Utils.bytesToUInt(bytes); i[0] += 4;
+                    TeleportFlags = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {

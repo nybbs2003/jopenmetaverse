@@ -77,10 +77,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    ObjectLocalID = Utils.bytesToUInt(bytes); i[0] += 4;
+                    ObjectLocalID = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                     ParamType = (ushort)(bytes[i[0]++] + (bytes[i[0]++] << 8));
                     ParamInUse = (bytes[i[0]++] != 0) ? true : false;
-                    ParamSize = Utils.bytesToUInt(bytes); i[0] += 4;
+                    ParamSize = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                     length = bytes[i[0]++];
                     ParamData = new byte[length];
                     Utils.arraycopy(bytes, i[0], ParamData, 0, length); i[0] +=  length;

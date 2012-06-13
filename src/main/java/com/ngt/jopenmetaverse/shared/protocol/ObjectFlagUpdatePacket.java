@@ -35,7 +35,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 {
                     AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
-                    ObjectLocalID = Utils.bytesToUInt(bytes); i[0] += 4;
+                    ObjectLocalID = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                     UsePhysics = (bytes[i[0]++] != 0) ? true : false;
                     IsTemporary = (bytes[i[0]++] != 0) ? true : false;
                     IsPhantom = (bytes[i[0]++] != 0) ? true : false;

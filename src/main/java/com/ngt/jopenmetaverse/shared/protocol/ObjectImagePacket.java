@@ -76,7 +76,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    ObjectLocalID = Utils.bytesToUInt(bytes); i[0] += 4;
+                    ObjectLocalID = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                     length = bytes[i[0]++];
                     MediaURL = new byte[length];
                     Utils.arraycopy(bytes, i[0], MediaURL, 0, length); i[0] +=  length;

@@ -53,7 +53,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    RegionFlags = Utils.bytesToUInt(bytes); i[0] += 4;
+                    RegionFlags = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                     SimAccess = (byte)bytes[i[0]++];
                     length = bytes[i[0]++];
                     SimName = new byte[length];

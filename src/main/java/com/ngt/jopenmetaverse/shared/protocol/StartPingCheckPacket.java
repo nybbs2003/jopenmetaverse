@@ -29,7 +29,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     PingID = (byte)bytes[i[0]++];
-                    OldestUnacked = Utils.bytesToUInt(bytes); i[0] += 4;
+                    OldestUnacked = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {

@@ -30,10 +30,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    RegionX = Utils.bytesToUInt(bytes); i[0] += 4;
-                    RegionY = Utils.bytesToUInt(bytes); i[0] += 4;
-                    RegionFlags = Utils.bytesToUInt(bytes); i[0] += 4;
-                    ObjectCapacity = Utils.bytesToUInt(bytes); i[0] += 4;
+                    RegionX = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    RegionY = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    RegionFlags = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    ObjectCapacity = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -77,7 +77,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    StatID = Utils.bytesToUInt(bytes); i[0] += 4;
+                    StatID = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                     StatValue = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)

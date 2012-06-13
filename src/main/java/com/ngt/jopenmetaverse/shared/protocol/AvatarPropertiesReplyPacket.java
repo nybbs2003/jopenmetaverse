@@ -103,7 +103,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     length = bytes[i[0]++];
                     CharterMember = new byte[length];
                     Utils.arraycopy(bytes, i[0], CharterMember, 0, length); i[0] +=  length;
-                    Flags = Utils.bytesToUInt(bytes); i[0] += 4;
+                    Flags = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {

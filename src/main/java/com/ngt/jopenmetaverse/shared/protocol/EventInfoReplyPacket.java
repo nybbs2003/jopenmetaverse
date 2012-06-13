@@ -87,7 +87,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    EventID = Utils.bytesToUInt(bytes); i[0] += 4;
+                    EventID = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                     length = bytes[i[0]++];
                     Creator = new byte[length];
                     Utils.arraycopy(bytes, i[0], Creator, 0, length); i[0] +=  length;
@@ -103,15 +103,15 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     length = bytes[i[0]++];
                     Date = new byte[length];
                     Utils.arraycopy(bytes, i[0], Date, 0, length); i[0] +=  length;
-                    DateUTC = Utils.bytesToUInt(bytes); i[0] += 4;
-                    Duration = Utils.bytesToUInt(bytes); i[0] += 4;
-                    Cover = Utils.bytesToUInt(bytes); i[0] += 4;
-                    Amount = Utils.bytesToUInt(bytes); i[0] += 4;
+                    DateUTC = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    Duration = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    Cover = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    Amount = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                     length = bytes[i[0]++];
                     SimName = new byte[length];
                     Utils.arraycopy(bytes, i[0], SimName, 0, length); i[0] +=  length;
                     GlobalPos.FromBytes(bytes, i[0]); i[0] += 24;
-                    EventFlags = Utils.bytesToUInt(bytes); i[0] += 4;
+                    EventFlags = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {

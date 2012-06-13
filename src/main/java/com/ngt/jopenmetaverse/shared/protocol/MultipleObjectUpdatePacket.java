@@ -75,7 +75,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    ObjectLocalID = Utils.bytesToUInt(bytes); i[0] += 4;
+                    ObjectLocalID = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                     Type = (byte)bytes[i[0]++];
                     length = bytes[i[0]++];
                     Data = new byte[length];

@@ -88,13 +88,13 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 {
                     FromGroup = (bytes[i[0]++] != 0) ? true : false;
                     ToAgentID.FromBytes(bytes, i[0]); i[0] += 16;
-                    ParentEstateID = Utils.bytesToUInt(bytes); i[0] += 4;
+                    ParentEstateID = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                     RegionID.FromBytes(bytes, i[0]); i[0] += 16;
                     Position.FromBytes(bytes, i[0]); i[0] += 12;
                     Offline = (byte)bytes[i[0]++];
                     Dialog = (byte)bytes[i[0]++];
                     ID.FromBytes(bytes, i[0]); i[0] += 16;
-                    Timestamp = Utils.bytesToUInt(bytes); i[0] += 4;
+                    Timestamp = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                     length = bytes[i[0]++];
                     FromAgentName = new byte[length];
                     Utils.arraycopy(bytes, i[0], FromAgentName, 0, length); i[0] +=  length;

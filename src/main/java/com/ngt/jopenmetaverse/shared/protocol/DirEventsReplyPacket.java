@@ -120,12 +120,12 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     length = bytes[i[0]++];
                     Name = new byte[length];
                     Utils.arraycopy(bytes, i[0], Name, 0, length); i[0] +=  length;
-                    EventID = Utils.bytesToUInt(bytes); i[0] += 4;
+                    EventID = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                     length = bytes[i[0]++];
                     Date = new byte[length];
                     Utils.arraycopy(bytes, i[0], Date, 0, length); i[0] +=  length;
-                    UnixTime = Utils.bytesToUInt(bytes); i[0] += 4;
-                    EventFlags = Utils.bytesToUInt(bytes); i[0] += 4;
+                    UnixTime = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    EventFlags = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -172,7 +172,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    Status = Utils.bytesToUInt(bytes); i[0] += 4;
+                    Status = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {

@@ -34,7 +34,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     CovenantID.FromBytes(bytes, i[0]); i[0] += 16;
-                    CovenantTimestamp = Utils.bytesToUInt(bytes); i[0] += 4;
+                    CovenantTimestamp = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                     length = bytes[i[0]++];
                     EstateName = new byte[length];
                     Utils.arraycopy(bytes, i[0], EstateName, 0, length); i[0] +=  length;

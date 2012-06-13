@@ -120,8 +120,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     Name = new byte[length];
                     Utils.arraycopy(bytes, i[0], Name, 0, length); i[0] +=  length;
                     ClassifiedFlags = (byte)bytes[i[0]++];
-                    CreationDate = Utils.bytesToUInt(bytes); i[0] += 4;
-                    ExpirationDate = Utils.bytesToUInt(bytes); i[0] += 4;
+                    CreationDate = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    ExpirationDate = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                     PriceForListing = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                 }
                 catch (Exception e)
@@ -168,7 +168,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    Status = Utils.bytesToUInt(bytes); i[0] += 4;
+                    Status = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {

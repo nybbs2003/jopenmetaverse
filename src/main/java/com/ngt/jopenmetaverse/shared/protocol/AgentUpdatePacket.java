@@ -48,7 +48,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     CameraLeftAxis.FromBytes(bytes, i[0]); i[0] += 12;
                     CameraUpAxis.FromBytes(bytes, i[0]); i[0] += 12;
                     Far = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
-                    ControlFlags = Utils.bytesToUInt(bytes); i[0] += 4;
+                    ControlFlags = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                     Flags = (byte)bytes[i[0]++];
                 }
                 catch (Exception e)
