@@ -28,7 +28,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    AgentID.FromBytes(bytes, i); i += 16;
+                    AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)
@@ -73,8 +73,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    Action = (byte)bytes[i++];
-                    BrushSize = (byte)bytes[i++];
+                    Action = (byte)bytes[i[0]++];
+                    BrushSize = (byte)bytes[i[0]++];
                     Seconds = Utils.BytesToFloat(bytes, i); i += 4;
                     Height = Utils.BytesToFloat(bytes, i); i += 4;
                 }
@@ -87,8 +87,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                bytes[i++] = Action;
-                bytes[i++] = BrushSize;
+                bytes[i[0]++] = Action;
+                bytes[i[0]++] = BrushSize;
                 Utils.FloatToBytes(Seconds, bytes, i); i += 4;
                 Utils.FloatToBytes(Height, bytes, i); i += 4;
             }
@@ -123,7 +123,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    LocalID = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
+                    LocalID = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     West = Utils.BytesToFloat(bytes, i); i += 4;
                     South = Utils.BytesToFloat(bytes, i); i += 4;
                     East = Utils.BytesToFloat(bytes, i); i += 4;
@@ -195,9 +195,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 length += AgentData.getLength();
                 length += ModifyBlock.length;
                 for (int j = 0; j < ParcelData.length; j++)
-                    length += ParcelData[j].length;
+                    length += ParcelData[j].getLength();
                 for (int j = 0; j < ModifyBlockExtended.length; j++)
-                    length += ModifyBlockExtended[j].length;
+                    length += ModifyBlockExtended[j].getLength();
                 return length;
             }
         }
@@ -239,7 +239,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
             AgentData.FromBytes(bytes, i);
             ModifyBlock.FromBytes(bytes, i);
-            int count = (int)bytes[i++];
+            int count = (int)bytes[i[0]++];
             if(ParcelData == null || ParcelData.length != -1) {
                 ParcelData = new ParcelDataBlock[count];
                 for(int j = 0; j < count; j++)
@@ -247,7 +247,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
             for (int j = 0; j < count; j++)
             { ParcelData[j].FromBytes(bytes, i); }
-            count = (int)bytes[i++];
+            count = (int)bytes[i[0]++];
             if(ModifyBlockExtended == null || ModifyBlockExtended.length != -1) {
                 ModifyBlockExtended = new ModifyBlockExtendedBlock[count];
                 for(int j = 0; j < count; j++)
@@ -270,7 +270,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             this.header =  header;
             AgentData.FromBytes(bytes, i);
             ModifyBlock.FromBytes(bytes, i);
-            int count = (int)bytes[i++];
+            int count = (int)bytes[i[0]++];
             if(ParcelData == null || ParcelData.length != count) {
                 ParcelData = new ParcelDataBlock[count];
                 for(int j = 0; j < count; j++)
@@ -278,7 +278,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
             for (int j = 0; j < count; j++)
             { ParcelData[j].FromBytes(bytes, i); }
-            count = (int)bytes[i++];
+            count = (int)bytes[i[0]++];
             if(ModifyBlockExtended == null || ModifyBlockExtended.length != count) {
                 ModifyBlockExtended = new ModifyBlockExtendedBlock[count];
                 for(int j = 0; j < count; j++)
@@ -295,18 +295,18 @@ package com.ngt.jopenmetaverse.shared.protocol;
             length += AgentData.getLength();
             length += ModifyBlock.length;
             length++;
-            for (int j = 0; j < ParcelData.length; j++) { length += ParcelData[j].length; }
+            for (int j = 0; j < ParcelData.length; j++) { length += ParcelData[j].getLength(); }
             length++;
-            for (int j = 0; j < ModifyBlockExtended.length; j++) { length += ModifyBlockExtended[j].length; }
+            for (int j = 0; j < ModifyBlockExtended.length; j++) { length += ModifyBlockExtended[j].getLength(); }
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
             int i = 0;
             header.ToBytes(bytes, i);
             AgentData.ToBytes(bytes, i);
             ModifyBlock.ToBytes(bytes, i);
-            bytes[i++] = (byte)ParcelData.length;
+            bytes[i[0]++] = (byte)ParcelData.length;
             for (int j = 0; j < ParcelData.length; j++) { ParcelData[j].ToBytes(bytes, i); }
-            bytes[i++] = (byte)ModifyBlockExtended.length;
+            bytes[i[0]++] = (byte)ModifyBlockExtended.length;
             for (int j = 0; j < ModifyBlockExtended.length; j++) { ModifyBlockExtended[j].ToBytes(bytes, i); }
             if (header.AckList != null && header.AckList.length > 0) { header.AcksToBytes(bytes, i); }
             return bytes;
@@ -320,11 +320,11 @@ package com.ngt.jopenmetaverse.shared.protocol;
             int fixedLength = 10;
 
             byte[] ackBytes = null;
-            int acksLength = 0;
+            int[] acksLength = new int[]{0};
             if (header.AckList != null && header.AckList.length > 0) {
                 header.AppendedAcks = true;
                 ackBytes = new byte[header.AckList.length * 4 + 1];
-                header.AcksToBytes(ackBytes, ref acksLength);
+                header.AcksToBytes(ackBytes, acksLength);
             }
 
             fixedLength += AgentData.getLength();
@@ -344,9 +344,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int ModifyBlockExtendedCount = 0;
 
                 i = ParcelDataStart;
-                while (fixedLength + variableLength + acksLength < Packet.MTU && i < ParcelData.length) {
-                    int blockLength = ParcelData[i].length;
-                    if (fixedLength + variableLength + blockLength + acksLength <= MTU) {
+                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i < ParcelData.length) {
+                    int blockLength = ParcelData[i].getLength();
+                    if (fixedLength + variableLength + blockLength + acksLength[0] <= MTU) {
                         variableLength += blockLength;
                         ++ParcelDataCount;
                     }
@@ -355,9 +355,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 }
 
                 i = ModifyBlockExtendedStart;
-                while (fixedLength + variableLength + acksLength < Packet.MTU && i < ModifyBlockExtended.length) {
-                    int blockLength = ModifyBlockExtended[i].length;
-                    if (fixedLength + variableLength + blockLength + acksLength <= MTU) {
+                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i < ModifyBlockExtended.length) {
+                    int blockLength = ModifyBlockExtended[i].getLength();
+                    if (fixedLength + variableLength + blockLength + acksLength[0] <= MTU) {
                         variableLength += blockLength;
                         ++ModifyBlockExtendedCount;
                     }
@@ -365,22 +365,22 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     ++i;
                 }
 
-                byte[] packet = new byte[fixedLength + variableLength + acksLength];
-                int length = fixedBytes.length;
-                Utils.arraycopy(fixedBytes, 0, packet, 0, length);
+                byte[] packet = new byte[fixedLength + variableLength + acksLength[0]];
+                int[] length = new int[] {fixedBytes.length};
+                Utils.arraycopy(fixedBytes, 0, packet, 0, length[0]);
                 if (packets.size() > 0) { packet[0] = (byte)(packet[0] & ~0x10); }
 
-                packet[length++] = (byte)ParcelDataCount;
-                for (i = ParcelDataStart; i < ParcelDataStart + ParcelDataCount; i++) { ParcelData[i].ToBytes(packet, ref length); }
+                packet[length[0]++] = (byte)ParcelDataCount;
+                for (i = ParcelDataStart; i < ParcelDataStart + ParcelDataCount; i++) { ParcelData[i].ToBytes(packet, length); }
                 ParcelDataStart += ParcelDataCount;
 
-                packet[length++] = (byte)ModifyBlockExtendedCount;
-                for (i = ModifyBlockExtendedStart; i < ModifyBlockExtendedStart + ModifyBlockExtendedCount; i++) { ModifyBlockExtended[i].ToBytes(packet, ref length); }
+                packet[length[0]++] = (byte)ModifyBlockExtendedCount;
+                for (i = ModifyBlockExtendedStart; i < ModifyBlockExtendedStart + ModifyBlockExtendedCount; i++) { ModifyBlockExtended[i].ToBytes(packet, length); }
                 ModifyBlockExtendedStart += ModifyBlockExtendedCount;
 
-                if (acksLength > 0) {
-                    Utils.arraycopy(ackBytes, 0, packet, length, acksLength);
-                    acksLength = 0;
+                if (acksLength[0] > 0) {
+                    Utils.arraycopy(ackBytes, 0, packet, length[0], acksLength[0]);
+                    acksLength[0] = 0;
                 }
 
                 packets.add(packet);

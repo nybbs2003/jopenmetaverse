@@ -27,7 +27,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    AgentID.FromBytes(bytes, i); i += 16;
+                    AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)
                 {
@@ -72,12 +72,12 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    length = bytes[i++];
+                    length = bytes[i[0]++];
                     SimFilename = new byte[length];
-                    Utils.arraycopy(bytes, i, SimFilename, 0, length); i += length;
-                    length = bytes[i++];
+                    Utils.arraycopy(bytes, i, SimFilename, 0, length); i[0] +=  length;
+                    length = bytes[i[0]++];
                     ViewerFilename = new byte[length];
-                    Utils.arraycopy(bytes, i, ViewerFilename, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, ViewerFilename, 0, length); i[0] +=  length;
                 }
                 catch (Exception e)
                 {
@@ -88,10 +88,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                bytes[i++] = (byte)SimFilename.length;
-                Utils.arraycopy(SimFilename, 0, bytes, i, SimFilename.length); i += SimFilename.length;
-                bytes[i++] = (byte)ViewerFilename.length;
-                Utils.arraycopy(ViewerFilename, 0, bytes, i, ViewerFilename.length); i += ViewerFilename.length;
+                bytes[i[0]++] = (byte)SimFilename.length;
+                Utils.arraycopy(SimFilename, 0, bytes, i, SimFilename.length); i[0] +=  SimFilename.length;
+                bytes[i[0]++] = (byte)ViewerFilename.length;
+                Utils.arraycopy(ViewerFilename, 0, bytes, i, ViewerFilename.length); i[0] +=  ViewerFilename.length;
             }
 
         }

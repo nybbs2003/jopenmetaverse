@@ -28,7 +28,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    AgentID.FromBytes(bytes, i); i += 16;
+                    AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)
@@ -72,9 +72,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    SequenceID = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    Flags = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    LocalID = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
+                    SequenceID = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    Flags = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    LocalID = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                 }
                 catch (Exception e)
                 {
@@ -98,7 +98,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                         {
                 int length = 10;
                 length += AgentData.getLength();
-                length += Data.getLength();
+                length += Data.length;
                 return length;
             }
         }
@@ -158,7 +158,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             int length = 10;
             length += AgentData.getLength();
-            length += Data.getLength();
+            length += Data.length;
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
             int i = 0;

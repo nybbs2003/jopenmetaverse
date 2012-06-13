@@ -29,9 +29,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    AgentID.FromBytes(bytes, i); i += 16;
+                    AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
-                    TransactionID.FromBytes(bytes, i); i += 16;
+                    TransactionID.FromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)
                 {
@@ -44,7 +44,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
                 SessionID.ToBytes(bytes, i[0]); i[0] += 16;
-                TransactionID.ToBytes(bytes, i); i += 16;
+                TransactionID.ToBytes(bytes, i[0]); i[0] += 16;
             }
 
         }
@@ -77,10 +77,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    length = bytes[i++];
+                    length = bytes[i[0]++];
                     Method = new byte[length];
-                    Utils.arraycopy(bytes, i, Method, 0, length); i += length;
-                    Invoice.FromBytes(bytes, i); i += 16;
+                    Utils.arraycopy(bytes, i, Method, 0, length); i[0] +=  length;
+                    Invoice.FromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)
                 {
@@ -91,9 +91,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                bytes[i++] = (byte)Method.length;
-                Utils.arraycopy(Method, 0, bytes, i, Method.length); i += Method.length;
-                Invoice.ToBytes(bytes, i); i += 16;
+                bytes[i[0]++] = (byte)Method.length;
+                Utils.arraycopy(Method, 0, bytes, i, Method.length); i[0] +=  Method.length;
+                Invoice.ToBytes(bytes, i[0]); i[0] += 16;
             }
 
         }
@@ -125,9 +125,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    length = bytes[i++];
+                    length = bytes[i[0]++];
                     Parameter = new byte[length];
-                    Utils.arraycopy(bytes, i, Parameter, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, Parameter, 0, length); i[0] +=  length;
                 }
                 catch (Exception e)
                 {
@@ -138,8 +138,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                bytes[i++] = (byte)Parameter.length;
-                Utils.arraycopy(Parameter, 0, bytes, i, Parameter.length); i += Parameter.length;
+                bytes[i[0]++] = (byte)Parameter.length;
+                Utils.arraycopy(Parameter, 0, bytes, i, Parameter.length); i[0] +=  Parameter.length;
             }
 
         }
@@ -152,7 +152,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 length += AgentData.getLength();
                 length += MethodData.length;
                 for (int j = 0; j < ParamList.length; j++)
-                    length += ParamList[j].length;
+                    length += ParamList[j].getLength();
                 return length;
             }
         }
@@ -192,7 +192,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
             AgentData.FromBytes(bytes, i);
             MethodData.FromBytes(bytes, i);
-            int count = (int)bytes[i++];
+            int count = (int)bytes[i[0]++];
             if(ParamList == null || ParamList.length != -1) {
                 ParamList = new ParamListBlock[count];
                 for(int j = 0; j < count; j++)
@@ -215,7 +215,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             this.header =  header;
             AgentData.FromBytes(bytes, i);
             MethodData.FromBytes(bytes, i);
-            int count = (int)bytes[i++];
+            int count = (int)bytes[i[0]++];
             if(ParamList == null || ParamList.length != count) {
                 ParamList = new ParamListBlock[count];
                 for(int j = 0; j < count; j++)
@@ -232,14 +232,14 @@ package com.ngt.jopenmetaverse.shared.protocol;
             length += AgentData.getLength();
             length += MethodData.length;
             length++;
-            for (int j = 0; j < ParamList.length; j++) { length += ParamList[j].length; }
+            for (int j = 0; j < ParamList.length; j++) { length += ParamList[j].getLength(); }
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
             int i = 0;
             header.ToBytes(bytes, i);
             AgentData.ToBytes(bytes, i);
             MethodData.ToBytes(bytes, i);
-            bytes[i++] = (byte)ParamList.length;
+            bytes[i[0]++] = (byte)ParamList.length;
             for (int j = 0; j < ParamList.length; j++) { ParamList[j].ToBytes(bytes, i); }
             if (header.AckList != null && header.AckList.length > 0) { header.AcksToBytes(bytes, i); }
             return bytes;
@@ -253,11 +253,11 @@ package com.ngt.jopenmetaverse.shared.protocol;
             int fixedLength = 10;
 
             byte[] ackBytes = null;
-            int acksLength = 0;
+            int[] acksLength = new int[]{0};
             if (header.AckList != null && header.AckList.length > 0) {
                 header.AppendedAcks = true;
                 ackBytes = new byte[header.AckList.length * 4 + 1];
-                header.AcksToBytes(ackBytes, ref acksLength);
+                header.AcksToBytes(ackBytes, acksLength);
             }
 
             fixedLength += AgentData.getLength();
@@ -275,9 +275,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int ParamListCount = 0;
 
                 i = ParamListStart;
-                while (fixedLength + variableLength + acksLength < Packet.MTU && i < ParamList.length) {
-                    int blockLength = ParamList[i].length;
-                    if (fixedLength + variableLength + blockLength + acksLength <= MTU) {
+                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i < ParamList.length) {
+                    int blockLength = ParamList[i].getLength();
+                    if (fixedLength + variableLength + blockLength + acksLength[0] <= MTU) {
                         variableLength += blockLength;
                         ++ParamListCount;
                     }
@@ -285,18 +285,18 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     ++i;
                 }
 
-                byte[] packet = new byte[fixedLength + variableLength + acksLength];
-                int length = fixedBytes.length;
-                Utils.arraycopy(fixedBytes, 0, packet, 0, length);
+                byte[] packet = new byte[fixedLength + variableLength + acksLength[0]];
+                int[] length = new int[] {fixedBytes.length};
+                Utils.arraycopy(fixedBytes, 0, packet, 0, length[0]);
                 if (packets.size() > 0) { packet[0] = (byte)(packet[0] & ~0x10); }
 
-                packet[length++] = (byte)ParamListCount;
-                for (i = ParamListStart; i < ParamListStart + ParamListCount; i++) { ParamList[i].ToBytes(packet, ref length); }
+                packet[length[0]++] = (byte)ParamListCount;
+                for (i = ParamListStart; i < ParamListStart + ParamListCount; i++) { ParamList[i].ToBytes(packet, length); }
                 ParamListStart += ParamListCount;
 
-                if (acksLength > 0) {
-                    Utils.arraycopy(ackBytes, 0, packet, length, acksLength);
-                    acksLength = 0;
+                if (acksLength[0] > 0) {
+                    Utils.arraycopy(ackBytes, 0, packet, length[0], acksLength[0]);
+                    acksLength[0] = 0;
                 }
 
                 packets.add(packet);

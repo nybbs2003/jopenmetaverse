@@ -29,9 +29,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    UUID.FromBytes(bytes, i); i += 16;
-                    Type = (sbyte)bytes[i++];
-                    Success = (bytes[i++] != 0) ? (bool)true : (bool)false;
+                    UUID.FromBytes(bytes, i[0]); i[0] += 16;
+                    Type = (sbyte)bytes[i[0]++];
+                    Success = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
                 }
                 catch (Exception e)
                 {
@@ -42,9 +42,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                UUID.ToBytes(bytes, i); i += 16;
-                bytes[i++] = (byte)Type;
-                bytes[i++] = (byte)((Success) ? 1 : 0);
+                UUID.ToBytes(bytes, i[0]); i[0] += 16;
+                bytes[i[0]++] = (byte)Type;
+                bytes[i[0]++] = (byte)((Success) ? 1 : 0);
             }
 
         }

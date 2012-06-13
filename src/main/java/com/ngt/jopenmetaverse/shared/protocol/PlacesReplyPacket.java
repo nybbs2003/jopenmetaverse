@@ -28,8 +28,8 @@ public void FromBytes(byte[] bytes, int[] i) throws MalformedDataException
             {
                 try
                 {
-                    AgentID.FromBytes(bytes, i); i += 16;
-                    QueryID.FromBytes(bytes, i); i += 16;
+                    AgentID.FromBytes(bytes, i[0]); i[0] += 16;
+                    QueryID.FromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)
                 {
@@ -41,7 +41,7 @@ public void FromBytes(byte[] bytes, int[] i) throws MalformedDataException
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
-                QueryID.ToBytes(bytes, i); i += 16;
+                QueryID.ToBytes(bytes, i[0]); i[0] += 16;
             }
 
         }
@@ -70,7 +70,7 @@ public void FromBytes(byte[] bytes, int[] i) throws MalformedDataException
             {
                 try
                 {
-                    TransactionID.FromBytes(bytes, i); i += 16;
+                    TransactionID.FromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)
                 {
@@ -81,7 +81,7 @@ public void FromBytes(byte[] bytes, int[] i) throws MalformedDataException
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                TransactionID.ToBytes(bytes, i); i += 16;
+                TransactionID.ToBytes(bytes, i[0]); i[0] += 16;
             }
 
         }
@@ -127,25 +127,25 @@ public void FromBytes(byte[] bytes, int[] i) throws MalformedDataException
                 int length;
                 try
                 {
-                    OwnerID.FromBytes(bytes, i); i += 16;
-                    length = bytes[i++];
+                    OwnerID.FromBytes(bytes, i[0]); i[0] += 16;
+                    length = bytes[i[0]++];
                     Name = new byte[length];
-                    Utils.arraycopy(bytes, i, Name, 0, length); i += length;
-                    length = bytes[i++];
+                    Utils.arraycopy(bytes, i, Name, 0, length); i[0] +=  length;
+                    length = bytes[i[0]++];
                     Desc = new byte[length];
-                    Utils.arraycopy(bytes, i, Desc, 0, length); i += length;
-                    ActualArea = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    BillableArea = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    Flags = (byte)bytes[i++];
+                    Utils.arraycopy(bytes, i, Desc, 0, length); i[0] +=  length;
+                    ActualArea = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    BillableArea = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    Flags = (byte)bytes[i[0]++];
                     GlobalX = Utils.BytesToFloat(bytes, i); i += 4;
                     GlobalY = Utils.BytesToFloat(bytes, i); i += 4;
                     GlobalZ = Utils.BytesToFloat(bytes, i); i += 4;
-                    length = bytes[i++];
+                    length = bytes[i[0]++];
                     SimName = new byte[length];
-                    Utils.arraycopy(bytes, i, SimName, 0, length); i += length;
-                    SnapshotID.FromBytes(bytes, i); i += 16;
+                    Utils.arraycopy(bytes, i, SimName, 0, length); i[0] +=  length;
+                    SnapshotID.FromBytes(bytes, i[0]); i[0] += 16;
                     Dwell = Utils.BytesToFloat(bytes, i); i += 4;
-                    Price = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
+                    Price = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                 }
                 catch (Exception e)
                 {
@@ -156,20 +156,20 @@ public void FromBytes(byte[] bytes, int[] i) throws MalformedDataException
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                OwnerID.ToBytes(bytes, i); i += 16;
-                bytes[i++] = (byte)Name.length;
-                Utils.arraycopy(Name, 0, bytes, i, Name.length); i += Name.length;
-                bytes[i++] = (byte)Desc.length;
-                Utils.arraycopy(Desc, 0, bytes, i, Desc.length); i += Desc.length;
+                OwnerID.ToBytes(bytes, i[0]); i[0] += 16;
+                bytes[i[0]++] = (byte)Name.length;
+                Utils.arraycopy(Name, 0, bytes, i, Name.length); i[0] +=  Name.length;
+                bytes[i[0]++] = (byte)Desc.length;
+                Utils.arraycopy(Desc, 0, bytes, i, Desc.length); i[0] +=  Desc.length;
                 Utils.IntToBytes(ActualArea, bytes, i); i += 4;
                 Utils.IntToBytes(BillableArea, bytes, i); i += 4;
-                bytes[i++] = Flags;
+                bytes[i[0]++] = Flags;
                 Utils.FloatToBytes(GlobalX, bytes, i); i += 4;
                 Utils.FloatToBytes(GlobalY, bytes, i); i += 4;
                 Utils.FloatToBytes(GlobalZ, bytes, i); i += 4;
-                bytes[i++] = (byte)SimName.length;
-                Utils.arraycopy(SimName, 0, bytes, i, SimName.length); i += SimName.length;
-                SnapshotID.ToBytes(bytes, i); i += 16;
+                bytes[i[0]++] = (byte)SimName.length;
+                Utils.arraycopy(SimName, 0, bytes, i, SimName.length); i[0] +=  SimName.length;
+                SnapshotID.ToBytes(bytes, i[0]); i[0] += 16;
                 Utils.FloatToBytes(Dwell, bytes, i); i += 4;
                 Utils.IntToBytes(Price, bytes, i); i += 4;
             }
@@ -184,7 +184,7 @@ public void FromBytes(byte[] bytes, int[] i) throws MalformedDataException
                 length += AgentData.getLength();
                 length += TransactionData.length;
                 for (int j = 0; j < QueryData.length; j++)
-                    length += QueryData[j].length;
+                    length += QueryData[j].getLength();
                 return length;
             }
         }
@@ -224,7 +224,7 @@ public void FromBytes(byte[] bytes, int[] i) throws MalformedDataException
             }
             AgentData.FromBytes(bytes, i);
             TransactionData.FromBytes(bytes, i);
-            int count = (int)bytes[i++];
+            int count = (int)bytes[i[0]++];
             if(QueryData == null || QueryData.length != -1) {
                 QueryData = new QueryDataBlock[count];
                 for(int j = 0; j < count; j++)
@@ -247,7 +247,7 @@ public void FromBytes(byte[] bytes, int[] i) throws MalformedDataException
             this.header =  header;
             AgentData.FromBytes(bytes, i);
             TransactionData.FromBytes(bytes, i);
-            int count = (int)bytes[i++];
+            int count = (int)bytes[i[0]++];
             if(QueryData == null || QueryData.length != count) {
                 QueryData = new QueryDataBlock[count];
                 for(int j = 0; j < count; j++)
@@ -264,14 +264,14 @@ public void FromBytes(byte[] bytes, int[] i) throws MalformedDataException
             length += AgentData.getLength();
             length += TransactionData.length;
             length++;
-            for (int j = 0; j < QueryData.length; j++) { length += QueryData[j].length; }
+            for (int j = 0; j < QueryData.length; j++) { length += QueryData[j].getLength(); }
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
             int i = 0;
             header.ToBytes(bytes, i);
             AgentData.ToBytes(bytes, i);
             TransactionData.ToBytes(bytes, i);
-            bytes[i++] = (byte)QueryData.length;
+            bytes[i[0]++] = (byte)QueryData.length;
             for (int j = 0; j < QueryData.length; j++) { QueryData[j].ToBytes(bytes, i); }
             if (header.AckList != null && header.AckList.length > 0) { header.AcksToBytes(bytes, i); }
             return bytes;
@@ -285,11 +285,11 @@ public void FromBytes(byte[] bytes, int[] i) throws MalformedDataException
             int fixedLength = 10;
 
             byte[] ackBytes = null;
-            int acksLength = 0;
+            int[] acksLength = new int[]{0};
             if (header.AckList != null && header.AckList.length > 0) {
                 header.AppendedAcks = true;
                 ackBytes = new byte[header.AckList.length * 4 + 1];
-                header.AcksToBytes(ackBytes, ref acksLength);
+                header.AcksToBytes(ackBytes, acksLength);
             }
 
             fixedLength += AgentData.getLength();
@@ -307,9 +307,9 @@ public void FromBytes(byte[] bytes, int[] i) throws MalformedDataException
                 int QueryDataCount = 0;
 
                 i = QueryDataStart;
-                while (fixedLength + variableLength + acksLength < Packet.MTU && i < QueryData.length) {
-                    int blockLength = QueryData[i].length;
-                    if (fixedLength + variableLength + blockLength + acksLength <= MTU) {
+                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i < QueryData.length) {
+                    int blockLength = QueryData[i].getLength();
+                    if (fixedLength + variableLength + blockLength + acksLength[0] <= MTU) {
                         variableLength += blockLength;
                         ++QueryDataCount;
                     }
@@ -317,18 +317,18 @@ public void FromBytes(byte[] bytes, int[] i) throws MalformedDataException
                     ++i;
                 }
 
-                byte[] packet = new byte[fixedLength + variableLength + acksLength];
-                int length = fixedBytes.length;
-                Utils.arraycopy(fixedBytes, 0, packet, 0, length);
+                byte[] packet = new byte[fixedLength + variableLength + acksLength[0]];
+                int[] length = new int[] {fixedBytes.length};
+                Utils.arraycopy(fixedBytes, 0, packet, 0, length[0]);
                 if (packets.size() > 0) { packet[0] = (byte)(packet[0] & ~0x10); }
 
-                packet[length++] = (byte)QueryDataCount;
-                for (i = QueryDataStart; i < QueryDataStart + QueryDataCount; i++) { QueryData[i].ToBytes(packet, ref length); }
+                packet[length[0]++] = (byte)QueryDataCount;
+                for (i = QueryDataStart; i < QueryDataStart + QueryDataCount; i++) { QueryData[i].ToBytes(packet, length); }
                 QueryDataStart += QueryDataCount;
 
-                if (acksLength > 0) {
-                    Utils.arraycopy(ackBytes, 0, packet, length, acksLength);
-                    acksLength = 0;
+                if (acksLength[0] > 0) {
+                    Utils.arraycopy(ackBytes, 0, packet, length[0], acksLength[0]);
+                    acksLength[0] = 0;
                 }
 
                 packets.add(packet);

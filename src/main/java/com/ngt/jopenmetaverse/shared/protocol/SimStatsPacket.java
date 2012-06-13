@@ -30,10 +30,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    RegionX = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    RegionY = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    RegionFlags = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    ObjectCapacity = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
+                    RegionX = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    RegionY = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    RegionFlags = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    ObjectCapacity = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                 }
                 catch (Exception e)
                 {
@@ -77,7 +77,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    StatID = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
+                    StatID = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     StatValue = Utils.BytesToFloat(bytes, i); i += 4;
                 }
                 catch (Exception e)
@@ -119,7 +119,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    PID = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
+                    PID = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                 }
                 catch (Exception e)
                 {
@@ -142,7 +142,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length = 11;
                 length += Region.length;
                 for (int j = 0; j < Stat.length; j++)
-                    length += Stat[j].length;
+                    length += Stat[j].getLength();
                 length += PidStat.length;
                 return length;
             }
@@ -181,7 +181,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 bytes = zeroBuffer;
             }
             Region.FromBytes(bytes, i);
-            int count = (int)bytes[i++];
+            int count = (int)bytes[i[0]++];
             if(Stat == null || Stat.length != -1) {
                 Stat = new StatBlock[count];
                 for(int j = 0; j < count; j++)
@@ -204,7 +204,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             this.header =  header;
             Region.FromBytes(bytes, i);
-            int count = (int)bytes[i++];
+            int count = (int)bytes[i[0]++];
             if(Stat == null || Stat.length != count) {
                 Stat = new StatBlock[count];
                 for(int j = 0; j < count; j++)
@@ -222,13 +222,13 @@ package com.ngt.jopenmetaverse.shared.protocol;
             length += Region.length;
             length += PidStat.length;
             length++;
-            for (int j = 0; j < Stat.length; j++) { length += Stat[j].length; }
+            for (int j = 0; j < Stat.length; j++) { length += Stat[j].getLength(); }
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
             int i = 0;
             header.ToBytes(bytes, i);
             Region.ToBytes(bytes, i);
-            bytes[i++] = (byte)Stat.length;
+            bytes[i[0]++] = (byte)Stat.length;
             for (int j = 0; j < Stat.length; j++) { Stat[j].ToBytes(bytes, i); }
             PidStat.ToBytes(bytes, i);
             if (header.AckList != null && header.AckList.length > 0) { header.AcksToBytes(bytes, i); }

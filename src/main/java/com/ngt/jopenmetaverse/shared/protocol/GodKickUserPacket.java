@@ -34,13 +34,13 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    GodID.FromBytes(bytes, i); i += 16;
+                    GodID.FromBytes(bytes, i[0]); i[0] += 16;
                     GodSessionID.FromBytes(bytes, i[0]); i[0] += 16;
-                    AgentID.FromBytes(bytes, i); i += 16;
-                    KickFlags = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    length = (bytes[i++] + (bytes[i++] << 8));
+                    AgentID.FromBytes(bytes, i[0]); i[0] += 16;
+                    KickFlags = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
                     Reason = new byte[length];
-                    Utils.arraycopy(bytes, i, Reason, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, Reason, 0, length); i[0] +=  length;
                 }
                 catch (Exception e)
                 {
@@ -51,13 +51,13 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                GodID.ToBytes(bytes, i); i += 16;
+                GodID.ToBytes(bytes, i[0]); i[0] += 16;
                 GodSessionID.ToBytes(bytes, i[0]); i[0] += 16;
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
                 Utils.UIntToBytes(KickFlags, bytes, i); i += 4;
-                bytes[i++] = (byte)(Reason.length % 256);
-                bytes[i++] = (byte)((Reason.length >> 8) % 256);
-                Utils.arraycopy(Reason, 0, bytes, i, Reason.length); i += Reason.length;
+                bytes[i[0]++] = (byte)(Reason.length % 256);
+                bytes[i[0]++] = (byte)((Reason.length >> 8) % 256);
+                Utils.arraycopy(Reason, 0, bytes, i, Reason.length); i[0] +=  Reason.length;
             }
 
         }

@@ -95,7 +95,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                         {
                 int length = 10;
                 length += AgentData.getLength();
-                length += Data.getLength();
+                length += Data.length;
                 return length;
             }
         }
@@ -154,7 +154,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         {
             int length = 10;
             length += AgentData.getLength();
-            length += Data.getLength();
+            length += Data.length;
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
             int[] i = new int[1];

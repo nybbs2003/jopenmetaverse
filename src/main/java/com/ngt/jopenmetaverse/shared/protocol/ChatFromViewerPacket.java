@@ -28,7 +28,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    AgentID.FromBytes(bytes, i); i += 16;
+                    AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)
@@ -75,11 +75,11 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    length = (bytes[i++] + (bytes[i++] << 8));
+                    length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
                     Message = new byte[length];
-                    Utils.arraycopy(bytes, i, Message, 0, length); i += length;
-                    Type = (byte)bytes[i++];
-                    Channel = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
+                    Utils.arraycopy(bytes, i, Message, 0, length); i[0] +=  length;
+                    Type = (byte)bytes[i[0]++];
+                    Channel = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                 }
                 catch (Exception e)
                 {
@@ -90,10 +90,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                bytes[i++] = (byte)(Message.length % 256);
-                bytes[i++] = (byte)((Message.length >> 8) % 256);
-                Utils.arraycopy(Message, 0, bytes, i, Message.length); i += Message.length;
-                bytes[i++] = Type;
+                bytes[i[0]++] = (byte)(Message.length % 256);
+                bytes[i[0]++] = (byte)((Message.length >> 8) % 256);
+                Utils.arraycopy(Message, 0, bytes, i, Message.length); i[0] +=  Message.length;
+                bytes[i[0]++] = Type;
                 Utils.IntToBytes(Channel, bytes, i); i += 4;
             }
 

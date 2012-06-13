@@ -28,7 +28,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    AgentID.FromBytes(bytes, i); i += 16;
+                    AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)
@@ -80,16 +80,16 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    SourceID.FromBytes(bytes, i); i += 16;
-                    DestID.FromBytes(bytes, i); i += 16;
-                    Flags = (byte)bytes[i++];
-                    Amount = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    AggregatePermNextOwner = (byte)bytes[i++];
-                    AggregatePermInventory = (byte)bytes[i++];
-                    TransactionType = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    length = bytes[i++];
+                    SourceID.FromBytes(bytes, i[0]); i[0] += 16;
+                    DestID.FromBytes(bytes, i[0]); i[0] += 16;
+                    Flags = (byte)bytes[i[0]++];
+                    Amount = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    AggregatePermNextOwner = (byte)bytes[i[0]++];
+                    AggregatePermInventory = (byte)bytes[i[0]++];
+                    TransactionType = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    length = bytes[i[0]++];
                     Description = new byte[length];
-                    Utils.arraycopy(bytes, i, Description, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, Description, 0, length); i[0] +=  length;
                 }
                 catch (Exception e)
                 {
@@ -100,15 +100,15 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                SourceID.ToBytes(bytes, i); i += 16;
-                DestID.ToBytes(bytes, i); i += 16;
-                bytes[i++] = Flags;
+                SourceID.ToBytes(bytes, i[0]); i[0] += 16;
+                DestID.ToBytes(bytes, i[0]); i[0] += 16;
+                bytes[i[0]++] = Flags;
                 Utils.IntToBytes(Amount, bytes, i); i += 4;
-                bytes[i++] = AggregatePermNextOwner;
-                bytes[i++] = AggregatePermInventory;
+                bytes[i[0]++] = AggregatePermNextOwner;
+                bytes[i[0]++] = AggregatePermInventory;
                 Utils.IntToBytes(TransactionType, bytes, i); i += 4;
-                bytes[i++] = (byte)Description.length;
-                Utils.arraycopy(Description, 0, bytes, i, Description.length); i += Description.length;
+                bytes[i[0]++] = (byte)Description.length;
+                Utils.arraycopy(Description, 0, bytes, i, Description.length); i[0] +=  Description.length;
             }
 
         }

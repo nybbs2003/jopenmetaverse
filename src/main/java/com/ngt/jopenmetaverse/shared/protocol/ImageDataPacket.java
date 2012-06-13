@@ -30,10 +30,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    ID.FromBytes(bytes, i); i += 16;
-                    Codec = (byte)bytes[i++];
-                    Size = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    Packets = (ushort)(bytes[i++] + (bytes[i++] << 8));
+                    ID.FromBytes(bytes, i[0]); i[0] += 16;
+                    Codec = (byte)bytes[i[0]++];
+                    Size = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    Packets = (ushort)(bytes[i[0]++] + (bytes[i[0]++] << 8));
                 }
                 catch (Exception e)
                 {
@@ -44,11 +44,11 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                ID.ToBytes(bytes, i); i += 16;
-                bytes[i++] = Codec;
+                ID.ToBytes(bytes, i[0]); i[0] += 16;
+                bytes[i[0]++] = Codec;
                 Utils.UIntToBytes(Size, bytes, i); i += 4;
-                bytes[i++] = (byte)(Packets % 256);
-                bytes[i++] = (byte)((Packets >> 8) % 256);
+                bytes[i[0]++] = (byte)(Packets % 256);
+                bytes[i[0]++] = (byte)((Packets >> 8) % 256);
             }
 
         }
@@ -63,7 +63,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                                 {
                     int length = 2;
-                    if (Data != null) { length += Data.getLength(); }
+                    if (Data != null) { length += Data.length; }
                     return length;
                 }
             }
@@ -80,9 +80,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    length = (bytes[i++] + (bytes[i++] << 8));
+                    length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
                     Data = new byte[length];
-                    Utils.arraycopy(bytes, i, Data, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, Data, 0, length); i[0] +=  length;
                 }
                 catch (Exception e)
                 {
@@ -93,9 +93,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                bytes[i++] = (byte)(Data.length % 256);
-                bytes[i++] = (byte)((Data.length >> 8) % 256);
-                Utils.arraycopy(Data, 0, bytes, i, Data.getLength()); i += Data.getLength();
+                bytes[i[0]++] = (byte)(Data.length % 256);
+                bytes[i[0]++] = (byte)((Data.length >> 8) % 256);
+                Utils.arraycopy(Data, 0, bytes, i, Data.length); i[0] +=  Data.length;
             }
 
         }

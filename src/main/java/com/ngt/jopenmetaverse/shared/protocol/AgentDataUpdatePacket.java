@@ -39,21 +39,21 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    AgentID.FromBytes(bytes, i); i += 16;
-                    length = bytes[i++];
+                    AgentID.FromBytes(bytes, i[0]); i[0] += 16;
+                    length = bytes[i[0]++];
                     FirstName = new byte[length];
-                    Utils.arraycopy(bytes, i, FirstName, 0, length); i += length;
-                    length = bytes[i++];
+                    Utils.arraycopy(bytes, i, FirstName, 0, length); i[0] +=  length;
+                    length = bytes[i[0]++];
                     LastName = new byte[length];
-                    Utils.arraycopy(bytes, i, LastName, 0, length); i += length;
-                    length = bytes[i++];
+                    Utils.arraycopy(bytes, i, LastName, 0, length); i[0] +=  length;
+                    length = bytes[i[0]++];
                     GroupTitle = new byte[length];
-                    Utils.arraycopy(bytes, i, GroupTitle, 0, length); i += length;
-                    ActiveGroupID.FromBytes(bytes, i); i += 16;
-                    GroupPowers = (ulong)((ulong)bytes[i++] + ((ulong)bytes[i++] << 8) + ((ulong)bytes[i++] << 16) + ((ulong)bytes[i++] << 24) + ((ulong)bytes[i++] << 32) + ((ulong)bytes[i++] << 40) + ((ulong)bytes[i++] << 48) + ((ulong)bytes[i++] << 56));
-                    length = bytes[i++];
+                    Utils.arraycopy(bytes, i, GroupTitle, 0, length); i[0] +=  length;
+                    ActiveGroupID.FromBytes(bytes, i[0]); i[0] += 16;
+                    GroupPowers = (ulong)((ulong)bytes[i[0]++] + ((ulong)bytes[i[0]++] << 8) + ((ulong)bytes[i[0]++] << 16) + ((ulong)bytes[i[0]++] << 24) + ((ulong)bytes[i[0]++] << 32) + ((ulong)bytes[i[0]++] << 40) + ((ulong)bytes[i[0]++] << 48) + ((ulong)bytes[i[0]++] << 56));
+                    length = bytes[i[0]++];
                     GroupName = new byte[length];
-                    Utils.arraycopy(bytes, i, GroupName, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, GroupName, 0, length); i[0] +=  length;
                 }
                 catch (Exception e)
                 {
@@ -65,16 +65,16 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
-                bytes[i++] = (byte)FirstName.length;
-                Utils.arraycopy(FirstName, 0, bytes, i, FirstName.length); i += FirstName.length;
-                bytes[i++] = (byte)LastName.length;
-                Utils.arraycopy(LastName, 0, bytes, i, LastName.length); i += LastName.length;
-                bytes[i++] = (byte)GroupTitle.length;
-                Utils.arraycopy(GroupTitle, 0, bytes, i, GroupTitle.length); i += GroupTitle.length;
-                ActiveGroupID.ToBytes(bytes, i); i += 16;
+                bytes[i[0]++] = (byte)FirstName.length;
+                Utils.arraycopy(FirstName, 0, bytes, i, FirstName.length); i[0] +=  FirstName.length;
+                bytes[i[0]++] = (byte)LastName.length;
+                Utils.arraycopy(LastName, 0, bytes, i, LastName.length); i[0] +=  LastName.length;
+                bytes[i[0]++] = (byte)GroupTitle.length;
+                Utils.arraycopy(GroupTitle, 0, bytes, i, GroupTitle.length); i[0] +=  GroupTitle.length;
+                ActiveGroupID.ToBytes(bytes, i[0]); i[0] += 16;
                 Utils.UInt64ToBytes(GroupPowers, bytes, i); i += 8;
-                bytes[i++] = (byte)GroupName.length;
-                Utils.arraycopy(GroupName, 0, bytes, i, GroupName.length); i += GroupName.length;
+                bytes[i[0]++] = (byte)GroupName.length;
+                Utils.arraycopy(GroupName, 0, bytes, i, GroupName.length); i[0] +=  GroupName.length;
             }
 
         }

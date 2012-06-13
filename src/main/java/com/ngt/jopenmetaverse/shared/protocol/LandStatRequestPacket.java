@@ -28,7 +28,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    AgentID.FromBytes(bytes, i); i += 16;
+                    AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)
@@ -76,12 +76,12 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    ReportType = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    RequestFlags = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    length = bytes[i++];
+                    ReportType = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    RequestFlags = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    length = bytes[i[0]++];
                     Filter = new byte[length];
-                    Utils.arraycopy(bytes, i, Filter, 0, length); i += length;
-                    ParcelLocalID = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
+                    Utils.arraycopy(bytes, i, Filter, 0, length); i[0] +=  length;
+                    ParcelLocalID = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                 }
                 catch (Exception e)
                 {
@@ -94,8 +94,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 Utils.UIntToBytes(ReportType, bytes, i); i += 4;
                 Utils.UIntToBytes(RequestFlags, bytes, i); i += 4;
-                bytes[i++] = (byte)Filter.length;
-                Utils.arraycopy(Filter, 0, bytes, i, Filter.length); i += Filter.length;
+                bytes[i[0]++] = (byte)Filter.length;
+                Utils.arraycopy(Filter, 0, bytes, i, Filter.length); i[0] +=  Filter.length;
                 Utils.IntToBytes(ParcelLocalID, bytes, i); i += 4;
             }
 

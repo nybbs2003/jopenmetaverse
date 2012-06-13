@@ -29,9 +29,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    ObjectID.FromBytes(bytes, i); i += 16;
-                    OwnerID.FromBytes(bytes, i); i += 16;
-                    SoundID.FromBytes(bytes, i); i += 16;
+                    ObjectID.FromBytes(bytes, i[0]); i[0] += 16;
+                    OwnerID.FromBytes(bytes, i[0]); i[0] += 16;
+                    SoundID.FromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)
                 {
@@ -42,9 +42,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                ObjectID.ToBytes(bytes, i); i += 16;
-                OwnerID.ToBytes(bytes, i); i += 16;
-                SoundID.ToBytes(bytes, i); i += 16;
+                ObjectID.ToBytes(bytes, i[0]); i[0] += 16;
+                OwnerID.ToBytes(bytes, i[0]); i[0] += 16;
+                SoundID.ToBytes(bytes, i[0]); i[0] += 16;
             }
 
         }
@@ -55,7 +55,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                         {
                 int length = 9;
                 for (int j = 0; j < DataBlock.length; j++)
-                    length += DataBlock[j].length;
+                    length += DataBlock[j].getLength();
                 return length;
             }
         }
@@ -88,7 +88,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 packetEnd[0] = Helpers.ZeroDecode(bytes, packetEnd[0] + 1, zeroBuffer) - 1;
                 bytes = zeroBuffer;
             }
-            int count = (int)bytes[i++];
+            int count = (int)bytes[i[0]++];
             if(DataBlock == null || DataBlock.length != -1) {
                 DataBlock = new DataBlockBlock[count];
                 for(int j = 0; j < count; j++)
@@ -109,7 +109,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 		public void FromBytes(Header header, byte[] bytes, int[] i, int[] packetEnd)
         {
             this.header =  header;
-            int count = (int)bytes[i++];
+            int count = (int)bytes[i[0]++];
             if(DataBlock == null || DataBlock.length != count) {
                 DataBlock = new DataBlockBlock[count];
                 for(int j = 0; j < count; j++)
@@ -124,12 +124,12 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             int length = 8;
             length++;
-            for (int j = 0; j < DataBlock.length; j++) { length += DataBlock[j].length; }
+            for (int j = 0; j < DataBlock.length; j++) { length += DataBlock[j].getLength(); }
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
             int i = 0;
             header.ToBytes(bytes, i);
-            bytes[i++] = (byte)DataBlock.length;
+            bytes[i[0]++] = (byte)DataBlock.length;
             for (int j = 0; j < DataBlock.length; j++) { DataBlock[j].ToBytes(bytes, i); }
             if (header.AckList != null && header.AckList.length > 0) { header.AcksToBytes(bytes, i); }
             return bytes;
@@ -143,11 +143,11 @@ package com.ngt.jopenmetaverse.shared.protocol;
             int fixedLength = 8;
 
             byte[] ackBytes = null;
-            int acksLength = 0;
+            int[] acksLength = new int[]{0};
             if (header.AckList != null && header.AckList.length > 0) {
                 header.AppendedAcks = true;
                 ackBytes = new byte[header.AckList.length * 4 + 1];
-                header.AcksToBytes(ackBytes, ref acksLength);
+                header.AcksToBytes(ackBytes, acksLength);
             }
 
             byte[] fixedBytes = new byte[fixedLength];
@@ -161,9 +161,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int DataBlockCount = 0;
 
                 i = DataBlockStart;
-                while (fixedLength + variableLength + acksLength < Packet.MTU && i < DataBlock.length) {
-                    int blockLength = DataBlock[i].length;
-                    if (fixedLength + variableLength + blockLength + acksLength <= MTU) {
+                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i < DataBlock.length) {
+                    int blockLength = DataBlock[i].getLength();
+                    if (fixedLength + variableLength + blockLength + acksLength[0] <= MTU) {
                         variableLength += blockLength;
                         ++DataBlockCount;
                     }
@@ -171,18 +171,18 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     ++i;
                 }
 
-                byte[] packet = new byte[fixedLength + variableLength + acksLength];
-                int length = fixedBytes.length;
-                Utils.arraycopy(fixedBytes, 0, packet, 0, length);
+                byte[] packet = new byte[fixedLength + variableLength + acksLength[0]];
+                int[] length = new int[] {fixedBytes.length};
+                Utils.arraycopy(fixedBytes, 0, packet, 0, length[0]);
                 if (packets.size() > 0) { packet[0] = (byte)(packet[0] & ~0x10); }
 
-                packet[length++] = (byte)DataBlockCount;
-                for (i = DataBlockStart; i < DataBlockStart + DataBlockCount; i++) { DataBlock[i].ToBytes(packet, ref length); }
+                packet[length[0]++] = (byte)DataBlockCount;
+                for (i = DataBlockStart; i < DataBlockStart + DataBlockCount; i++) { DataBlock[i].ToBytes(packet, length); }
                 DataBlockStart += DataBlockCount;
 
-                if (acksLength > 0) {
-                    Utils.arraycopy(ackBytes, 0, packet, length, acksLength);
-                    acksLength = 0;
+                if (acksLength[0] > 0) {
+                    Utils.arraycopy(ackBytes, 0, packet, length[0], acksLength[0]);
+                    acksLength[0] = 0;
                 }
 
                 packets.add(packet);

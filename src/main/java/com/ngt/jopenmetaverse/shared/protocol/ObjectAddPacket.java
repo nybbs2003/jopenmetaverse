@@ -29,9 +29,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    AgentID.FromBytes(bytes, i); i += 16;
+                    AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
-                    GroupID.FromBytes(bytes, i); i += 16;
+                    GroupID.FromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)
                 {
@@ -44,7 +44,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
                 SessionID.ToBytes(bytes, i[0]); i[0] += 16;
-                GroupID.ToBytes(bytes, i); i += 16;
+                GroupID.ToBytes(bytes, i[0]); i[0] += 16;
             }
 
         }
@@ -101,35 +101,35 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    PCode = (byte)bytes[i++];
-                    Material = (byte)bytes[i++];
-                    AddFlags = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    PathCurve = (byte)bytes[i++];
-                    ProfileCurve = (byte)bytes[i++];
-                    PathBegin = (ushort)(bytes[i++] + (bytes[i++] << 8));
-                    PathEnd = (ushort)(bytes[i++] + (bytes[i++] << 8));
-                    PathScaleX = (byte)bytes[i++];
-                    PathScaleY = (byte)bytes[i++];
-                    PathShearX = (byte)bytes[i++];
-                    PathShearY = (byte)bytes[i++];
-                    PathTwist = (sbyte)bytes[i++];
-                    PathTwistBegin = (sbyte)bytes[i++];
-                    PathRadiusOffset = (sbyte)bytes[i++];
-                    PathTaperX = (sbyte)bytes[i++];
-                    PathTaperY = (sbyte)bytes[i++];
-                    PathRevolutions = (byte)bytes[i++];
-                    PathSkew = (sbyte)bytes[i++];
-                    ProfileBegin = (ushort)(bytes[i++] + (bytes[i++] << 8));
-                    ProfileEnd = (ushort)(bytes[i++] + (bytes[i++] << 8));
-                    ProfileHollow = (ushort)(bytes[i++] + (bytes[i++] << 8));
-                    BypassRaycast = (byte)bytes[i++];
-                    RayStart.FromBytes(bytes, i); i += 12;
-                    RayEnd.FromBytes(bytes, i); i += 12;
-                    RayTargetID.FromBytes(bytes, i); i += 16;
-                    RayEndIsIntersection = (byte)bytes[i++];
-                    Scale.FromBytes(bytes, i); i += 12;
+                    PCode = (byte)bytes[i[0]++];
+                    Material = (byte)bytes[i[0]++];
+                    AddFlags = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    PathCurve = (byte)bytes[i[0]++];
+                    ProfileCurve = (byte)bytes[i[0]++];
+                    PathBegin = (ushort)(bytes[i[0]++] + (bytes[i[0]++] << 8));
+                    PathEnd = (ushort)(bytes[i[0]++] + (bytes[i[0]++] << 8));
+                    PathScaleX = (byte)bytes[i[0]++];
+                    PathScaleY = (byte)bytes[i[0]++];
+                    PathShearX = (byte)bytes[i[0]++];
+                    PathShearY = (byte)bytes[i[0]++];
+                    PathTwist = (sbyte)bytes[i[0]++];
+                    PathTwistBegin = (sbyte)bytes[i[0]++];
+                    PathRadiusOffset = (sbyte)bytes[i[0]++];
+                    PathTaperX = (sbyte)bytes[i[0]++];
+                    PathTaperY = (sbyte)bytes[i[0]++];
+                    PathRevolutions = (byte)bytes[i[0]++];
+                    PathSkew = (sbyte)bytes[i[0]++];
+                    ProfileBegin = (ushort)(bytes[i[0]++] + (bytes[i[0]++] << 8));
+                    ProfileEnd = (ushort)(bytes[i[0]++] + (bytes[i[0]++] << 8));
+                    ProfileHollow = (ushort)(bytes[i[0]++] + (bytes[i[0]++] << 8));
+                    BypassRaycast = (byte)bytes[i[0]++];
+                    RayStart.FromBytes(bytes, i[0]); i[0] += 12;
+                    RayEnd.FromBytes(bytes, i[0]); i[0] += 12;
+                    RayTargetID.FromBytes(bytes, i[0]); i[0] += 16;
+                    RayEndIsIntersection = (byte)bytes[i[0]++];
+                    Scale.FromBytes(bytes, i[0]); i[0] += 12;
                     Rotation.FromBytes(bytes, i, true); i += 12;
-                    State = (byte)bytes[i++];
+                    State = (byte)bytes[i[0]++];
                 }
                 catch (Exception e)
                 {
@@ -140,40 +140,40 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                bytes[i++] = PCode;
-                bytes[i++] = Material;
+                bytes[i[0]++] = PCode;
+                bytes[i[0]++] = Material;
                 Utils.UIntToBytes(AddFlags, bytes, i); i += 4;
-                bytes[i++] = PathCurve;
-                bytes[i++] = ProfileCurve;
-                bytes[i++] = (byte)(PathBegin % 256);
-                bytes[i++] = (byte)((PathBegin >> 8) % 256);
-                bytes[i++] = (byte)(PathEnd % 256);
-                bytes[i++] = (byte)((PathEnd >> 8) % 256);
-                bytes[i++] = PathScaleX;
-                bytes[i++] = PathScaleY;
-                bytes[i++] = PathShearX;
-                bytes[i++] = PathShearY;
-                bytes[i++] = (byte)PathTwist;
-                bytes[i++] = (byte)PathTwistBegin;
-                bytes[i++] = (byte)PathRadiusOffset;
-                bytes[i++] = (byte)PathTaperX;
-                bytes[i++] = (byte)PathTaperY;
-                bytes[i++] = PathRevolutions;
-                bytes[i++] = (byte)PathSkew;
-                bytes[i++] = (byte)(ProfileBegin % 256);
-                bytes[i++] = (byte)((ProfileBegin >> 8) % 256);
-                bytes[i++] = (byte)(ProfileEnd % 256);
-                bytes[i++] = (byte)((ProfileEnd >> 8) % 256);
-                bytes[i++] = (byte)(ProfileHollow % 256);
-                bytes[i++] = (byte)((ProfileHollow >> 8) % 256);
-                bytes[i++] = BypassRaycast;
-                RayStart.ToBytes(bytes, i); i += 12;
-                RayEnd.ToBytes(bytes, i); i += 12;
-                RayTargetID.ToBytes(bytes, i); i += 16;
-                bytes[i++] = RayEndIsIntersection;
-                Scale.ToBytes(bytes, i); i += 12;
-                Rotation.ToBytes(bytes, i); i += 12;
-                bytes[i++] = State;
+                bytes[i[0]++] = PathCurve;
+                bytes[i[0]++] = ProfileCurve;
+                bytes[i[0]++] = (byte)(PathBegin % 256);
+                bytes[i[0]++] = (byte)((PathBegin >> 8) % 256);
+                bytes[i[0]++] = (byte)(PathEnd % 256);
+                bytes[i[0]++] = (byte)((PathEnd >> 8) % 256);
+                bytes[i[0]++] = PathScaleX;
+                bytes[i[0]++] = PathScaleY;
+                bytes[i[0]++] = PathShearX;
+                bytes[i[0]++] = PathShearY;
+                bytes[i[0]++] = (byte)PathTwist;
+                bytes[i[0]++] = (byte)PathTwistBegin;
+                bytes[i[0]++] = (byte)PathRadiusOffset;
+                bytes[i[0]++] = (byte)PathTaperX;
+                bytes[i[0]++] = (byte)PathTaperY;
+                bytes[i[0]++] = PathRevolutions;
+                bytes[i[0]++] = (byte)PathSkew;
+                bytes[i[0]++] = (byte)(ProfileBegin % 256);
+                bytes[i[0]++] = (byte)((ProfileBegin >> 8) % 256);
+                bytes[i[0]++] = (byte)(ProfileEnd % 256);
+                bytes[i[0]++] = (byte)((ProfileEnd >> 8) % 256);
+                bytes[i[0]++] = (byte)(ProfileHollow % 256);
+                bytes[i[0]++] = (byte)((ProfileHollow >> 8) % 256);
+                bytes[i[0]++] = BypassRaycast;
+                RayStart.ToBytes(bytes, i[0]); i[0] += 12;
+                RayEnd.ToBytes(bytes, i[0]); i[0] += 12;
+                RayTargetID.ToBytes(bytes, i[0]); i[0] += 16;
+                bytes[i[0]++] = RayEndIsIntersection;
+                Scale.ToBytes(bytes, i[0]); i[0] += 12;
+                Rotation.ToBytes(bytes, i[0]); i[0] += 12;
+                bytes[i[0]++] = State;
             }
 
         }

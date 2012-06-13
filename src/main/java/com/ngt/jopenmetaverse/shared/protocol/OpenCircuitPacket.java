@@ -28,8 +28,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    IP = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    Port = (ushort)((bytes[i++] << 8) + bytes[i++]);
+                    IP = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    Port = (ushort)((bytes[i[0]++] << 8) + bytes[i[0]++]);
                 }
                 catch (Exception e)
                 {
@@ -41,8 +41,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 Utils.UIntToBytes(IP, bytes, i); i += 4;
-                bytes[i++] = (byte)((Port >> 8) % 256);
-                bytes[i++] = (byte)(Port % 256);
+                bytes[i[0]++] = (byte)((Port >> 8) % 256);
+                bytes[i[0]++] = (byte)(Port % 256);
             }
 
         }

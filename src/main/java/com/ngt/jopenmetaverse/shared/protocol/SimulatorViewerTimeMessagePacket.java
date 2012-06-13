@@ -32,12 +32,12 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    UsecSinceStart = (ulong)((ulong)bytes[i++] + ((ulong)bytes[i++] << 8) + ((ulong)bytes[i++] << 16) + ((ulong)bytes[i++] << 24) + ((ulong)bytes[i++] << 32) + ((ulong)bytes[i++] << 40) + ((ulong)bytes[i++] << 48) + ((ulong)bytes[i++] << 56));
-                    SecPerDay = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    SecPerYear = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    SunDirection.FromBytes(bytes, i); i += 12;
+                    UsecSinceStart = (ulong)((ulong)bytes[i[0]++] + ((ulong)bytes[i[0]++] << 8) + ((ulong)bytes[i[0]++] << 16) + ((ulong)bytes[i[0]++] << 24) + ((ulong)bytes[i[0]++] << 32) + ((ulong)bytes[i[0]++] << 40) + ((ulong)bytes[i[0]++] << 48) + ((ulong)bytes[i[0]++] << 56));
+                    SecPerDay = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    SecPerYear = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    SunDirection.FromBytes(bytes, i[0]); i[0] += 12;
                     SunPhase = Utils.BytesToFloat(bytes, i); i += 4;
-                    SunAngVelocity.FromBytes(bytes, i); i += 12;
+                    SunAngVelocity.FromBytes(bytes, i[0]); i[0] += 12;
                 }
                 catch (Exception e)
                 {
@@ -51,9 +51,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 Utils.UInt64ToBytes(UsecSinceStart, bytes, i); i += 8;
                 Utils.UIntToBytes(SecPerDay, bytes, i); i += 4;
                 Utils.UIntToBytes(SecPerYear, bytes, i); i += 4;
-                SunDirection.ToBytes(bytes, i); i += 12;
+                SunDirection.ToBytes(bytes, i[0]); i[0] += 12;
                 Utils.FloatToBytes(SunPhase, bytes, i); i += 4;
-                SunAngVelocity.ToBytes(bytes, i); i += 12;
+                SunAngVelocity.ToBytes(bytes, i[0]); i[0] += 12;
             }
 
         }

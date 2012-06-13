@@ -17,7 +17,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                                 {
                     int length = 30;
-                    if (Data != null) { length += Data.getLength(); }
+                    if (Data != null) { length += Data.length; }
                     return length;
                 }
             }
@@ -34,13 +34,13 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    TransferID.FromBytes(bytes, i); i += 16;
-                    ChannelType = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    Packet = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    Status = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    length = (bytes[i++] + (bytes[i++] << 8));
+                    TransferID.FromBytes(bytes, i[0]); i[0] += 16;
+                    ChannelType = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    Packet = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    Status = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
                     Data = new byte[length];
-                    Utils.arraycopy(bytes, i, Data, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, Data, 0, length); i[0] +=  length;
                 }
                 catch (Exception e)
                 {
@@ -51,13 +51,13 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                TransferID.ToBytes(bytes, i); i += 16;
+                TransferID.ToBytes(bytes, i[0]); i[0] += 16;
                 Utils.IntToBytes(ChannelType, bytes, i); i += 4;
                 Utils.IntToBytes(Packet, bytes, i); i += 4;
                 Utils.IntToBytes(Status, bytes, i); i += 4;
-                bytes[i++] = (byte)(Data.length % 256);
-                bytes[i++] = (byte)((Data.length >> 8) % 256);
-                Utils.arraycopy(Data, 0, bytes, i, Data.getLength()); i += Data.getLength();
+                bytes[i[0]++] = (byte)(Data.length % 256);
+                bytes[i[0]++] = (byte)((Data.length >> 8) % 256);
+                Utils.arraycopy(Data, 0, bytes, i, Data.length); i[0] +=  Data.length;
             }
 
         }

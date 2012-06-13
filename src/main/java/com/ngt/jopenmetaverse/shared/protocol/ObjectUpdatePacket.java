@@ -28,8 +28,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    RegionHandle = (ulong)((ulong)bytes[i++] + ((ulong)bytes[i++] << 8) + ((ulong)bytes[i++] << 16) + ((ulong)bytes[i++] << 24) + ((ulong)bytes[i++] << 32) + ((ulong)bytes[i++] << 40) + ((ulong)bytes[i++] << 48) + ((ulong)bytes[i++] << 56));
-                    TimeDilation = (ushort)(bytes[i++] + (bytes[i++] << 8));
+                    RegionHandle = (ulong)((ulong)bytes[i[0]++] + ((ulong)bytes[i[0]++] << 8) + ((ulong)bytes[i[0]++] << 16) + ((ulong)bytes[i[0]++] << 24) + ((ulong)bytes[i[0]++] << 32) + ((ulong)bytes[i[0]++] << 40) + ((ulong)bytes[i[0]++] << 48) + ((ulong)bytes[i[0]++] << 56));
+                    TimeDilation = (ushort)(bytes[i[0]++] + (bytes[i[0]++] << 8));
                 }
                 catch (Exception e)
                 {
@@ -41,8 +41,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 Utils.UInt64ToBytes(RegionHandle, bytes, i); i += 8;
-                bytes[i++] = (byte)(TimeDilation % 256);
-                bytes[i++] = (byte)((TimeDilation >> 8) % 256);
+                bytes[i[0]++] = (byte)(TimeDilation % 256);
+                bytes[i[0]++] = (byte)((TimeDilation >> 8) % 256);
             }
 
         }
@@ -106,7 +106,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     if (TextureEntry != null) { length += TextureEntry.length; }
                     if (TextureAnim != null) { length += TextureAnim.length; }
                     if (NameValue != null) { length += NameValue.length; }
-                    if (Data != null) { length += Data.getLength(); }
+                    if (Data != null) { length += Data.length; }
                     if (Text != null) { length += Text.length; }
                     if (MediaURL != null) { length += MediaURL.length; }
                     if (PSBlock != null) { length += PSBlock.length; }
@@ -127,71 +127,71 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    ID = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    State = (byte)bytes[i++];
-                    FullID.FromBytes(bytes, i); i += 16;
-                    CRC = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    PCode = (byte)bytes[i++];
-                    Material = (byte)bytes[i++];
-                    ClickAction = (byte)bytes[i++];
-                    Scale.FromBytes(bytes, i); i += 12;
-                    length = bytes[i++];
+                    ID = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    State = (byte)bytes[i[0]++];
+                    FullID.FromBytes(bytes, i[0]); i[0] += 16;
+                    CRC = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    PCode = (byte)bytes[i[0]++];
+                    Material = (byte)bytes[i[0]++];
+                    ClickAction = (byte)bytes[i[0]++];
+                    Scale.FromBytes(bytes, i[0]); i[0] += 12;
+                    length = bytes[i[0]++];
                     ObjectData = new byte[length];
-                    Utils.arraycopy(bytes, i, ObjectData, 0, length); i += length;
-                    ParentID = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    UpdateFlags = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    PathCurve = (byte)bytes[i++];
-                    ProfileCurve = (byte)bytes[i++];
-                    PathBegin = (ushort)(bytes[i++] + (bytes[i++] << 8));
-                    PathEnd = (ushort)(bytes[i++] + (bytes[i++] << 8));
-                    PathScaleX = (byte)bytes[i++];
-                    PathScaleY = (byte)bytes[i++];
-                    PathShearX = (byte)bytes[i++];
-                    PathShearY = (byte)bytes[i++];
-                    PathTwist = (sbyte)bytes[i++];
-                    PathTwistBegin = (sbyte)bytes[i++];
-                    PathRadiusOffset = (sbyte)bytes[i++];
-                    PathTaperX = (sbyte)bytes[i++];
-                    PathTaperY = (sbyte)bytes[i++];
-                    PathRevolutions = (byte)bytes[i++];
-                    PathSkew = (sbyte)bytes[i++];
-                    ProfileBegin = (ushort)(bytes[i++] + (bytes[i++] << 8));
-                    ProfileEnd = (ushort)(bytes[i++] + (bytes[i++] << 8));
-                    ProfileHollow = (ushort)(bytes[i++] + (bytes[i++] << 8));
-                    length = (bytes[i++] + (bytes[i++] << 8));
+                    Utils.arraycopy(bytes, i, ObjectData, 0, length); i[0] +=  length;
+                    ParentID = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    UpdateFlags = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    PathCurve = (byte)bytes[i[0]++];
+                    ProfileCurve = (byte)bytes[i[0]++];
+                    PathBegin = (ushort)(bytes[i[0]++] + (bytes[i[0]++] << 8));
+                    PathEnd = (ushort)(bytes[i[0]++] + (bytes[i[0]++] << 8));
+                    PathScaleX = (byte)bytes[i[0]++];
+                    PathScaleY = (byte)bytes[i[0]++];
+                    PathShearX = (byte)bytes[i[0]++];
+                    PathShearY = (byte)bytes[i[0]++];
+                    PathTwist = (sbyte)bytes[i[0]++];
+                    PathTwistBegin = (sbyte)bytes[i[0]++];
+                    PathRadiusOffset = (sbyte)bytes[i[0]++];
+                    PathTaperX = (sbyte)bytes[i[0]++];
+                    PathTaperY = (sbyte)bytes[i[0]++];
+                    PathRevolutions = (byte)bytes[i[0]++];
+                    PathSkew = (sbyte)bytes[i[0]++];
+                    ProfileBegin = (ushort)(bytes[i[0]++] + (bytes[i[0]++] << 8));
+                    ProfileEnd = (ushort)(bytes[i[0]++] + (bytes[i[0]++] << 8));
+                    ProfileHollow = (ushort)(bytes[i[0]++] + (bytes[i[0]++] << 8));
+                    length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
                     TextureEntry = new byte[length];
-                    Utils.arraycopy(bytes, i, TextureEntry, 0, length); i += length;
-                    length = bytes[i++];
+                    Utils.arraycopy(bytes, i, TextureEntry, 0, length); i[0] +=  length;
+                    length = bytes[i[0]++];
                     TextureAnim = new byte[length];
-                    Utils.arraycopy(bytes, i, TextureAnim, 0, length); i += length;
-                    length = (bytes[i++] + (bytes[i++] << 8));
+                    Utils.arraycopy(bytes, i, TextureAnim, 0, length); i[0] +=  length;
+                    length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
                     NameValue = new byte[length];
-                    Utils.arraycopy(bytes, i, NameValue, 0, length); i += length;
-                    length = (bytes[i++] + (bytes[i++] << 8));
+                    Utils.arraycopy(bytes, i, NameValue, 0, length); i[0] +=  length;
+                    length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
                     Data = new byte[length];
-                    Utils.arraycopy(bytes, i, Data, 0, length); i += length;
-                    length = bytes[i++];
+                    Utils.arraycopy(bytes, i, Data, 0, length); i[0] +=  length;
+                    length = bytes[i[0]++];
                     Text = new byte[length];
-                    Utils.arraycopy(bytes, i, Text, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, Text, 0, length); i[0] +=  length;
                     TextColor = new byte[4];
                     Utils.arraycopy(bytes, i, TextColor, 0, 4); i += 4;
-                    length = bytes[i++];
+                    length = bytes[i[0]++];
                     MediaURL = new byte[length];
-                    Utils.arraycopy(bytes, i, MediaURL, 0, length); i += length;
-                    length = bytes[i++];
+                    Utils.arraycopy(bytes, i, MediaURL, 0, length); i[0] +=  length;
+                    length = bytes[i[0]++];
                     PSBlock = new byte[length];
-                    Utils.arraycopy(bytes, i, PSBlock, 0, length); i += length;
-                    length = bytes[i++];
+                    Utils.arraycopy(bytes, i, PSBlock, 0, length); i[0] +=  length;
+                    length = bytes[i[0]++];
                     ExtraParams = new byte[length];
-                    Utils.arraycopy(bytes, i, ExtraParams, 0, length); i += length;
-                    Sound.FromBytes(bytes, i); i += 16;
-                    OwnerID.FromBytes(bytes, i); i += 16;
+                    Utils.arraycopy(bytes, i, ExtraParams, 0, length); i[0] +=  length;
+                    Sound.FromBytes(bytes, i[0]); i[0] += 16;
+                    OwnerID.FromBytes(bytes, i[0]); i[0] += 16;
                     Gain = Utils.BytesToFloat(bytes, i); i += 4;
-                    Flags = (byte)bytes[i++];
+                    Flags = (byte)bytes[i[0]++];
                     Radius = Utils.BytesToFloat(bytes, i); i += 4;
-                    JointType = (byte)bytes[i++];
-                    JointPivot.FromBytes(bytes, i); i += 12;
-                    JointAxisOrAnchor.FromBytes(bytes, i); i += 12;
+                    JointType = (byte)bytes[i[0]++];
+                    JointPivot.FromBytes(bytes, i[0]); i[0] += 12;
+                    JointAxisOrAnchor.FromBytes(bytes, i[0]); i[0] += 12;
                 }
                 catch (Exception e)
                 {
@@ -203,68 +203,68 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 Utils.UIntToBytes(ID, bytes, i); i += 4;
-                bytes[i++] = State;
-                FullID.ToBytes(bytes, i); i += 16;
+                bytes[i[0]++] = State;
+                FullID.ToBytes(bytes, i[0]); i[0] += 16;
                 Utils.UIntToBytes(CRC, bytes, i); i += 4;
-                bytes[i++] = PCode;
-                bytes[i++] = Material;
-                bytes[i++] = ClickAction;
-                Scale.ToBytes(bytes, i); i += 12;
-                bytes[i++] = (byte)ObjectData.length;
-                Utils.arraycopy(ObjectData, 0, bytes, i, ObjectData.length); i += ObjectData.length;
+                bytes[i[0]++] = PCode;
+                bytes[i[0]++] = Material;
+                bytes[i[0]++] = ClickAction;
+                Scale.ToBytes(bytes, i[0]); i[0] += 12;
+                bytes[i[0]++] = (byte)ObjectData.length;
+                Utils.arraycopy(ObjectData, 0, bytes, i, ObjectData.length); i[0] +=  ObjectData.length;
                 Utils.UIntToBytes(ParentID, bytes, i); i += 4;
                 Utils.UIntToBytes(UpdateFlags, bytes, i); i += 4;
-                bytes[i++] = PathCurve;
-                bytes[i++] = ProfileCurve;
-                bytes[i++] = (byte)(PathBegin % 256);
-                bytes[i++] = (byte)((PathBegin >> 8) % 256);
-                bytes[i++] = (byte)(PathEnd % 256);
-                bytes[i++] = (byte)((PathEnd >> 8) % 256);
-                bytes[i++] = PathScaleX;
-                bytes[i++] = PathScaleY;
-                bytes[i++] = PathShearX;
-                bytes[i++] = PathShearY;
-                bytes[i++] = (byte)PathTwist;
-                bytes[i++] = (byte)PathTwistBegin;
-                bytes[i++] = (byte)PathRadiusOffset;
-                bytes[i++] = (byte)PathTaperX;
-                bytes[i++] = (byte)PathTaperY;
-                bytes[i++] = PathRevolutions;
-                bytes[i++] = (byte)PathSkew;
-                bytes[i++] = (byte)(ProfileBegin % 256);
-                bytes[i++] = (byte)((ProfileBegin >> 8) % 256);
-                bytes[i++] = (byte)(ProfileEnd % 256);
-                bytes[i++] = (byte)((ProfileEnd >> 8) % 256);
-                bytes[i++] = (byte)(ProfileHollow % 256);
-                bytes[i++] = (byte)((ProfileHollow >> 8) % 256);
-                bytes[i++] = (byte)(TextureEntry.length % 256);
-                bytes[i++] = (byte)((TextureEntry.length >> 8) % 256);
-                Utils.arraycopy(TextureEntry, 0, bytes, i, TextureEntry.length); i += TextureEntry.length;
-                bytes[i++] = (byte)TextureAnim.length;
-                Utils.arraycopy(TextureAnim, 0, bytes, i, TextureAnim.length); i += TextureAnim.length;
-                bytes[i++] = (byte)(NameValue.length % 256);
-                bytes[i++] = (byte)((NameValue.length >> 8) % 256);
-                Utils.arraycopy(NameValue, 0, bytes, i, NameValue.length); i += NameValue.length;
-                bytes[i++] = (byte)(Data.length % 256);
-                bytes[i++] = (byte)((Data.length >> 8) % 256);
-                Utils.arraycopy(Data, 0, bytes, i, Data.getLength()); i += Data.getLength();
-                bytes[i++] = (byte)Text.length;
-                Utils.arraycopy(Text, 0, bytes, i, Text.length); i += Text.length;
+                bytes[i[0]++] = PathCurve;
+                bytes[i[0]++] = ProfileCurve;
+                bytes[i[0]++] = (byte)(PathBegin % 256);
+                bytes[i[0]++] = (byte)((PathBegin >> 8) % 256);
+                bytes[i[0]++] = (byte)(PathEnd % 256);
+                bytes[i[0]++] = (byte)((PathEnd >> 8) % 256);
+                bytes[i[0]++] = PathScaleX;
+                bytes[i[0]++] = PathScaleY;
+                bytes[i[0]++] = PathShearX;
+                bytes[i[0]++] = PathShearY;
+                bytes[i[0]++] = (byte)PathTwist;
+                bytes[i[0]++] = (byte)PathTwistBegin;
+                bytes[i[0]++] = (byte)PathRadiusOffset;
+                bytes[i[0]++] = (byte)PathTaperX;
+                bytes[i[0]++] = (byte)PathTaperY;
+                bytes[i[0]++] = PathRevolutions;
+                bytes[i[0]++] = (byte)PathSkew;
+                bytes[i[0]++] = (byte)(ProfileBegin % 256);
+                bytes[i[0]++] = (byte)((ProfileBegin >> 8) % 256);
+                bytes[i[0]++] = (byte)(ProfileEnd % 256);
+                bytes[i[0]++] = (byte)((ProfileEnd >> 8) % 256);
+                bytes[i[0]++] = (byte)(ProfileHollow % 256);
+                bytes[i[0]++] = (byte)((ProfileHollow >> 8) % 256);
+                bytes[i[0]++] = (byte)(TextureEntry.length % 256);
+                bytes[i[0]++] = (byte)((TextureEntry.length >> 8) % 256);
+                Utils.arraycopy(TextureEntry, 0, bytes, i, TextureEntry.length); i[0] +=  TextureEntry.length;
+                bytes[i[0]++] = (byte)TextureAnim.length;
+                Utils.arraycopy(TextureAnim, 0, bytes, i, TextureAnim.length); i[0] +=  TextureAnim.length;
+                bytes[i[0]++] = (byte)(NameValue.length % 256);
+                bytes[i[0]++] = (byte)((NameValue.length >> 8) % 256);
+                Utils.arraycopy(NameValue, 0, bytes, i, NameValue.length); i[0] +=  NameValue.length;
+                bytes[i[0]++] = (byte)(Data.length % 256);
+                bytes[i[0]++] = (byte)((Data.length >> 8) % 256);
+                Utils.arraycopy(Data, 0, bytes, i, Data.length); i[0] +=  Data.length;
+                bytes[i[0]++] = (byte)Text.length;
+                Utils.arraycopy(Text, 0, bytes, i, Text.length); i[0] +=  Text.length;
                 Utils.arraycopy(TextColor, 0, bytes, i, 4);i += 4;
-                bytes[i++] = (byte)MediaURL.length;
-                Utils.arraycopy(MediaURL, 0, bytes, i, MediaURL.length); i += MediaURL.length;
-                bytes[i++] = (byte)PSBlock.length;
-                Utils.arraycopy(PSBlock, 0, bytes, i, PSBlock.length); i += PSBlock.length;
-                bytes[i++] = (byte)ExtraParams.length;
-                Utils.arraycopy(ExtraParams, 0, bytes, i, ExtraParams.length); i += ExtraParams.length;
-                Sound.ToBytes(bytes, i); i += 16;
-                OwnerID.ToBytes(bytes, i); i += 16;
+                bytes[i[0]++] = (byte)MediaURL.length;
+                Utils.arraycopy(MediaURL, 0, bytes, i, MediaURL.length); i[0] +=  MediaURL.length;
+                bytes[i[0]++] = (byte)PSBlock.length;
+                Utils.arraycopy(PSBlock, 0, bytes, i, PSBlock.length); i[0] +=  PSBlock.length;
+                bytes[i[0]++] = (byte)ExtraParams.length;
+                Utils.arraycopy(ExtraParams, 0, bytes, i, ExtraParams.length); i[0] +=  ExtraParams.length;
+                Sound.ToBytes(bytes, i[0]); i[0] += 16;
+                OwnerID.ToBytes(bytes, i[0]); i[0] += 16;
                 Utils.FloatToBytes(Gain, bytes, i); i += 4;
-                bytes[i++] = Flags;
+                bytes[i[0]++] = Flags;
                 Utils.FloatToBytes(Radius, bytes, i); i += 4;
-                bytes[i++] = JointType;
-                JointPivot.ToBytes(bytes, i); i += 12;
-                JointAxisOrAnchor.ToBytes(bytes, i); i += 12;
+                bytes[i[0]++] = JointType;
+                JointPivot.ToBytes(bytes, i[0]); i[0] += 12;
+                JointAxisOrAnchor.ToBytes(bytes, i[0]); i[0] += 12;
             }
 
         }
@@ -276,7 +276,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length = 8;
                 length += RegionData.length;
                 for (int j = 0; j < ObjectData.length; j++)
-                    length += ObjectData[j].length;
+                    length += ObjectData[j].getLength();
                 return length;
             }
         }
@@ -313,7 +313,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 bytes = zeroBuffer;
             }
             RegionData.FromBytes(bytes, i);
-            int count = (int)bytes[i++];
+            int count = (int)bytes[i[0]++];
             if(ObjectData == null || ObjectData.length != -1) {
                 ObjectData = new ObjectDataBlock[count];
                 for(int j = 0; j < count; j++)
@@ -335,7 +335,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             this.header =  header;
             RegionData.FromBytes(bytes, i);
-            int count = (int)bytes[i++];
+            int count = (int)bytes[i[0]++];
             if(ObjectData == null || ObjectData.length != count) {
                 ObjectData = new ObjectDataBlock[count];
                 for(int j = 0; j < count; j++)
@@ -351,13 +351,13 @@ package com.ngt.jopenmetaverse.shared.protocol;
             int length = 7;
             length += RegionData.length;
             length++;
-            for (int j = 0; j < ObjectData.length; j++) { length += ObjectData[j].length; }
+            for (int j = 0; j < ObjectData.length; j++) { length += ObjectData[j].getLength(); }
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
             int i = 0;
             header.ToBytes(bytes, i);
             RegionData.ToBytes(bytes, i);
-            bytes[i++] = (byte)ObjectData.length;
+            bytes[i[0]++] = (byte)ObjectData.length;
             for (int j = 0; j < ObjectData.length; j++) { ObjectData[j].ToBytes(bytes, i); }
             if (header.AckList != null && header.AckList.length > 0) { header.AcksToBytes(bytes, i); }
             return bytes;
@@ -371,11 +371,11 @@ package com.ngt.jopenmetaverse.shared.protocol;
             int fixedLength = 7;
 
             byte[] ackBytes = null;
-            int acksLength = 0;
+            int[] acksLength = new int[]{0};
             if (header.AckList != null && header.AckList.length > 0) {
                 header.AppendedAcks = true;
                 ackBytes = new byte[header.AckList.length * 4 + 1];
-                header.AcksToBytes(ackBytes, ref acksLength);
+                header.AcksToBytes(ackBytes, acksLength);
             }
 
             fixedLength += RegionData.length;
@@ -391,9 +391,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int ObjectDataCount = 0;
 
                 i = ObjectDataStart;
-                while (fixedLength + variableLength + acksLength < Packet.MTU && i < ObjectData.length) {
-                    int blockLength = ObjectData[i].length;
-                    if (fixedLength + variableLength + blockLength + acksLength <= MTU) {
+                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i < ObjectData.length) {
+                    int blockLength = ObjectData[i].getLength();
+                    if (fixedLength + variableLength + blockLength + acksLength[0] <= MTU) {
                         variableLength += blockLength;
                         ++ObjectDataCount;
                     }
@@ -401,18 +401,18 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     ++i;
                 }
 
-                byte[] packet = new byte[fixedLength + variableLength + acksLength];
-                int length = fixedBytes.length;
-                Utils.arraycopy(fixedBytes, 0, packet, 0, length);
+                byte[] packet = new byte[fixedLength + variableLength + acksLength[0]];
+                int[] length = new int[] {fixedBytes.length};
+                Utils.arraycopy(fixedBytes, 0, packet, 0, length[0]);
                 if (packets.size() > 0) { packet[0] = (byte)(packet[0] & ~0x10); }
 
-                packet[length++] = (byte)ObjectDataCount;
-                for (i = ObjectDataStart; i < ObjectDataStart + ObjectDataCount; i++) { ObjectData[i].ToBytes(packet, ref length); }
+                packet[length[0]++] = (byte)ObjectDataCount;
+                for (i = ObjectDataStart; i < ObjectDataStart + ObjectDataCount; i++) { ObjectData[i].ToBytes(packet, length); }
                 ObjectDataStart += ObjectDataCount;
 
-                if (acksLength > 0) {
-                    Utils.arraycopy(ackBytes, 0, packet, length, acksLength);
-                    acksLength = 0;
+                if (acksLength[0] > 0) {
+                    Utils.arraycopy(ackBytes, 0, packet, length[0], acksLength[0]);
+                    acksLength[0] = 0;
                 }
 
                 packets.add(packet);

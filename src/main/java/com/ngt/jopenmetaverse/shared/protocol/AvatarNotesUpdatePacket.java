@@ -28,7 +28,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    AgentID.FromBytes(bytes, i); i += 16;
+                    AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)
@@ -74,10 +74,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    TargetID.FromBytes(bytes, i); i += 16;
-                    length = (bytes[i++] + (bytes[i++] << 8));
+                    TargetID.FromBytes(bytes, i[0]); i[0] += 16;
+                    length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
                     Notes = new byte[length];
-                    Utils.arraycopy(bytes, i, Notes, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, Notes, 0, length); i[0] +=  length;
                 }
                 catch (Exception e)
                 {
@@ -88,10 +88,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                TargetID.ToBytes(bytes, i); i += 16;
-                bytes[i++] = (byte)(Notes.length % 256);
-                bytes[i++] = (byte)((Notes.length >> 8) % 256);
-                Utils.arraycopy(Notes, 0, bytes, i, Notes.length); i += Notes.length;
+                TargetID.ToBytes(bytes, i[0]); i[0] += 16;
+                bytes[i[0]++] = (byte)(Notes.length % 256);
+                bytes[i[0]++] = (byte)((Notes.length >> 8) % 256);
+                Utils.arraycopy(Notes, 0, bytes, i, Notes.length); i[0] +=  Notes.length;
             }
 
         }
@@ -102,7 +102,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                         {
                 int length = 10;
                 length += AgentData.getLength();
-                length += Data.getLength();
+                length += Data.length;
                 return length;
             }
         }
@@ -161,7 +161,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             int length = 10;
             length += AgentData.getLength();
-            length += Data.getLength();
+            length += Data.length;
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
             int i = 0;

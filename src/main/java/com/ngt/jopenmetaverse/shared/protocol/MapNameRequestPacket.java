@@ -31,11 +31,11 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    AgentID.FromBytes(bytes, i); i += 16;
+                    AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
-                    Flags = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    EstateID = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    Godlike = (bytes[i++] != 0) ? (bool)true : (bool)false;
+                    Flags = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    EstateID = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    Godlike = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
                 }
                 catch (Exception e)
                 {
@@ -50,7 +50,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 SessionID.ToBytes(bytes, i[0]); i[0] += 16;
                 Utils.UIntToBytes(Flags, bytes, i); i += 4;
                 Utils.UIntToBytes(EstateID, bytes, i); i += 4;
-                bytes[i++] = (byte)((Godlike) ? 1 : 0);
+                bytes[i[0]++] = (byte)((Godlike) ? 1 : 0);
             }
 
         }
@@ -82,9 +82,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    length = bytes[i++];
+                    length = bytes[i[0]++];
                     Name = new byte[length];
-                    Utils.arraycopy(bytes, i, Name, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, Name, 0, length); i[0] +=  length;
                 }
                 catch (Exception e)
                 {
@@ -95,8 +95,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                bytes[i++] = (byte)Name.length;
-                Utils.arraycopy(Name, 0, bytes, i, Name.length); i += Name.length;
+                bytes[i[0]++] = (byte)Name.length;
+                Utils.arraycopy(Name, 0, bytes, i, Name.length); i[0] +=  Name.length;
             }
 
         }

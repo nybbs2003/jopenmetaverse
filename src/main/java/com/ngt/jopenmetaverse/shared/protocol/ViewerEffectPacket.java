@@ -28,7 +28,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    AgentID.FromBytes(bytes, i); i += 16;
+                    AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)
@@ -78,15 +78,15 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    ID.FromBytes(bytes, i); i += 16;
-                    AgentID.FromBytes(bytes, i); i += 16;
-                    Type = (byte)bytes[i++];
+                    ID.FromBytes(bytes, i[0]); i[0] += 16;
+                    AgentID.FromBytes(bytes, i[0]); i[0] += 16;
+                    Type = (byte)bytes[i[0]++];
                     Duration = Utils.BytesToFloat(bytes, i); i += 4;
                     Color = new byte[4];
                     Utils.arraycopy(bytes, i, Color, 0, 4); i += 4;
-                    length = bytes[i++];
+                    length = bytes[i[0]++];
                     TypeData = new byte[length];
-                    Utils.arraycopy(bytes, i, TypeData, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, TypeData, 0, length); i[0] +=  length;
                 }
                 catch (Exception e)
                 {
@@ -97,13 +97,13 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                ID.ToBytes(bytes, i); i += 16;
+                ID.ToBytes(bytes, i[0]); i[0] += 16;
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
-                bytes[i++] = Type;
+                bytes[i[0]++] = Type;
                 Utils.FloatToBytes(Duration, bytes, i); i += 4;
                 Utils.arraycopy(Color, 0, bytes, i, 4);i += 4;
-                bytes[i++] = (byte)TypeData.length;
-                Utils.arraycopy(TypeData, 0, bytes, i, TypeData.length); i += TypeData.length;
+                bytes[i[0]++] = (byte)TypeData.length;
+                Utils.arraycopy(TypeData, 0, bytes, i, TypeData.length); i[0] +=  TypeData.length;
             }
 
         }
@@ -115,7 +115,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length = 9;
                 length += AgentData.getLength();
                 for (int j = 0; j < Effect.length; j++)
-                    length += Effect[j].length;
+                    length += Effect[j].getLength();
                 return length;
             }
         }
@@ -152,7 +152,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 bytes = zeroBuffer;
             }
             AgentData.FromBytes(bytes, i);
-            int count = (int)bytes[i++];
+            int count = (int)bytes[i[0]++];
             if(Effect == null || Effect.length != -1) {
                 Effect = new EffectBlock[count];
                 for(int j = 0; j < count; j++)
@@ -174,7 +174,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             this.header =  header;
             AgentData.FromBytes(bytes, i);
-            int count = (int)bytes[i++];
+            int count = (int)bytes[i[0]++];
             if(Effect == null || Effect.length != count) {
                 Effect = new EffectBlock[count];
                 for(int j = 0; j < count; j++)
@@ -190,13 +190,13 @@ package com.ngt.jopenmetaverse.shared.protocol;
             int length = 8;
             length += AgentData.getLength();
             length++;
-            for (int j = 0; j < Effect.length; j++) { length += Effect[j].length; }
+            for (int j = 0; j < Effect.length; j++) { length += Effect[j].getLength(); }
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
             int i = 0;
             header.ToBytes(bytes, i);
             AgentData.ToBytes(bytes, i);
-            bytes[i++] = (byte)Effect.length;
+            bytes[i[0]++] = (byte)Effect.length;
             for (int j = 0; j < Effect.length; j++) { Effect[j].ToBytes(bytes, i); }
             if (header.AckList != null && header.AckList.length > 0) { header.AcksToBytes(bytes, i); }
             return bytes;
@@ -210,11 +210,11 @@ package com.ngt.jopenmetaverse.shared.protocol;
             int fixedLength = 8;
 
             byte[] ackBytes = null;
-            int acksLength = 0;
+            int[] acksLength = new int[]{0};
             if (header.AckList != null && header.AckList.length > 0) {
                 header.AppendedAcks = true;
                 ackBytes = new byte[header.AckList.length * 4 + 1];
-                header.AcksToBytes(ackBytes, ref acksLength);
+                header.AcksToBytes(ackBytes, acksLength);
             }
 
             fixedLength += AgentData.getLength();
@@ -230,9 +230,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int EffectCount = 0;
 
                 i = EffectStart;
-                while (fixedLength + variableLength + acksLength < Packet.MTU && i < Effect.length) {
-                    int blockLength = Effect[i].length;
-                    if (fixedLength + variableLength + blockLength + acksLength <= MTU) {
+                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i < Effect.length) {
+                    int blockLength = Effect[i].getLength();
+                    if (fixedLength + variableLength + blockLength + acksLength[0] <= MTU) {
                         variableLength += blockLength;
                         ++EffectCount;
                     }
@@ -240,18 +240,18 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     ++i;
                 }
 
-                byte[] packet = new byte[fixedLength + variableLength + acksLength];
-                int length = fixedBytes.length;
-                Utils.arraycopy(fixedBytes, 0, packet, 0, length);
+                byte[] packet = new byte[fixedLength + variableLength + acksLength[0]];
+                int[] length = new int[] {fixedBytes.length};
+                Utils.arraycopy(fixedBytes, 0, packet, 0, length[0]);
                 if (packets.size() > 0) { packet[0] = (byte)(packet[0] & ~0x10); }
 
-                packet[length++] = (byte)EffectCount;
-                for (i = EffectStart; i < EffectStart + EffectCount; i++) { Effect[i].ToBytes(packet, ref length); }
+                packet[length[0]++] = (byte)EffectCount;
+                for (i = EffectStart; i < EffectStart + EffectCount; i++) { Effect[i].ToBytes(packet, length); }
                 EffectStart += EffectCount;
 
-                if (acksLength > 0) {
-                    Utils.arraycopy(ackBytes, 0, packet, length, acksLength);
-                    acksLength = 0;
+                if (acksLength[0] > 0) {
+                    Utils.arraycopy(ackBytes, 0, packet, length[0], acksLength[0]);
+                    acksLength[0] = 0;
                 }
 
                 packets.add(packet);

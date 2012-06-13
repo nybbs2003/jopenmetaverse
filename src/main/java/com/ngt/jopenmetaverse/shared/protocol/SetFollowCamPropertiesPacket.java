@@ -27,7 +27,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    ObjectID.FromBytes(bytes, i); i += 16;
+                    ObjectID.FromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)
                 {
@@ -38,7 +38,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                ObjectID.ToBytes(bytes, i); i += 16;
+                ObjectID.ToBytes(bytes, i[0]); i[0] += 16;
             }
 
         }
@@ -68,7 +68,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    Type = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
+                    Type = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     Value = Utils.BytesToFloat(bytes, i); i += 4;
                 }
                 catch (Exception e)
@@ -93,7 +93,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length = 11;
                 length += ObjectData.length;
                 for (int j = 0; j < CameraProperty.length; j++)
-                    length += CameraProperty[j].length;
+                    length += CameraProperty[j].getLength();
                 return length;
             }
         }
@@ -129,7 +129,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 bytes = zeroBuffer;
             }
             ObjectData.FromBytes(bytes, i);
-            int count = (int)bytes[i++];
+            int count = (int)bytes[i[0]++];
             if(CameraProperty == null || CameraProperty.length != -1) {
                 CameraProperty = new CameraPropertyBlock[count];
                 for(int j = 0; j < count; j++)
@@ -151,7 +151,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             this.header =  header;
             ObjectData.FromBytes(bytes, i);
-            int count = (int)bytes[i++];
+            int count = (int)bytes[i[0]++];
             if(CameraProperty == null || CameraProperty.length != count) {
                 CameraProperty = new CameraPropertyBlock[count];
                 for(int j = 0; j < count; j++)
@@ -167,13 +167,13 @@ package com.ngt.jopenmetaverse.shared.protocol;
             int length = 10;
             length += ObjectData.length;
             length++;
-            for (int j = 0; j < CameraProperty.length; j++) { length += CameraProperty[j].length; }
+            for (int j = 0; j < CameraProperty.length; j++) { length += CameraProperty[j].getLength(); }
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
             int i = 0;
             header.ToBytes(bytes, i);
             ObjectData.ToBytes(bytes, i);
-            bytes[i++] = (byte)CameraProperty.length;
+            bytes[i[0]++] = (byte)CameraProperty.length;
             for (int j = 0; j < CameraProperty.length; j++) { CameraProperty[j].ToBytes(bytes, i); }
             if (header.AckList != null && header.AckList.length > 0) { header.AcksToBytes(bytes, i); }
             return bytes;
@@ -187,11 +187,11 @@ package com.ngt.jopenmetaverse.shared.protocol;
             int fixedLength = 10;
 
             byte[] ackBytes = null;
-            int acksLength = 0;
+            int[] acksLength = new int[]{0};
             if (header.AckList != null && header.AckList.length > 0) {
                 header.AppendedAcks = true;
                 ackBytes = new byte[header.AckList.length * 4 + 1];
-                header.AcksToBytes(ackBytes, ref acksLength);
+                header.AcksToBytes(ackBytes, acksLength);
             }
 
             fixedLength += ObjectData.length;
@@ -207,9 +207,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int CameraPropertyCount = 0;
 
                 i = CameraPropertyStart;
-                while (fixedLength + variableLength + acksLength < Packet.MTU && i < CameraProperty.length) {
-                    int blockLength = CameraProperty[i].length;
-                    if (fixedLength + variableLength + blockLength + acksLength <= MTU) {
+                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i < CameraProperty.length) {
+                    int blockLength = CameraProperty[i].getLength();
+                    if (fixedLength + variableLength + blockLength + acksLength[0] <= MTU) {
                         variableLength += blockLength;
                         ++CameraPropertyCount;
                     }
@@ -217,18 +217,18 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     ++i;
                 }
 
-                byte[] packet = new byte[fixedLength + variableLength + acksLength];
-                int length = fixedBytes.length;
-                Utils.arraycopy(fixedBytes, 0, packet, 0, length);
+                byte[] packet = new byte[fixedLength + variableLength + acksLength[0]];
+                int[] length = new int[] {fixedBytes.length};
+                Utils.arraycopy(fixedBytes, 0, packet, 0, length[0]);
                 if (packets.size() > 0) { packet[0] = (byte)(packet[0] & ~0x10); }
 
-                packet[length++] = (byte)CameraPropertyCount;
-                for (i = CameraPropertyStart; i < CameraPropertyStart + CameraPropertyCount; i++) { CameraProperty[i].ToBytes(packet, ref length); }
+                packet[length[0]++] = (byte)CameraPropertyCount;
+                for (i = CameraPropertyStart; i < CameraPropertyStart + CameraPropertyCount; i++) { CameraProperty[i].ToBytes(packet, length); }
                 CameraPropertyStart += CameraPropertyCount;
 
-                if (acksLength > 0) {
-                    Utils.arraycopy(ackBytes, 0, packet, length, acksLength);
-                    acksLength = 0;
+                if (acksLength[0] > 0) {
+                    Utils.arraycopy(ackBytes, 0, packet, length[0], acksLength[0]);
+                    acksLength[0] = 0;
                 }
 
                 packets.add(packet);

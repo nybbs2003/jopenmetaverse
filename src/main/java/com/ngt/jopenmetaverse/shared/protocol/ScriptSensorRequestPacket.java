@@ -40,19 +40,19 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    SourceID.FromBytes(bytes, i); i += 16;
-                    RequestID.FromBytes(bytes, i); i += 16;
-                    SearchID.FromBytes(bytes, i); i += 16;
-                    SearchPos.FromBytes(bytes, i); i += 12;
+                    SourceID.FromBytes(bytes, i[0]); i[0] += 16;
+                    RequestID.FromBytes(bytes, i[0]); i[0] += 16;
+                    SearchID.FromBytes(bytes, i[0]); i[0] += 16;
+                    SearchPos.FromBytes(bytes, i[0]); i[0] += 12;
                     SearchDir.FromBytes(bytes, i, true); i += 12;
-                    length = bytes[i++];
+                    length = bytes[i[0]++];
                     SearchName = new byte[length];
-                    Utils.arraycopy(bytes, i, SearchName, 0, length); i += length;
-                    Type = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
+                    Utils.arraycopy(bytes, i, SearchName, 0, length); i[0] +=  length;
+                    Type = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     Range = Utils.BytesToFloat(bytes, i); i += 4;
                     Arc = Utils.BytesToFloat(bytes, i); i += 4;
-                    RegionHandle = (ulong)((ulong)bytes[i++] + ((ulong)bytes[i++] << 8) + ((ulong)bytes[i++] << 16) + ((ulong)bytes[i++] << 24) + ((ulong)bytes[i++] << 32) + ((ulong)bytes[i++] << 40) + ((ulong)bytes[i++] << 48) + ((ulong)bytes[i++] << 56));
-                    SearchRegions = (byte)bytes[i++];
+                    RegionHandle = (ulong)((ulong)bytes[i[0]++] + ((ulong)bytes[i[0]++] << 8) + ((ulong)bytes[i[0]++] << 16) + ((ulong)bytes[i[0]++] << 24) + ((ulong)bytes[i[0]++] << 32) + ((ulong)bytes[i[0]++] << 40) + ((ulong)bytes[i[0]++] << 48) + ((ulong)bytes[i[0]++] << 56));
+                    SearchRegions = (byte)bytes[i[0]++];
                 }
                 catch (Exception e)
                 {
@@ -63,18 +63,18 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                SourceID.ToBytes(bytes, i); i += 16;
-                RequestID.ToBytes(bytes, i); i += 16;
-                SearchID.ToBytes(bytes, i); i += 16;
-                SearchPos.ToBytes(bytes, i); i += 12;
-                SearchDir.ToBytes(bytes, i); i += 12;
-                bytes[i++] = (byte)SearchName.length;
-                Utils.arraycopy(SearchName, 0, bytes, i, SearchName.length); i += SearchName.length;
+                SourceID.ToBytes(bytes, i[0]); i[0] += 16;
+                RequestID.ToBytes(bytes, i[0]); i[0] += 16;
+                SearchID.ToBytes(bytes, i[0]); i[0] += 16;
+                SearchPos.ToBytes(bytes, i[0]); i[0] += 12;
+                SearchDir.ToBytes(bytes, i[0]); i[0] += 12;
+                bytes[i[0]++] = (byte)SearchName.length;
+                Utils.arraycopy(SearchName, 0, bytes, i, SearchName.length); i[0] +=  SearchName.length;
                 Utils.IntToBytes(Type, bytes, i); i += 4;
                 Utils.FloatToBytes(Range, bytes, i); i += 4;
                 Utils.FloatToBytes(Arc, bytes, i); i += 4;
                 Utils.UInt64ToBytes(RegionHandle, bytes, i); i += 8;
-                bytes[i++] = SearchRegions;
+                bytes[i[0]++] = SearchRegions;
             }
 
         }

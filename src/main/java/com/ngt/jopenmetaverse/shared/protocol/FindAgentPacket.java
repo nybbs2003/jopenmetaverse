@@ -29,9 +29,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    Hunter.FromBytes(bytes, i); i += 16;
-                    Prey.FromBytes(bytes, i); i += 16;
-                    SpaceIP = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
+                    Hunter.FromBytes(bytes, i[0]); i[0] += 16;
+                    Prey.FromBytes(bytes, i[0]); i[0] += 16;
+                    SpaceIP = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                 }
                 catch (Exception e)
                 {
@@ -42,8 +42,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Hunter.ToBytes(bytes, i); i += 16;
-                Prey.ToBytes(bytes, i); i += 16;
+                Hunter.ToBytes(bytes, i[0]); i[0] += 16;
+                Prey.ToBytes(bytes, i[0]); i[0] += 16;
                 Utils.UIntToBytes(SpaceIP, bytes, i); i += 4;
             }
 
@@ -99,7 +99,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length = 11;
                 length += AgentBlock.length;
                 for (int j = 0; j < LocationBlock.length; j++)
-                    length += LocationBlock[j].length;
+                    length += LocationBlock[j].getLength();
                 return length;
             }
         }
@@ -135,7 +135,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 bytes = zeroBuffer;
             }
             AgentBlock.FromBytes(bytes, i);
-            int count = (int)bytes[i++];
+            int count = (int)bytes[i[0]++];
             if(LocationBlock == null || LocationBlock.length != -1) {
                 LocationBlock = new LocationBlockBlock[count];
                 for(int j = 0; j < count; j++)
@@ -157,7 +157,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             this.header =  header;
             AgentBlock.FromBytes(bytes, i);
-            int count = (int)bytes[i++];
+            int count = (int)bytes[i[0]++];
             if(LocationBlock == null || LocationBlock.length != count) {
                 LocationBlock = new LocationBlockBlock[count];
                 for(int j = 0; j < count; j++)
@@ -173,13 +173,13 @@ package com.ngt.jopenmetaverse.shared.protocol;
             int length = 10;
             length += AgentBlock.length;
             length++;
-            for (int j = 0; j < LocationBlock.length; j++) { length += LocationBlock[j].length; }
+            for (int j = 0; j < LocationBlock.length; j++) { length += LocationBlock[j].getLength(); }
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
             int i = 0;
             header.ToBytes(bytes, i);
             AgentBlock.ToBytes(bytes, i);
-            bytes[i++] = (byte)LocationBlock.length;
+            bytes[i[0]++] = (byte)LocationBlock.length;
             for (int j = 0; j < LocationBlock.length; j++) { LocationBlock[j].ToBytes(bytes, i); }
             if (header.AckList != null && header.AckList.length > 0) { header.AcksToBytes(bytes, i); }
             return bytes;
@@ -193,11 +193,11 @@ package com.ngt.jopenmetaverse.shared.protocol;
             int fixedLength = 10;
 
             byte[] ackBytes = null;
-            int acksLength = 0;
+            int[] acksLength = new int[]{0};
             if (header.AckList != null && header.AckList.length > 0) {
                 header.AppendedAcks = true;
                 ackBytes = new byte[header.AckList.length * 4 + 1];
-                header.AcksToBytes(ackBytes, ref acksLength);
+                header.AcksToBytes(ackBytes, acksLength);
             }
 
             fixedLength += AgentBlock.length;
@@ -213,9 +213,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int LocationBlockCount = 0;
 
                 i = LocationBlockStart;
-                while (fixedLength + variableLength + acksLength < Packet.MTU && i < LocationBlock.length) {
-                    int blockLength = LocationBlock[i].length;
-                    if (fixedLength + variableLength + blockLength + acksLength <= MTU) {
+                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i < LocationBlock.length) {
+                    int blockLength = LocationBlock[i].getLength();
+                    if (fixedLength + variableLength + blockLength + acksLength[0] <= MTU) {
                         variableLength += blockLength;
                         ++LocationBlockCount;
                     }
@@ -223,18 +223,18 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     ++i;
                 }
 
-                byte[] packet = new byte[fixedLength + variableLength + acksLength];
-                int length = fixedBytes.length;
-                Utils.arraycopy(fixedBytes, 0, packet, 0, length);
+                byte[] packet = new byte[fixedLength + variableLength + acksLength[0]];
+                int[] length = new int[] {fixedBytes.length};
+                Utils.arraycopy(fixedBytes, 0, packet, 0, length[0]);
                 if (packets.size() > 0) { packet[0] = (byte)(packet[0] & ~0x10); }
 
-                packet[length++] = (byte)LocationBlockCount;
-                for (i = LocationBlockStart; i < LocationBlockStart + LocationBlockCount; i++) { LocationBlock[i].ToBytes(packet, ref length); }
+                packet[length[0]++] = (byte)LocationBlockCount;
+                for (i = LocationBlockStart; i < LocationBlockStart + LocationBlockCount; i++) { LocationBlock[i].ToBytes(packet, length); }
                 LocationBlockStart += LocationBlockCount;
 
-                if (acksLength > 0) {
-                    Utils.arraycopy(ackBytes, 0, packet, length, acksLength);
-                    acksLength = 0;
+                if (acksLength[0] > 0) {
+                    Utils.arraycopy(ackBytes, 0, packet, length[0], acksLength[0]);
+                    acksLength[0] = 0;
                 }
 
                 packets.add(packet);

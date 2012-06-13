@@ -28,8 +28,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    TargetIP = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    TargetPort = (ushort)((bytes[i++] << 8) + bytes[i++]);
+                    TargetIP = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    TargetPort = (ushort)((bytes[i[0]++] << 8) + bytes[i[0]++]);
                 }
                 catch (Exception e)
                 {
@@ -41,8 +41,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 Utils.UIntToBytes(TargetIP, bytes, i); i += 4;
-                bytes[i++] = (byte)((TargetPort >> 8) % 256);
-                bytes[i++] = (byte)(TargetPort % 256);
+                bytes[i[0]++] = (byte)((TargetPort >> 8) % 256);
+                bytes[i[0]++] = (byte)(TargetPort % 256);
             }
 
         }
@@ -76,11 +76,11 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    AgentID.FromBytes(bytes, i); i += 16;
+                    AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
-                    length = (bytes[i++] + (bytes[i++] << 8));
+                    length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
                     Reason = new byte[length];
-                    Utils.arraycopy(bytes, i, Reason, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, Reason, 0, length); i[0] +=  length;
                 }
                 catch (Exception e)
                 {
@@ -93,9 +93,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
                 SessionID.ToBytes(bytes, i[0]); i[0] += 16;
-                bytes[i++] = (byte)(Reason.length % 256);
-                bytes[i++] = (byte)((Reason.length >> 8) % 256);
-                Utils.arraycopy(Reason, 0, bytes, i, Reason.length); i += Reason.length;
+                bytes[i[0]++] = (byte)(Reason.length % 256);
+                bytes[i[0]++] = (byte)((Reason.length >> 8) % 256);
+                Utils.arraycopy(Reason, 0, bytes, i, Reason.length); i[0] +=  Reason.length;
             }
 
         }

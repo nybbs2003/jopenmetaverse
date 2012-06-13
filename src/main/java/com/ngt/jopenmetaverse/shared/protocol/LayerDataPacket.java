@@ -27,7 +27,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    Type = (byte)bytes[i++];
+                    Type = (byte)bytes[i[0]++];
                 }
                 catch (Exception e)
                 {
@@ -38,7 +38,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                bytes[i++] = Type;
+                bytes[i[0]++] = Type;
             }
 
         }
@@ -53,7 +53,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                                 {
                     int length = 2;
-                    if (Data != null) { length += Data.getLength(); }
+                    if (Data != null) { length += Data.length; }
                     return length;
                 }
             }
@@ -70,9 +70,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    length = (bytes[i++] + (bytes[i++] << 8));
+                    length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
                     Data = new byte[length];
-                    Utils.arraycopy(bytes, i, Data, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, Data, 0, length); i[0] +=  length;
                 }
                 catch (Exception e)
                 {
@@ -83,9 +83,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                bytes[i++] = (byte)(Data.length % 256);
-                bytes[i++] = (byte)((Data.length >> 8) % 256);
-                Utils.arraycopy(Data, 0, bytes, i, Data.getLength()); i += Data.getLength();
+                bytes[i[0]++] = (byte)(Data.length % 256);
+                bytes[i[0]++] = (byte)((Data.length >> 8) % 256);
+                Utils.arraycopy(Data, 0, bytes, i, Data.length); i[0] +=  Data.length;
             }
 
         }

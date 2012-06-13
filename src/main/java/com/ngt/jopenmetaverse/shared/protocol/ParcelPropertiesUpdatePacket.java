@@ -28,7 +28,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    AgentID.FromBytes(bytes, i); i += 16;
+                    AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)
@@ -94,33 +94,33 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    LocalID = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    Flags = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    ParcelFlags = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    SalePrice = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    length = bytes[i++];
+                    LocalID = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    Flags = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    ParcelFlags = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    SalePrice = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    length = bytes[i[0]++];
                     Name = new byte[length];
-                    Utils.arraycopy(bytes, i, Name, 0, length); i += length;
-                    length = bytes[i++];
+                    Utils.arraycopy(bytes, i, Name, 0, length); i[0] +=  length;
+                    length = bytes[i[0]++];
                     Desc = new byte[length];
-                    Utils.arraycopy(bytes, i, Desc, 0, length); i += length;
-                    length = bytes[i++];
+                    Utils.arraycopy(bytes, i, Desc, 0, length); i[0] +=  length;
+                    length = bytes[i[0]++];
                     MusicURL = new byte[length];
-                    Utils.arraycopy(bytes, i, MusicURL, 0, length); i += length;
-                    length = bytes[i++];
+                    Utils.arraycopy(bytes, i, MusicURL, 0, length); i[0] +=  length;
+                    length = bytes[i[0]++];
                     MediaURL = new byte[length];
-                    Utils.arraycopy(bytes, i, MediaURL, 0, length); i += length;
-                    MediaID.FromBytes(bytes, i); i += 16;
-                    MediaAutoScale = (byte)bytes[i++];
-                    GroupID.FromBytes(bytes, i); i += 16;
-                    PassPrice = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
+                    Utils.arraycopy(bytes, i, MediaURL, 0, length); i[0] +=  length;
+                    MediaID.FromBytes(bytes, i[0]); i[0] += 16;
+                    MediaAutoScale = (byte)bytes[i[0]++];
+                    GroupID.FromBytes(bytes, i[0]); i[0] += 16;
+                    PassPrice = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     PassHours = Utils.BytesToFloat(bytes, i); i += 4;
-                    Category = (byte)bytes[i++];
-                    AuthBuyerID.FromBytes(bytes, i); i += 16;
-                    SnapshotID.FromBytes(bytes, i); i += 16;
-                    UserLocation.FromBytes(bytes, i); i += 12;
-                    UserLookAt.FromBytes(bytes, i); i += 12;
-                    LandingType = (byte)bytes[i++];
+                    Category = (byte)bytes[i[0]++];
+                    AuthBuyerID.FromBytes(bytes, i[0]); i[0] += 16;
+                    SnapshotID.FromBytes(bytes, i[0]); i[0] += 16;
+                    UserLocation.FromBytes(bytes, i[0]); i[0] += 12;
+                    UserLookAt.FromBytes(bytes, i[0]); i[0] += 12;
+                    LandingType = (byte)bytes[i[0]++];
                 }
                 catch (Exception e)
                 {
@@ -135,25 +135,25 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 Utils.UIntToBytes(Flags, bytes, i); i += 4;
                 Utils.UIntToBytes(ParcelFlags, bytes, i); i += 4;
                 Utils.IntToBytes(SalePrice, bytes, i); i += 4;
-                bytes[i++] = (byte)Name.length;
-                Utils.arraycopy(Name, 0, bytes, i, Name.length); i += Name.length;
-                bytes[i++] = (byte)Desc.length;
-                Utils.arraycopy(Desc, 0, bytes, i, Desc.length); i += Desc.length;
-                bytes[i++] = (byte)MusicURL.length;
-                Utils.arraycopy(MusicURL, 0, bytes, i, MusicURL.length); i += MusicURL.length;
-                bytes[i++] = (byte)MediaURL.length;
-                Utils.arraycopy(MediaURL, 0, bytes, i, MediaURL.length); i += MediaURL.length;
-                MediaID.ToBytes(bytes, i); i += 16;
-                bytes[i++] = MediaAutoScale;
-                GroupID.ToBytes(bytes, i); i += 16;
+                bytes[i[0]++] = (byte)Name.length;
+                Utils.arraycopy(Name, 0, bytes, i, Name.length); i[0] +=  Name.length;
+                bytes[i[0]++] = (byte)Desc.length;
+                Utils.arraycopy(Desc, 0, bytes, i, Desc.length); i[0] +=  Desc.length;
+                bytes[i[0]++] = (byte)MusicURL.length;
+                Utils.arraycopy(MusicURL, 0, bytes, i, MusicURL.length); i[0] +=  MusicURL.length;
+                bytes[i[0]++] = (byte)MediaURL.length;
+                Utils.arraycopy(MediaURL, 0, bytes, i, MediaURL.length); i[0] +=  MediaURL.length;
+                MediaID.ToBytes(bytes, i[0]); i[0] += 16;
+                bytes[i[0]++] = MediaAutoScale;
+                GroupID.ToBytes(bytes, i[0]); i[0] += 16;
                 Utils.IntToBytes(PassPrice, bytes, i); i += 4;
                 Utils.FloatToBytes(PassHours, bytes, i); i += 4;
-                bytes[i++] = Category;
-                AuthBuyerID.ToBytes(bytes, i); i += 16;
-                SnapshotID.ToBytes(bytes, i); i += 16;
-                UserLocation.ToBytes(bytes, i); i += 12;
-                UserLookAt.ToBytes(bytes, i); i += 12;
-                bytes[i++] = LandingType;
+                bytes[i[0]++] = Category;
+                AuthBuyerID.ToBytes(bytes, i[0]); i[0] += 16;
+                SnapshotID.ToBytes(bytes, i[0]); i[0] += 16;
+                UserLocation.ToBytes(bytes, i[0]); i[0] += 12;
+                UserLookAt.ToBytes(bytes, i[0]); i[0] += 12;
+                bytes[i[0]++] = LandingType;
             }
 
         }

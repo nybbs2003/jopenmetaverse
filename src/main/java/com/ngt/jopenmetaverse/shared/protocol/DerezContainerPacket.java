@@ -28,8 +28,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    ObjectID.FromBytes(bytes, i); i += 16;
-                    Delete = (bytes[i++] != 0) ? (bool)true : (bool)false;
+                    ObjectID.FromBytes(bytes, i[0]); i[0] += 16;
+                    Delete = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
                 }
                 catch (Exception e)
                 {
@@ -40,8 +40,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                ObjectID.ToBytes(bytes, i); i += 16;
-                bytes[i++] = (byte)((Delete) ? 1 : 0);
+                ObjectID.ToBytes(bytes, i[0]); i[0] += 16;
+                bytes[i[0]++] = (byte)((Delete) ? 1 : 0);
             }
 
         }
@@ -51,7 +51,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
                         {
                 int length = 10;
-                length += Data.getLength();
+                length += Data.length;
                 return length;
             }
         }
@@ -106,7 +106,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public byte[] ToBytes()
         {
             int length = 10;
-            length += Data.getLength();
+            length += Data.length;
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
             int i = 0;

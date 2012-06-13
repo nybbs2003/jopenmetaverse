@@ -36,15 +36,15 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    ID = (ulong)((ulong)bytes[i++] + ((ulong)bytes[i++] << 8) + ((ulong)bytes[i++] << 16) + ((ulong)bytes[i++] << 24) + ((ulong)bytes[i++] << 32) + ((ulong)bytes[i++] << 40) + ((ulong)bytes[i++] << 48) + ((ulong)bytes[i++] << 56));
-                    length = bytes[i++];
+                    ID = (ulong)((ulong)bytes[i[0]++] + ((ulong)bytes[i[0]++] << 8) + ((ulong)bytes[i[0]++] << 16) + ((ulong)bytes[i[0]++] << 24) + ((ulong)bytes[i[0]++] << 32) + ((ulong)bytes[i[0]++] << 40) + ((ulong)bytes[i[0]++] << 48) + ((ulong)bytes[i[0]++] << 56));
+                    length = bytes[i[0]++];
                     Filename = new byte[length];
-                    Utils.arraycopy(bytes, i, Filename, 0, length); i += length;
-                    FilePath = (byte)bytes[i++];
-                    DeleteOnCompletion = (bytes[i++] != 0) ? (bool)true : (bool)false;
-                    UseBigPackets = (bytes[i++] != 0) ? (bool)true : (bool)false;
-                    VFileID.FromBytes(bytes, i); i += 16;
-                    VFileType = (short)(bytes[i++] + (bytes[i++] << 8));
+                    Utils.arraycopy(bytes, i, Filename, 0, length); i[0] +=  length;
+                    FilePath = (byte)bytes[i[0]++];
+                    DeleteOnCompletion = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
+                    UseBigPackets = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
+                    VFileID.FromBytes(bytes, i[0]); i[0] += 16;
+                    VFileType = (short)(bytes[i[0]++] + (bytes[i[0]++] << 8));
                 }
                 catch (Exception e)
                 {
@@ -56,14 +56,14 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 Utils.UInt64ToBytes(ID, bytes, i); i += 8;
-                bytes[i++] = (byte)Filename.length;
-                Utils.arraycopy(Filename, 0, bytes, i, Filename.length); i += Filename.length;
-                bytes[i++] = FilePath;
-                bytes[i++] = (byte)((DeleteOnCompletion) ? 1 : 0);
-                bytes[i++] = (byte)((UseBigPackets) ? 1 : 0);
-                VFileID.ToBytes(bytes, i); i += 16;
-                bytes[i++] = (byte)(VFileType % 256);
-                bytes[i++] = (byte)((VFileType >> 8) % 256);
+                bytes[i[0]++] = (byte)Filename.length;
+                Utils.arraycopy(Filename, 0, bytes, i, Filename.length); i[0] +=  Filename.length;
+                bytes[i[0]++] = FilePath;
+                bytes[i[0]++] = (byte)((DeleteOnCompletion) ? 1 : 0);
+                bytes[i[0]++] = (byte)((UseBigPackets) ? 1 : 0);
+                VFileID.ToBytes(bytes, i[0]); i[0] += 16;
+                bytes[i[0]++] = (byte)(VFileType % 256);
+                bytes[i[0]++] = (byte)((VFileType >> 8) % 256);
             }
 
         }

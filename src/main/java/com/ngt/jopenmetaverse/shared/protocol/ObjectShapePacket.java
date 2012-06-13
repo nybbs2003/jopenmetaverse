@@ -28,7 +28,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    AgentID.FromBytes(bytes, i); i += 16;
+                    AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)
@@ -88,25 +88,25 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    ObjectLocalID = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    PathCurve = (byte)bytes[i++];
-                    ProfileCurve = (byte)bytes[i++];
-                    PathBegin = (ushort)(bytes[i++] + (bytes[i++] << 8));
-                    PathEnd = (ushort)(bytes[i++] + (bytes[i++] << 8));
-                    PathScaleX = (byte)bytes[i++];
-                    PathScaleY = (byte)bytes[i++];
-                    PathShearX = (byte)bytes[i++];
-                    PathShearY = (byte)bytes[i++];
-                    PathTwist = (sbyte)bytes[i++];
-                    PathTwistBegin = (sbyte)bytes[i++];
-                    PathRadiusOffset = (sbyte)bytes[i++];
-                    PathTaperX = (sbyte)bytes[i++];
-                    PathTaperY = (sbyte)bytes[i++];
-                    PathRevolutions = (byte)bytes[i++];
-                    PathSkew = (sbyte)bytes[i++];
-                    ProfileBegin = (ushort)(bytes[i++] + (bytes[i++] << 8));
-                    ProfileEnd = (ushort)(bytes[i++] + (bytes[i++] << 8));
-                    ProfileHollow = (ushort)(bytes[i++] + (bytes[i++] << 8));
+                    ObjectLocalID = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    PathCurve = (byte)bytes[i[0]++];
+                    ProfileCurve = (byte)bytes[i[0]++];
+                    PathBegin = (ushort)(bytes[i[0]++] + (bytes[i[0]++] << 8));
+                    PathEnd = (ushort)(bytes[i[0]++] + (bytes[i[0]++] << 8));
+                    PathScaleX = (byte)bytes[i[0]++];
+                    PathScaleY = (byte)bytes[i[0]++];
+                    PathShearX = (byte)bytes[i[0]++];
+                    PathShearY = (byte)bytes[i[0]++];
+                    PathTwist = (sbyte)bytes[i[0]++];
+                    PathTwistBegin = (sbyte)bytes[i[0]++];
+                    PathRadiusOffset = (sbyte)bytes[i[0]++];
+                    PathTaperX = (sbyte)bytes[i[0]++];
+                    PathTaperY = (sbyte)bytes[i[0]++];
+                    PathRevolutions = (byte)bytes[i[0]++];
+                    PathSkew = (sbyte)bytes[i[0]++];
+                    ProfileBegin = (ushort)(bytes[i[0]++] + (bytes[i[0]++] << 8));
+                    ProfileEnd = (ushort)(bytes[i[0]++] + (bytes[i[0]++] << 8));
+                    ProfileHollow = (ushort)(bytes[i[0]++] + (bytes[i[0]++] << 8));
                 }
                 catch (Exception e)
                 {
@@ -118,29 +118,29 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 Utils.UIntToBytes(ObjectLocalID, bytes, i); i += 4;
-                bytes[i++] = PathCurve;
-                bytes[i++] = ProfileCurve;
-                bytes[i++] = (byte)(PathBegin % 256);
-                bytes[i++] = (byte)((PathBegin >> 8) % 256);
-                bytes[i++] = (byte)(PathEnd % 256);
-                bytes[i++] = (byte)((PathEnd >> 8) % 256);
-                bytes[i++] = PathScaleX;
-                bytes[i++] = PathScaleY;
-                bytes[i++] = PathShearX;
-                bytes[i++] = PathShearY;
-                bytes[i++] = (byte)PathTwist;
-                bytes[i++] = (byte)PathTwistBegin;
-                bytes[i++] = (byte)PathRadiusOffset;
-                bytes[i++] = (byte)PathTaperX;
-                bytes[i++] = (byte)PathTaperY;
-                bytes[i++] = PathRevolutions;
-                bytes[i++] = (byte)PathSkew;
-                bytes[i++] = (byte)(ProfileBegin % 256);
-                bytes[i++] = (byte)((ProfileBegin >> 8) % 256);
-                bytes[i++] = (byte)(ProfileEnd % 256);
-                bytes[i++] = (byte)((ProfileEnd >> 8) % 256);
-                bytes[i++] = (byte)(ProfileHollow % 256);
-                bytes[i++] = (byte)((ProfileHollow >> 8) % 256);
+                bytes[i[0]++] = PathCurve;
+                bytes[i[0]++] = ProfileCurve;
+                bytes[i[0]++] = (byte)(PathBegin % 256);
+                bytes[i[0]++] = (byte)((PathBegin >> 8) % 256);
+                bytes[i[0]++] = (byte)(PathEnd % 256);
+                bytes[i[0]++] = (byte)((PathEnd >> 8) % 256);
+                bytes[i[0]++] = PathScaleX;
+                bytes[i[0]++] = PathScaleY;
+                bytes[i[0]++] = PathShearX;
+                bytes[i[0]++] = PathShearY;
+                bytes[i[0]++] = (byte)PathTwist;
+                bytes[i[0]++] = (byte)PathTwistBegin;
+                bytes[i[0]++] = (byte)PathRadiusOffset;
+                bytes[i[0]++] = (byte)PathTaperX;
+                bytes[i[0]++] = (byte)PathTaperY;
+                bytes[i[0]++] = PathRevolutions;
+                bytes[i[0]++] = (byte)PathSkew;
+                bytes[i[0]++] = (byte)(ProfileBegin % 256);
+                bytes[i[0]++] = (byte)((ProfileBegin >> 8) % 256);
+                bytes[i[0]++] = (byte)(ProfileEnd % 256);
+                bytes[i[0]++] = (byte)((ProfileEnd >> 8) % 256);
+                bytes[i[0]++] = (byte)(ProfileHollow % 256);
+                bytes[i[0]++] = (byte)((ProfileHollow >> 8) % 256);
             }
 
         }
@@ -152,7 +152,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length = 11;
                 length += AgentData.getLength();
                 for (int j = 0; j < ObjectData.length; j++)
-                    length += ObjectData[j].length;
+                    length += ObjectData[j].getLength();
                 return length;
             }
         }
@@ -189,7 +189,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 bytes = zeroBuffer;
             }
             AgentData.FromBytes(bytes, i);
-            int count = (int)bytes[i++];
+            int count = (int)bytes[i[0]++];
             if(ObjectData == null || ObjectData.length != -1) {
                 ObjectData = new ObjectDataBlock[count];
                 for(int j = 0; j < count; j++)
@@ -211,7 +211,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             this.header =  header;
             AgentData.FromBytes(bytes, i);
-            int count = (int)bytes[i++];
+            int count = (int)bytes[i[0]++];
             if(ObjectData == null || ObjectData.length != count) {
                 ObjectData = new ObjectDataBlock[count];
                 for(int j = 0; j < count; j++)
@@ -227,13 +227,13 @@ package com.ngt.jopenmetaverse.shared.protocol;
             int length = 10;
             length += AgentData.getLength();
             length++;
-            for (int j = 0; j < ObjectData.length; j++) { length += ObjectData[j].length; }
+            for (int j = 0; j < ObjectData.length; j++) { length += ObjectData[j].getLength(); }
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
             int i = 0;
             header.ToBytes(bytes, i);
             AgentData.ToBytes(bytes, i);
-            bytes[i++] = (byte)ObjectData.length;
+            bytes[i[0]++] = (byte)ObjectData.length;
             for (int j = 0; j < ObjectData.length; j++) { ObjectData[j].ToBytes(bytes, i); }
             if (header.AckList != null && header.AckList.length > 0) { header.AcksToBytes(bytes, i); }
             return bytes;
@@ -247,11 +247,11 @@ package com.ngt.jopenmetaverse.shared.protocol;
             int fixedLength = 10;
 
             byte[] ackBytes = null;
-            int acksLength = 0;
+            int[] acksLength = new int[]{0};
             if (header.AckList != null && header.AckList.length > 0) {
                 header.AppendedAcks = true;
                 ackBytes = new byte[header.AckList.length * 4 + 1];
-                header.AcksToBytes(ackBytes, ref acksLength);
+                header.AcksToBytes(ackBytes, acksLength);
             }
 
             fixedLength += AgentData.getLength();
@@ -267,9 +267,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int ObjectDataCount = 0;
 
                 i = ObjectDataStart;
-                while (fixedLength + variableLength + acksLength < Packet.MTU && i < ObjectData.length) {
-                    int blockLength = ObjectData[i].length;
-                    if (fixedLength + variableLength + blockLength + acksLength <= MTU) {
+                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i < ObjectData.length) {
+                    int blockLength = ObjectData[i].getLength();
+                    if (fixedLength + variableLength + blockLength + acksLength[0] <= MTU) {
                         variableLength += blockLength;
                         ++ObjectDataCount;
                     }
@@ -277,18 +277,18 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     ++i;
                 }
 
-                byte[] packet = new byte[fixedLength + variableLength + acksLength];
-                int length = fixedBytes.length;
-                Utils.arraycopy(fixedBytes, 0, packet, 0, length);
+                byte[] packet = new byte[fixedLength + variableLength + acksLength[0]];
+                int[] length = new int[] {fixedBytes.length};
+                Utils.arraycopy(fixedBytes, 0, packet, 0, length[0]);
                 if (packets.size() > 0) { packet[0] = (byte)(packet[0] & ~0x10); }
 
-                packet[length++] = (byte)ObjectDataCount;
-                for (i = ObjectDataStart; i < ObjectDataStart + ObjectDataCount; i++) { ObjectData[i].ToBytes(packet, ref length); }
+                packet[length[0]++] = (byte)ObjectDataCount;
+                for (i = ObjectDataStart; i < ObjectDataStart + ObjectDataCount; i++) { ObjectData[i].ToBytes(packet, length); }
                 ObjectDataStart += ObjectDataCount;
 
-                if (acksLength > 0) {
-                    Utils.arraycopy(ackBytes, 0, packet, length, acksLength);
-                    acksLength = 0;
+                if (acksLength[0] > 0) {
+                    Utils.arraycopy(ackBytes, 0, packet, length[0], acksLength[0]);
+                    acksLength[0] = 0;
                 }
 
                 packets.add(packet);

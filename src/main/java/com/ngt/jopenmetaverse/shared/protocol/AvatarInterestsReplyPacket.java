@@ -28,8 +28,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    AgentID.FromBytes(bytes, i); i += 16;
-                    AvatarID.FromBytes(bytes, i); i += 16;
+                    AgentID.FromBytes(bytes, i[0]); i[0] += 16;
+                    AvatarID.FromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)
                 {
@@ -41,7 +41,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
-                AvatarID.ToBytes(bytes, i); i += 16;
+                AvatarID.ToBytes(bytes, i[0]); i[0] += 16;
             }
 
         }
@@ -79,17 +79,17 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    WantToMask = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    length = bytes[i++];
+                    WantToMask = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    length = bytes[i[0]++];
                     WantToText = new byte[length];
-                    Utils.arraycopy(bytes, i, WantToText, 0, length); i += length;
-                    SkillsMask = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    length = bytes[i++];
+                    Utils.arraycopy(bytes, i, WantToText, 0, length); i[0] +=  length;
+                    SkillsMask = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    length = bytes[i[0]++];
                     SkillsText = new byte[length];
-                    Utils.arraycopy(bytes, i, SkillsText, 0, length); i += length;
-                    length = bytes[i++];
+                    Utils.arraycopy(bytes, i, SkillsText, 0, length); i[0] +=  length;
+                    length = bytes[i[0]++];
                     LanguagesText = new byte[length];
-                    Utils.arraycopy(bytes, i, LanguagesText, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, LanguagesText, 0, length); i[0] +=  length;
                 }
                 catch (Exception e)
                 {
@@ -101,13 +101,13 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 Utils.UIntToBytes(WantToMask, bytes, i); i += 4;
-                bytes[i++] = (byte)WantToText.length;
-                Utils.arraycopy(WantToText, 0, bytes, i, WantToText.length); i += WantToText.length;
+                bytes[i[0]++] = (byte)WantToText.length;
+                Utils.arraycopy(WantToText, 0, bytes, i, WantToText.length); i[0] +=  WantToText.length;
                 Utils.UIntToBytes(SkillsMask, bytes, i); i += 4;
-                bytes[i++] = (byte)SkillsText.length;
-                Utils.arraycopy(SkillsText, 0, bytes, i, SkillsText.length); i += SkillsText.length;
-                bytes[i++] = (byte)LanguagesText.length;
-                Utils.arraycopy(LanguagesText, 0, bytes, i, LanguagesText.length); i += LanguagesText.length;
+                bytes[i[0]++] = (byte)SkillsText.length;
+                Utils.arraycopy(SkillsText, 0, bytes, i, SkillsText.length); i[0] +=  SkillsText.length;
+                bytes[i[0]++] = (byte)LanguagesText.length;
+                Utils.arraycopy(LanguagesText, 0, bytes, i, LanguagesText.length); i[0] +=  LanguagesText.length;
             }
 
         }

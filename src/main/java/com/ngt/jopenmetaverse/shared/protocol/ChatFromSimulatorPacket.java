@@ -38,18 +38,18 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    length = bytes[i++];
+                    length = bytes[i[0]++];
                     FromName = new byte[length];
-                    Utils.arraycopy(bytes, i, FromName, 0, length); i += length;
-                    SourceID.FromBytes(bytes, i); i += 16;
-                    OwnerID.FromBytes(bytes, i); i += 16;
-                    SourceType = (byte)bytes[i++];
-                    ChatType = (byte)bytes[i++];
-                    Audible = (byte)bytes[i++];
-                    Position.FromBytes(bytes, i); i += 12;
-                    length = (bytes[i++] + (bytes[i++] << 8));
+                    Utils.arraycopy(bytes, i, FromName, 0, length); i[0] +=  length;
+                    SourceID.FromBytes(bytes, i[0]); i[0] += 16;
+                    OwnerID.FromBytes(bytes, i[0]); i[0] += 16;
+                    SourceType = (byte)bytes[i[0]++];
+                    ChatType = (byte)bytes[i[0]++];
+                    Audible = (byte)bytes[i[0]++];
+                    Position.FromBytes(bytes, i[0]); i[0] += 12;
+                    length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
                     Message = new byte[length];
-                    Utils.arraycopy(bytes, i, Message, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, Message, 0, length); i[0] +=  length;
                 }
                 catch (Exception e)
                 {
@@ -60,17 +60,17 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                bytes[i++] = (byte)FromName.length;
-                Utils.arraycopy(FromName, 0, bytes, i, FromName.length); i += FromName.length;
-                SourceID.ToBytes(bytes, i); i += 16;
-                OwnerID.ToBytes(bytes, i); i += 16;
-                bytes[i++] = SourceType;
-                bytes[i++] = ChatType;
-                bytes[i++] = Audible;
-                Position.ToBytes(bytes, i); i += 12;
-                bytes[i++] = (byte)(Message.length % 256);
-                bytes[i++] = (byte)((Message.length >> 8) % 256);
-                Utils.arraycopy(Message, 0, bytes, i, Message.length); i += Message.length;
+                bytes[i[0]++] = (byte)FromName.length;
+                Utils.arraycopy(FromName, 0, bytes, i, FromName.length); i[0] +=  FromName.length;
+                SourceID.ToBytes(bytes, i[0]); i[0] += 16;
+                OwnerID.ToBytes(bytes, i[0]); i[0] += 16;
+                bytes[i[0]++] = SourceType;
+                bytes[i[0]++] = ChatType;
+                bytes[i[0]++] = Audible;
+                Position.ToBytes(bytes, i[0]); i[0] += 12;
+                bytes[i[0]++] = (byte)(Message.length % 256);
+                bytes[i[0]++] = (byte)((Message.length >> 8) % 256);
+                Utils.arraycopy(Message, 0, bytes, i, Message.length); i[0] +=  Message.length;
             }
 
         }

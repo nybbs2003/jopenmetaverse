@@ -28,7 +28,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    AgentID.FromBytes(bytes, i); i += 16;
+                    AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)
@@ -73,9 +73,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    length = bytes[i++];
+                    length = bytes[i[0]++];
                     Filename = new byte[length];
-                    Utils.arraycopy(bytes, i, Filename, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, Filename, 0, length); i[0] +=  length;
                 }
                 catch (Exception e)
                 {
@@ -86,8 +86,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                bytes[i++] = (byte)Filename.length;
-                Utils.arraycopy(Filename, 0, bytes, i, Filename.length); i += Filename.length;
+                bytes[i[0]++] = (byte)Filename.length;
+                Utils.arraycopy(Filename, 0, bytes, i, Filename.length); i[0] +=  Filename.length;
             }
 
         }

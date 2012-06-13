@@ -27,7 +27,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    Data = (bytes[i++] != 0) ? (bool)true : (bool)false;
+                    Data = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
                 }
                 catch (Exception e)
                 {
@@ -38,7 +38,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                bytes[i++] = (byte)((Data) ? 1 : 0);
+                bytes[i[0]++] = (byte)((Data) ? 1 : 0);
             }
 
         }

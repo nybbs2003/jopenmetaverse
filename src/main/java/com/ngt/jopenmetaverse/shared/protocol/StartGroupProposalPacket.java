@@ -28,7 +28,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    AgentID.FromBytes(bytes, i); i += 16;
+                    AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)
@@ -77,13 +77,13 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    GroupID.FromBytes(bytes, i); i += 16;
-                    Quorum = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
+                    GroupID.FromBytes(bytes, i[0]); i[0] += 16;
+                    Quorum = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     Majority = Utils.BytesToFloat(bytes, i); i += 4;
-                    Duration = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    length = bytes[i++];
+                    Duration = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    length = bytes[i[0]++];
                     ProposalText = new byte[length];
-                    Utils.arraycopy(bytes, i, ProposalText, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, ProposalText, 0, length); i[0] +=  length;
                 }
                 catch (Exception e)
                 {
@@ -94,12 +94,12 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                GroupID.ToBytes(bytes, i); i += 16;
+                GroupID.ToBytes(bytes, i[0]); i[0] += 16;
                 Utils.IntToBytes(Quorum, bytes, i); i += 4;
                 Utils.FloatToBytes(Majority, bytes, i); i += 4;
                 Utils.IntToBytes(Duration, bytes, i); i += 4;
-                bytes[i++] = (byte)ProposalText.length;
-                Utils.arraycopy(ProposalText, 0, bytes, i, ProposalText.length); i += ProposalText.length;
+                bytes[i[0]++] = (byte)ProposalText.length;
+                Utils.arraycopy(ProposalText, 0, bytes, i, ProposalText.length); i[0] +=  ProposalText.length;
             }
 
         }

@@ -28,7 +28,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    AgentID.FromBytes(bytes, i); i += 16;
+                    AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)
@@ -83,20 +83,20 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    PickID.FromBytes(bytes, i); i += 16;
-                    CreatorID.FromBytes(bytes, i); i += 16;
-                    TopPick = (bytes[i++] != 0) ? (bool)true : (bool)false;
-                    ParcelID.FromBytes(bytes, i); i += 16;
-                    length = bytes[i++];
+                    PickID.FromBytes(bytes, i[0]); i[0] += 16;
+                    CreatorID.FromBytes(bytes, i[0]); i[0] += 16;
+                    TopPick = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
+                    ParcelID.FromBytes(bytes, i[0]); i[0] += 16;
+                    length = bytes[i[0]++];
                     Name = new byte[length];
-                    Utils.arraycopy(bytes, i, Name, 0, length); i += length;
-                    length = (bytes[i++] + (bytes[i++] << 8));
+                    Utils.arraycopy(bytes, i, Name, 0, length); i[0] +=  length;
+                    length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
                     Desc = new byte[length];
-                    Utils.arraycopy(bytes, i, Desc, 0, length); i += length;
-                    SnapshotID.FromBytes(bytes, i); i += 16;
-                    PosGlobal.FromBytes(bytes, i); i += 24;
-                    SortOrder = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    Enabled = (bytes[i++] != 0) ? (bool)true : (bool)false;
+                    Utils.arraycopy(bytes, i, Desc, 0, length); i[0] +=  length;
+                    SnapshotID.FromBytes(bytes, i[0]); i[0] += 16;
+                    PosGlobal.FromBytes(bytes, i[0]); i[0] += 24;
+                    SortOrder = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    Enabled = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
                 }
                 catch (Exception e)
                 {
@@ -107,19 +107,19 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                PickID.ToBytes(bytes, i); i += 16;
-                CreatorID.ToBytes(bytes, i); i += 16;
-                bytes[i++] = (byte)((TopPick) ? 1 : 0);
-                ParcelID.ToBytes(bytes, i); i += 16;
-                bytes[i++] = (byte)Name.length;
-                Utils.arraycopy(Name, 0, bytes, i, Name.length); i += Name.length;
-                bytes[i++] = (byte)(Desc.length % 256);
-                bytes[i++] = (byte)((Desc.length >> 8) % 256);
-                Utils.arraycopy(Desc, 0, bytes, i, Desc.length); i += Desc.length;
-                SnapshotID.ToBytes(bytes, i); i += 16;
-                PosGlobal.ToBytes(bytes, i); i += 24;
+                PickID.ToBytes(bytes, i[0]); i[0] += 16;
+                CreatorID.ToBytes(bytes, i[0]); i[0] += 16;
+                bytes[i[0]++] = (byte)((TopPick) ? 1 : 0);
+                ParcelID.ToBytes(bytes, i[0]); i[0] += 16;
+                bytes[i[0]++] = (byte)Name.length;
+                Utils.arraycopy(Name, 0, bytes, i, Name.length); i[0] +=  Name.length;
+                bytes[i[0]++] = (byte)(Desc.length % 256);
+                bytes[i[0]++] = (byte)((Desc.length >> 8) % 256);
+                Utils.arraycopy(Desc, 0, bytes, i, Desc.length); i[0] +=  Desc.length;
+                SnapshotID.ToBytes(bytes, i[0]); i[0] += 16;
+                PosGlobal.ToBytes(bytes, i[0]); i[0] += 24;
                 Utils.IntToBytes(SortOrder, bytes, i); i += 4;
-                bytes[i++] = (byte)((Enabled) ? 1 : 0);
+                bytes[i[0]++] = (byte)((Enabled) ? 1 : 0);
             }
 
         }
@@ -130,7 +130,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                         {
                 int length = 10;
                 length += AgentData.getLength();
-                length += Data.getLength();
+                length += Data.length;
                 return length;
             }
         }
@@ -189,7 +189,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             int length = 10;
             length += AgentData.getLength();
-            length += Data.getLength();
+            length += Data.length;
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
             int i = 0;

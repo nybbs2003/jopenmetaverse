@@ -53,24 +53,24 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    RegionFlags = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    SimAccess = (byte)bytes[i++];
-                    length = bytes[i++];
+                    RegionFlags = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    SimAccess = (byte)bytes[i[0]++];
+                    length = bytes[i[0]++];
                     SimName = new byte[length];
-                    Utils.arraycopy(bytes, i, SimName, 0, length); i += length;
-                    SimOwner.FromBytes(bytes, i); i += 16;
-                    IsEstateManager = (bytes[i++] != 0) ? (bool)true : (bool)false;
+                    Utils.arraycopy(bytes, i, SimName, 0, length); i[0] +=  length;
+                    SimOwner.FromBytes(bytes, i[0]); i[0] += 16;
+                    IsEstateManager = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
                     WaterHeight = Utils.BytesToFloat(bytes, i); i += 4;
                     BillableFactor = Utils.BytesToFloat(bytes, i); i += 4;
-                    CacheID.FromBytes(bytes, i); i += 16;
-                    TerrainBase0.FromBytes(bytes, i); i += 16;
-                    TerrainBase1.FromBytes(bytes, i); i += 16;
-                    TerrainBase2.FromBytes(bytes, i); i += 16;
-                    TerrainBase3.FromBytes(bytes, i); i += 16;
-                    TerrainDetail0.FromBytes(bytes, i); i += 16;
-                    TerrainDetail1.FromBytes(bytes, i); i += 16;
-                    TerrainDetail2.FromBytes(bytes, i); i += 16;
-                    TerrainDetail3.FromBytes(bytes, i); i += 16;
+                    CacheID.FromBytes(bytes, i[0]); i[0] += 16;
+                    TerrainBase0.FromBytes(bytes, i[0]); i[0] += 16;
+                    TerrainBase1.FromBytes(bytes, i[0]); i[0] += 16;
+                    TerrainBase2.FromBytes(bytes, i[0]); i[0] += 16;
+                    TerrainBase3.FromBytes(bytes, i[0]); i[0] += 16;
+                    TerrainDetail0.FromBytes(bytes, i[0]); i[0] += 16;
+                    TerrainDetail1.FromBytes(bytes, i[0]); i[0] += 16;
+                    TerrainDetail2.FromBytes(bytes, i[0]); i[0] += 16;
+                    TerrainDetail3.FromBytes(bytes, i[0]); i[0] += 16;
                     TerrainStartHeight00 = Utils.BytesToFloat(bytes, i); i += 4;
                     TerrainStartHeight01 = Utils.BytesToFloat(bytes, i); i += 4;
                     TerrainStartHeight10 = Utils.BytesToFloat(bytes, i); i += 4;
@@ -90,22 +90,22 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 Utils.UIntToBytes(RegionFlags, bytes, i); i += 4;
-                bytes[i++] = SimAccess;
-                bytes[i++] = (byte)SimName.length;
-                Utils.arraycopy(SimName, 0, bytes, i, SimName.length); i += SimName.length;
-                SimOwner.ToBytes(bytes, i); i += 16;
-                bytes[i++] = (byte)((IsEstateManager) ? 1 : 0);
+                bytes[i[0]++] = SimAccess;
+                bytes[i[0]++] = (byte)SimName.length;
+                Utils.arraycopy(SimName, 0, bytes, i, SimName.length); i[0] +=  SimName.length;
+                SimOwner.ToBytes(bytes, i[0]); i[0] += 16;
+                bytes[i[0]++] = (byte)((IsEstateManager) ? 1 : 0);
                 Utils.FloatToBytes(WaterHeight, bytes, i); i += 4;
                 Utils.FloatToBytes(BillableFactor, bytes, i); i += 4;
-                CacheID.ToBytes(bytes, i); i += 16;
-                TerrainBase0.ToBytes(bytes, i); i += 16;
-                TerrainBase1.ToBytes(bytes, i); i += 16;
-                TerrainBase2.ToBytes(bytes, i); i += 16;
-                TerrainBase3.ToBytes(bytes, i); i += 16;
-                TerrainDetail0.ToBytes(bytes, i); i += 16;
-                TerrainDetail1.ToBytes(bytes, i); i += 16;
-                TerrainDetail2.ToBytes(bytes, i); i += 16;
-                TerrainDetail3.ToBytes(bytes, i); i += 16;
+                CacheID.ToBytes(bytes, i[0]); i[0] += 16;
+                TerrainBase0.ToBytes(bytes, i[0]); i[0] += 16;
+                TerrainBase1.ToBytes(bytes, i[0]); i[0] += 16;
+                TerrainBase2.ToBytes(bytes, i[0]); i[0] += 16;
+                TerrainBase3.ToBytes(bytes, i[0]); i[0] += 16;
+                TerrainDetail0.ToBytes(bytes, i[0]); i[0] += 16;
+                TerrainDetail1.ToBytes(bytes, i[0]); i[0] += 16;
+                TerrainDetail2.ToBytes(bytes, i[0]); i[0] += 16;
+                TerrainDetail3.ToBytes(bytes, i[0]); i[0] += 16;
                 Utils.FloatToBytes(TerrainStartHeight00, bytes, i); i += 4;
                 Utils.FloatToBytes(TerrainStartHeight01, bytes, i); i += 4;
                 Utils.FloatToBytes(TerrainStartHeight10, bytes, i); i += 4;
@@ -142,7 +142,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    RegionID.FromBytes(bytes, i); i += 16;
+                    RegionID.FromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)
                 {
@@ -153,7 +153,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                RegionID.ToBytes(bytes, i); i += 16;
+                RegionID.ToBytes(bytes, i[0]); i[0] += 16;
             }
 
         }
@@ -191,17 +191,17 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    CPUClassID = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    CPURatio = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    length = bytes[i++];
+                    CPUClassID = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    CPURatio = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    length = bytes[i[0]++];
                     ColoName = new byte[length];
-                    Utils.arraycopy(bytes, i, ColoName, 0, length); i += length;
-                    length = bytes[i++];
+                    Utils.arraycopy(bytes, i, ColoName, 0, length); i[0] +=  length;
+                    length = bytes[i[0]++];
                     ProductSKU = new byte[length];
-                    Utils.arraycopy(bytes, i, ProductSKU, 0, length); i += length;
-                    length = bytes[i++];
+                    Utils.arraycopy(bytes, i, ProductSKU, 0, length); i[0] +=  length;
+                    length = bytes[i[0]++];
                     ProductName = new byte[length];
-                    Utils.arraycopy(bytes, i, ProductName, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, ProductName, 0, length); i[0] +=  length;
                 }
                 catch (Exception e)
                 {
@@ -214,12 +214,12 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 Utils.IntToBytes(CPUClassID, bytes, i); i += 4;
                 Utils.IntToBytes(CPURatio, bytes, i); i += 4;
-                bytes[i++] = (byte)ColoName.length;
-                Utils.arraycopy(ColoName, 0, bytes, i, ColoName.length); i += ColoName.length;
-                bytes[i++] = (byte)ProductSKU.length;
-                Utils.arraycopy(ProductSKU, 0, bytes, i, ProductSKU.length); i += ProductSKU.length;
-                bytes[i++] = (byte)ProductName.length;
-                Utils.arraycopy(ProductName, 0, bytes, i, ProductName.length); i += ProductName.length;
+                bytes[i[0]++] = (byte)ColoName.length;
+                Utils.arraycopy(ColoName, 0, bytes, i, ColoName.length); i[0] +=  ColoName.length;
+                bytes[i[0]++] = (byte)ProductSKU.length;
+                Utils.arraycopy(ProductSKU, 0, bytes, i, ProductSKU.length); i[0] +=  ProductSKU.length;
+                bytes[i[0]++] = (byte)ProductName.length;
+                Utils.arraycopy(ProductName, 0, bytes, i, ProductName.length); i[0] +=  ProductName.length;
             }
 
         }

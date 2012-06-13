@@ -34,13 +34,13 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    TransferID.FromBytes(bytes, i); i += 16;
-                    ChannelType = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    SourceType = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
+                    TransferID.FromBytes(bytes, i[0]); i[0] += 16;
+                    ChannelType = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    SourceType = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     Priority = Utils.BytesToFloat(bytes, i); i += 4;
-                    length = (bytes[i++] + (bytes[i++] << 8));
+                    length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
                     Params = new byte[length];
-                    Utils.arraycopy(bytes, i, Params, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, Params, 0, length); i[0] +=  length;
                 }
                 catch (Exception e)
                 {
@@ -51,13 +51,13 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                TransferID.ToBytes(bytes, i); i += 16;
+                TransferID.ToBytes(bytes, i[0]); i[0] += 16;
                 Utils.IntToBytes(ChannelType, bytes, i); i += 4;
                 Utils.IntToBytes(SourceType, bytes, i); i += 4;
                 Utils.FloatToBytes(Priority, bytes, i); i += 4;
-                bytes[i++] = (byte)(Params.length % 256);
-                bytes[i++] = (byte)((Params.length >> 8) % 256);
-                Utils.arraycopy(Params, 0, bytes, i, Params.length); i += Params.length;
+                bytes[i[0]++] = (byte)(Params.length % 256);
+                bytes[i[0]++] = (byte)((Params.length >> 8) % 256);
+                Utils.arraycopy(Params, 0, bytes, i, Params.length); i[0] +=  Params.length;
             }
 
         }

@@ -31,11 +31,11 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    AgentID.FromBytes(bytes, i); i += 16;
+                    AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
-                    Flags = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    EstateID = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    Godlike = (bytes[i++] != 0) ? (bool)true : (bool)false;
+                    Flags = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    EstateID = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    Godlike = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
                 }
                 catch (Exception e)
                 {
@@ -50,7 +50,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 SessionID.ToBytes(bytes, i[0]); i[0] += 16;
                 Utils.UIntToBytes(Flags, bytes, i); i += 4;
                 Utils.UIntToBytes(EstateID, bytes, i); i += 4;
-                bytes[i++] = (byte)((Godlike) ? 1 : 0);
+                bytes[i[0]++] = (byte)((Godlike) ? 1 : 0);
             }
 
         }
@@ -82,10 +82,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    MinX = (ushort)(bytes[i++] + (bytes[i++] << 8));
-                    MaxX = (ushort)(bytes[i++] + (bytes[i++] << 8));
-                    MinY = (ushort)(bytes[i++] + (bytes[i++] << 8));
-                    MaxY = (ushort)(bytes[i++] + (bytes[i++] << 8));
+                    MinX = (ushort)(bytes[i[0]++] + (bytes[i[0]++] << 8));
+                    MaxX = (ushort)(bytes[i[0]++] + (bytes[i[0]++] << 8));
+                    MinY = (ushort)(bytes[i[0]++] + (bytes[i[0]++] << 8));
+                    MaxY = (ushort)(bytes[i[0]++] + (bytes[i[0]++] << 8));
                 }
                 catch (Exception e)
                 {
@@ -96,14 +96,14 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                bytes[i++] = (byte)(MinX % 256);
-                bytes[i++] = (byte)((MinX >> 8) % 256);
-                bytes[i++] = (byte)(MaxX % 256);
-                bytes[i++] = (byte)((MaxX >> 8) % 256);
-                bytes[i++] = (byte)(MinY % 256);
-                bytes[i++] = (byte)((MinY >> 8) % 256);
-                bytes[i++] = (byte)(MaxY % 256);
-                bytes[i++] = (byte)((MaxY >> 8) % 256);
+                bytes[i[0]++] = (byte)(MinX % 256);
+                bytes[i[0]++] = (byte)((MinX >> 8) % 256);
+                bytes[i[0]++] = (byte)(MaxX % 256);
+                bytes[i[0]++] = (byte)((MaxX >> 8) % 256);
+                bytes[i[0]++] = (byte)(MinY % 256);
+                bytes[i[0]++] = (byte)((MinY >> 8) % 256);
+                bytes[i[0]++] = (byte)(MaxY % 256);
+                bytes[i[0]++] = (byte)((MaxY >> 8) % 256);
             }
 
         }

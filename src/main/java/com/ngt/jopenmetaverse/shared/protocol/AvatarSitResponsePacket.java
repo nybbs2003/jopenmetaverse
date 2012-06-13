@@ -27,7 +27,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    ID.FromBytes(bytes, i); i += 16;
+                    ID.FromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)
                 {
@@ -38,7 +38,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                ID.ToBytes(bytes, i); i += 16;
+                ID.ToBytes(bytes, i[0]); i[0] += 16;
             }
 
         }
@@ -72,12 +72,12 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    AutoPilot = (bytes[i++] != 0) ? (bool)true : (bool)false;
-                    SitPosition.FromBytes(bytes, i); i += 12;
+                    AutoPilot = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
+                    SitPosition.FromBytes(bytes, i[0]); i[0] += 12;
                     SitRotation.FromBytes(bytes, i, true); i += 12;
-                    CameraEyeOffset.FromBytes(bytes, i); i += 12;
-                    CameraAtOffset.FromBytes(bytes, i); i += 12;
-                    ForceMouselook = (bytes[i++] != 0) ? (bool)true : (bool)false;
+                    CameraEyeOffset.FromBytes(bytes, i[0]); i[0] += 12;
+                    CameraAtOffset.FromBytes(bytes, i[0]); i[0] += 12;
+                    ForceMouselook = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
                 }
                 catch (Exception e)
                 {
@@ -88,12 +88,12 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                bytes[i++] = (byte)((AutoPilot) ? 1 : 0);
-                SitPosition.ToBytes(bytes, i); i += 12;
-                SitRotation.ToBytes(bytes, i); i += 12;
-                CameraEyeOffset.ToBytes(bytes, i); i += 12;
-                CameraAtOffset.ToBytes(bytes, i); i += 12;
-                bytes[i++] = (byte)((ForceMouselook) ? 1 : 0);
+                bytes[i[0]++] = (byte)((AutoPilot) ? 1 : 0);
+                SitPosition.ToBytes(bytes, i[0]); i[0] += 12;
+                SitRotation.ToBytes(bytes, i[0]); i[0] += 12;
+                CameraEyeOffset.ToBytes(bytes, i[0]); i[0] += 12;
+                CameraAtOffset.ToBytes(bytes, i[0]); i[0] += 12;
+                bytes[i[0]++] = (byte)((ForceMouselook) ? 1 : 0);
             }
 
         }

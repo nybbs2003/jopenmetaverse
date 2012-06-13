@@ -28,7 +28,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    AgentID.FromBytes(bytes, i); i += 16;
+                    AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)
@@ -76,12 +76,12 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    QueryID.FromBytes(bytes, i); i += 16;
-                    length = bytes[i++];
+                    QueryID.FromBytes(bytes, i[0]); i[0] += 16;
+                    length = bytes[i[0]++];
                     QueryText = new byte[length];
-                    Utils.arraycopy(bytes, i, QueryText, 0, length); i += length;
-                    QueryFlags = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    QueryStart = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
+                    Utils.arraycopy(bytes, i, QueryText, 0, length); i[0] +=  length;
+                    QueryFlags = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    QueryStart = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                 }
                 catch (Exception e)
                 {
@@ -92,9 +92,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                QueryID.ToBytes(bytes, i); i += 16;
-                bytes[i++] = (byte)QueryText.length;
-                Utils.arraycopy(QueryText, 0, bytes, i, QueryText.length); i += QueryText.length;
+                QueryID.ToBytes(bytes, i[0]); i[0] += 16;
+                bytes[i[0]++] = (byte)QueryText.length;
+                Utils.arraycopy(QueryText, 0, bytes, i, QueryText.length); i[0] +=  QueryText.length;
                 Utils.UIntToBytes(QueryFlags, bytes, i); i += 4;
                 Utils.IntToBytes(QueryStart, bytes, i); i += 4;
             }

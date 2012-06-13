@@ -28,8 +28,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    RequestID.FromBytes(bytes, i); i += 16;
-                    AgentID.FromBytes(bytes, i); i += 16;
+                    RequestID.FromBytes(bytes, i[0]); i[0] += 16;
+                    AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)
                 {
@@ -40,7 +40,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                RequestID.ToBytes(bytes, i); i += 16;
+                RequestID.ToBytes(bytes, i[0]); i[0] += 16;
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
             }
 

@@ -56,36 +56,36 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    RegionHandle = (ulong)((ulong)bytes[i++] + ((ulong)bytes[i++] << 8) + ((ulong)bytes[i++] << 16) + ((ulong)bytes[i++] << 24) + ((ulong)bytes[i++] << 32) + ((ulong)bytes[i++] << 40) + ((ulong)bytes[i++] << 48) + ((ulong)bytes[i++] << 56));
-                    ViewerCircuitCode = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    AgentID.FromBytes(bytes, i); i += 16;
+                    RegionHandle = (ulong)((ulong)bytes[i[0]++] + ((ulong)bytes[i[0]++] << 8) + ((ulong)bytes[i[0]++] << 16) + ((ulong)bytes[i[0]++] << 24) + ((ulong)bytes[i[0]++] << 32) + ((ulong)bytes[i[0]++] << 40) + ((ulong)bytes[i[0]++] << 48) + ((ulong)bytes[i[0]++] << 56));
+                    ViewerCircuitCode = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
-                    AgentPos.FromBytes(bytes, i); i += 12;
-                    AgentVel.FromBytes(bytes, i); i += 12;
-                    Center.FromBytes(bytes, i); i += 12;
-                    Size.FromBytes(bytes, i); i += 12;
-                    AtAxis.FromBytes(bytes, i); i += 12;
-                    LeftAxis.FromBytes(bytes, i); i += 12;
-                    UpAxis.FromBytes(bytes, i); i += 12;
-                    ChangedGrid = (bytes[i++] != 0) ? (bool)true : (bool)false;
+                    AgentPos.FromBytes(bytes, i[0]); i[0] += 12;
+                    AgentVel.FromBytes(bytes, i[0]); i[0] += 12;
+                    Center.FromBytes(bytes, i[0]); i[0] += 12;
+                    Size.FromBytes(bytes, i[0]); i[0] += 12;
+                    AtAxis.FromBytes(bytes, i[0]); i[0] += 12;
+                    LeftAxis.FromBytes(bytes, i[0]); i[0] += 12;
+                    UpAxis.FromBytes(bytes, i[0]); i[0] += 12;
+                    ChangedGrid = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
                     Far = Utils.BytesToFloat(bytes, i); i += 4;
                     Aspect = Utils.BytesToFloat(bytes, i); i += 4;
-                    length = bytes[i++];
+                    length = bytes[i[0]++];
                     Throttles = new byte[length];
-                    Utils.arraycopy(bytes, i, Throttles, 0, length); i += length;
-                    LocomotionState = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
+                    Utils.arraycopy(bytes, i, Throttles, 0, length); i[0] +=  length;
+                    LocomotionState = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     HeadRotation.FromBytes(bytes, i, true); i += 12;
                     BodyRotation.FromBytes(bytes, i, true); i += 12;
-                    ControlFlags = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
+                    ControlFlags = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     EnergyLevel = Utils.BytesToFloat(bytes, i); i += 4;
-                    GodLevel = (byte)bytes[i++];
-                    AlwaysRun = (bytes[i++] != 0) ? (bool)true : (bool)false;
-                    PreyAgent.FromBytes(bytes, i); i += 16;
-                    AgentAccess = (byte)bytes[i++];
-                    length = (bytes[i++] + (bytes[i++] << 8));
+                    GodLevel = (byte)bytes[i[0]++];
+                    AlwaysRun = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
+                    PreyAgent.FromBytes(bytes, i[0]); i[0] += 16;
+                    AgentAccess = (byte)bytes[i[0]++];
+                    length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
                     AgentTextures = new byte[length];
-                    Utils.arraycopy(bytes, i, AgentTextures, 0, length); i += length;
-                    ActiveGroupID.FromBytes(bytes, i); i += 16;
+                    Utils.arraycopy(bytes, i, AgentTextures, 0, length); i[0] +=  length;
+                    ActiveGroupID.FromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)
                 {
@@ -100,31 +100,31 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 Utils.UIntToBytes(ViewerCircuitCode, bytes, i); i += 4;
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
                 SessionID.ToBytes(bytes, i[0]); i[0] += 16;
-                AgentPos.ToBytes(bytes, i); i += 12;
-                AgentVel.ToBytes(bytes, i); i += 12;
-                Center.ToBytes(bytes, i); i += 12;
-                Size.ToBytes(bytes, i); i += 12;
-                AtAxis.ToBytes(bytes, i); i += 12;
-                LeftAxis.ToBytes(bytes, i); i += 12;
-                UpAxis.ToBytes(bytes, i); i += 12;
-                bytes[i++] = (byte)((ChangedGrid) ? 1 : 0);
+                AgentPos.ToBytes(bytes, i[0]); i[0] += 12;
+                AgentVel.ToBytes(bytes, i[0]); i[0] += 12;
+                Center.ToBytes(bytes, i[0]); i[0] += 12;
+                Size.ToBytes(bytes, i[0]); i[0] += 12;
+                AtAxis.ToBytes(bytes, i[0]); i[0] += 12;
+                LeftAxis.ToBytes(bytes, i[0]); i[0] += 12;
+                UpAxis.ToBytes(bytes, i[0]); i[0] += 12;
+                bytes[i[0]++] = (byte)((ChangedGrid) ? 1 : 0);
                 Utils.FloatToBytes(Far, bytes, i); i += 4;
                 Utils.FloatToBytes(Aspect, bytes, i); i += 4;
-                bytes[i++] = (byte)Throttles.length;
-                Utils.arraycopy(Throttles, 0, bytes, i, Throttles.length); i += Throttles.length;
+                bytes[i[0]++] = (byte)Throttles.length;
+                Utils.arraycopy(Throttles, 0, bytes, i, Throttles.length); i[0] +=  Throttles.length;
                 Utils.UIntToBytes(LocomotionState, bytes, i); i += 4;
-                HeadRotation.ToBytes(bytes, i); i += 12;
-                BodyRotation.ToBytes(bytes, i); i += 12;
+                HeadRotation.ToBytes(bytes, i[0]); i[0] += 12;
+                BodyRotation.ToBytes(bytes, i[0]); i[0] += 12;
                 Utils.UIntToBytes(ControlFlags, bytes, i); i += 4;
                 Utils.FloatToBytes(EnergyLevel, bytes, i); i += 4;
-                bytes[i++] = GodLevel;
-                bytes[i++] = (byte)((AlwaysRun) ? 1 : 0);
-                PreyAgent.ToBytes(bytes, i); i += 16;
-                bytes[i++] = AgentAccess;
-                bytes[i++] = (byte)(AgentTextures.length % 256);
-                bytes[i++] = (byte)((AgentTextures.length >> 8) % 256);
-                Utils.arraycopy(AgentTextures, 0, bytes, i, AgentTextures.length); i += AgentTextures.length;
-                ActiveGroupID.ToBytes(bytes, i); i += 16;
+                bytes[i[0]++] = GodLevel;
+                bytes[i[0]++] = (byte)((AlwaysRun) ? 1 : 0);
+                PreyAgent.ToBytes(bytes, i[0]); i[0] += 16;
+                bytes[i[0]++] = AgentAccess;
+                bytes[i[0]++] = (byte)(AgentTextures.length % 256);
+                bytes[i[0]++] = (byte)((AgentTextures.length >> 8) % 256);
+                Utils.arraycopy(AgentTextures, 0, bytes, i, AgentTextures.length); i[0] +=  AgentTextures.length;
+                ActiveGroupID.ToBytes(bytes, i[0]); i[0] += 16;
             }
 
         }
@@ -155,9 +155,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    GroupID.FromBytes(bytes, i); i += 16;
-                    GroupPowers = (ulong)((ulong)bytes[i++] + ((ulong)bytes[i++] << 8) + ((ulong)bytes[i++] << 16) + ((ulong)bytes[i++] << 24) + ((ulong)bytes[i++] << 32) + ((ulong)bytes[i++] << 40) + ((ulong)bytes[i++] << 48) + ((ulong)bytes[i++] << 56));
-                    AcceptNotices = (bytes[i++] != 0) ? (bool)true : (bool)false;
+                    GroupID.FromBytes(bytes, i[0]); i[0] += 16;
+                    GroupPowers = (ulong)((ulong)bytes[i[0]++] + ((ulong)bytes[i[0]++] << 8) + ((ulong)bytes[i[0]++] << 16) + ((ulong)bytes[i[0]++] << 24) + ((ulong)bytes[i[0]++] << 32) + ((ulong)bytes[i[0]++] << 40) + ((ulong)bytes[i[0]++] << 48) + ((ulong)bytes[i[0]++] << 56));
+                    AcceptNotices = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
                 }
                 catch (Exception e)
                 {
@@ -168,9 +168,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                GroupID.ToBytes(bytes, i); i += 16;
+                GroupID.ToBytes(bytes, i[0]); i[0] += 16;
                 Utils.UInt64ToBytes(GroupPowers, bytes, i); i += 8;
-                bytes[i++] = (byte)((AcceptNotices) ? 1 : 0);
+                bytes[i[0]++] = (byte)((AcceptNotices) ? 1 : 0);
             }
 
         }
@@ -200,8 +200,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    Animation.FromBytes(bytes, i); i += 16;
-                    ObjectID.FromBytes(bytes, i); i += 16;
+                    Animation.FromBytes(bytes, i[0]); i[0] += 16;
+                    ObjectID.FromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)
                 {
@@ -212,8 +212,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Animation.ToBytes(bytes, i); i += 16;
-                ObjectID.ToBytes(bytes, i); i += 16;
+                Animation.ToBytes(bytes, i[0]); i[0] += 16;
+                ObjectID.ToBytes(bytes, i[0]); i[0] += 16;
             }
 
         }
@@ -242,7 +242,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    GranterID.FromBytes(bytes, i); i += 16;
+                    GranterID.FromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)
                 {
@@ -253,7 +253,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                GranterID.ToBytes(bytes, i); i += 16;
+                GranterID.ToBytes(bytes, i[0]); i[0] += 16;
             }
 
         }
@@ -285,9 +285,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    length = (bytes[i++] + (bytes[i++] << 8));
+                    length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
                     NVPairs = new byte[length];
-                    Utils.arraycopy(bytes, i, NVPairs, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, NVPairs, 0, length); i[0] +=  length;
                 }
                 catch (Exception e)
                 {
@@ -298,9 +298,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                bytes[i++] = (byte)(NVPairs.length % 256);
-                bytes[i++] = (byte)((NVPairs.length >> 8) % 256);
-                Utils.arraycopy(NVPairs, 0, bytes, i, NVPairs.length); i += NVPairs.length;
+                bytes[i[0]++] = (byte)(NVPairs.length % 256);
+                bytes[i[0]++] = (byte)((NVPairs.length >> 8) % 256);
+                Utils.arraycopy(NVPairs, 0, bytes, i, NVPairs.length); i[0] +=  NVPairs.length;
             }
 
         }
@@ -329,7 +329,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    ParamValue = (byte)bytes[i++];
+                    ParamValue = (byte)bytes[i[0]++];
                 }
                 catch (Exception e)
                 {
@@ -340,7 +340,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                bytes[i++] = ParamValue;
+                bytes[i[0]++] = ParamValue;
             }
 
         }
@@ -370,8 +370,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    AgentLegacyAccess = (byte)bytes[i++];
-                    AgentMaxAccess = (byte)bytes[i++];
+                    AgentLegacyAccess = (byte)bytes[i[0]++];
+                    AgentMaxAccess = (byte)bytes[i[0]++];
                 }
                 catch (Exception e)
                 {
@@ -382,8 +382,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                bytes[i++] = AgentLegacyAccess;
-                bytes[i++] = AgentMaxAccess;
+                bytes[i[0]++] = AgentLegacyAccess;
+                bytes[i[0]++] = AgentMaxAccess;
             }
 
         }
@@ -412,7 +412,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    Flags = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
+                    Flags = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                 }
                 catch (Exception e)
                 {
@@ -435,19 +435,19 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length = 14;
                 length += AgentData.getLength();
                 for (int j = 0; j < GroupData.length; j++)
-                    length += GroupData[j].length;
+                    length += GroupData[j].getLength();
                 for (int j = 0; j < AnimationData.length; j++)
-                    length += AnimationData[j].length;
+                    length += AnimationData[j].getLength();
                 for (int j = 0; j < GranterBlock.length; j++)
-                    length += GranterBlock[j].length;
+                    length += GranterBlock[j].getLength();
                 for (int j = 0; j < NVPairData.length; j++)
-                    length += NVPairData[j].length;
+                    length += NVPairData[j].getLength();
                 for (int j = 0; j < VisualParam.length; j++)
-                    length += VisualParam[j].length;
+                    length += VisualParam[j].getLength();
                 for (int j = 0; j < AgentAccess.length; j++)
-                    length += AgentAccess[j].length;
+                    length += AgentAccess[j].getLength();
                 for (int j = 0; j < AgentInfo.length; j++)
-                    length += AgentInfo[j].length;
+                    length += AgentInfo[j].getLength();
                 return length;
             }
         }
@@ -496,7 +496,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 bytes = zeroBuffer;
             }
             AgentData.FromBytes(bytes, i);
-            int count = (int)bytes[i++];
+            int count = (int)bytes[i[0]++];
             if(GroupData == null || GroupData.length != -1) {
                 GroupData = new GroupDataBlock[count];
                 for(int j = 0; j < count; j++)
@@ -504,7 +504,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
             for (int j = 0; j < count; j++)
             { GroupData[j].FromBytes(bytes, i); }
-            count = (int)bytes[i++];
+            count = (int)bytes[i[0]++];
             if(AnimationData == null || AnimationData.length != -1) {
                 AnimationData = new AnimationDataBlock[count];
                 for(int j = 0; j < count; j++)
@@ -512,7 +512,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
             for (int j = 0; j < count; j++)
             { AnimationData[j].FromBytes(bytes, i); }
-            count = (int)bytes[i++];
+            count = (int)bytes[i[0]++];
             if(GranterBlock == null || GranterBlock.length != -1) {
                 GranterBlock = new GranterBlockBlock[count];
                 for(int j = 0; j < count; j++)
@@ -520,7 +520,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
             for (int j = 0; j < count; j++)
             { GranterBlock[j].FromBytes(bytes, i); }
-            count = (int)bytes[i++];
+            count = (int)bytes[i[0]++];
             if(NVPairData == null || NVPairData.length != -1) {
                 NVPairData = new NVPairDataBlock[count];
                 for(int j = 0; j < count; j++)
@@ -528,7 +528,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
             for (int j = 0; j < count; j++)
             { NVPairData[j].FromBytes(bytes, i); }
-            count = (int)bytes[i++];
+            count = (int)bytes[i[0]++];
             if(VisualParam == null || VisualParam.length != -1) {
                 VisualParam = new VisualParamBlock[count];
                 for(int j = 0; j < count; j++)
@@ -536,7 +536,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
             for (int j = 0; j < count; j++)
             { VisualParam[j].FromBytes(bytes, i); }
-            count = (int)bytes[i++];
+            count = (int)bytes[i[0]++];
             if(AgentAccess == null || AgentAccess.length != -1) {
                 AgentAccess = new AgentAccessBlock[count];
                 for(int j = 0; j < count; j++)
@@ -544,7 +544,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
             for (int j = 0; j < count; j++)
             { AgentAccess[j].FromBytes(bytes, i); }
-            count = (int)bytes[i++];
+            count = (int)bytes[i[0]++];
             if(AgentInfo == null || AgentInfo.length != -1) {
                 AgentInfo = new AgentInfoBlock[count];
                 for(int j = 0; j < count; j++)
@@ -566,7 +566,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             this.header =  header;
             AgentData.FromBytes(bytes, i);
-            int count = (int)bytes[i++];
+            int count = (int)bytes[i[0]++];
             if(GroupData == null || GroupData.length != count) {
                 GroupData = new GroupDataBlock[count];
                 for(int j = 0; j < count; j++)
@@ -574,7 +574,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
             for (int j = 0; j < count; j++)
             { GroupData[j].FromBytes(bytes, i); }
-            count = (int)bytes[i++];
+            count = (int)bytes[i[0]++];
             if(AnimationData == null || AnimationData.length != count) {
                 AnimationData = new AnimationDataBlock[count];
                 for(int j = 0; j < count; j++)
@@ -582,7 +582,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
             for (int j = 0; j < count; j++)
             { AnimationData[j].FromBytes(bytes, i); }
-            count = (int)bytes[i++];
+            count = (int)bytes[i[0]++];
             if(GranterBlock == null || GranterBlock.length != count) {
                 GranterBlock = new GranterBlockBlock[count];
                 for(int j = 0; j < count; j++)
@@ -590,7 +590,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
             for (int j = 0; j < count; j++)
             { GranterBlock[j].FromBytes(bytes, i); }
-            count = (int)bytes[i++];
+            count = (int)bytes[i[0]++];
             if(NVPairData == null || NVPairData.length != count) {
                 NVPairData = new NVPairDataBlock[count];
                 for(int j = 0; j < count; j++)
@@ -598,7 +598,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
             for (int j = 0; j < count; j++)
             { NVPairData[j].FromBytes(bytes, i); }
-            count = (int)bytes[i++];
+            count = (int)bytes[i[0]++];
             if(VisualParam == null || VisualParam.length != count) {
                 VisualParam = new VisualParamBlock[count];
                 for(int j = 0; j < count; j++)
@@ -606,7 +606,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
             for (int j = 0; j < count; j++)
             { VisualParam[j].FromBytes(bytes, i); }
-            count = (int)bytes[i++];
+            count = (int)bytes[i[0]++];
             if(AgentAccess == null || AgentAccess.length != count) {
                 AgentAccess = new AgentAccessBlock[count];
                 for(int j = 0; j < count; j++)
@@ -614,7 +614,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
             for (int j = 0; j < count; j++)
             { AgentAccess[j].FromBytes(bytes, i); }
-            count = (int)bytes[i++];
+            count = (int)bytes[i[0]++];
             if(AgentInfo == null || AgentInfo.length != count) {
                 AgentInfo = new AgentInfoBlock[count];
                 for(int j = 0; j < count; j++)
@@ -630,37 +630,37 @@ package com.ngt.jopenmetaverse.shared.protocol;
             int length = 7;
             length += AgentData.getLength();
             length++;
-            for (int j = 0; j < GroupData.length; j++) { length += GroupData[j].length; }
+            for (int j = 0; j < GroupData.length; j++) { length += GroupData[j].getLength(); }
             length++;
-            for (int j = 0; j < AnimationData.length; j++) { length += AnimationData[j].length; }
+            for (int j = 0; j < AnimationData.length; j++) { length += AnimationData[j].getLength(); }
             length++;
-            for (int j = 0; j < GranterBlock.length; j++) { length += GranterBlock[j].length; }
+            for (int j = 0; j < GranterBlock.length; j++) { length += GranterBlock[j].getLength(); }
             length++;
-            for (int j = 0; j < NVPairData.length; j++) { length += NVPairData[j].length; }
+            for (int j = 0; j < NVPairData.length; j++) { length += NVPairData[j].getLength(); }
             length++;
-            for (int j = 0; j < VisualParam.length; j++) { length += VisualParam[j].length; }
+            for (int j = 0; j < VisualParam.length; j++) { length += VisualParam[j].getLength(); }
             length++;
-            for (int j = 0; j < AgentAccess.length; j++) { length += AgentAccess[j].length; }
+            for (int j = 0; j < AgentAccess.length; j++) { length += AgentAccess[j].getLength(); }
             length++;
-            for (int j = 0; j < AgentInfo.length; j++) { length += AgentInfo[j].length; }
+            for (int j = 0; j < AgentInfo.length; j++) { length += AgentInfo[j].getLength(); }
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
             int i = 0;
             header.ToBytes(bytes, i);
             AgentData.ToBytes(bytes, i);
-            bytes[i++] = (byte)GroupData.length;
+            bytes[i[0]++] = (byte)GroupData.length;
             for (int j = 0; j < GroupData.length; j++) { GroupData[j].ToBytes(bytes, i); }
-            bytes[i++] = (byte)AnimationData.length;
+            bytes[i[0]++] = (byte)AnimationData.length;
             for (int j = 0; j < AnimationData.length; j++) { AnimationData[j].ToBytes(bytes, i); }
-            bytes[i++] = (byte)GranterBlock.length;
+            bytes[i[0]++] = (byte)GranterBlock.length;
             for (int j = 0; j < GranterBlock.length; j++) { GranterBlock[j].ToBytes(bytes, i); }
-            bytes[i++] = (byte)NVPairData.length;
+            bytes[i[0]++] = (byte)NVPairData.length;
             for (int j = 0; j < NVPairData.length; j++) { NVPairData[j].ToBytes(bytes, i); }
-            bytes[i++] = (byte)VisualParam.length;
+            bytes[i[0]++] = (byte)VisualParam.length;
             for (int j = 0; j < VisualParam.length; j++) { VisualParam[j].ToBytes(bytes, i); }
-            bytes[i++] = (byte)AgentAccess.length;
+            bytes[i[0]++] = (byte)AgentAccess.length;
             for (int j = 0; j < AgentAccess.length; j++) { AgentAccess[j].ToBytes(bytes, i); }
-            bytes[i++] = (byte)AgentInfo.length;
+            bytes[i[0]++] = (byte)AgentInfo.length;
             for (int j = 0; j < AgentInfo.length; j++) { AgentInfo[j].ToBytes(bytes, i); }
             if (header.AckList != null && header.AckList.length > 0) { header.AcksToBytes(bytes, i); }
             return bytes;
@@ -674,11 +674,11 @@ package com.ngt.jopenmetaverse.shared.protocol;
             int fixedLength = 7;
 
             byte[] ackBytes = null;
-            int acksLength = 0;
+            int[] acksLength = new int[]{0};
             if (header.AckList != null && header.AckList.length > 0) {
                 header.AppendedAcks = true;
                 ackBytes = new byte[header.AckList.length * 4 + 1];
-                header.AcksToBytes(ackBytes, ref acksLength);
+                header.AcksToBytes(ackBytes, acksLength);
             }
 
             fixedLength += AgentData.getLength();
@@ -706,9 +706,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int AgentInfoCount = 0;
 
                 i = GroupDataStart;
-                while (fixedLength + variableLength + acksLength < Packet.MTU && i < GroupData.length) {
-                    int blockLength = GroupData[i].length;
-                    if (fixedLength + variableLength + blockLength + acksLength <= MTU) {
+                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i < GroupData.length) {
+                    int blockLength = GroupData[i].getLength();
+                    if (fixedLength + variableLength + blockLength + acksLength[0] <= MTU) {
                         variableLength += blockLength;
                         ++GroupDataCount;
                     }
@@ -717,9 +717,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 }
 
                 i = AnimationDataStart;
-                while (fixedLength + variableLength + acksLength < Packet.MTU && i < AnimationData.length) {
-                    int blockLength = AnimationData[i].length;
-                    if (fixedLength + variableLength + blockLength + acksLength <= MTU) {
+                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i < AnimationData.length) {
+                    int blockLength = AnimationData[i].getLength();
+                    if (fixedLength + variableLength + blockLength + acksLength[0] <= MTU) {
                         variableLength += blockLength;
                         ++AnimationDataCount;
                     }
@@ -728,9 +728,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 }
 
                 i = GranterBlockStart;
-                while (fixedLength + variableLength + acksLength < Packet.MTU && i < GranterBlock.length) {
-                    int blockLength = GranterBlock[i].length;
-                    if (fixedLength + variableLength + blockLength + acksLength <= MTU) {
+                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i < GranterBlock.length) {
+                    int blockLength = GranterBlock[i].getLength();
+                    if (fixedLength + variableLength + blockLength + acksLength[0] <= MTU) {
                         variableLength += blockLength;
                         ++GranterBlockCount;
                     }
@@ -739,9 +739,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 }
 
                 i = NVPairDataStart;
-                while (fixedLength + variableLength + acksLength < Packet.MTU && i < NVPairData.length) {
-                    int blockLength = NVPairData[i].length;
-                    if (fixedLength + variableLength + blockLength + acksLength <= MTU) {
+                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i < NVPairData.length) {
+                    int blockLength = NVPairData[i].getLength();
+                    if (fixedLength + variableLength + blockLength + acksLength[0] <= MTU) {
                         variableLength += blockLength;
                         ++NVPairDataCount;
                     }
@@ -750,9 +750,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 }
 
                 i = VisualParamStart;
-                while (fixedLength + variableLength + acksLength < Packet.MTU && i < VisualParam.length) {
-                    int blockLength = VisualParam[i].length;
-                    if (fixedLength + variableLength + blockLength + acksLength <= MTU) {
+                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i < VisualParam.length) {
+                    int blockLength = VisualParam[i].getLength();
+                    if (fixedLength + variableLength + blockLength + acksLength[0] <= MTU) {
                         variableLength += blockLength;
                         ++VisualParamCount;
                     }
@@ -761,9 +761,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 }
 
                 i = AgentAccessStart;
-                while (fixedLength + variableLength + acksLength < Packet.MTU && i < AgentAccess.length) {
-                    int blockLength = AgentAccess[i].length;
-                    if (fixedLength + variableLength + blockLength + acksLength <= MTU) {
+                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i < AgentAccess.length) {
+                    int blockLength = AgentAccess[i].getLength();
+                    if (fixedLength + variableLength + blockLength + acksLength[0] <= MTU) {
                         variableLength += blockLength;
                         ++AgentAccessCount;
                     }
@@ -772,9 +772,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 }
 
                 i = AgentInfoStart;
-                while (fixedLength + variableLength + acksLength < Packet.MTU && i < AgentInfo.length) {
-                    int blockLength = AgentInfo[i].length;
-                    if (fixedLength + variableLength + blockLength + acksLength <= MTU) {
+                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i < AgentInfo.length) {
+                    int blockLength = AgentInfo[i].getLength();
+                    if (fixedLength + variableLength + blockLength + acksLength[0] <= MTU) {
                         variableLength += blockLength;
                         ++AgentInfoCount;
                     }
@@ -782,42 +782,42 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     ++i;
                 }
 
-                byte[] packet = new byte[fixedLength + variableLength + acksLength];
-                int length = fixedBytes.length;
-                Utils.arraycopy(fixedBytes, 0, packet, 0, length);
+                byte[] packet = new byte[fixedLength + variableLength + acksLength[0]];
+                int[] length = new int[] {fixedBytes.length};
+                Utils.arraycopy(fixedBytes, 0, packet, 0, length[0]);
                 if (packets.size() > 0) { packet[0] = (byte)(packet[0] & ~0x10); }
 
-                packet[length++] = (byte)GroupDataCount;
-                for (i = GroupDataStart; i < GroupDataStart + GroupDataCount; i++) { GroupData[i].ToBytes(packet, ref length); }
+                packet[length[0]++] = (byte)GroupDataCount;
+                for (i = GroupDataStart; i < GroupDataStart + GroupDataCount; i++) { GroupData[i].ToBytes(packet, length); }
                 GroupDataStart += GroupDataCount;
 
-                packet[length++] = (byte)AnimationDataCount;
-                for (i = AnimationDataStart; i < AnimationDataStart + AnimationDataCount; i++) { AnimationData[i].ToBytes(packet, ref length); }
+                packet[length[0]++] = (byte)AnimationDataCount;
+                for (i = AnimationDataStart; i < AnimationDataStart + AnimationDataCount; i++) { AnimationData[i].ToBytes(packet, length); }
                 AnimationDataStart += AnimationDataCount;
 
-                packet[length++] = (byte)GranterBlockCount;
-                for (i = GranterBlockStart; i < GranterBlockStart + GranterBlockCount; i++) { GranterBlock[i].ToBytes(packet, ref length); }
+                packet[length[0]++] = (byte)GranterBlockCount;
+                for (i = GranterBlockStart; i < GranterBlockStart + GranterBlockCount; i++) { GranterBlock[i].ToBytes(packet, length); }
                 GranterBlockStart += GranterBlockCount;
 
-                packet[length++] = (byte)NVPairDataCount;
-                for (i = NVPairDataStart; i < NVPairDataStart + NVPairDataCount; i++) { NVPairData[i].ToBytes(packet, ref length); }
+                packet[length[0]++] = (byte)NVPairDataCount;
+                for (i = NVPairDataStart; i < NVPairDataStart + NVPairDataCount; i++) { NVPairData[i].ToBytes(packet, length); }
                 NVPairDataStart += NVPairDataCount;
 
-                packet[length++] = (byte)VisualParamCount;
-                for (i = VisualParamStart; i < VisualParamStart + VisualParamCount; i++) { VisualParam[i].ToBytes(packet, ref length); }
+                packet[length[0]++] = (byte)VisualParamCount;
+                for (i = VisualParamStart; i < VisualParamStart + VisualParamCount; i++) { VisualParam[i].ToBytes(packet, length); }
                 VisualParamStart += VisualParamCount;
 
-                packet[length++] = (byte)AgentAccessCount;
-                for (i = AgentAccessStart; i < AgentAccessStart + AgentAccessCount; i++) { AgentAccess[i].ToBytes(packet, ref length); }
+                packet[length[0]++] = (byte)AgentAccessCount;
+                for (i = AgentAccessStart; i < AgentAccessStart + AgentAccessCount; i++) { AgentAccess[i].ToBytes(packet, length); }
                 AgentAccessStart += AgentAccessCount;
 
-                packet[length++] = (byte)AgentInfoCount;
-                for (i = AgentInfoStart; i < AgentInfoStart + AgentInfoCount; i++) { AgentInfo[i].ToBytes(packet, ref length); }
+                packet[length[0]++] = (byte)AgentInfoCount;
+                for (i = AgentInfoStart; i < AgentInfoStart + AgentInfoCount; i++) { AgentInfo[i].ToBytes(packet, length); }
                 AgentInfoStart += AgentInfoCount;
 
-                if (acksLength > 0) {
-                    Utils.arraycopy(ackBytes, 0, packet, length, acksLength);
-                    acksLength = 0;
+                if (acksLength[0] > 0) {
+                    Utils.arraycopy(ackBytes, 0, packet, length[0], acksLength[0]);
+                    acksLength[0] = 0;
                 }
 
                 packets.add(packet);

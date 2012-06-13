@@ -27,7 +27,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    PingID = (byte)bytes[i++];
+                    PingID = (byte)bytes[i[0]++];
                 }
                 catch (Exception e)
                 {
@@ -38,7 +38,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                bytes[i++] = PingID;
+                bytes[i[0]++] = PingID;
             }
 
         }

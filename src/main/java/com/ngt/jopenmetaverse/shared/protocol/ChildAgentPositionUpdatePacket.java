@@ -38,18 +38,18 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    RegionHandle = (ulong)((ulong)bytes[i++] + ((ulong)bytes[i++] << 8) + ((ulong)bytes[i++] << 16) + ((ulong)bytes[i++] << 24) + ((ulong)bytes[i++] << 32) + ((ulong)bytes[i++] << 40) + ((ulong)bytes[i++] << 48) + ((ulong)bytes[i++] << 56));
-                    ViewerCircuitCode = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    AgentID.FromBytes(bytes, i); i += 16;
+                    RegionHandle = (ulong)((ulong)bytes[i[0]++] + ((ulong)bytes[i[0]++] << 8) + ((ulong)bytes[i[0]++] << 16) + ((ulong)bytes[i[0]++] << 24) + ((ulong)bytes[i[0]++] << 32) + ((ulong)bytes[i[0]++] << 40) + ((ulong)bytes[i[0]++] << 48) + ((ulong)bytes[i[0]++] << 56));
+                    ViewerCircuitCode = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
-                    AgentPos.FromBytes(bytes, i); i += 12;
-                    AgentVel.FromBytes(bytes, i); i += 12;
-                    Center.FromBytes(bytes, i); i += 12;
-                    Size.FromBytes(bytes, i); i += 12;
-                    AtAxis.FromBytes(bytes, i); i += 12;
-                    LeftAxis.FromBytes(bytes, i); i += 12;
-                    UpAxis.FromBytes(bytes, i); i += 12;
-                    ChangedGrid = (bytes[i++] != 0) ? (bool)true : (bool)false;
+                    AgentPos.FromBytes(bytes, i[0]); i[0] += 12;
+                    AgentVel.FromBytes(bytes, i[0]); i[0] += 12;
+                    Center.FromBytes(bytes, i[0]); i[0] += 12;
+                    Size.FromBytes(bytes, i[0]); i[0] += 12;
+                    AtAxis.FromBytes(bytes, i[0]); i[0] += 12;
+                    LeftAxis.FromBytes(bytes, i[0]); i[0] += 12;
+                    UpAxis.FromBytes(bytes, i[0]); i[0] += 12;
+                    ChangedGrid = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
                 }
                 catch (Exception e)
                 {
@@ -64,14 +64,14 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 Utils.UIntToBytes(ViewerCircuitCode, bytes, i); i += 4;
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
                 SessionID.ToBytes(bytes, i[0]); i[0] += 16;
-                AgentPos.ToBytes(bytes, i); i += 12;
-                AgentVel.ToBytes(bytes, i); i += 12;
-                Center.ToBytes(bytes, i); i += 12;
-                Size.ToBytes(bytes, i); i += 12;
-                AtAxis.ToBytes(bytes, i); i += 12;
-                LeftAxis.ToBytes(bytes, i); i += 12;
-                UpAxis.ToBytes(bytes, i); i += 12;
-                bytes[i++] = (byte)((ChangedGrid) ? 1 : 0);
+                AgentPos.ToBytes(bytes, i[0]); i[0] += 12;
+                AgentVel.ToBytes(bytes, i[0]); i[0] += 12;
+                Center.ToBytes(bytes, i[0]); i[0] += 12;
+                Size.ToBytes(bytes, i[0]); i[0] += 12;
+                AtAxis.ToBytes(bytes, i[0]); i[0] += 12;
+                LeftAxis.ToBytes(bytes, i[0]); i[0] += 12;
+                UpAxis.ToBytes(bytes, i[0]); i[0] += 12;
+                bytes[i[0]++] = (byte)((ChangedGrid) ? 1 : 0);
             }
 
         }

@@ -33,12 +33,12 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    CovenantID.FromBytes(bytes, i); i += 16;
-                    CovenantTimestamp = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    length = bytes[i++];
+                    CovenantID.FromBytes(bytes, i[0]); i[0] += 16;
+                    CovenantTimestamp = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    length = bytes[i[0]++];
                     EstateName = new byte[length];
-                    Utils.arraycopy(bytes, i, EstateName, 0, length); i += length;
-                    EstateOwnerID.FromBytes(bytes, i); i += 16;
+                    Utils.arraycopy(bytes, i, EstateName, 0, length); i[0] +=  length;
+                    EstateOwnerID.FromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)
                 {
@@ -49,11 +49,11 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                CovenantID.ToBytes(bytes, i); i += 16;
+                CovenantID.ToBytes(bytes, i[0]); i[0] += 16;
                 Utils.UIntToBytes(CovenantTimestamp, bytes, i); i += 4;
-                bytes[i++] = (byte)EstateName.length;
-                Utils.arraycopy(EstateName, 0, bytes, i, EstateName.length); i += EstateName.length;
-                EstateOwnerID.ToBytes(bytes, i); i += 16;
+                bytes[i[0]++] = (byte)EstateName.length;
+                Utils.arraycopy(EstateName, 0, bytes, i, EstateName.length); i[0] +=  EstateName.length;
+                EstateOwnerID.ToBytes(bytes, i[0]); i[0] += 16;
             }
 
         }
@@ -63,7 +63,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
                         {
                 int length = 10;
-                length += Data.getLength();
+                length += Data.length;
                 return length;
             }
         }
@@ -117,7 +117,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public byte[] ToBytes()
         {
             int length = 10;
-            length += Data.getLength();
+            length += Data.length;
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
             int i = 0;

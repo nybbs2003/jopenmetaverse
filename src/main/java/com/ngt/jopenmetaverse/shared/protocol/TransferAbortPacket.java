@@ -28,8 +28,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    TransferID.FromBytes(bytes, i); i += 16;
-                    ChannelType = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
+                    TransferID.FromBytes(bytes, i[0]); i[0] += 16;
+                    ChannelType = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                 }
                 catch (Exception e)
                 {
@@ -40,7 +40,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                TransferID.ToBytes(bytes, i); i += 16;
+                TransferID.ToBytes(bytes, i[0]); i[0] += 16;
                 Utils.IntToBytes(ChannelType, bytes, i); i += 4;
             }
 

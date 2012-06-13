@@ -27,7 +27,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    AgentID.FromBytes(bytes, i); i += 16;
+                    AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)
                 {
@@ -71,10 +71,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    TeleportFlags = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    length = bytes[i++];
+                    TeleportFlags = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    length = bytes[i[0]++];
                     Message = new byte[length];
-                    Utils.arraycopy(bytes, i, Message, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, Message, 0, length); i[0] +=  length;
                 }
                 catch (Exception e)
                 {
@@ -86,8 +86,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 Utils.UIntToBytes(TeleportFlags, bytes, i); i += 4;
-                bytes[i++] = (byte)Message.length;
-                Utils.arraycopy(Message, 0, bytes, i, Message.length); i += Message.length;
+                bytes[i[0]++] = (byte)Message.length;
+                Utils.arraycopy(Message, 0, bytes, i, Message.length); i[0] +=  Message.length;
             }
 
         }

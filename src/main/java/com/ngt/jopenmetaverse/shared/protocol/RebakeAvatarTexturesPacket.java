@@ -27,7 +27,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    TextureID.FromBytes(bytes, i); i += 16;
+                    TextureID.FromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)
                 {
@@ -38,7 +38,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                TextureID.ToBytes(bytes, i); i += 16;
+                TextureID.ToBytes(bytes, i[0]); i[0] += 16;
             }
 
         }

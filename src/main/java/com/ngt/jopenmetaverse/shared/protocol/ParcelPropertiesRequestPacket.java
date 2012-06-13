@@ -28,7 +28,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    AgentID.FromBytes(bytes, i); i += 16;
+                    AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)
@@ -75,12 +75,12 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    SequenceID = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
+                    SequenceID = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     West = Utils.BytesToFloat(bytes, i); i += 4;
                     South = Utils.BytesToFloat(bytes, i); i += 4;
                     East = Utils.BytesToFloat(bytes, i); i += 4;
                     North = Utils.BytesToFloat(bytes, i); i += 4;
-                    SnapSelection = (bytes[i++] != 0) ? (bool)true : (bool)false;
+                    SnapSelection = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
                 }
                 catch (Exception e)
                 {
@@ -96,7 +96,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 Utils.FloatToBytes(South, bytes, i); i += 4;
                 Utils.FloatToBytes(East, bytes, i); i += 4;
                 Utils.FloatToBytes(North, bytes, i); i += 4;
-                bytes[i++] = (byte)((SnapSelection) ? 1 : 0);
+                bytes[i[0]++] = (byte)((SnapSelection) ? 1 : 0);
             }
 
         }

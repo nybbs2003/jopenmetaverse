@@ -30,10 +30,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    AgentID.FromBytes(bytes, i); i += 16;
+                    AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
-                    LureID.FromBytes(bytes, i); i += 16;
-                    TeleportFlags = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
+                    LureID.FromBytes(bytes, i[0]); i[0] += 16;
+                    TeleportFlags = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                 }
                 catch (Exception e)
                 {
@@ -46,7 +46,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
                 SessionID.ToBytes(bytes, i[0]); i[0] += 16;
-                LureID.ToBytes(bytes, i); i += 16;
+                LureID.ToBytes(bytes, i[0]); i[0] += 16;
                 Utils.UIntToBytes(TeleportFlags, bytes, i); i += 4;
             }
 

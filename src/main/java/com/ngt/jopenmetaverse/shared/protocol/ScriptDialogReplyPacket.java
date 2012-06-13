@@ -28,7 +28,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    AgentID.FromBytes(bytes, i); i += 16;
+                    AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)
@@ -76,12 +76,12 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    ObjectID.FromBytes(bytes, i); i += 16;
-                    ChatChannel = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    ButtonIndex = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    length = bytes[i++];
+                    ObjectID.FromBytes(bytes, i[0]); i[0] += 16;
+                    ChatChannel = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    ButtonIndex = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    length = bytes[i[0]++];
                     ButtonLabel = new byte[length];
-                    Utils.arraycopy(bytes, i, ButtonLabel, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, ButtonLabel, 0, length); i[0] +=  length;
                 }
                 catch (Exception e)
                 {
@@ -92,11 +92,11 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                ObjectID.ToBytes(bytes, i); i += 16;
+                ObjectID.ToBytes(bytes, i[0]); i[0] += 16;
                 Utils.IntToBytes(ChatChannel, bytes, i); i += 4;
                 Utils.IntToBytes(ButtonIndex, bytes, i); i += 4;
-                bytes[i++] = (byte)ButtonLabel.length;
-                Utils.arraycopy(ButtonLabel, 0, bytes, i, ButtonLabel.length); i += ButtonLabel.length;
+                bytes[i[0]++] = (byte)ButtonLabel.length;
+                Utils.arraycopy(ButtonLabel, 0, bytes, i, ButtonLabel.length); i[0] +=  ButtonLabel.length;
             }
 
         }
@@ -107,7 +107,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                         {
                 int length = 10;
                 length += AgentData.getLength();
-                length += Data.getLength();
+                length += Data.length;
                 return length;
             }
         }
@@ -167,7 +167,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             int length = 10;
             length += AgentData.getLength();
-            length += Data.getLength();
+            length += Data.length;
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
             int i = 0;

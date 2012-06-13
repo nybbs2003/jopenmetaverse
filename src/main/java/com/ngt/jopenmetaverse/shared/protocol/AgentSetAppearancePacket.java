@@ -30,10 +30,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    AgentID.FromBytes(bytes, i); i += 16;
+                    AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
-                    SerialNum = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    Size.FromBytes(bytes, i); i += 12;
+                    SerialNum = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    Size.FromBytes(bytes, i[0]); i[0] += 12;
                 }
                 catch (Exception e)
                 {
@@ -47,7 +47,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
                 SessionID.ToBytes(bytes, i[0]); i[0] += 16;
                 Utils.UIntToBytes(SerialNum, bytes, i); i += 4;
-                Size.ToBytes(bytes, i); i += 12;
+                Size.ToBytes(bytes, i[0]); i[0] += 12;
             }
 
         }
@@ -77,8 +77,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    CacheID.FromBytes(bytes, i); i += 16;
-                    TextureIndex = (byte)bytes[i++];
+                    CacheID.FromBytes(bytes, i[0]); i[0] += 16;
+                    TextureIndex = (byte)bytes[i[0]++];
                 }
                 catch (Exception e)
                 {
@@ -89,8 +89,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                CacheID.ToBytes(bytes, i); i += 16;
-                bytes[i++] = TextureIndex;
+                CacheID.ToBytes(bytes, i[0]); i[0] += 16;
+                bytes[i[0]++] = TextureIndex;
             }
 
         }
@@ -122,9 +122,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    length = (bytes[i++] + (bytes[i++] << 8));
+                    length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
                     TextureEntry = new byte[length];
-                    Utils.arraycopy(bytes, i, TextureEntry, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, TextureEntry, 0, length); i[0] +=  length;
                 }
                 catch (Exception e)
                 {
@@ -135,9 +135,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                bytes[i++] = (byte)(TextureEntry.length % 256);
-                bytes[i++] = (byte)((TextureEntry.length >> 8) % 256);
-                Utils.arraycopy(TextureEntry, 0, bytes, i, TextureEntry.length); i += TextureEntry.length;
+                bytes[i[0]++] = (byte)(TextureEntry.length % 256);
+                bytes[i[0]++] = (byte)((TextureEntry.length >> 8) % 256);
+                Utils.arraycopy(TextureEntry, 0, bytes, i, TextureEntry.length); i[0] +=  TextureEntry.length;
             }
 
         }
@@ -166,7 +166,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    ParamValue = (byte)bytes[i++];
+                    ParamValue = (byte)bytes[i[0]++];
                 }
                 catch (Exception e)
                 {
@@ -177,7 +177,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                bytes[i++] = ParamValue;
+                bytes[i[0]++] = ParamValue;
             }
 
         }
@@ -189,10 +189,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length = 12;
                 length += AgentData.getLength();
                 for (int j = 0; j < WearableData.length; j++)
-                    length += WearableData[j].length;
+                    length += WearableData[j].getLength();
                 length += ObjectData.length;
                 for (int j = 0; j < VisualParam.length; j++)
-                    length += VisualParam[j].length;
+                    length += VisualParam[j].getLength();
                 return length;
             }
         }
@@ -233,7 +233,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 bytes = zeroBuffer;
             }
             AgentData.FromBytes(bytes, i);
-            int count = (int)bytes[i++];
+            int count = (int)bytes[i[0]++];
             if(WearableData == null || WearableData.length != -1) {
                 WearableData = new WearableDataBlock[count];
                 for(int j = 0; j < count; j++)
@@ -242,7 +242,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             for (int j = 0; j < count; j++)
             { WearableData[j].FromBytes(bytes, i); }
             ObjectData.FromBytes(bytes, i);
-            count = (int)bytes[i++];
+            count = (int)bytes[i[0]++];
             if(VisualParam == null || VisualParam.length != -1) {
                 VisualParam = new VisualParamBlock[count];
                 for(int j = 0; j < count; j++)
@@ -264,7 +264,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             this.header =  header;
             AgentData.FromBytes(bytes, i);
-            int count = (int)bytes[i++];
+            int count = (int)bytes[i[0]++];
             if(WearableData == null || WearableData.length != count) {
                 WearableData = new WearableDataBlock[count];
                 for(int j = 0; j < count; j++)
@@ -273,7 +273,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             for (int j = 0; j < count; j++)
             { WearableData[j].FromBytes(bytes, i); }
             ObjectData.FromBytes(bytes, i);
-            count = (int)bytes[i++];
+            count = (int)bytes[i[0]++];
             if(VisualParam == null || VisualParam.length != count) {
                 VisualParam = new VisualParamBlock[count];
                 for(int j = 0; j < count; j++)
@@ -290,18 +290,18 @@ package com.ngt.jopenmetaverse.shared.protocol;
             length += AgentData.getLength();
             length += ObjectData.length;
             length++;
-            for (int j = 0; j < WearableData.length; j++) { length += WearableData[j].length; }
+            for (int j = 0; j < WearableData.length; j++) { length += WearableData[j].getLength(); }
             length++;
-            for (int j = 0; j < VisualParam.length; j++) { length += VisualParam[j].length; }
+            for (int j = 0; j < VisualParam.length; j++) { length += VisualParam[j].getLength(); }
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
             int i = 0;
             header.ToBytes(bytes, i);
             AgentData.ToBytes(bytes, i);
-            bytes[i++] = (byte)WearableData.length;
+            bytes[i[0]++] = (byte)WearableData.length;
             for (int j = 0; j < WearableData.length; j++) { WearableData[j].ToBytes(bytes, i); }
             ObjectData.ToBytes(bytes, i);
-            bytes[i++] = (byte)VisualParam.length;
+            bytes[i[0]++] = (byte)VisualParam.length;
             for (int j = 0; j < VisualParam.length; j++) { VisualParam[j].ToBytes(bytes, i); }
             if (header.AckList != null && header.AckList.length > 0) { header.AcksToBytes(bytes, i); }
             return bytes;

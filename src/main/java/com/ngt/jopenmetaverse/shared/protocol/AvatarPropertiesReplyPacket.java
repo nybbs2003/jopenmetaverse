@@ -28,8 +28,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    AgentID.FromBytes(bytes, i); i += 16;
-                    AvatarID.FromBytes(bytes, i); i += 16;
+                    AgentID.FromBytes(bytes, i[0]); i[0] += 16;
+                    AvatarID.FromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)
                 {
@@ -41,7 +41,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
-                AvatarID.ToBytes(bytes, i); i += 16;
+                AvatarID.ToBytes(bytes, i[0]); i[0] += 16;
             }
 
         }
@@ -85,25 +85,25 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    ImageID.FromBytes(bytes, i); i += 16;
-                    FLImageID.FromBytes(bytes, i); i += 16;
-                    PartnerID.FromBytes(bytes, i); i += 16;
-                    length = (bytes[i++] + (bytes[i++] << 8));
+                    ImageID.FromBytes(bytes, i[0]); i[0] += 16;
+                    FLImageID.FromBytes(bytes, i[0]); i[0] += 16;
+                    PartnerID.FromBytes(bytes, i[0]); i[0] += 16;
+                    length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
                     AboutText = new byte[length];
-                    Utils.arraycopy(bytes, i, AboutText, 0, length); i += length;
-                    length = bytes[i++];
+                    Utils.arraycopy(bytes, i, AboutText, 0, length); i[0] +=  length;
+                    length = bytes[i[0]++];
                     FLAboutText = new byte[length];
-                    Utils.arraycopy(bytes, i, FLAboutText, 0, length); i += length;
-                    length = bytes[i++];
+                    Utils.arraycopy(bytes, i, FLAboutText, 0, length); i[0] +=  length;
+                    length = bytes[i[0]++];
                     BornOn = new byte[length];
-                    Utils.arraycopy(bytes, i, BornOn, 0, length); i += length;
-                    length = bytes[i++];
+                    Utils.arraycopy(bytes, i, BornOn, 0, length); i[0] +=  length;
+                    length = bytes[i[0]++];
                     ProfileURL = new byte[length];
-                    Utils.arraycopy(bytes, i, ProfileURL, 0, length); i += length;
-                    length = bytes[i++];
+                    Utils.arraycopy(bytes, i, ProfileURL, 0, length); i[0] +=  length;
+                    length = bytes[i[0]++];
                     CharterMember = new byte[length];
-                    Utils.arraycopy(bytes, i, CharterMember, 0, length); i += length;
-                    Flags = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
+                    Utils.arraycopy(bytes, i, CharterMember, 0, length); i[0] +=  length;
+                    Flags = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                 }
                 catch (Exception e)
                 {
@@ -114,20 +114,20 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                ImageID.ToBytes(bytes, i); i += 16;
-                FLImageID.ToBytes(bytes, i); i += 16;
-                PartnerID.ToBytes(bytes, i); i += 16;
-                bytes[i++] = (byte)(AboutText.length % 256);
-                bytes[i++] = (byte)((AboutText.length >> 8) % 256);
-                Utils.arraycopy(AboutText, 0, bytes, i, AboutText.length); i += AboutText.length;
-                bytes[i++] = (byte)FLAboutText.length;
-                Utils.arraycopy(FLAboutText, 0, bytes, i, FLAboutText.length); i += FLAboutText.length;
-                bytes[i++] = (byte)BornOn.length;
-                Utils.arraycopy(BornOn, 0, bytes, i, BornOn.length); i += BornOn.length;
-                bytes[i++] = (byte)ProfileURL.length;
-                Utils.arraycopy(ProfileURL, 0, bytes, i, ProfileURL.length); i += ProfileURL.length;
-                bytes[i++] = (byte)CharterMember.length;
-                Utils.arraycopy(CharterMember, 0, bytes, i, CharterMember.length); i += CharterMember.length;
+                ImageID.ToBytes(bytes, i[0]); i[0] += 16;
+                FLImageID.ToBytes(bytes, i[0]); i[0] += 16;
+                PartnerID.ToBytes(bytes, i[0]); i[0] += 16;
+                bytes[i[0]++] = (byte)(AboutText.length % 256);
+                bytes[i[0]++] = (byte)((AboutText.length >> 8) % 256);
+                Utils.arraycopy(AboutText, 0, bytes, i, AboutText.length); i[0] +=  AboutText.length;
+                bytes[i[0]++] = (byte)FLAboutText.length;
+                Utils.arraycopy(FLAboutText, 0, bytes, i, FLAboutText.length); i[0] +=  FLAboutText.length;
+                bytes[i[0]++] = (byte)BornOn.length;
+                Utils.arraycopy(BornOn, 0, bytes, i, BornOn.length); i[0] +=  BornOn.length;
+                bytes[i[0]++] = (byte)ProfileURL.length;
+                Utils.arraycopy(ProfileURL, 0, bytes, i, ProfileURL.length); i[0] +=  ProfileURL.length;
+                bytes[i[0]++] = (byte)CharterMember.length;
+                Utils.arraycopy(CharterMember, 0, bytes, i, CharterMember.length); i[0] +=  CharterMember.length;
                 Utils.UIntToBytes(Flags, bytes, i); i += 4;
             }
 

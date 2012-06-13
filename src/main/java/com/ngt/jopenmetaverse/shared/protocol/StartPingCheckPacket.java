@@ -28,8 +28,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    PingID = (byte)bytes[i++];
-                    OldestUnacked = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
+                    PingID = (byte)bytes[i[0]++];
+                    OldestUnacked = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                 }
                 catch (Exception e)
                 {
@@ -40,7 +40,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                bytes[i++] = PingID;
+                bytes[i[0]++] = PingID;
                 Utils.UIntToBytes(OldestUnacked, bytes, i); i += 4;
             }
 

@@ -28,7 +28,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    AgentID.FromBytes(bytes, i); i += 16;
+                    AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)
@@ -72,9 +72,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    RegionHandle = (ulong)((ulong)bytes[i++] + ((ulong)bytes[i++] << 8) + ((ulong)bytes[i++] << 16) + ((ulong)bytes[i++] << 24) + ((ulong)bytes[i++] << 32) + ((ulong)bytes[i++] << 40) + ((ulong)bytes[i++] << 48) + ((ulong)bytes[i++] << 56));
-                    Position.FromBytes(bytes, i); i += 12;
-                    LookAt.FromBytes(bytes, i); i += 12;
+                    RegionHandle = (ulong)((ulong)bytes[i[0]++] + ((ulong)bytes[i[0]++] << 8) + ((ulong)bytes[i[0]++] << 16) + ((ulong)bytes[i[0]++] << 24) + ((ulong)bytes[i[0]++] << 32) + ((ulong)bytes[i[0]++] << 40) + ((ulong)bytes[i[0]++] << 48) + ((ulong)bytes[i[0]++] << 56));
+                    Position.FromBytes(bytes, i[0]); i[0] += 12;
+                    LookAt.FromBytes(bytes, i[0]); i[0] += 12;
                 }
                 catch (Exception e)
                 {
@@ -86,8 +86,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 Utils.UInt64ToBytes(RegionHandle, bytes, i); i += 8;
-                Position.ToBytes(bytes, i); i += 12;
-                LookAt.ToBytes(bytes, i); i += 12;
+                Position.ToBytes(bytes, i[0]); i[0] += 12;
+                LookAt.ToBytes(bytes, i[0]); i[0] += 12;
             }
 
         }

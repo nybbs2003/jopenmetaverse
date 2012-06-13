@@ -27,7 +27,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    ID.FromBytes(bytes, i); i += 16;
+                    ID.FromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)
                 {
@@ -38,7 +38,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                ID.ToBytes(bytes, i); i += 16;
+                ID.ToBytes(bytes, i[0]); i[0] += 16;
             }
 
         }
@@ -68,8 +68,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    AnimID.FromBytes(bytes, i); i += 16;
-                    AnimSequenceID = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
+                    AnimID.FromBytes(bytes, i[0]); i[0] += 16;
+                    AnimSequenceID = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                 }
                 catch (Exception e)
                 {
@@ -80,7 +80,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                AnimID.ToBytes(bytes, i); i += 16;
+                AnimID.ToBytes(bytes, i[0]); i[0] += 16;
                 Utils.IntToBytes(AnimSequenceID, bytes, i); i += 4;
             }
 
@@ -110,7 +110,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    ObjectID.FromBytes(bytes, i); i += 16;
+                    ObjectID.FromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)
                 {
@@ -121,7 +121,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                ObjectID.ToBytes(bytes, i); i += 16;
+                ObjectID.ToBytes(bytes, i[0]); i[0] += 16;
             }
 
         }
@@ -153,9 +153,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    length = bytes[i++];
+                    length = bytes[i[0]++];
                     TypeData = new byte[length];
-                    Utils.arraycopy(bytes, i, TypeData, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, TypeData, 0, length); i[0] +=  length;
                 }
                 catch (Exception e)
                 {
@@ -166,8 +166,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                bytes[i++] = (byte)TypeData.length;
-                Utils.arraycopy(TypeData, 0, bytes, i, TypeData.length); i += TypeData.length;
+                bytes[i[0]++] = (byte)TypeData.length;
+                Utils.arraycopy(TypeData, 0, bytes, i, TypeData.length); i[0] +=  TypeData.length;
             }
 
         }
@@ -179,11 +179,11 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length = 10;
                 length += Sender.length;
                 for (int j = 0; j < AnimationList.length; j++)
-                    length += AnimationList[j].length;
+                    length += AnimationList[j].getLength();
                 for (int j = 0; j < AnimationSourceList.length; j++)
-                    length += AnimationSourceList[j].length;
+                    length += AnimationSourceList[j].getLength();
                 for (int j = 0; j < PhysicalAvatarEventList.length; j++)
-                    length += PhysicalAvatarEventList[j].length;
+                    length += PhysicalAvatarEventList[j].getLength();
                 return length;
             }
         }
@@ -223,7 +223,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 bytes = zeroBuffer;
             }
             Sender.FromBytes(bytes, i);
-            int count = (int)bytes[i++];
+            int count = (int)bytes[i[0]++];
             if(AnimationList == null || AnimationList.length != -1) {
                 AnimationList = new AnimationListBlock[count];
                 for(int j = 0; j < count; j++)
@@ -231,7 +231,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
             for (int j = 0; j < count; j++)
             { AnimationList[j].FromBytes(bytes, i); }
-            count = (int)bytes[i++];
+            count = (int)bytes[i[0]++];
             if(AnimationSourceList == null || AnimationSourceList.length != -1) {
                 AnimationSourceList = new AnimationSourceListBlock[count];
                 for(int j = 0; j < count; j++)
@@ -239,7 +239,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
             for (int j = 0; j < count; j++)
             { AnimationSourceList[j].FromBytes(bytes, i); }
-            count = (int)bytes[i++];
+            count = (int)bytes[i[0]++];
             if(PhysicalAvatarEventList == null || PhysicalAvatarEventList.length != -1) {
                 PhysicalAvatarEventList = new PhysicalAvatarEventListBlock[count];
                 for(int j = 0; j < count; j++)
@@ -261,7 +261,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             this.header =  header;
             Sender.FromBytes(bytes, i);
-            int count = (int)bytes[i++];
+            int count = (int)bytes[i[0]++];
             if(AnimationList == null || AnimationList.length != count) {
                 AnimationList = new AnimationListBlock[count];
                 for(int j = 0; j < count; j++)
@@ -269,7 +269,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
             for (int j = 0; j < count; j++)
             { AnimationList[j].FromBytes(bytes, i); }
-            count = (int)bytes[i++];
+            count = (int)bytes[i[0]++];
             if(AnimationSourceList == null || AnimationSourceList.length != count) {
                 AnimationSourceList = new AnimationSourceListBlock[count];
                 for(int j = 0; j < count; j++)
@@ -277,7 +277,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
             for (int j = 0; j < count; j++)
             { AnimationSourceList[j].FromBytes(bytes, i); }
-            count = (int)bytes[i++];
+            count = (int)bytes[i[0]++];
             if(PhysicalAvatarEventList == null || PhysicalAvatarEventList.length != count) {
                 PhysicalAvatarEventList = new PhysicalAvatarEventListBlock[count];
                 for(int j = 0; j < count; j++)
@@ -293,21 +293,21 @@ package com.ngt.jopenmetaverse.shared.protocol;
             int length = 7;
             length += Sender.length;
             length++;
-            for (int j = 0; j < AnimationList.length; j++) { length += AnimationList[j].length; }
+            for (int j = 0; j < AnimationList.length; j++) { length += AnimationList[j].getLength(); }
             length++;
-            for (int j = 0; j < AnimationSourceList.length; j++) { length += AnimationSourceList[j].length; }
+            for (int j = 0; j < AnimationSourceList.length; j++) { length += AnimationSourceList[j].getLength(); }
             length++;
-            for (int j = 0; j < PhysicalAvatarEventList.length; j++) { length += PhysicalAvatarEventList[j].length; }
+            for (int j = 0; j < PhysicalAvatarEventList.length; j++) { length += PhysicalAvatarEventList[j].getLength(); }
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
             int i = 0;
             header.ToBytes(bytes, i);
             Sender.ToBytes(bytes, i);
-            bytes[i++] = (byte)AnimationList.length;
+            bytes[i[0]++] = (byte)AnimationList.length;
             for (int j = 0; j < AnimationList.length; j++) { AnimationList[j].ToBytes(bytes, i); }
-            bytes[i++] = (byte)AnimationSourceList.length;
+            bytes[i[0]++] = (byte)AnimationSourceList.length;
             for (int j = 0; j < AnimationSourceList.length; j++) { AnimationSourceList[j].ToBytes(bytes, i); }
-            bytes[i++] = (byte)PhysicalAvatarEventList.length;
+            bytes[i[0]++] = (byte)PhysicalAvatarEventList.length;
             for (int j = 0; j < PhysicalAvatarEventList.length; j++) { PhysicalAvatarEventList[j].ToBytes(bytes, i); }
             if (header.AckList != null && header.AckList.length > 0) { header.AcksToBytes(bytes, i); }
             return bytes;
@@ -321,11 +321,11 @@ package com.ngt.jopenmetaverse.shared.protocol;
             int fixedLength = 7;
 
             byte[] ackBytes = null;
-            int acksLength = 0;
+            int[] acksLength = new int[]{0};
             if (header.AckList != null && header.AckList.length > 0) {
                 header.AppendedAcks = true;
                 ackBytes = new byte[header.AckList.length * 4 + 1];
-                header.AcksToBytes(ackBytes, ref acksLength);
+                header.AcksToBytes(ackBytes, acksLength);
             }
 
             fixedLength += Sender.length;
@@ -345,9 +345,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int PhysicalAvatarEventListCount = 0;
 
                 i = AnimationListStart;
-                while (fixedLength + variableLength + acksLength < Packet.MTU && i < AnimationList.length) {
-                    int blockLength = AnimationList[i].length;
-                    if (fixedLength + variableLength + blockLength + acksLength <= MTU) {
+                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i < AnimationList.length) {
+                    int blockLength = AnimationList[i].getLength();
+                    if (fixedLength + variableLength + blockLength + acksLength[0] <= MTU) {
                         variableLength += blockLength;
                         ++AnimationListCount;
                     }
@@ -356,9 +356,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 }
 
                 i = AnimationSourceListStart;
-                while (fixedLength + variableLength + acksLength < Packet.MTU && i < AnimationSourceList.length) {
-                    int blockLength = AnimationSourceList[i].length;
-                    if (fixedLength + variableLength + blockLength + acksLength <= MTU) {
+                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i < AnimationSourceList.length) {
+                    int blockLength = AnimationSourceList[i].getLength();
+                    if (fixedLength + variableLength + blockLength + acksLength[0] <= MTU) {
                         variableLength += blockLength;
                         ++AnimationSourceListCount;
                     }
@@ -367,9 +367,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 }
 
                 i = PhysicalAvatarEventListStart;
-                while (fixedLength + variableLength + acksLength < Packet.MTU && i < PhysicalAvatarEventList.length) {
-                    int blockLength = PhysicalAvatarEventList[i].length;
-                    if (fixedLength + variableLength + blockLength + acksLength <= MTU) {
+                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i < PhysicalAvatarEventList.length) {
+                    int blockLength = PhysicalAvatarEventList[i].getLength();
+                    if (fixedLength + variableLength + blockLength + acksLength[0] <= MTU) {
                         variableLength += blockLength;
                         ++PhysicalAvatarEventListCount;
                     }
@@ -377,26 +377,26 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     ++i;
                 }
 
-                byte[] packet = new byte[fixedLength + variableLength + acksLength];
-                int length = fixedBytes.length;
-                Utils.arraycopy(fixedBytes, 0, packet, 0, length);
+                byte[] packet = new byte[fixedLength + variableLength + acksLength[0]];
+                int[] length = new int[] {fixedBytes.length};
+                Utils.arraycopy(fixedBytes, 0, packet, 0, length[0]);
                 if (packets.size() > 0) { packet[0] = (byte)(packet[0] & ~0x10); }
 
-                packet[length++] = (byte)AnimationListCount;
-                for (i = AnimationListStart; i < AnimationListStart + AnimationListCount; i++) { AnimationList[i].ToBytes(packet, ref length); }
+                packet[length[0]++] = (byte)AnimationListCount;
+                for (i = AnimationListStart; i < AnimationListStart + AnimationListCount; i++) { AnimationList[i].ToBytes(packet, length); }
                 AnimationListStart += AnimationListCount;
 
-                packet[length++] = (byte)AnimationSourceListCount;
-                for (i = AnimationSourceListStart; i < AnimationSourceListStart + AnimationSourceListCount; i++) { AnimationSourceList[i].ToBytes(packet, ref length); }
+                packet[length[0]++] = (byte)AnimationSourceListCount;
+                for (i = AnimationSourceListStart; i < AnimationSourceListStart + AnimationSourceListCount; i++) { AnimationSourceList[i].ToBytes(packet, length); }
                 AnimationSourceListStart += AnimationSourceListCount;
 
-                packet[length++] = (byte)PhysicalAvatarEventListCount;
-                for (i = PhysicalAvatarEventListStart; i < PhysicalAvatarEventListStart + PhysicalAvatarEventListCount; i++) { PhysicalAvatarEventList[i].ToBytes(packet, ref length); }
+                packet[length[0]++] = (byte)PhysicalAvatarEventListCount;
+                for (i = PhysicalAvatarEventListStart; i < PhysicalAvatarEventListStart + PhysicalAvatarEventListCount; i++) { PhysicalAvatarEventList[i].ToBytes(packet, length); }
                 PhysicalAvatarEventListStart += PhysicalAvatarEventListCount;
 
-                if (acksLength > 0) {
-                    Utils.arraycopy(ackBytes, 0, packet, length, acksLength);
-                    acksLength = 0;
+                if (acksLength[0] > 0) {
+                    Utils.arraycopy(ackBytes, 0, packet, length[0], acksLength[0]);
+                    acksLength[0] = 0;
                 }
 
                 packets.add(packet);

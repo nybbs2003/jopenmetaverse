@@ -28,8 +28,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    AgentID.FromBytes(bytes, i); i += 16;
-                    AvatarID.FromBytes(bytes, i); i += 16;
+                    AgentID.FromBytes(bytes, i[0]); i[0] += 16;
+                    AvatarID.FromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)
                 {
@@ -41,7 +41,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
-                AvatarID.ToBytes(bytes, i); i += 16;
+                AvatarID.ToBytes(bytes, i[0]); i[0] += 16;
             }
 
         }
@@ -79,16 +79,16 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    GroupPowers = (ulong)((ulong)bytes[i++] + ((ulong)bytes[i++] << 8) + ((ulong)bytes[i++] << 16) + ((ulong)bytes[i++] << 24) + ((ulong)bytes[i++] << 32) + ((ulong)bytes[i++] << 40) + ((ulong)bytes[i++] << 48) + ((ulong)bytes[i++] << 56));
-                    AcceptNotices = (bytes[i++] != 0) ? (bool)true : (bool)false;
-                    length = bytes[i++];
+                    GroupPowers = (ulong)((ulong)bytes[i[0]++] + ((ulong)bytes[i[0]++] << 8) + ((ulong)bytes[i[0]++] << 16) + ((ulong)bytes[i[0]++] << 24) + ((ulong)bytes[i[0]++] << 32) + ((ulong)bytes[i[0]++] << 40) + ((ulong)bytes[i[0]++] << 48) + ((ulong)bytes[i[0]++] << 56));
+                    AcceptNotices = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
+                    length = bytes[i[0]++];
                     GroupTitle = new byte[length];
-                    Utils.arraycopy(bytes, i, GroupTitle, 0, length); i += length;
-                    GroupID.FromBytes(bytes, i); i += 16;
-                    length = bytes[i++];
+                    Utils.arraycopy(bytes, i, GroupTitle, 0, length); i[0] +=  length;
+                    GroupID.FromBytes(bytes, i[0]); i[0] += 16;
+                    length = bytes[i[0]++];
                     GroupName = new byte[length];
-                    Utils.arraycopy(bytes, i, GroupName, 0, length); i += length;
-                    GroupInsigniaID.FromBytes(bytes, i); i += 16;
+                    Utils.arraycopy(bytes, i, GroupName, 0, length); i[0] +=  length;
+                    GroupInsigniaID.FromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)
                 {
@@ -100,13 +100,13 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 Utils.UInt64ToBytes(GroupPowers, bytes, i); i += 8;
-                bytes[i++] = (byte)((AcceptNotices) ? 1 : 0);
-                bytes[i++] = (byte)GroupTitle.length;
-                Utils.arraycopy(GroupTitle, 0, bytes, i, GroupTitle.length); i += GroupTitle.length;
-                GroupID.ToBytes(bytes, i); i += 16;
-                bytes[i++] = (byte)GroupName.length;
-                Utils.arraycopy(GroupName, 0, bytes, i, GroupName.length); i += GroupName.length;
-                GroupInsigniaID.ToBytes(bytes, i); i += 16;
+                bytes[i[0]++] = (byte)((AcceptNotices) ? 1 : 0);
+                bytes[i[0]++] = (byte)GroupTitle.length;
+                Utils.arraycopy(GroupTitle, 0, bytes, i, GroupTitle.length); i[0] +=  GroupTitle.length;
+                GroupID.ToBytes(bytes, i[0]); i[0] += 16;
+                bytes[i[0]++] = (byte)GroupName.length;
+                Utils.arraycopy(GroupName, 0, bytes, i, GroupName.length); i[0] +=  GroupName.length;
+                GroupInsigniaID.ToBytes(bytes, i[0]); i[0] += 16;
             }
 
         }
@@ -135,7 +135,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    ListInProfile = (bytes[i++] != 0) ? (bool)true : (bool)false;
+                    ListInProfile = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
                 }
                 catch (Exception e)
                 {
@@ -146,7 +146,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                bytes[i++] = (byte)((ListInProfile) ? 1 : 0);
+                bytes[i[0]++] = (byte)((ListInProfile) ? 1 : 0);
             }
 
         }
@@ -158,7 +158,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length = 11;
                 length += AgentData.getLength();
                 for (int j = 0; j < GroupData.length; j++)
-                    length += GroupData[j].length;
+                    length += GroupData[j].getLength();
                 length += NewGroupData.length;
                 return length;
             }
@@ -198,7 +198,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 bytes = zeroBuffer;
             }
             AgentData.FromBytes(bytes, i);
-            int count = (int)bytes[i++];
+            int count = (int)bytes[i[0]++];
             if(GroupData == null || GroupData.length != -1) {
                 GroupData = new GroupDataBlock[count];
                 for(int j = 0; j < count; j++)
@@ -221,7 +221,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             this.header =  header;
             AgentData.FromBytes(bytes, i);
-            int count = (int)bytes[i++];
+            int count = (int)bytes[i[0]++];
             if(GroupData == null || GroupData.length != count) {
                 GroupData = new GroupDataBlock[count];
                 for(int j = 0; j < count; j++)
@@ -239,13 +239,13 @@ package com.ngt.jopenmetaverse.shared.protocol;
             length += AgentData.getLength();
             length += NewGroupData.length;
             length++;
-            for (int j = 0; j < GroupData.length; j++) { length += GroupData[j].length; }
+            for (int j = 0; j < GroupData.length; j++) { length += GroupData[j].getLength(); }
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
             int i = 0;
             header.ToBytes(bytes, i);
             AgentData.ToBytes(bytes, i);
-            bytes[i++] = (byte)GroupData.length;
+            bytes[i[0]++] = (byte)GroupData.length;
             for (int j = 0; j < GroupData.length; j++) { GroupData[j].ToBytes(bytes, i); }
             NewGroupData.ToBytes(bytes, i);
             if (header.AckList != null && header.AckList.length > 0) { header.AcksToBytes(bytes, i); }

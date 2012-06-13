@@ -29,9 +29,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    Handle = (ulong)((ulong)bytes[i++] + ((ulong)bytes[i++] << 8) + ((ulong)bytes[i++] << 16) + ((ulong)bytes[i++] << 24) + ((ulong)bytes[i++] << 32) + ((ulong)bytes[i++] << 40) + ((ulong)bytes[i++] << 48) + ((ulong)bytes[i++] << 56));
-                    IP = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    Port = (ushort)((bytes[i++] << 8) + bytes[i++]);
+                    Handle = (ulong)((ulong)bytes[i[0]++] + ((ulong)bytes[i[0]++] << 8) + ((ulong)bytes[i[0]++] << 16) + ((ulong)bytes[i[0]++] << 24) + ((ulong)bytes[i[0]++] << 32) + ((ulong)bytes[i[0]++] << 40) + ((ulong)bytes[i[0]++] << 48) + ((ulong)bytes[i[0]++] << 56));
+                    IP = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    Port = (ushort)((bytes[i[0]++] << 8) + bytes[i[0]++]);
                 }
                 catch (Exception e)
                 {
@@ -44,8 +44,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 Utils.UInt64ToBytes(Handle, bytes, i); i += 8;
                 Utils.UIntToBytes(IP, bytes, i); i += 4;
-                bytes[i++] = (byte)((Port >> 8) % 256);
-                bytes[i++] = (byte)(Port % 256);
+                bytes[i[0]++] = (byte)((Port >> 8) % 256);
+                bytes[i[0]++] = (byte)(Port % 256);
             }
 
         }

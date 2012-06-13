@@ -28,7 +28,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    AgentID.FromBytes(bytes, i); i += 16;
+                    AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)
@@ -80,16 +80,16 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    GroupID.FromBytes(bytes, i); i += 16;
-                    length = (bytes[i++] + (bytes[i++] << 8));
+                    GroupID.FromBytes(bytes, i[0]); i[0] += 16;
+                    length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
                     Charter = new byte[length];
-                    Utils.arraycopy(bytes, i, Charter, 0, length); i += length;
-                    ShowInList = (bytes[i++] != 0) ? (bool)true : (bool)false;
-                    InsigniaID.FromBytes(bytes, i); i += 16;
-                    MembershipFee = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    OpenEnrollment = (bytes[i++] != 0) ? (bool)true : (bool)false;
-                    AllowPublish = (bytes[i++] != 0) ? (bool)true : (bool)false;
-                    MaturePublish = (bytes[i++] != 0) ? (bool)true : (bool)false;
+                    Utils.arraycopy(bytes, i, Charter, 0, length); i[0] +=  length;
+                    ShowInList = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
+                    InsigniaID.FromBytes(bytes, i[0]); i[0] += 16;
+                    MembershipFee = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    OpenEnrollment = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
+                    AllowPublish = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
+                    MaturePublish = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
                 }
                 catch (Exception e)
                 {
@@ -100,16 +100,16 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                GroupID.ToBytes(bytes, i); i += 16;
-                bytes[i++] = (byte)(Charter.length % 256);
-                bytes[i++] = (byte)((Charter.length >> 8) % 256);
-                Utils.arraycopy(Charter, 0, bytes, i, Charter.length); i += Charter.length;
-                bytes[i++] = (byte)((ShowInList) ? 1 : 0);
-                InsigniaID.ToBytes(bytes, i); i += 16;
+                GroupID.ToBytes(bytes, i[0]); i[0] += 16;
+                bytes[i[0]++] = (byte)(Charter.length % 256);
+                bytes[i[0]++] = (byte)((Charter.length >> 8) % 256);
+                Utils.arraycopy(Charter, 0, bytes, i, Charter.length); i[0] +=  Charter.length;
+                bytes[i[0]++] = (byte)((ShowInList) ? 1 : 0);
+                InsigniaID.ToBytes(bytes, i[0]); i[0] += 16;
                 Utils.IntToBytes(MembershipFee, bytes, i); i += 4;
-                bytes[i++] = (byte)((OpenEnrollment) ? 1 : 0);
-                bytes[i++] = (byte)((AllowPublish) ? 1 : 0);
-                bytes[i++] = (byte)((MaturePublish) ? 1 : 0);
+                bytes[i[0]++] = (byte)((OpenEnrollment) ? 1 : 0);
+                bytes[i[0]++] = (byte)((AllowPublish) ? 1 : 0);
+                bytes[i[0]++] = (byte)((MaturePublish) ? 1 : 0);
             }
 
         }

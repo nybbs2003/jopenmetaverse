@@ -32,11 +32,11 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    RequestID.FromBytes(bytes, i); i += 16;
-                    GroupID.FromBytes(bytes, i); i += 16;
-                    length = bytes[i++];
+                    RequestID.FromBytes(bytes, i[0]); i[0] += 16;
+                    GroupID.FromBytes(bytes, i[0]); i[0] += 16;
+                    length = bytes[i[0]++];
                     Selection = new byte[length];
-                    Utils.arraycopy(bytes, i, Selection, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, Selection, 0, length); i[0] +=  length;
                 }
                 catch (Exception e)
                 {
@@ -47,10 +47,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                RequestID.ToBytes(bytes, i); i += 16;
-                GroupID.ToBytes(bytes, i); i += 16;
-                bytes[i++] = (byte)Selection.length;
-                Utils.arraycopy(Selection, 0, bytes, i, Selection.length); i += Selection.length;
+                RequestID.ToBytes(bytes, i[0]); i[0] += 16;
+                GroupID.ToBytes(bytes, i[0]); i[0] += 16;
+                bytes[i[0]++] = (byte)Selection.length;
+                Utils.arraycopy(Selection, 0, bytes, i, Selection.length); i[0] +=  Selection.length;
             }
 
         }

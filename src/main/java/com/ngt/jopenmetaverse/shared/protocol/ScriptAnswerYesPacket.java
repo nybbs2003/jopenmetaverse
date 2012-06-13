@@ -28,7 +28,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    AgentID.FromBytes(bytes, i); i += 16;
+                    AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)
@@ -72,9 +72,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    TaskID.FromBytes(bytes, i); i += 16;
-                    ItemID.FromBytes(bytes, i); i += 16;
-                    Questions = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
+                    TaskID.FromBytes(bytes, i[0]); i[0] += 16;
+                    ItemID.FromBytes(bytes, i[0]); i[0] += 16;
+                    Questions = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                 }
                 catch (Exception e)
                 {
@@ -85,8 +85,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                TaskID.ToBytes(bytes, i); i += 16;
-                ItemID.ToBytes(bytes, i); i += 16;
+                TaskID.ToBytes(bytes, i[0]); i[0] += 16;
+                ItemID.ToBytes(bytes, i[0]); i[0] += 16;
                 Utils.IntToBytes(Questions, bytes, i); i += 4;
             }
 
@@ -98,7 +98,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                         {
                 int length = 10;
                 length += AgentData.getLength();
-                length += Data.getLength();
+                length += Data.length;
                 return length;
             }
         }
@@ -157,7 +157,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             int length = 10;
             length += AgentData.getLength();
-            length += Data.getLength();
+            length += Data.length;
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
             int i = 0;

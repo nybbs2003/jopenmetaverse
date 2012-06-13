@@ -28,7 +28,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    AgentID.FromBytes(bytes, i); i += 16;
+                    AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)
@@ -88,23 +88,23 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    length = bytes[i++];
+                    length = bytes[i[0]++];
                     SimName = new byte[length];
-                    Utils.arraycopy(bytes, i, SimName, 0, length); i += length;
-                    EstateID = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    ParentEstateID = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    RegionFlags = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    SimAccess = (byte)bytes[i++];
-                    MaxAgents = (byte)bytes[i++];
+                    Utils.arraycopy(bytes, i, SimName, 0, length); i[0] +=  length;
+                    EstateID = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    ParentEstateID = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    RegionFlags = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    SimAccess = (byte)bytes[i[0]++];
+                    MaxAgents = (byte)bytes[i[0]++];
                     BillableFactor = Utils.BytesToFloat(bytes, i); i += 4;
                     ObjectBonusFactor = Utils.BytesToFloat(bytes, i); i += 4;
                     WaterHeight = Utils.BytesToFloat(bytes, i); i += 4;
                     TerrainRaiseLimit = Utils.BytesToFloat(bytes, i); i += 4;
                     TerrainLowerLimit = Utils.BytesToFloat(bytes, i); i += 4;
-                    PricePerMeter = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    RedirectGridX = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    RedirectGridY = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    UseEstateSun = (bytes[i++] != 0) ? (bool)true : (bool)false;
+                    PricePerMeter = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    RedirectGridX = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    RedirectGridY = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    UseEstateSun = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
                     SunHour = Utils.BytesToFloat(bytes, i); i += 4;
                 }
                 catch (Exception e)
@@ -116,13 +116,13 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                bytes[i++] = (byte)SimName.length;
-                Utils.arraycopy(SimName, 0, bytes, i, SimName.length); i += SimName.length;
+                bytes[i[0]++] = (byte)SimName.length;
+                Utils.arraycopy(SimName, 0, bytes, i, SimName.length); i[0] +=  SimName.length;
                 Utils.UIntToBytes(EstateID, bytes, i); i += 4;
                 Utils.UIntToBytes(ParentEstateID, bytes, i); i += 4;
                 Utils.UIntToBytes(RegionFlags, bytes, i); i += 4;
-                bytes[i++] = SimAccess;
-                bytes[i++] = MaxAgents;
+                bytes[i[0]++] = SimAccess;
+                bytes[i[0]++] = MaxAgents;
                 Utils.FloatToBytes(BillableFactor, bytes, i); i += 4;
                 Utils.FloatToBytes(ObjectBonusFactor, bytes, i); i += 4;
                 Utils.FloatToBytes(WaterHeight, bytes, i); i += 4;
@@ -131,7 +131,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 Utils.IntToBytes(PricePerMeter, bytes, i); i += 4;
                 Utils.IntToBytes(RedirectGridX, bytes, i); i += 4;
                 Utils.IntToBytes(RedirectGridY, bytes, i); i += 4;
-                bytes[i++] = (byte)((UseEstateSun) ? 1 : 0);
+                bytes[i[0]++] = (byte)((UseEstateSun) ? 1 : 0);
                 Utils.FloatToBytes(SunHour, bytes, i); i += 4;
             }
 
@@ -169,15 +169,15 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    length = bytes[i++];
+                    length = bytes[i[0]++];
                     ProductSKU = new byte[length];
-                    Utils.arraycopy(bytes, i, ProductSKU, 0, length); i += length;
-                    length = bytes[i++];
+                    Utils.arraycopy(bytes, i, ProductSKU, 0, length); i[0] +=  length;
+                    length = bytes[i[0]++];
                     ProductName = new byte[length];
-                    Utils.arraycopy(bytes, i, ProductName, 0, length); i += length;
-                    MaxAgents32 = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    HardMaxAgents = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    HardMaxObjects = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
+                    Utils.arraycopy(bytes, i, ProductName, 0, length); i[0] +=  length;
+                    MaxAgents32 = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    HardMaxAgents = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    HardMaxObjects = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                 }
                 catch (Exception e)
                 {
@@ -188,10 +188,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                bytes[i++] = (byte)ProductSKU.length;
-                Utils.arraycopy(ProductSKU, 0, bytes, i, ProductSKU.length); i += ProductSKU.length;
-                bytes[i++] = (byte)ProductName.length;
-                Utils.arraycopy(ProductName, 0, bytes, i, ProductName.length); i += ProductName.length;
+                bytes[i[0]++] = (byte)ProductSKU.length;
+                Utils.arraycopy(ProductSKU, 0, bytes, i, ProductSKU.length); i[0] +=  ProductSKU.length;
+                bytes[i[0]++] = (byte)ProductName.length;
+                Utils.arraycopy(ProductName, 0, bytes, i, ProductName.length); i[0] +=  ProductName.length;
                 Utils.UIntToBytes(MaxAgents32, bytes, i); i += 4;
                 Utils.UIntToBytes(HardMaxAgents, bytes, i); i += 4;
                 Utils.UIntToBytes(HardMaxObjects, bytes, i); i += 4;

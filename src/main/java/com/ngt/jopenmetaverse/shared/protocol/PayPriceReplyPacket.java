@@ -28,8 +28,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    ObjectID.FromBytes(bytes, i); i += 16;
-                    DefaultPayPrice = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
+                    ObjectID.FromBytes(bytes, i[0]); i[0] += 16;
+                    DefaultPayPrice = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                 }
                 catch (Exception e)
                 {
@@ -40,7 +40,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                ObjectID.ToBytes(bytes, i); i += 16;
+                ObjectID.ToBytes(bytes, i[0]); i[0] += 16;
                 Utils.IntToBytes(DefaultPayPrice, bytes, i); i += 4;
             }
 
@@ -70,7 +70,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    PayButton = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
+                    PayButton = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                 }
                 catch (Exception e)
                 {
@@ -93,7 +93,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length = 11;
                 length += ObjectData.length;
                 for (int j = 0; j < ButtonData.length; j++)
-                    length += ButtonData[j].length;
+                    length += ButtonData[j].getLength();
                 return length;
             }
         }
@@ -129,7 +129,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 bytes = zeroBuffer;
             }
             ObjectData.FromBytes(bytes, i);
-            int count = (int)bytes[i++];
+            int count = (int)bytes[i[0]++];
             if(ButtonData == null || ButtonData.length != -1) {
                 ButtonData = new ButtonDataBlock[count];
                 for(int j = 0; j < count; j++)
@@ -151,7 +151,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             this.header =  header;
             ObjectData.FromBytes(bytes, i);
-            int count = (int)bytes[i++];
+            int count = (int)bytes[i[0]++];
             if(ButtonData == null || ButtonData.length != count) {
                 ButtonData = new ButtonDataBlock[count];
                 for(int j = 0; j < count; j++)
@@ -167,13 +167,13 @@ package com.ngt.jopenmetaverse.shared.protocol;
             int length = 10;
             length += ObjectData.length;
             length++;
-            for (int j = 0; j < ButtonData.length; j++) { length += ButtonData[j].length; }
+            for (int j = 0; j < ButtonData.length; j++) { length += ButtonData[j].getLength(); }
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
             int i = 0;
             header.ToBytes(bytes, i);
             ObjectData.ToBytes(bytes, i);
-            bytes[i++] = (byte)ButtonData.length;
+            bytes[i[0]++] = (byte)ButtonData.length;
             for (int j = 0; j < ButtonData.length; j++) { ButtonData[j].ToBytes(bytes, i); }
             if (header.AckList != null && header.AckList.length > 0) { header.AcksToBytes(bytes, i); }
             return bytes;
@@ -187,11 +187,11 @@ package com.ngt.jopenmetaverse.shared.protocol;
             int fixedLength = 10;
 
             byte[] ackBytes = null;
-            int acksLength = 0;
+            int[] acksLength = new int[]{0};
             if (header.AckList != null && header.AckList.length > 0) {
                 header.AppendedAcks = true;
                 ackBytes = new byte[header.AckList.length * 4 + 1];
-                header.AcksToBytes(ackBytes, ref acksLength);
+                header.AcksToBytes(ackBytes, acksLength);
             }
 
             fixedLength += ObjectData.length;
@@ -207,9 +207,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int ButtonDataCount = 0;
 
                 i = ButtonDataStart;
-                while (fixedLength + variableLength + acksLength < Packet.MTU && i < ButtonData.length) {
-                    int blockLength = ButtonData[i].length;
-                    if (fixedLength + variableLength + blockLength + acksLength <= MTU) {
+                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i < ButtonData.length) {
+                    int blockLength = ButtonData[i].getLength();
+                    if (fixedLength + variableLength + blockLength + acksLength[0] <= MTU) {
                         variableLength += blockLength;
                         ++ButtonDataCount;
                     }
@@ -217,18 +217,18 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     ++i;
                 }
 
-                byte[] packet = new byte[fixedLength + variableLength + acksLength];
-                int length = fixedBytes.length;
-                Utils.arraycopy(fixedBytes, 0, packet, 0, length);
+                byte[] packet = new byte[fixedLength + variableLength + acksLength[0]];
+                int[] length = new int[] {fixedBytes.length};
+                Utils.arraycopy(fixedBytes, 0, packet, 0, length[0]);
                 if (packets.size() > 0) { packet[0] = (byte)(packet[0] & ~0x10); }
 
-                packet[length++] = (byte)ButtonDataCount;
-                for (i = ButtonDataStart; i < ButtonDataStart + ButtonDataCount; i++) { ButtonData[i].ToBytes(packet, ref length); }
+                packet[length[0]++] = (byte)ButtonDataCount;
+                for (i = ButtonDataStart; i < ButtonDataStart + ButtonDataCount; i++) { ButtonData[i].ToBytes(packet, length); }
                 ButtonDataStart += ButtonDataCount;
 
-                if (acksLength > 0) {
-                    Utils.arraycopy(ackBytes, 0, packet, length, acksLength);
-                    acksLength = 0;
+                if (acksLength[0] > 0) {
+                    Utils.arraycopy(ackBytes, 0, packet, length[0], acksLength[0]);
+                    acksLength[0] = 0;
                 }
 
                 packets.add(packet);

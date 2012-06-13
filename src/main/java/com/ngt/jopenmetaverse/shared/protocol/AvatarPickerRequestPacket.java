@@ -31,9 +31,9 @@ import com.ngt.jopenmetaverse.shared.types.UUID;
             {
                 try
                 {
-                    AgentID.FromBytes(bytes, i); i += 16;
+                    AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
-                    QueryID.FromBytes(bytes, i); i += 16;
+                    QueryID.FromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)
                 {
@@ -46,7 +46,7 @@ import com.ngt.jopenmetaverse.shared.types.UUID;
             {
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
                 SessionID.ToBytes(bytes, i[0]); i[0] += 16;
-                QueryID.ToBytes(bytes, i); i += 16;
+                QueryID.ToBytes(bytes, i[0]); i[0] += 16;
             }
 
         }
@@ -78,9 +78,9 @@ import com.ngt.jopenmetaverse.shared.types.UUID;
                 int length;
                 try
                 {
-                    length = bytes[i++];
+                    length = bytes[i[0]++];
                     Name = new byte[length];
-                    Utils.arraycopy(bytes, i, Name, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, Name, 0, length); i[0] +=  length;
                 }
                 catch (Exception e)
                 {
@@ -91,8 +91,8 @@ import com.ngt.jopenmetaverse.shared.types.UUID;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                bytes[i++] = (byte)Name.length;
-                Utils.arraycopy(Name, 0, bytes, i, Name.length); i += Name.length;
+                bytes[i[0]++] = (byte)Name.length;
+                Utils.arraycopy(Name, 0, bytes, i, Name.length); i[0] +=  Name.length;
             }
 
         }
@@ -103,7 +103,7 @@ import com.ngt.jopenmetaverse.shared.types.UUID;
                         {
                 int length = 10;
                 length += AgentData.getLength();
-                length += Data.getLength();
+                length += Data.length;
                 return length;
             }
         }
@@ -162,7 +162,7 @@ import com.ngt.jopenmetaverse.shared.types.UUID;
         {
             int length = 10;
             length += AgentData.getLength();
-            length += Data.getLength();
+            length += Data.length;
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
             int i = 0;

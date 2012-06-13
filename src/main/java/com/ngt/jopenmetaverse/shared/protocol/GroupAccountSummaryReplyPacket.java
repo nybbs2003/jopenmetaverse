@@ -28,8 +28,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    AgentID.FromBytes(bytes, i); i += 16;
-                    GroupID.FromBytes(bytes, i); i += 16;
+                    AgentID.FromBytes(bytes, i[0]); i[0] += 16;
+                    GroupID.FromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)
                 {
@@ -41,7 +41,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
-                GroupID.ToBytes(bytes, i); i += 16;
+                GroupID.ToBytes(bytes, i[0]); i[0] += 16;
             }
 
         }
@@ -94,32 +94,32 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    RequestID.FromBytes(bytes, i); i += 16;
-                    IntervalDays = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    CurrentInterval = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    length = bytes[i++];
+                    RequestID.FromBytes(bytes, i[0]); i[0] += 16;
+                    IntervalDays = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    CurrentInterval = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    length = bytes[i[0]++];
                     StartDate = new byte[length];
-                    Utils.arraycopy(bytes, i, StartDate, 0, length); i += length;
-                    Balance = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    TotalCredits = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    TotalDebits = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    ObjectTaxCurrent = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    LightTaxCurrent = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    LandTaxCurrent = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    GroupTaxCurrent = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    ParcelDirFeeCurrent = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    ObjectTaxEstimate = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    LightTaxEstimate = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    LandTaxEstimate = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    GroupTaxEstimate = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    ParcelDirFeeEstimate = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    NonExemptMembers = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    length = bytes[i++];
+                    Utils.arraycopy(bytes, i, StartDate, 0, length); i[0] +=  length;
+                    Balance = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    TotalCredits = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    TotalDebits = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    ObjectTaxCurrent = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    LightTaxCurrent = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    LandTaxCurrent = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    GroupTaxCurrent = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    ParcelDirFeeCurrent = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    ObjectTaxEstimate = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    LightTaxEstimate = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    LandTaxEstimate = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    GroupTaxEstimate = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    ParcelDirFeeEstimate = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    NonExemptMembers = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    length = bytes[i[0]++];
                     LastTaxDate = new byte[length];
-                    Utils.arraycopy(bytes, i, LastTaxDate, 0, length); i += length;
-                    length = bytes[i++];
+                    Utils.arraycopy(bytes, i, LastTaxDate, 0, length); i[0] +=  length;
+                    length = bytes[i[0]++];
                     TaxDate = new byte[length];
-                    Utils.arraycopy(bytes, i, TaxDate, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, TaxDate, 0, length); i[0] +=  length;
                 }
                 catch (Exception e)
                 {
@@ -130,11 +130,11 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                RequestID.ToBytes(bytes, i); i += 16;
+                RequestID.ToBytes(bytes, i[0]); i[0] += 16;
                 Utils.IntToBytes(IntervalDays, bytes, i); i += 4;
                 Utils.IntToBytes(CurrentInterval, bytes, i); i += 4;
-                bytes[i++] = (byte)StartDate.length;
-                Utils.arraycopy(StartDate, 0, bytes, i, StartDate.length); i += StartDate.length;
+                bytes[i[0]++] = (byte)StartDate.length;
+                Utils.arraycopy(StartDate, 0, bytes, i, StartDate.length); i[0] +=  StartDate.length;
                 Utils.IntToBytes(Balance, bytes, i); i += 4;
                 Utils.IntToBytes(TotalCredits, bytes, i); i += 4;
                 Utils.IntToBytes(TotalDebits, bytes, i); i += 4;
@@ -149,10 +149,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 Utils.IntToBytes(GroupTaxEstimate, bytes, i); i += 4;
                 Utils.IntToBytes(ParcelDirFeeEstimate, bytes, i); i += 4;
                 Utils.IntToBytes(NonExemptMembers, bytes, i); i += 4;
-                bytes[i++] = (byte)LastTaxDate.length;
-                Utils.arraycopy(LastTaxDate, 0, bytes, i, LastTaxDate.length); i += LastTaxDate.length;
-                bytes[i++] = (byte)TaxDate.length;
-                Utils.arraycopy(TaxDate, 0, bytes, i, TaxDate.length); i += TaxDate.length;
+                bytes[i[0]++] = (byte)LastTaxDate.length;
+                Utils.arraycopy(LastTaxDate, 0, bytes, i, LastTaxDate.length); i[0] +=  LastTaxDate.length;
+                bytes[i[0]++] = (byte)TaxDate.length;
+                Utils.arraycopy(TaxDate, 0, bytes, i, TaxDate.length); i[0] +=  TaxDate.length;
             }
 
         }

@@ -38,18 +38,18 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    AgentID.FromBytes(bytes, i); i += 16;
+                    AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
                     BodyRotation.FromBytes(bytes, i, true); i += 12;
                     HeadRotation.FromBytes(bytes, i, true); i += 12;
-                    State = (byte)bytes[i++];
-                    CameraCenter.FromBytes(bytes, i); i += 12;
-                    CameraAtAxis.FromBytes(bytes, i); i += 12;
-                    CameraLeftAxis.FromBytes(bytes, i); i += 12;
-                    CameraUpAxis.FromBytes(bytes, i); i += 12;
+                    State = (byte)bytes[i[0]++];
+                    CameraCenter.FromBytes(bytes, i[0]); i[0] += 12;
+                    CameraAtAxis.FromBytes(bytes, i[0]); i[0] += 12;
+                    CameraLeftAxis.FromBytes(bytes, i[0]); i[0] += 12;
+                    CameraUpAxis.FromBytes(bytes, i[0]); i[0] += 12;
                     Far = Utils.BytesToFloat(bytes, i); i += 4;
-                    ControlFlags = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    Flags = (byte)bytes[i++];
+                    ControlFlags = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    Flags = (byte)bytes[i[0]++];
                 }
                 catch (Exception e)
                 {
@@ -62,16 +62,16 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
                 SessionID.ToBytes(bytes, i[0]); i[0] += 16;
-                BodyRotation.ToBytes(bytes, i); i += 12;
-                HeadRotation.ToBytes(bytes, i); i += 12;
-                bytes[i++] = State;
-                CameraCenter.ToBytes(bytes, i); i += 12;
-                CameraAtAxis.ToBytes(bytes, i); i += 12;
-                CameraLeftAxis.ToBytes(bytes, i); i += 12;
-                CameraUpAxis.ToBytes(bytes, i); i += 12;
+                BodyRotation.ToBytes(bytes, i[0]); i[0] += 12;
+                HeadRotation.ToBytes(bytes, i[0]); i[0] += 12;
+                bytes[i[0]++] = State;
+                CameraCenter.ToBytes(bytes, i[0]); i[0] += 12;
+                CameraAtAxis.ToBytes(bytes, i[0]); i[0] += 12;
+                CameraLeftAxis.ToBytes(bytes, i[0]); i[0] += 12;
+                CameraUpAxis.ToBytes(bytes, i[0]); i[0] += 12;
                 Utils.FloatToBytes(Far, bytes, i); i += 4;
                 Utils.UIntToBytes(ControlFlags, bytes, i); i += 4;
-                bytes[i++] = Flags;
+                bytes[i[0]++] = Flags;
             }
 
         }

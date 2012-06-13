@@ -29,9 +29,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    AgentID.FromBytes(bytes, i); i += 16;
+                    AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
-                    CircuitCode = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
+                    CircuitCode = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                 }
                 catch (Exception e)
                 {
@@ -75,9 +75,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    GenCounter = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    Height = (ushort)(bytes[i++] + (bytes[i++] << 8));
-                    Width = (ushort)(bytes[i++] + (bytes[i++] << 8));
+                    GenCounter = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    Height = (ushort)(bytes[i[0]++] + (bytes[i[0]++] << 8));
+                    Width = (ushort)(bytes[i[0]++] + (bytes[i[0]++] << 8));
                 }
                 catch (Exception e)
                 {
@@ -89,10 +89,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 Utils.UIntToBytes(GenCounter, bytes, i); i += 4;
-                bytes[i++] = (byte)(Height % 256);
-                bytes[i++] = (byte)((Height >> 8) % 256);
-                bytes[i++] = (byte)(Width % 256);
-                bytes[i++] = (byte)((Width >> 8) % 256);
+                bytes[i[0]++] = (byte)(Height % 256);
+                bytes[i[0]++] = (byte)((Height >> 8) % 256);
+                bytes[i[0]++] = (byte)(Width % 256);
+                bytes[i[0]++] = (byte)((Width >> 8) % 256);
             }
 
         }

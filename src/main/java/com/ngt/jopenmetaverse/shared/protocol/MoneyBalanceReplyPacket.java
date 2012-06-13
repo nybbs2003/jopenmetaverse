@@ -36,15 +36,15 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    AgentID.FromBytes(bytes, i); i += 16;
-                    TransactionID.FromBytes(bytes, i); i += 16;
-                    TransactionSuccess = (bytes[i++] != 0) ? (bool)true : (bool)false;
-                    MoneyBalance = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    SquareMetersCredit = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    SquareMetersCommitted = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    length = bytes[i++];
+                    AgentID.FromBytes(bytes, i[0]); i[0] += 16;
+                    TransactionID.FromBytes(bytes, i[0]); i[0] += 16;
+                    TransactionSuccess = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
+                    MoneyBalance = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    SquareMetersCredit = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    SquareMetersCommitted = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    length = bytes[i[0]++];
                     Description = new byte[length];
-                    Utils.arraycopy(bytes, i, Description, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, Description, 0, length); i[0] +=  length;
                 }
                 catch (Exception e)
                 {
@@ -56,13 +56,13 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
-                TransactionID.ToBytes(bytes, i); i += 16;
-                bytes[i++] = (byte)((TransactionSuccess) ? 1 : 0);
+                TransactionID.ToBytes(bytes, i[0]); i[0] += 16;
+                bytes[i[0]++] = (byte)((TransactionSuccess) ? 1 : 0);
                 Utils.IntToBytes(MoneyBalance, bytes, i); i += 4;
                 Utils.IntToBytes(SquareMetersCredit, bytes, i); i += 4;
                 Utils.IntToBytes(SquareMetersCommitted, bytes, i); i += 4;
-                bytes[i++] = (byte)Description.length;
-                Utils.arraycopy(Description, 0, bytes, i, Description.length); i += Description.length;
+                bytes[i[0]++] = (byte)Description.length;
+                Utils.arraycopy(Description, 0, bytes, i, Description.length); i[0] +=  Description.length;
             }
 
         }
@@ -100,15 +100,15 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    TransactionType = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    SourceID.FromBytes(bytes, i); i += 16;
-                    IsSourceGroup = (bytes[i++] != 0) ? (bool)true : (bool)false;
-                    DestID.FromBytes(bytes, i); i += 16;
-                    IsDestGroup = (bytes[i++] != 0) ? (bool)true : (bool)false;
-                    Amount = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    length = bytes[i++];
+                    TransactionType = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    SourceID.FromBytes(bytes, i[0]); i[0] += 16;
+                    IsSourceGroup = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
+                    DestID.FromBytes(bytes, i[0]); i[0] += 16;
+                    IsDestGroup = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
+                    Amount = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    length = bytes[i[0]++];
                     ItemDescription = new byte[length];
-                    Utils.arraycopy(bytes, i, ItemDescription, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, ItemDescription, 0, length); i[0] +=  length;
                 }
                 catch (Exception e)
                 {
@@ -120,13 +120,13 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 Utils.IntToBytes(TransactionType, bytes, i); i += 4;
-                SourceID.ToBytes(bytes, i); i += 16;
-                bytes[i++] = (byte)((IsSourceGroup) ? 1 : 0);
-                DestID.ToBytes(bytes, i); i += 16;
-                bytes[i++] = (byte)((IsDestGroup) ? 1 : 0);
+                SourceID.ToBytes(bytes, i[0]); i[0] += 16;
+                bytes[i[0]++] = (byte)((IsSourceGroup) ? 1 : 0);
+                DestID.ToBytes(bytes, i[0]); i[0] += 16;
+                bytes[i[0]++] = (byte)((IsDestGroup) ? 1 : 0);
                 Utils.IntToBytes(Amount, bytes, i); i += 4;
-                bytes[i++] = (byte)ItemDescription.length;
-                Utils.arraycopy(ItemDescription, 0, bytes, i, ItemDescription.length); i += ItemDescription.length;
+                bytes[i[0]++] = (byte)ItemDescription.length;
+                Utils.arraycopy(ItemDescription, 0, bytes, i, ItemDescription.length); i[0] +=  ItemDescription.length;
             }
 
         }

@@ -44,27 +44,27 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    AgentID.FromBytes(bytes, i); i += 16;
+                    AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
-                    AssetID.FromBytes(bytes, i); i += 16;
-                    PosGlobal.FromBytes(bytes, i); i += 24;
-                    length = bytes[i++];
+                    AssetID.FromBytes(bytes, i[0]); i[0] += 16;
+                    PosGlobal.FromBytes(bytes, i[0]); i[0] += 24;
+                    length = bytes[i[0]++];
                     To = new byte[length];
-                    Utils.arraycopy(bytes, i, To, 0, length); i += length;
-                    length = bytes[i++];
+                    Utils.arraycopy(bytes, i, To, 0, length); i[0] +=  length;
+                    length = bytes[i[0]++];
                     From = new byte[length];
-                    Utils.arraycopy(bytes, i, From, 0, length); i += length;
-                    length = bytes[i++];
+                    Utils.arraycopy(bytes, i, From, 0, length); i[0] +=  length;
+                    length = bytes[i[0]++];
                     Name = new byte[length];
-                    Utils.arraycopy(bytes, i, Name, 0, length); i += length;
-                    length = bytes[i++];
+                    Utils.arraycopy(bytes, i, Name, 0, length); i[0] +=  length;
+                    length = bytes[i[0]++];
                     Subject = new byte[length];
-                    Utils.arraycopy(bytes, i, Subject, 0, length); i += length;
-                    length = (bytes[i++] + (bytes[i++] << 8));
+                    Utils.arraycopy(bytes, i, Subject, 0, length); i[0] +=  length;
+                    length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
                     Msg = new byte[length];
-                    Utils.arraycopy(bytes, i, Msg, 0, length); i += length;
-                    AllowPublish = (bytes[i++] != 0) ? (bool)true : (bool)false;
-                    MaturePublish = (bytes[i++] != 0) ? (bool)true : (bool)false;
+                    Utils.arraycopy(bytes, i, Msg, 0, length); i[0] +=  length;
+                    AllowPublish = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
+                    MaturePublish = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
                 }
                 catch (Exception e)
                 {
@@ -77,21 +77,21 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
                 SessionID.ToBytes(bytes, i[0]); i[0] += 16;
-                AssetID.ToBytes(bytes, i); i += 16;
-                PosGlobal.ToBytes(bytes, i); i += 24;
-                bytes[i++] = (byte)To.length;
-                Utils.arraycopy(To, 0, bytes, i, To.length); i += To.length;
-                bytes[i++] = (byte)From.length;
-                Utils.arraycopy(From, 0, bytes, i, From.length); i += From.length;
-                bytes[i++] = (byte)Name.length;
-                Utils.arraycopy(Name, 0, bytes, i, Name.length); i += Name.length;
-                bytes[i++] = (byte)Subject.length;
-                Utils.arraycopy(Subject, 0, bytes, i, Subject.length); i += Subject.length;
-                bytes[i++] = (byte)(Msg.length % 256);
-                bytes[i++] = (byte)((Msg.length >> 8) % 256);
-                Utils.arraycopy(Msg, 0, bytes, i, Msg.length); i += Msg.length;
-                bytes[i++] = (byte)((AllowPublish) ? 1 : 0);
-                bytes[i++] = (byte)((MaturePublish) ? 1 : 0);
+                AssetID.ToBytes(bytes, i[0]); i[0] += 16;
+                PosGlobal.ToBytes(bytes, i[0]); i[0] += 24;
+                bytes[i[0]++] = (byte)To.length;
+                Utils.arraycopy(To, 0, bytes, i, To.length); i[0] +=  To.length;
+                bytes[i[0]++] = (byte)From.length;
+                Utils.arraycopy(From, 0, bytes, i, From.length); i[0] +=  From.length;
+                bytes[i[0]++] = (byte)Name.length;
+                Utils.arraycopy(Name, 0, bytes, i, Name.length); i[0] +=  Name.length;
+                bytes[i[0]++] = (byte)Subject.length;
+                Utils.arraycopy(Subject, 0, bytes, i, Subject.length); i[0] +=  Subject.length;
+                bytes[i[0]++] = (byte)(Msg.length % 256);
+                bytes[i[0]++] = (byte)((Msg.length >> 8) % 256);
+                Utils.arraycopy(Msg, 0, bytes, i, Msg.length); i[0] +=  Msg.length;
+                bytes[i[0]++] = (byte)((AllowPublish) ? 1 : 0);
+                bytes[i[0]++] = (byte)((MaturePublish) ? 1 : 0);
             }
 
         }

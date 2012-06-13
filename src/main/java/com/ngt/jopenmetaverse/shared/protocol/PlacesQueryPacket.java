@@ -29,9 +29,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    AgentID.FromBytes(bytes, i); i += 16;
+                    AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
-                    QueryID.FromBytes(bytes, i); i += 16;
+                    QueryID.FromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)
                 {
@@ -44,7 +44,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
                 SessionID.ToBytes(bytes, i[0]); i[0] += 16;
-                QueryID.ToBytes(bytes, i); i += 16;
+                QueryID.ToBytes(bytes, i[0]); i[0] += 16;
             }
 
         }
@@ -73,7 +73,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    TransactionID.FromBytes(bytes, i); i += 16;
+                    TransactionID.FromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)
                 {
@@ -84,7 +84,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                TransactionID.ToBytes(bytes, i); i += 16;
+                TransactionID.ToBytes(bytes, i[0]); i[0] += 16;
             }
 
         }
@@ -120,14 +120,14 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    length = bytes[i++];
+                    length = bytes[i[0]++];
                     QueryText = new byte[length];
-                    Utils.arraycopy(bytes, i, QueryText, 0, length); i += length;
-                    QueryFlags = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    Category = (sbyte)bytes[i++];
-                    length = bytes[i++];
+                    Utils.arraycopy(bytes, i, QueryText, 0, length); i[0] +=  length;
+                    QueryFlags = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    Category = (sbyte)bytes[i[0]++];
+                    length = bytes[i[0]++];
                     SimName = new byte[length];
-                    Utils.arraycopy(bytes, i, SimName, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, SimName, 0, length); i[0] +=  length;
                 }
                 catch (Exception e)
                 {
@@ -138,12 +138,12 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                bytes[i++] = (byte)QueryText.length;
-                Utils.arraycopy(QueryText, 0, bytes, i, QueryText.length); i += QueryText.length;
+                bytes[i[0]++] = (byte)QueryText.length;
+                Utils.arraycopy(QueryText, 0, bytes, i, QueryText.length); i[0] +=  QueryText.length;
                 Utils.UIntToBytes(QueryFlags, bytes, i); i += 4;
-                bytes[i++] = (byte)Category;
-                bytes[i++] = (byte)SimName.length;
-                Utils.arraycopy(SimName, 0, bytes, i, SimName.length); i += SimName.length;
+                bytes[i[0]++] = (byte)Category;
+                bytes[i[0]++] = (byte)SimName.length;
+                Utils.arraycopy(SimName, 0, bytes, i, SimName.length); i[0] +=  SimName.length;
             }
 
         }

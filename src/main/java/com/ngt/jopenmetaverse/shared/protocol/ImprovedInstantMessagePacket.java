@@ -28,7 +28,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    AgentID.FromBytes(bytes, i); i += 16;
+                    AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)
@@ -86,24 +86,24 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    FromGroup = (bytes[i++] != 0) ? (bool)true : (bool)false;
-                    ToAgentID.FromBytes(bytes, i); i += 16;
-                    ParentEstateID = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    RegionID.FromBytes(bytes, i); i += 16;
-                    Position.FromBytes(bytes, i); i += 12;
-                    Offline = (byte)bytes[i++];
-                    Dialog = (byte)bytes[i++];
-                    ID.FromBytes(bytes, i); i += 16;
-                    Timestamp = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    length = bytes[i++];
+                    FromGroup = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
+                    ToAgentID.FromBytes(bytes, i[0]); i[0] += 16;
+                    ParentEstateID = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    RegionID.FromBytes(bytes, i[0]); i[0] += 16;
+                    Position.FromBytes(bytes, i[0]); i[0] += 12;
+                    Offline = (byte)bytes[i[0]++];
+                    Dialog = (byte)bytes[i[0]++];
+                    ID.FromBytes(bytes, i[0]); i[0] += 16;
+                    Timestamp = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    length = bytes[i[0]++];
                     FromAgentName = new byte[length];
-                    Utils.arraycopy(bytes, i, FromAgentName, 0, length); i += length;
-                    length = (bytes[i++] + (bytes[i++] << 8));
+                    Utils.arraycopy(bytes, i, FromAgentName, 0, length); i[0] +=  length;
+                    length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
                     Message = new byte[length];
-                    Utils.arraycopy(bytes, i, Message, 0, length); i += length;
-                    length = (bytes[i++] + (bytes[i++] << 8));
+                    Utils.arraycopy(bytes, i, Message, 0, length); i[0] +=  length;
+                    length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
                     BinaryBucket = new byte[length];
-                    Utils.arraycopy(bytes, i, BinaryBucket, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, BinaryBucket, 0, length); i[0] +=  length;
                 }
                 catch (Exception e)
                 {
@@ -114,23 +114,23 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                bytes[i++] = (byte)((FromGroup) ? 1 : 0);
+                bytes[i[0]++] = (byte)((FromGroup) ? 1 : 0);
                 ToAgentID.ToBytes(bytes, i[0]); i[0] += 16;
                 Utils.UIntToBytes(ParentEstateID, bytes, i); i += 4;
-                RegionID.ToBytes(bytes, i); i += 16;
-                Position.ToBytes(bytes, i); i += 12;
-                bytes[i++] = Offline;
-                bytes[i++] = Dialog;
-                ID.ToBytes(bytes, i); i += 16;
+                RegionID.ToBytes(bytes, i[0]); i[0] += 16;
+                Position.ToBytes(bytes, i[0]); i[0] += 12;
+                bytes[i[0]++] = Offline;
+                bytes[i[0]++] = Dialog;
+                ID.ToBytes(bytes, i[0]); i[0] += 16;
                 Utils.UIntToBytes(Timestamp, bytes, i); i += 4;
-                bytes[i++] = (byte)FromAgentName.length;
-                Utils.arraycopy(FromAgentName, 0, bytes, i, FromAgentName.length); i += FromAgentName.length;
-                bytes[i++] = (byte)(Message.length % 256);
-                bytes[i++] = (byte)((Message.length >> 8) % 256);
-                Utils.arraycopy(Message, 0, bytes, i, Message.length); i += Message.length;
-                bytes[i++] = (byte)(BinaryBucket.length % 256);
-                bytes[i++] = (byte)((BinaryBucket.length >> 8) % 256);
-                Utils.arraycopy(BinaryBucket, 0, bytes, i, BinaryBucket.length); i += BinaryBucket.length;
+                bytes[i[0]++] = (byte)FromAgentName.length;
+                Utils.arraycopy(FromAgentName, 0, bytes, i, FromAgentName.length); i[0] +=  FromAgentName.length;
+                bytes[i[0]++] = (byte)(Message.length % 256);
+                bytes[i[0]++] = (byte)((Message.length >> 8) % 256);
+                Utils.arraycopy(Message, 0, bytes, i, Message.length); i[0] +=  Message.length;
+                bytes[i[0]++] = (byte)(BinaryBucket.length % 256);
+                bytes[i[0]++] = (byte)((BinaryBucket.length >> 8) % 256);
+                Utils.arraycopy(BinaryBucket, 0, bytes, i, BinaryBucket.length); i[0] +=  BinaryBucket.length;
             }
 
         }

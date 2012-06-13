@@ -28,7 +28,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    AgentID.FromBytes(bytes, i); i += 16;
+                    AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)
@@ -74,11 +74,11 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    FolderID.FromBytes(bytes, i); i += 16;
-                    OwnerID.FromBytes(bytes, i); i += 16;
-                    SortOrder = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    FetchFolders = (bytes[i++] != 0) ? (bool)true : (bool)false;
-                    FetchItems = (bytes[i++] != 0) ? (bool)true : (bool)false;
+                    FolderID.FromBytes(bytes, i[0]); i[0] += 16;
+                    OwnerID.FromBytes(bytes, i[0]); i[0] += 16;
+                    SortOrder = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    FetchFolders = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
+                    FetchItems = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
                 }
                 catch (Exception e)
                 {
@@ -89,11 +89,11 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                FolderID.ToBytes(bytes, i); i += 16;
-                OwnerID.ToBytes(bytes, i); i += 16;
+                FolderID.ToBytes(bytes, i[0]); i[0] += 16;
+                OwnerID.ToBytes(bytes, i[0]); i[0] += 16;
                 Utils.IntToBytes(SortOrder, bytes, i); i += 4;
-                bytes[i++] = (byte)((FetchFolders) ? 1 : 0);
-                bytes[i++] = (byte)((FetchItems) ? 1 : 0);
+                bytes[i[0]++] = (byte)((FetchFolders) ? 1 : 0);
+                bytes[i[0]++] = (byte)((FetchItems) ? 1 : 0);
             }
 
         }

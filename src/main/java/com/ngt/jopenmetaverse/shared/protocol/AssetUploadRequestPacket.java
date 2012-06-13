@@ -34,13 +34,13 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    TransactionID.FromBytes(bytes, i); i += 16;
-                    Type = (sbyte)bytes[i++];
-                    Tempfile = (bytes[i++] != 0) ? (bool)true : (bool)false;
-                    StoreLocal = (bytes[i++] != 0) ? (bool)true : (bool)false;
-                    length = (bytes[i++] + (bytes[i++] << 8));
+                    TransactionID.FromBytes(bytes, i[0]); i[0] += 16;
+                    Type = (sbyte)bytes[i[0]++];
+                    Tempfile = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
+                    StoreLocal = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
+                    length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
                     AssetData = new byte[length];
-                    Utils.arraycopy(bytes, i, AssetData, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, AssetData, 0, length); i[0] +=  length;
                 }
                 catch (Exception e)
                 {
@@ -51,13 +51,13 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                TransactionID.ToBytes(bytes, i); i += 16;
-                bytes[i++] = (byte)Type;
-                bytes[i++] = (byte)((Tempfile) ? 1 : 0);
-                bytes[i++] = (byte)((StoreLocal) ? 1 : 0);
-                bytes[i++] = (byte)(AssetData.length % 256);
-                bytes[i++] = (byte)((AssetData.length >> 8) % 256);
-                Utils.arraycopy(AssetData, 0, bytes, i, AssetData.length); i += AssetData.length;
+                TransactionID.ToBytes(bytes, i[0]); i[0] += 16;
+                bytes[i[0]++] = (byte)Type;
+                bytes[i[0]++] = (byte)((Tempfile) ? 1 : 0);
+                bytes[i[0]++] = (byte)((StoreLocal) ? 1 : 0);
+                bytes[i[0]++] = (byte)(AssetData.length % 256);
+                bytes[i[0]++] = (byte)((AssetData.length >> 8) % 256);
+                Utils.arraycopy(AssetData, 0, bytes, i, AssetData.length); i[0] +=  AssetData.length;
             }
 
         }

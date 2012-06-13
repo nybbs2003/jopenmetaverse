@@ -28,7 +28,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    AgentID.FromBytes(bytes, i); i += 16;
+                    AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)
@@ -76,12 +76,12 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    length = bytes[i++];
+                    length = bytes[i[0]++];
                     SimName = new byte[length];
-                    Utils.arraycopy(bytes, i, SimName, 0, length); i += length;
-                    LocationID = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    LocationPos.FromBytes(bytes, i); i += 12;
-                    LocationLookAt.FromBytes(bytes, i); i += 12;
+                    Utils.arraycopy(bytes, i, SimName, 0, length); i[0] +=  length;
+                    LocationID = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    LocationPos.FromBytes(bytes, i[0]); i[0] += 12;
+                    LocationLookAt.FromBytes(bytes, i[0]); i[0] += 12;
                 }
                 catch (Exception e)
                 {
@@ -92,11 +92,11 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                bytes[i++] = (byte)SimName.length;
-                Utils.arraycopy(SimName, 0, bytes, i, SimName.length); i += SimName.length;
+                bytes[i[0]++] = (byte)SimName.length;
+                Utils.arraycopy(SimName, 0, bytes, i, SimName.length); i[0] +=  SimName.length;
                 Utils.UIntToBytes(LocationID, bytes, i); i += 4;
-                LocationPos.ToBytes(bytes, i); i += 12;
-                LocationLookAt.ToBytes(bytes, i); i += 12;
+                LocationPos.ToBytes(bytes, i[0]); i[0] += 12;
+                LocationLookAt.ToBytes(bytes, i[0]); i[0] += 12;
             }
 
         }

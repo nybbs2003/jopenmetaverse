@@ -28,7 +28,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    AgentID.FromBytes(bytes, i); i += 16;
+                    AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)
@@ -74,11 +74,11 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    GroupID.FromBytes(bytes, i); i += 16;
-                    IsGroupOwned = (bytes[i++] != 0) ? (bool)true : (bool)false;
-                    RemoveContribution = (bytes[i++] != 0) ? (bool)true : (bool)false;
-                    LocalID = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    Final = (bytes[i++] != 0) ? (bool)true : (bool)false;
+                    GroupID.FromBytes(bytes, i[0]); i[0] += 16;
+                    IsGroupOwned = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
+                    RemoveContribution = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
+                    LocalID = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    Final = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
                 }
                 catch (Exception e)
                 {
@@ -89,11 +89,11 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                GroupID.ToBytes(bytes, i); i += 16;
-                bytes[i++] = (byte)((IsGroupOwned) ? 1 : 0);
-                bytes[i++] = (byte)((RemoveContribution) ? 1 : 0);
+                GroupID.ToBytes(bytes, i[0]); i[0] += 16;
+                bytes[i[0]++] = (byte)((IsGroupOwned) ? 1 : 0);
+                bytes[i[0]++] = (byte)((RemoveContribution) ? 1 : 0);
                 Utils.IntToBytes(LocalID, bytes, i); i += 4;
-                bytes[i++] = (byte)((Final) ? 1 : 0);
+                bytes[i[0]++] = (byte)((Final) ? 1 : 0);
             }
 
         }
@@ -123,8 +123,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    Price = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    Area = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
+                    Price = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    Area = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                 }
                 catch (Exception e)
                 {
@@ -147,7 +147,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                         {
                 int length = 10;
                 length += AgentData.getLength();
-                length += Data.getLength();
+                length += Data.length;
                 length += ParcelData.length;
                 return length;
             }
@@ -212,7 +212,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             int length = 10;
             length += AgentData.getLength();
-            length += Data.getLength();
+            length += Data.length;
             length += ParcelData.length;
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];

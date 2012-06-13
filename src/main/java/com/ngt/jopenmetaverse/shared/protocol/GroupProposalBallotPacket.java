@@ -28,7 +28,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    AgentID.FromBytes(bytes, i); i += 16;
+                    AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)
@@ -75,11 +75,11 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    ProposalID.FromBytes(bytes, i); i += 16;
-                    GroupID.FromBytes(bytes, i); i += 16;
-                    length = bytes[i++];
+                    ProposalID.FromBytes(bytes, i[0]); i[0] += 16;
+                    GroupID.FromBytes(bytes, i[0]); i[0] += 16;
+                    length = bytes[i[0]++];
                     VoteCast = new byte[length];
-                    Utils.arraycopy(bytes, i, VoteCast, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, VoteCast, 0, length); i[0] +=  length;
                 }
                 catch (Exception e)
                 {
@@ -90,10 +90,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                ProposalID.ToBytes(bytes, i); i += 16;
-                GroupID.ToBytes(bytes, i); i += 16;
-                bytes[i++] = (byte)VoteCast.length;
-                Utils.arraycopy(VoteCast, 0, bytes, i, VoteCast.length); i += VoteCast.length;
+                ProposalID.ToBytes(bytes, i[0]); i[0] += 16;
+                GroupID.ToBytes(bytes, i[0]); i[0] += 16;
+                bytes[i[0]++] = (byte)VoteCast.length;
+                Utils.arraycopy(VoteCast, 0, bytes, i, VoteCast.length); i[0] +=  VoteCast.length;
             }
 
         }

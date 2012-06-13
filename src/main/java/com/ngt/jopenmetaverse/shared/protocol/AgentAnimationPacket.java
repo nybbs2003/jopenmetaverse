@@ -55,7 +55,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         public final class AnimationListBlock extends PacketBlock
         {
             public UUID AnimID;
-            public bool StartAnim;
+            public boolean StartAnim;
 
             @Override
 			public int getLength()
@@ -66,7 +66,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             }
 
             public AnimationListBlock() { }
-            public AnimationListBlock(byte[] bytes, int[] i)
+            public AnimationListBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -76,8 +76,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 try
                 {
-                    AnimID.FromBytes(bytes, i); i += 16;
-                    StartAnim = (bytes[i++] != 0) ? (bool)true : (bool)false;
+                    AnimID.FromBytes(bytes, i[0]); i[0] += 16;
+                    StartAnim = (bytes[i[0]++] != 0) ? true : false;
                 }
                 catch (Exception e)
                 {
@@ -88,8 +88,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                AnimID.ToBytes(bytes, i); i += 16;
-                bytes[i++] = (byte)((StartAnim) ? 1 : 0);
+                AnimID.ToBytes(bytes, i[0]); i[0] += 16;
+                bytes[i[0]++] = (byte)((StartAnim) ? 1 : 0);
             }
 
         }
@@ -110,7 +110,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             }
 
             public PhysicalAvatarEventListBlock() { }
-            public PhysicalAvatarEventListBlock(byte[] bytes, int[] i)
+            public PhysicalAvatarEventListBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -121,9 +121,9 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 int length;
                 try
                 {
-                    length = bytes[i++];
+                    length = bytes[i[0]++];
                     TypeData = new byte[length];
-                    Utils.arraycopy(bytes, i, TypeData, 0, length); i += length;
+                    Utils.arraycopy(bytes, i[0], TypeData, 0, length); i[0] += length;
                 }
                 catch (Exception e)
                 {
@@ -147,9 +147,9 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 int length = 9;
                 length += AgentData.getLength();
                 for (int j = 0; j < AnimationList.length; j++)
-                    length += AnimationList[j].length;
+                    length += AnimationList[j].getLength();
                 for (int j = 0; j < PhysicalAvatarEventList.length; j++)
-                    length += PhysicalAvatarEventList[j].length;
+                    length += PhysicalAvatarEventList[j].getLength();
                 return length;
             }
         }
@@ -170,7 +170,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             PhysicalAvatarEventList = null;
         }
 
-        public AgentAnimationPacket(byte[] bytes, int[] i) 
+        public AgentAnimationPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -178,7 +178,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         @Override
-		public void FromBytes(byte[] bytes, int[] i, int[] packetEnd, byte[] zeroBuffer)
+		public void FromBytes(byte[] bytes, int[] i, int[] packetEnd, byte[] zeroBuffer) throws MalformedDataException
         {
             header.FromBytes(bytes, i, packetEnd);
             if (header.Zerocoded && zeroBuffer != null)
@@ -187,7 +187,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 bytes = zeroBuffer;
             }
             AgentData.FromBytes(bytes, i);
-            int count = (int)bytes[i++];
+            int count = (int)bytes[i[0]++];
             if(AnimationList == null || AnimationList.length != -1) {
                 AnimationList = new AnimationListBlock[count];
                 for(int j = 0; j < count; j++)
@@ -195,7 +195,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             }
             for (int j = 0; j < count; j++)
             { AnimationList[j].FromBytes(bytes, i); }
-            count = (int)bytes[i++];
+            count = (int)bytes[i[0]++];
             if(PhysicalAvatarEventList == null || PhysicalAvatarEventList.length != -1) {
                 PhysicalAvatarEventList = new PhysicalAvatarEventListBlock[count];
                 for(int j = 0; j < count; j++)
@@ -205,7 +205,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             { PhysicalAvatarEventList[j].FromBytes(bytes, i); }
         }
 
-        public AgentAnimationPacket(Header head, byte[] bytes, int[] i)
+        public AgentAnimationPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -213,11 +213,11 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         @Override
-		public void FromBytes(Header header, byte[] bytes, int[] i, int[] packetEnd)
+		public void FromBytes(Header header, byte[] bytes, int[] i, int[] packetEnd) throws MalformedDataException
         {
             this.header =  header;
             AgentData.FromBytes(bytes, i);
-            int count = (int)bytes[i++];
+            int count = (int)bytes[i[0]++];
             if(AnimationList == null || AnimationList.length != count) {
                 AnimationList = new AnimationListBlock[count];
                 for(int j = 0; j < count; j++)
@@ -225,7 +225,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             }
             for (int j = 0; j < count; j++)
             { AnimationList[j].FromBytes(bytes, i); }
-            count = (int)bytes[i++];
+            count = (int)bytes[i[0]++];
             if(PhysicalAvatarEventList == null || PhysicalAvatarEventList.length != count) {
                 PhysicalAvatarEventList = new PhysicalAvatarEventListBlock[count];
                 for(int j = 0; j < count; j++)
@@ -241,17 +241,17 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             int length = 7;
             length += AgentData.getLength();
             length++;
-            for (int j = 0; j < AnimationList.length; j++) { length += AnimationList[j].length; }
+            for (int j = 0; j < AnimationList.length; j++) { length += AnimationList[j].getLength(); }
             length++;
-            for (int j = 0; j < PhysicalAvatarEventList.length; j++) { length += PhysicalAvatarEventList[j].length; }
+            for (int j = 0; j < PhysicalAvatarEventList.length; j++) { length += PhysicalAvatarEventList[j].getLength(); }
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
-            int i = 0;
+            int[] i = new int[]{0};
             header.ToBytes(bytes, i);
             AgentData.ToBytes(bytes, i);
-            bytes[i++] = (byte)AnimationList.length;
+            bytes[i[0]++] = (byte)AnimationList.length;
             for (int j = 0; j < AnimationList.length; j++) { AnimationList[j].ToBytes(bytes, i); }
-            bytes[i++] = (byte)PhysicalAvatarEventList.length;
+            bytes[i[0]++] = (byte)PhysicalAvatarEventList.length;
             for (int j = 0; j < PhysicalAvatarEventList.length; j++) { PhysicalAvatarEventList[j].ToBytes(bytes, i); }
             if (header.AckList != null && header.AckList.length > 0) { header.AcksToBytes(bytes, i); }
             return bytes;
@@ -261,15 +261,15 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 			public byte[][] ToBytesMultiple()
         {
             List<byte[]> packets = new ArrayList<byte[]>();
-            int i = 0;
+            int[] i = new int[]{0};
             int fixedLength = 7;
 
             byte[] ackBytes = null;
-            int acksLength = 0;
+            int[] acksLength = new int[]{0};
             if (header.AckList != null && header.AckList.length > 0) {
                 header.AppendedAcks = true;
                 ackBytes = new byte[header.AckList.length * 4 + 1];
-                header.AcksToBytes(ackBytes, ref acksLength);
+                header.AcksToBytes(ackBytes, acksLength);
             }
 
             fixedLength += AgentData.getLength();
@@ -286,44 +286,44 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 int AnimationListCount = 0;
                 int PhysicalAvatarEventListCount = 0;
 
-                i = AnimationListStart;
-                while (fixedLength + variableLength + acksLength < Packet.MTU && i < AnimationList.length) {
-                    int blockLength = AnimationList[i].length;
-                    if (fixedLength + variableLength + blockLength + acksLength <= MTU) {
+                i[0] = AnimationListStart;
+                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i[0] < AnimationList.length) {
+                    int blockLength = AnimationList[i[0]].getLength();
+                    if (fixedLength + variableLength + blockLength + acksLength[0] <= MTU) {
                         variableLength += blockLength;
                         ++AnimationListCount;
                     }
                     else { break; }
-                    ++i;
+                    ++i[0];
                 }
 
-                i = PhysicalAvatarEventListStart;
-                while (fixedLength + variableLength + acksLength < Packet.MTU && i < PhysicalAvatarEventList.length) {
-                    int blockLength = PhysicalAvatarEventList[i].length;
-                    if (fixedLength + variableLength + blockLength + acksLength <= MTU) {
+                i[0] = PhysicalAvatarEventListStart;
+                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i[0] < PhysicalAvatarEventList.length) {
+                    int blockLength = PhysicalAvatarEventList[i[0]].getLength();
+                    if (fixedLength + variableLength + blockLength + acksLength[0] <= MTU) {
                         variableLength += blockLength;
                         ++PhysicalAvatarEventListCount;
                     }
                     else { break; }
-                    ++i;
+                    ++i[0];
                 }
 
-                byte[] packet = new byte[fixedLength + variableLength + acksLength];
-                int length = fixedBytes.length;
-                Utils.arraycopy(fixedBytes, 0, packet, 0, length);
+                byte[] packet = new byte[fixedLength + variableLength + acksLength[0]];
+                int[] length = new int[] {fixedBytes.length};
+                Utils.arraycopy(fixedBytes, 0, packet, 0, length[0]);
                 if (packets.size() > 0) { packet[0] = (byte)(packet[0] & ~0x10); }
 
-                packet[length++] = (byte)AnimationListCount;
-                for (i = AnimationListStart; i < AnimationListStart + AnimationListCount; i++) { AnimationList[i].ToBytes(packet, ref length); }
+                packet[length[0]++] = (byte)AnimationListCount;
+                for (i[0] = AnimationListStart; i[0] < AnimationListStart + AnimationListCount; i[0]++) { AnimationList[i[0]].ToBytes(packet, length); }
                 AnimationListStart += AnimationListCount;
 
-                packet[length++] = (byte)PhysicalAvatarEventListCount;
-                for (i = PhysicalAvatarEventListStart; i < PhysicalAvatarEventListStart + PhysicalAvatarEventListCount; i++) { PhysicalAvatarEventList[i].ToBytes(packet, ref length); }
+                packet[length[0]++] = (byte)PhysicalAvatarEventListCount;
+                for (i[0] = PhysicalAvatarEventListStart; i[0] < PhysicalAvatarEventListStart + PhysicalAvatarEventListCount; i[0]++) { PhysicalAvatarEventList[i[0]].ToBytes(packet, length); }
                 PhysicalAvatarEventListStart += PhysicalAvatarEventListCount;
 
-                if (acksLength > 0) {
-                    Utils.arraycopy(ackBytes, 0, packet, length, acksLength);
-                    acksLength = 0;
+                if (acksLength[0] > 0) {
+                    Utils.arraycopy(ackBytes, 0, packet, length[0], acksLength[0]);
+                    acksLength[0] = 0;
                 }
 
                 packets.add(packet);

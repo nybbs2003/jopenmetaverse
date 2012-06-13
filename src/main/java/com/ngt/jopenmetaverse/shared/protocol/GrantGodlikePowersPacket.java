@@ -28,7 +28,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    AgentID.FromBytes(bytes, i); i += 16;
+                    AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)
@@ -71,8 +71,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    GodLevel = (byte)bytes[i++];
-                    Token.FromBytes(bytes, i); i += 16;
+                    GodLevel = (byte)bytes[i[0]++];
+                    Token.FromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)
                 {
@@ -83,8 +83,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                bytes[i++] = GodLevel;
-                Token.ToBytes(bytes, i); i += 16;
+                bytes[i[0]++] = GodLevel;
+                Token.ToBytes(bytes, i[0]); i[0] += 16;
             }
 
         }

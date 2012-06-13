@@ -28,7 +28,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    AgentID.FromBytes(bytes, i); i += 16;
+                    AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)
@@ -70,7 +70,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    LocalID = (uint)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
+                    LocalID = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                 }
                 catch (Exception e)
                 {
@@ -115,12 +115,12 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    UVCoord.FromBytes(bytes, i); i += 12;
-                    STCoord.FromBytes(bytes, i); i += 12;
-                    FaceIndex = (int)(bytes[i++] + (bytes[i++] << 8) + (bytes[i++] << 16) + (bytes[i++] << 24));
-                    Position.FromBytes(bytes, i); i += 12;
-                    Normal.FromBytes(bytes, i); i += 12;
-                    Binormal.FromBytes(bytes, i); i += 12;
+                    UVCoord.FromBytes(bytes, i[0]); i[0] += 12;
+                    STCoord.FromBytes(bytes, i[0]); i[0] += 12;
+                    FaceIndex = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    Position.FromBytes(bytes, i[0]); i[0] += 12;
+                    Normal.FromBytes(bytes, i[0]); i[0] += 12;
+                    Binormal.FromBytes(bytes, i[0]); i[0] += 12;
                 }
                 catch (Exception e)
                 {
@@ -131,12 +131,12 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                UVCoord.ToBytes(bytes, i); i += 12;
-                STCoord.ToBytes(bytes, i); i += 12;
+                UVCoord.ToBytes(bytes, i[0]); i[0] += 12;
+                STCoord.ToBytes(bytes, i[0]); i[0] += 12;
                 Utils.IntToBytes(FaceIndex, bytes, i); i += 4;
-                Position.ToBytes(bytes, i); i += 12;
-                Normal.ToBytes(bytes, i); i += 12;
-                Binormal.ToBytes(bytes, i); i += 12;
+                Position.ToBytes(bytes, i[0]); i[0] += 12;
+                Normal.ToBytes(bytes, i[0]); i[0] += 12;
+                Binormal.ToBytes(bytes, i[0]); i[0] += 12;
             }
 
         }
@@ -149,7 +149,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 length += AgentData.getLength();
                 length += ObjectData.length;
                 for (int j = 0; j < SurfaceInfo.length; j++)
-                    length += SurfaceInfo[j].length;
+                    length += SurfaceInfo[j].getLength();
                 return length;
             }
         }
@@ -188,7 +188,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
             AgentData.FromBytes(bytes, i);
             ObjectData.FromBytes(bytes, i);
-            int count = (int)bytes[i++];
+            int count = (int)bytes[i[0]++];
             if(SurfaceInfo == null || SurfaceInfo.length != -1) {
                 SurfaceInfo = new SurfaceInfoBlock[count];
                 for(int j = 0; j < count; j++)
@@ -211,7 +211,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             this.header =  header;
             AgentData.FromBytes(bytes, i);
             ObjectData.FromBytes(bytes, i);
-            int count = (int)bytes[i++];
+            int count = (int)bytes[i[0]++];
             if(SurfaceInfo == null || SurfaceInfo.length != count) {
                 SurfaceInfo = new SurfaceInfoBlock[count];
                 for(int j = 0; j < count; j++)
@@ -228,14 +228,14 @@ package com.ngt.jopenmetaverse.shared.protocol;
             length += AgentData.getLength();
             length += ObjectData.length;
             length++;
-            for (int j = 0; j < SurfaceInfo.length; j++) { length += SurfaceInfo[j].length; }
+            for (int j = 0; j < SurfaceInfo.length; j++) { length += SurfaceInfo[j].getLength(); }
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
             int i = 0;
             header.ToBytes(bytes, i);
             AgentData.ToBytes(bytes, i);
             ObjectData.ToBytes(bytes, i);
-            bytes[i++] = (byte)SurfaceInfo.length;
+            bytes[i[0]++] = (byte)SurfaceInfo.length;
             for (int j = 0; j < SurfaceInfo.length; j++) { SurfaceInfo[j].ToBytes(bytes, i); }
             if (header.AckList != null && header.AckList.length > 0) { header.AcksToBytes(bytes, i); }
             return bytes;
@@ -249,11 +249,11 @@ package com.ngt.jopenmetaverse.shared.protocol;
             int fixedLength = 10;
 
             byte[] ackBytes = null;
-            int acksLength = 0;
+            int[] acksLength = new int[]{0};
             if (header.AckList != null && header.AckList.length > 0) {
                 header.AppendedAcks = true;
                 ackBytes = new byte[header.AckList.length * 4 + 1];
-                header.AcksToBytes(ackBytes, ref acksLength);
+                header.AcksToBytes(ackBytes, acksLength);
             }
 
             fixedLength += AgentData.getLength();
@@ -271,9 +271,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int SurfaceInfoCount = 0;
 
                 i = SurfaceInfoStart;
-                while (fixedLength + variableLength + acksLength < Packet.MTU && i < SurfaceInfo.length) {
-                    int blockLength = SurfaceInfo[i].length;
-                    if (fixedLength + variableLength + blockLength + acksLength <= MTU) {
+                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i < SurfaceInfo.length) {
+                    int blockLength = SurfaceInfo[i].getLength();
+                    if (fixedLength + variableLength + blockLength + acksLength[0] <= MTU) {
                         variableLength += blockLength;
                         ++SurfaceInfoCount;
                     }
@@ -281,18 +281,18 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     ++i;
                 }
 
-                byte[] packet = new byte[fixedLength + variableLength + acksLength];
-                int length = fixedBytes.length;
-                Utils.arraycopy(fixedBytes, 0, packet, 0, length);
+                byte[] packet = new byte[fixedLength + variableLength + acksLength[0]];
+                int[] length = new int[] {fixedBytes.length};
+                Utils.arraycopy(fixedBytes, 0, packet, 0, length[0]);
                 if (packets.size() > 0) { packet[0] = (byte)(packet[0] & ~0x10); }
 
-                packet[length++] = (byte)SurfaceInfoCount;
-                for (i = SurfaceInfoStart; i < SurfaceInfoStart + SurfaceInfoCount; i++) { SurfaceInfo[i].ToBytes(packet, ref length); }
+                packet[length[0]++] = (byte)SurfaceInfoCount;
+                for (i = SurfaceInfoStart; i < SurfaceInfoStart + SurfaceInfoCount; i++) { SurfaceInfo[i].ToBytes(packet, length); }
                 SurfaceInfoStart += SurfaceInfoCount;
 
-                if (acksLength > 0) {
-                    Utils.arraycopy(ackBytes, 0, packet, length, acksLength);
-                    acksLength = 0;
+                if (acksLength[0] > 0) {
+                    Utils.arraycopy(ackBytes, 0, packet, length[0], acksLength[0]);
+                    acksLength[0] = 0;
                 }
 
                 packets.add(packet);

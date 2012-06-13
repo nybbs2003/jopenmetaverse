@@ -29,9 +29,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    X = (byte)bytes[i++];
-                    Y = (byte)bytes[i++];
-                    Z = (byte)bytes[i++];
+                    X = (byte)bytes[i[0]++];
+                    Y = (byte)bytes[i[0]++];
+                    Z = (byte)bytes[i[0]++];
                 }
                 catch (Exception e)
                 {
@@ -42,9 +42,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                bytes[i++] = X;
-                bytes[i++] = Y;
-                bytes[i++] = Z;
+                bytes[i[0]++] = X;
+                bytes[i[0]++] = Y;
+                bytes[i[0]++] = Z;
             }
 
         }
@@ -74,8 +74,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    You = (short)(bytes[i++] + (bytes[i++] << 8));
-                    Prey = (short)(bytes[i++] + (bytes[i++] << 8));
+                    You = (short)(bytes[i[0]++] + (bytes[i[0]++] << 8));
+                    Prey = (short)(bytes[i[0]++] + (bytes[i[0]++] << 8));
                 }
                 catch (Exception e)
                 {
@@ -86,10 +86,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                bytes[i++] = (byte)(You % 256);
-                bytes[i++] = (byte)((You >> 8) % 256);
-                bytes[i++] = (byte)(Prey % 256);
-                bytes[i++] = (byte)((Prey >> 8) % 256);
+                bytes[i[0]++] = (byte)(You % 256);
+                bytes[i[0]++] = (byte)((You >> 8) % 256);
+                bytes[i[0]++] = (byte)(Prey % 256);
+                bytes[i[0]++] = (byte)((Prey >> 8) % 256);
             }
 
         }
@@ -118,7 +118,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    AgentID.FromBytes(bytes, i); i += 16;
+                    AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)
                 {
@@ -140,10 +140,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
                         {
                 int length = 10;
                 for (int j = 0; j < Location.length; j++)
-                    length += Location[j].length;
+                    length += Location[j].getLength();
                 length += Index.length;
                 for (int j = 0; j < AgentData.getLength(); j++)
-                    length += AgentData[j].length;
+                    length += AgentData[j].getLength();
                 return length;
             }
         }
@@ -180,7 +180,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 packetEnd[0] = Helpers.ZeroDecode(bytes, packetEnd[0] + 1, zeroBuffer) - 1;
                 bytes = zeroBuffer;
             }
-            int count = (int)bytes[i++];
+            int count = (int)bytes[i[0]++];
             if(Location == null || Location.length != -1) {
                 Location = new LocationBlock[count];
                 for(int j = 0; j < count; j++)
@@ -189,7 +189,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             for (int j = 0; j < count; j++)
             { Location[j].FromBytes(bytes, i); }
             Index.FromBytes(bytes, i);
-            count = (int)bytes[i++];
+            count = (int)bytes[i[0]++];
             if(AgentData == null || AgentData.getLength() != -1) {
                 AgentData = new AgentDataBlock[count];
                 for(int j = 0; j < count; j++)
@@ -210,7 +210,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 		public void FromBytes(Header header, byte[] bytes, int[] i, int[] packetEnd)
         {
             this.header =  header;
-            int count = (int)bytes[i++];
+            int count = (int)bytes[i[0]++];
             if(Location == null || Location.length != count) {
                 Location = new LocationBlock[count];
                 for(int j = 0; j < count; j++)
@@ -219,7 +219,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             for (int j = 0; j < count; j++)
             { Location[j].FromBytes(bytes, i); }
             Index.FromBytes(bytes, i);
-            count = (int)bytes[i++];
+            count = (int)bytes[i[0]++];
             if(AgentData == null || AgentData.getLength() != count) {
                 AgentData = new AgentDataBlock[count];
                 for(int j = 0; j < count; j++)
@@ -235,17 +235,17 @@ package com.ngt.jopenmetaverse.shared.protocol;
             int length = 8;
             length += Index.length;
             length++;
-            for (int j = 0; j < Location.length; j++) { length += Location[j].length; }
+            for (int j = 0; j < Location.length; j++) { length += Location[j].getLength(); }
             length++;
-            for (int j = 0; j < AgentData.getLength(); j++) { length += AgentData[j].length; }
+            for (int j = 0; j < AgentData.getLength(); j++) { length += AgentData[j].getLength(); }
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
             int i = 0;
             header.ToBytes(bytes, i);
-            bytes[i++] = (byte)Location.length;
+            bytes[i[0]++] = (byte)Location.length;
             for (int j = 0; j < Location.length; j++) { Location[j].ToBytes(bytes, i); }
             Index.ToBytes(bytes, i);
-            bytes[i++] = (byte)AgentData.getLength();
+            bytes[i[0]++] = (byte)AgentData.getLength();
             for (int j = 0; j < AgentData.getLength(); j++) { AgentData[j].ToBytes(bytes, i); }
             if (header.AckList != null && header.AckList.length > 0) { header.AcksToBytes(bytes, i); }
             return bytes;

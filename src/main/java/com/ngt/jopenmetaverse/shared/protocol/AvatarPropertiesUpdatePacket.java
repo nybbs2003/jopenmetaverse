@@ -28,7 +28,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    AgentID.FromBytes(bytes, i); i += 16;
+                    AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)
@@ -81,19 +81,19 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    ImageID.FromBytes(bytes, i); i += 16;
-                    FLImageID.FromBytes(bytes, i); i += 16;
-                    length = (bytes[i++] + (bytes[i++] << 8));
+                    ImageID.FromBytes(bytes, i[0]); i[0] += 16;
+                    FLImageID.FromBytes(bytes, i[0]); i[0] += 16;
+                    length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
                     AboutText = new byte[length];
-                    Utils.arraycopy(bytes, i, AboutText, 0, length); i += length;
-                    length = bytes[i++];
+                    Utils.arraycopy(bytes, i, AboutText, 0, length); i[0] +=  length;
+                    length = bytes[i[0]++];
                     FLAboutText = new byte[length];
-                    Utils.arraycopy(bytes, i, FLAboutText, 0, length); i += length;
-                    AllowPublish = (bytes[i++] != 0) ? (bool)true : (bool)false;
-                    MaturePublish = (bytes[i++] != 0) ? (bool)true : (bool)false;
-                    length = bytes[i++];
+                    Utils.arraycopy(bytes, i, FLAboutText, 0, length); i[0] +=  length;
+                    AllowPublish = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
+                    MaturePublish = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
+                    length = bytes[i[0]++];
                     ProfileURL = new byte[length];
-                    Utils.arraycopy(bytes, i, ProfileURL, 0, length); i += length;
+                    Utils.arraycopy(bytes, i, ProfileURL, 0, length); i[0] +=  length;
                 }
                 catch (Exception e)
                 {
@@ -104,17 +104,17 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                ImageID.ToBytes(bytes, i); i += 16;
-                FLImageID.ToBytes(bytes, i); i += 16;
-                bytes[i++] = (byte)(AboutText.length % 256);
-                bytes[i++] = (byte)((AboutText.length >> 8) % 256);
-                Utils.arraycopy(AboutText, 0, bytes, i, AboutText.length); i += AboutText.length;
-                bytes[i++] = (byte)FLAboutText.length;
-                Utils.arraycopy(FLAboutText, 0, bytes, i, FLAboutText.length); i += FLAboutText.length;
-                bytes[i++] = (byte)((AllowPublish) ? 1 : 0);
-                bytes[i++] = (byte)((MaturePublish) ? 1 : 0);
-                bytes[i++] = (byte)ProfileURL.length;
-                Utils.arraycopy(ProfileURL, 0, bytes, i, ProfileURL.length); i += ProfileURL.length;
+                ImageID.ToBytes(bytes, i[0]); i[0] += 16;
+                FLImageID.ToBytes(bytes, i[0]); i[0] += 16;
+                bytes[i[0]++] = (byte)(AboutText.length % 256);
+                bytes[i[0]++] = (byte)((AboutText.length >> 8) % 256);
+                Utils.arraycopy(AboutText, 0, bytes, i, AboutText.length); i[0] +=  AboutText.length;
+                bytes[i[0]++] = (byte)FLAboutText.length;
+                Utils.arraycopy(FLAboutText, 0, bytes, i, FLAboutText.length); i[0] +=  FLAboutText.length;
+                bytes[i[0]++] = (byte)((AllowPublish) ? 1 : 0);
+                bytes[i[0]++] = (byte)((MaturePublish) ? 1 : 0);
+                bytes[i[0]++] = (byte)ProfileURL.length;
+                Utils.arraycopy(ProfileURL, 0, bytes, i, ProfileURL.length); i[0] +=  ProfileURL.length;
             }
 
         }
