@@ -41,7 +41,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.UIntToBytes(Flags, bytes, i); i += 4;
+                Utils.UIntToBytes(Flags, bytes, i[0]); i[0] += 4;
             }
 
         }
@@ -81,7 +81,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.UIntToBytes(ItemType, bytes, i); i += 4;
+                Utils.UIntToBytes(ItemType, bytes, i[0]); i[0] += 4;
             }
 
         }
@@ -136,11 +136,11 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.UIntToBytes(X, bytes, i); i += 4;
-                Utils.UIntToBytes(Y, bytes, i); i += 4;
+                Utils.UIntToBytes(X, bytes, i[0]); i[0] += 4;
+                Utils.UIntToBytes(Y, bytes, i[0]); i[0] += 4;
                 ID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.IntToBytes(Extra, bytes, i); i += 4;
-                Utils.IntToBytes(Extra2, bytes, i); i += 4;
+                Utils.IntToBytes(Extra, bytes, i[0]); i[0] += 4;
+                Utils.IntToBytes(Extra2, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)Name.length;
                 Utils.arraycopy(Name, 0, bytes, i[0], Name.length); i[0] +=  Name.length;
             }

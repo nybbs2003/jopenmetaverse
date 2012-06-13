@@ -46,7 +46,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 ID.ToBytes(bytes, i[0]); i[0] += 16;
                 bytes[i[0]++] = Codec;
-                Utils.UIntToBytes(Size, bytes, i); i += 4;
+                Utils.UIntToBytes(Size, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)(Packets % 256);
                 bytes[i[0]++] = (byte)((Packets >> 8) % 256);
             }

@@ -34,7 +34,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     SoundID.FromBytes(bytes, i[0]); i[0] += 16;
                     ObjectID.FromBytes(bytes, i[0]); i[0] += 16;
                     OwnerID.FromBytes(bytes, i[0]); i[0] += 16;
-                    Gain = Utils.BytesToFloat(bytes, i); i += 4;
+                    Gain = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
                     Flags = (byte)bytes[i[0]++];
                 }
                 catch (Exception e)
@@ -49,7 +49,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 SoundID.ToBytes(bytes, i[0]); i[0] += 16;
                 ObjectID.ToBytes(bytes, i[0]); i[0] += 16;
                 OwnerID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.FloatToBytes(Gain, bytes, i); i += 4;
+                Utils.FloatToBytes(Gain, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = Flags;
             }
 

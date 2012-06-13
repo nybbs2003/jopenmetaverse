@@ -105,10 +105,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.UIntToBytes(CallbackID, bytes, i); i += 4;
+                Utils.UIntToBytes(CallbackID, bytes, i[0]); i[0] += 4;
                 FolderID.ToBytes(bytes, i[0]); i[0] += 16;
                 TransactionID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.UIntToBytes(NextOwnerMask, bytes, i); i += 4;
+                Utils.UIntToBytes(NextOwnerMask, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)Type;
                 bytes[i[0]++] = (byte)InvType;
                 bytes[i[0]++] = WearableType;

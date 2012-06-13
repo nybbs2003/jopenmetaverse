@@ -89,11 +89,11 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.UIntToBytes(Flags, bytes, i); i += 4;
-                Utils.IntToBytes(LocalID, bytes, i); i += 4;
+                Utils.UIntToBytes(Flags, bytes, i[0]); i[0] += 4;
+                Utils.IntToBytes(LocalID, bytes, i[0]); i[0] += 4;
                 TransactionID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.IntToBytes(SequenceID, bytes, i); i += 4;
-                Utils.IntToBytes(Sections, bytes, i); i += 4;
+                Utils.IntToBytes(SequenceID, bytes, i[0]); i[0] += 4;
+                Utils.IntToBytes(Sections, bytes, i[0]); i[0] += 4;
             }
 
         }
@@ -138,8 +138,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 ID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.IntToBytes(Time, bytes, i); i += 4;
-                Utils.UIntToBytes(Flags, bytes, i); i += 4;
+                Utils.IntToBytes(Time, bytes, i[0]); i[0] += 4;
+                Utils.UIntToBytes(Flags, bytes, i[0]); i[0] += 4;
             }
 
         }

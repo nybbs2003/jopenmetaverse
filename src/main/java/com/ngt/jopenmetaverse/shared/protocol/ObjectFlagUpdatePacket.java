@@ -52,7 +52,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
                 SessionID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.UIntToBytes(ObjectLocalID, bytes, i); i += 4;
+                Utils.UIntToBytes(ObjectLocalID, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)((UsePhysics) ? 1 : 0);
                 bytes[i[0]++] = (byte)((IsTemporary) ? 1 : 0);
                 bytes[i[0]++] = (byte)((IsPhantom) ? 1 : 0);
@@ -90,10 +90,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     PhysicsShapeType = (byte)bytes[i[0]++];
-                    Density = Utils.BytesToFloat(bytes, i); i += 4;
-                    Friction = Utils.BytesToFloat(bytes, i); i += 4;
-                    Restitution = Utils.BytesToFloat(bytes, i); i += 4;
-                    GravityMultiplier = Utils.BytesToFloat(bytes, i); i += 4;
+                    Density = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
+                    Friction = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
+                    Restitution = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
+                    GravityMultiplier = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -105,10 +105,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 bytes[i[0]++] = PhysicsShapeType;
-                Utils.FloatToBytes(Density, bytes, i); i += 4;
-                Utils.FloatToBytes(Friction, bytes, i); i += 4;
-                Utils.FloatToBytes(Restitution, bytes, i); i += 4;
-                Utils.FloatToBytes(GravityMultiplier, bytes, i); i += 4;
+                Utils.FloatToBytes(Density, bytes, i[0]); i[0] += 4;
+                Utils.FloatToBytes(Friction, bytes, i[0]); i[0] += 4;
+                Utils.FloatToBytes(Restitution, bytes, i[0]); i[0] += 4;
+                Utils.FloatToBytes(GravityMultiplier, bytes, i[0]); i[0] += 4;
             }
 
         }

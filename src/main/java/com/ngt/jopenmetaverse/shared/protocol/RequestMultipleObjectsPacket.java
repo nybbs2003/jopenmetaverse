@@ -84,7 +84,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 bytes[i[0]++] = CacheMissType;
-                Utils.UIntToBytes(ID, bytes, i); i += 4;
+                Utils.UIntToBytes(ID, bytes, i[0]); i[0] += 4;
             }
 
         }

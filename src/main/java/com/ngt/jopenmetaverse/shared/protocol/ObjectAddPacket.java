@@ -142,7 +142,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 bytes[i[0]++] = PCode;
                 bytes[i[0]++] = Material;
-                Utils.UIntToBytes(AddFlags, bytes, i); i += 4;
+                Utils.UIntToBytes(AddFlags, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = PathCurve;
                 bytes[i[0]++] = ProfileCurve;
                 bytes[i[0]++] = (byte)(PathBegin % 256);

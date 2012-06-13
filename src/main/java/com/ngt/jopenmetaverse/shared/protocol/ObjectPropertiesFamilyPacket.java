@@ -76,19 +76,19 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.UIntToBytes(RequestFlags, bytes, i); i += 4;
+                Utils.UIntToBytes(RequestFlags, bytes, i[0]); i[0] += 4;
                 ObjectID.ToBytes(bytes, i[0]); i[0] += 16;
                 OwnerID.ToBytes(bytes, i[0]); i[0] += 16;
                 GroupID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.UIntToBytes(BaseMask, bytes, i); i += 4;
-                Utils.UIntToBytes(OwnerMask, bytes, i); i += 4;
-                Utils.UIntToBytes(GroupMask, bytes, i); i += 4;
-                Utils.UIntToBytes(EveryoneMask, bytes, i); i += 4;
-                Utils.UIntToBytes(NextOwnerMask, bytes, i); i += 4;
-                Utils.IntToBytes(OwnershipCost, bytes, i); i += 4;
+                Utils.UIntToBytes(BaseMask, bytes, i[0]); i[0] += 4;
+                Utils.UIntToBytes(OwnerMask, bytes, i[0]); i[0] += 4;
+                Utils.UIntToBytes(GroupMask, bytes, i[0]); i[0] += 4;
+                Utils.UIntToBytes(EveryoneMask, bytes, i[0]); i[0] += 4;
+                Utils.UIntToBytes(NextOwnerMask, bytes, i[0]); i[0] += 4;
+                Utils.IntToBytes(OwnershipCost, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = SaleType;
-                Utils.IntToBytes(SalePrice, bytes, i); i += 4;
-                Utils.UIntToBytes(Category, bytes, i); i += 4;
+                Utils.IntToBytes(SalePrice, bytes, i[0]); i[0] += 4;
+                Utils.UIntToBytes(Category, bytes, i[0]); i[0] += 4;
                 LastOwnerID.ToBytes(bytes, i[0]); i[0] += 16;
                 bytes[i[0]++] = (byte)Name.length;
                 Utils.arraycopy(Name, 0, bytes, i[0], Name.length); i[0] +=  Name.length;

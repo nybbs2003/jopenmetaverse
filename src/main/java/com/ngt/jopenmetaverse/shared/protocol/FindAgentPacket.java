@@ -44,7 +44,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 Hunter.ToBytes(bytes, i[0]); i[0] += 16;
                 Prey.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.UIntToBytes(SpaceIP, bytes, i); i += 4;
+                Utils.UIntToBytes(SpaceIP, bytes, i[0]); i[0] += 4;
             }
 
         }
@@ -74,8 +74,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    GlobalX = Utils.BytesToDouble(bytes, i); i += 8;
-                    GlobalY = Utils.BytesToDouble(bytes, i); i += 8;
+                    GlobalX = Utils.BytesToDouble(bytes, i[0]); i[0] += 8;
+                    GlobalY = Utils.BytesToDouble(bytes, i[0]); i[0] += 8;
                 }
                 catch (Exception e)
                 {
@@ -86,8 +86,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.DoubleToBytes(GlobalX, bytes, i); i += 8;
-                Utils.DoubleToBytes(GlobalY, bytes, i); i += 8;
+                Utils.DoubleToBytes(GlobalX, bytes, i[0]); i[0] += 8;
+                Utils.DoubleToBytes(GlobalY, bytes, i[0]); i[0] += 8;
             }
 
         }

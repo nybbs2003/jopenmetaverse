@@ -122,7 +122,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.UIntToBytes(EventID, bytes, i); i += 4;
+                Utils.UIntToBytes(EventID, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)Creator.length;
                 Utils.arraycopy(Creator, 0, bytes, i[0], Creator.length); i[0] +=  Creator.length;
                 bytes[i[0]++] = (byte)Name.length;
@@ -134,14 +134,14 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 Utils.arraycopy(Desc, 0, bytes, i[0], Desc.length); i[0] +=  Desc.length;
                 bytes[i[0]++] = (byte)Date.length;
                 Utils.arraycopy(Date, 0, bytes, i[0], Date.length); i[0] +=  Date.length;
-                Utils.UIntToBytes(DateUTC, bytes, i); i += 4;
-                Utils.UIntToBytes(Duration, bytes, i); i += 4;
-                Utils.UIntToBytes(Cover, bytes, i); i += 4;
-                Utils.UIntToBytes(Amount, bytes, i); i += 4;
+                Utils.UIntToBytes(DateUTC, bytes, i[0]); i[0] += 4;
+                Utils.UIntToBytes(Duration, bytes, i[0]); i[0] += 4;
+                Utils.UIntToBytes(Cover, bytes, i[0]); i[0] += 4;
+                Utils.UIntToBytes(Amount, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)SimName.length;
                 Utils.arraycopy(SimName, 0, bytes, i[0], SimName.length); i[0] +=  SimName.length;
                 GlobalPos.ToBytes(bytes, i[0]); i[0] += 24;
-                Utils.UIntToBytes(EventFlags, bytes, i); i += 4;
+                Utils.UIntToBytes(EventFlags, bytes, i[0]); i[0] += 4;
             }
 
         }

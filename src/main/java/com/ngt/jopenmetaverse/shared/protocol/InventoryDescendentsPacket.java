@@ -49,8 +49,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
                 FolderID.ToBytes(bytes, i[0]); i[0] += 16;
                 OwnerID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.IntToBytes(Version, bytes, i); i += 4;
-                Utils.IntToBytes(Descendents, bytes, i); i += 4;
+                Utils.IntToBytes(Version, bytes, i[0]); i[0] += 4;
+                Utils.IntToBytes(Descendents, bytes, i[0]); i[0] += 4;
             }
 
         }
@@ -198,24 +198,24 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 CreatorID.ToBytes(bytes, i[0]); i[0] += 16;
                 OwnerID.ToBytes(bytes, i[0]); i[0] += 16;
                 GroupID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.UIntToBytes(BaseMask, bytes, i); i += 4;
-                Utils.UIntToBytes(OwnerMask, bytes, i); i += 4;
-                Utils.UIntToBytes(GroupMask, bytes, i); i += 4;
-                Utils.UIntToBytes(EveryoneMask, bytes, i); i += 4;
-                Utils.UIntToBytes(NextOwnerMask, bytes, i); i += 4;
+                Utils.UIntToBytes(BaseMask, bytes, i[0]); i[0] += 4;
+                Utils.UIntToBytes(OwnerMask, bytes, i[0]); i[0] += 4;
+                Utils.UIntToBytes(GroupMask, bytes, i[0]); i[0] += 4;
+                Utils.UIntToBytes(EveryoneMask, bytes, i[0]); i[0] += 4;
+                Utils.UIntToBytes(NextOwnerMask, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)((GroupOwned) ? 1 : 0);
                 AssetID.ToBytes(bytes, i[0]); i[0] += 16;
                 bytes[i[0]++] = (byte)Type;
                 bytes[i[0]++] = (byte)InvType;
-                Utils.UIntToBytes(Flags, bytes, i); i += 4;
+                Utils.UIntToBytes(Flags, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = SaleType;
-                Utils.IntToBytes(SalePrice, bytes, i); i += 4;
+                Utils.IntToBytes(SalePrice, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)Name.length;
                 Utils.arraycopy(Name, 0, bytes, i[0], Name.length); i[0] +=  Name.length;
                 bytes[i[0]++] = (byte)Description.length;
                 Utils.arraycopy(Description, 0, bytes, i[0], Description.length); i[0] +=  Description.length;
-                Utils.IntToBytes(CreationDate, bytes, i); i += 4;
-                Utils.UIntToBytes(CRC, bytes, i); i += 4;
+                Utils.IntToBytes(CreationDate, bytes, i[0]); i[0] += 4;
+                Utils.UIntToBytes(CRC, bytes, i[0]); i[0] += 4;
             }
 
         }

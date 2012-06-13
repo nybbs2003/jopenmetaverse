@@ -114,10 +114,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 bytes[i[0]++] = (byte)((RayEndIsIntersection) ? 1 : 0);
                 bytes[i[0]++] = (byte)((RezSelected) ? 1 : 0);
                 bytes[i[0]++] = (byte)((RemoveItem) ? 1 : 0);
-                Utils.UIntToBytes(ItemFlags, bytes, i); i += 4;
-                Utils.UIntToBytes(GroupMask, bytes, i); i += 4;
-                Utils.UIntToBytes(EveryoneMask, bytes, i); i += 4;
-                Utils.UIntToBytes(NextOwnerMask, bytes, i); i += 4;
+                Utils.UIntToBytes(ItemFlags, bytes, i[0]); i[0] += 4;
+                Utils.UIntToBytes(GroupMask, bytes, i[0]); i[0] += 4;
+                Utils.UIntToBytes(EveryoneMask, bytes, i[0]); i[0] += 4;
+                Utils.UIntToBytes(NextOwnerMask, bytes, i[0]); i[0] += 4;
             }
 
         }

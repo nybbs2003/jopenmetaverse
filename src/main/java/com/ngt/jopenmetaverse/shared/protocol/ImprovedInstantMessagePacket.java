@@ -116,13 +116,13 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 bytes[i[0]++] = (byte)((FromGroup) ? 1 : 0);
                 ToAgentID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.UIntToBytes(ParentEstateID, bytes, i); i += 4;
+                Utils.UIntToBytes(ParentEstateID, bytes, i[0]); i[0] += 4;
                 RegionID.ToBytes(bytes, i[0]); i[0] += 16;
                 Position.ToBytes(bytes, i[0]); i[0] += 12;
                 bytes[i[0]++] = Offline;
                 bytes[i[0]++] = Dialog;
                 ID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.UIntToBytes(Timestamp, bytes, i); i += 4;
+                Utils.UIntToBytes(Timestamp, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)FromAgentName.length;
                 Utils.arraycopy(FromAgentName, 0, bytes, i[0], FromAgentName.length); i[0] +=  FromAgentName.length;
                 bytes[i[0]++] = (byte)(Message.length % 256);

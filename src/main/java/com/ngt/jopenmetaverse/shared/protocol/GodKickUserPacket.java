@@ -54,7 +54,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 GodID.ToBytes(bytes, i[0]); i[0] += 16;
                 GodSessionID.ToBytes(bytes, i[0]); i[0] += 16;
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.UIntToBytes(KickFlags, bytes, i); i += 4;
+                Utils.UIntToBytes(KickFlags, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)(Reason.length % 256);
                 bytes[i[0]++] = (byte)((Reason.length >> 8) % 256);
                 Utils.arraycopy(Reason, 0, bytes, i[0], Reason.length); i[0] +=  Reason.length;

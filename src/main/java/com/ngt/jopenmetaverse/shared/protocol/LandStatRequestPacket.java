@@ -92,11 +92,11 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.UIntToBytes(ReportType, bytes, i); i += 4;
-                Utils.UIntToBytes(RequestFlags, bytes, i); i += 4;
+                Utils.UIntToBytes(ReportType, bytes, i[0]); i[0] += 4;
+                Utils.UIntToBytes(RequestFlags, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)Filter.length;
                 Utils.arraycopy(Filter, 0, bytes, i[0], Filter.length); i[0] +=  Filter.length;
-                Utils.IntToBytes(ParcelLocalID, bytes, i); i += 4;
+                Utils.IntToBytes(ParcelLocalID, bytes, i[0]); i[0] += 4;
             }
 
         }

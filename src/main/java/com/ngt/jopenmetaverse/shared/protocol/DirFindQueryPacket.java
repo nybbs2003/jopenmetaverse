@@ -95,8 +95,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 QueryID.ToBytes(bytes, i[0]); i[0] += 16;
                 bytes[i[0]++] = (byte)QueryText.length;
                 Utils.arraycopy(QueryText, 0, bytes, i[0], QueryText.length); i[0] +=  QueryText.length;
-                Utils.UIntToBytes(QueryFlags, bytes, i); i += 4;
-                Utils.IntToBytes(QueryStart, bytes, i); i += 4;
+                Utils.UIntToBytes(QueryFlags, bytes, i[0]); i[0] += 4;
+                Utils.IntToBytes(QueryStart, bytes, i[0]); i[0] += 4;
             }
 
         }

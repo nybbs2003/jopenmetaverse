@@ -95,8 +95,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 MuteID.ToBytes(bytes, i[0]); i[0] += 16;
                 bytes[i[0]++] = (byte)MuteName.length;
                 Utils.arraycopy(MuteName, 0, bytes, i[0], MuteName.length); i[0] +=  MuteName.length;
-                Utils.IntToBytes(MuteType, bytes, i); i += 4;
-                Utils.UIntToBytes(MuteFlags, bytes, i); i += 4;
+                Utils.IntToBytes(MuteType, bytes, i[0]); i[0] += 4;
+                Utils.UIntToBytes(MuteFlags, bytes, i[0]); i[0] += 4;
             }
 
         }

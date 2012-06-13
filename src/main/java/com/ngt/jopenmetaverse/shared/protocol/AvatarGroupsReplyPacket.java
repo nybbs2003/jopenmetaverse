@@ -49,7 +49,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         /// <exclude/>
         public final class GroupDataBlock extends PacketBlock
         {
-            public ulong GroupPowers;
+            public BigInteger GroupPowers;
             public bool AcceptNotices;
             public byte[] GroupTitle;
             public UUID GroupID;
@@ -79,7 +79,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    GroupPowers = (ulong)((ulong)bytes[i[0]++] + ((ulong)bytes[i[0]++] << 8) + ((ulong)bytes[i[0]++] << 16) + ((ulong)bytes[i[0]++] << 24) + ((ulong)bytes[i[0]++] << 32) + ((ulong)bytes[i[0]++] << 40) + ((ulong)bytes[i[0]++] << 48) + ((ulong)bytes[i[0]++] << 56));
+                    GroupPowers = new BigInteger(bytes);
                     AcceptNotices = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
                     length = bytes[i[0]++];
                     GroupTitle = new byte[length];
@@ -99,7 +99,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.UInt64ToBytes(GroupPowers, bytes, i); i += 8;
+                Utils.ulongToBytes(GroupPowers, bytes, i[0]); i[0] += 8;
                 bytes[i[0]++] = (byte)((AcceptNotices) ? 1 : 0);
                 bytes[i[0]++] = (byte)GroupTitle.length;
                 Utils.arraycopy(GroupTitle, 0, bytes, i[0], GroupTitle.length); i[0] +=  GroupTitle.length;

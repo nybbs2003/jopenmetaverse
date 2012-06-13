@@ -8,7 +8,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             public UUID AgentID;
             public UUID GroupID;
-            public ulong AgentPowers;
+            public BigInteger AgentPowers;
             public byte[] GroupTitle;
 
             @Override
@@ -35,7 +35,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 {
                     AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     GroupID.FromBytes(bytes, i[0]); i[0] += 16;
-                    AgentPowers = (ulong)((ulong)bytes[i[0]++] + ((ulong)bytes[i[0]++] << 8) + ((ulong)bytes[i[0]++] << 16) + ((ulong)bytes[i[0]++] << 24) + ((ulong)bytes[i[0]++] << 32) + ((ulong)bytes[i[0]++] << 40) + ((ulong)bytes[i[0]++] << 48) + ((ulong)bytes[i[0]++] << 56));
+                    AgentPowers = new BigInteger(bytes);
                     length = bytes[i[0]++];
                     GroupTitle = new byte[length];
                     Utils.arraycopy(bytes, i[0], GroupTitle, 0, length); i[0] +=  length;
@@ -51,7 +51,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
                 GroupID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.UInt64ToBytes(AgentPowers, bytes, i); i += 8;
+                Utils.ulongToBytes(AgentPowers, bytes, i[0]); i[0] += 8;
                 bytes[i[0]++] = (byte)GroupTitle.length;
                 Utils.arraycopy(GroupTitle, 0, bytes, i[0], GroupTitle.length); i[0] +=  GroupTitle.length;
             }

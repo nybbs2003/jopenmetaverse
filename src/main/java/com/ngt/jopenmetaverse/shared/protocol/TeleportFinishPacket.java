@@ -10,7 +10,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             public uint LocationID;
             public uint SimIP;
             public ushort SimPort;
-            public ulong RegionHandle;
+            public BigInteger RegionHandle;
             public byte[] SeedCapability;
             public byte SimAccess;
             public uint TeleportFlags;
@@ -41,7 +41,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     LocationID = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     SimIP = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     SimPort = (ushort)((bytes[i[0]++] << 8) + bytes[i[0]++]);
-                    RegionHandle = (ulong)((ulong)bytes[i[0]++] + ((ulong)bytes[i[0]++] << 8) + ((ulong)bytes[i[0]++] << 16) + ((ulong)bytes[i[0]++] << 24) + ((ulong)bytes[i[0]++] << 32) + ((ulong)bytes[i[0]++] << 40) + ((ulong)bytes[i[0]++] << 48) + ((ulong)bytes[i[0]++] << 56));
+                    RegionHandle = new BigInteger(bytes);
                     length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
                     SeedCapability = new byte[length];
                     Utils.arraycopy(bytes, i[0], SeedCapability, 0, length); i[0] +=  length;
@@ -58,16 +58,16 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.UIntToBytes(LocationID, bytes, i); i += 4;
-                Utils.UIntToBytes(SimIP, bytes, i); i += 4;
+                Utils.UIntToBytes(LocationID, bytes, i[0]); i[0] += 4;
+                Utils.UIntToBytes(SimIP, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)((SimPort >> 8) % 256);
                 bytes[i[0]++] = (byte)(SimPort % 256);
-                Utils.UInt64ToBytes(RegionHandle, bytes, i); i += 8;
+                Utils.ulongToBytes(RegionHandle, bytes, i[0]); i[0] += 8;
                 bytes[i[0]++] = (byte)(SeedCapability.length % 256);
                 bytes[i[0]++] = (byte)((SeedCapability.length >> 8) % 256);
                 Utils.arraycopy(SeedCapability, 0, bytes, i[0], SeedCapability.length); i[0] +=  SeedCapability.length;
                 bytes[i[0]++] = SimAccess;
-                Utils.UIntToBytes(TeleportFlags, bytes, i); i += 4;
+                Utils.UIntToBytes(TeleportFlags, bytes, i[0]); i[0] += 4;
             }
 
         }

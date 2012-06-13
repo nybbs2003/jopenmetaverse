@@ -6,7 +6,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         /// <exclude/>
         public final class AgentDataBlock extends PacketBlock
         {
-            public ulong RegionHandle;
+            public BigInteger RegionHandle;
             public uint ViewerCircuitCode;
             public UUID AgentID;
             public UUID SessionID;
@@ -30,7 +30,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    RegionHandle = (ulong)((ulong)bytes[i[0]++] + ((ulong)bytes[i[0]++] << 8) + ((ulong)bytes[i[0]++] << 16) + ((ulong)bytes[i[0]++] << 24) + ((ulong)bytes[i[0]++] << 32) + ((ulong)bytes[i[0]++] << 40) + ((ulong)bytes[i[0]++] << 48) + ((ulong)bytes[i[0]++] << 56));
+                    RegionHandle = new BigInteger(bytes);
                     ViewerCircuitCode = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
@@ -44,8 +44,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.UInt64ToBytes(RegionHandle, bytes, i); i += 8;
-                Utils.UIntToBytes(ViewerCircuitCode, bytes, i); i += 4;
+                Utils.ulongToBytes(RegionHandle, bytes, i[0]); i[0] += 8;
+                Utils.UIntToBytes(ViewerCircuitCode, bytes, i[0]); i[0] += 4;
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
                 SessionID.ToBytes(bytes, i[0]); i[0] += 16;
             }

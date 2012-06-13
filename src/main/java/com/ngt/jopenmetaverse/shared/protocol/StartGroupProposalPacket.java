@@ -79,7 +79,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 {
                     GroupID.FromBytes(bytes, i[0]); i[0] += 16;
                     Quorum = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    Majority = Utils.BytesToFloat(bytes, i); i += 4;
+                    Majority = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
                     Duration = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     length = bytes[i[0]++];
                     ProposalText = new byte[length];
@@ -95,9 +95,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 GroupID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.IntToBytes(Quorum, bytes, i); i += 4;
-                Utils.FloatToBytes(Majority, bytes, i); i += 4;
-                Utils.IntToBytes(Duration, bytes, i); i += 4;
+                Utils.IntToBytes(Quorum, bytes, i[0]); i[0] += 4;
+                Utils.FloatToBytes(Majority, bytes, i[0]); i[0] += 4;
+                Utils.IntToBytes(Duration, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)ProposalText.length;
                 Utils.arraycopy(ProposalText, 0, bytes, i[0], ProposalText.length); i[0] +=  ProposalText.length;
             }

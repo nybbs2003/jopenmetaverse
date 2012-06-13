@@ -92,7 +92,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 GroupID.ToBytes(bytes, i[0]); i[0] += 16;
                 bytes[i[0]++] = (byte)((IsGroupOwned) ? 1 : 0);
                 bytes[i[0]++] = (byte)((RemoveContribution) ? 1 : 0);
-                Utils.IntToBytes(LocalID, bytes, i); i += 4;
+                Utils.IntToBytes(LocalID, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)((Final) ? 1 : 0);
             }
 
@@ -135,8 +135,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.IntToBytes(Price, bytes, i); i += 4;
-                Utils.IntToBytes(Area, bytes, i); i += 4;
+                Utils.IntToBytes(Price, bytes, i[0]); i[0] += 4;
+                Utils.IntToBytes(Area, bytes, i[0]); i[0] += 4;
             }
 
         }

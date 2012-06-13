@@ -60,8 +60,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     Utils.arraycopy(bytes, i[0], SimName, 0, length); i[0] +=  length;
                     SimOwner.FromBytes(bytes, i[0]); i[0] += 16;
                     IsEstateManager = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
-                    WaterHeight = Utils.BytesToFloat(bytes, i); i += 4;
-                    BillableFactor = Utils.BytesToFloat(bytes, i); i += 4;
+                    WaterHeight = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
+                    BillableFactor = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
                     CacheID.FromBytes(bytes, i[0]); i[0] += 16;
                     TerrainBase0.FromBytes(bytes, i[0]); i[0] += 16;
                     TerrainBase1.FromBytes(bytes, i[0]); i[0] += 16;
@@ -71,14 +71,14 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     TerrainDetail1.FromBytes(bytes, i[0]); i[0] += 16;
                     TerrainDetail2.FromBytes(bytes, i[0]); i[0] += 16;
                     TerrainDetail3.FromBytes(bytes, i[0]); i[0] += 16;
-                    TerrainStartHeight00 = Utils.BytesToFloat(bytes, i); i += 4;
-                    TerrainStartHeight01 = Utils.BytesToFloat(bytes, i); i += 4;
-                    TerrainStartHeight10 = Utils.BytesToFloat(bytes, i); i += 4;
-                    TerrainStartHeight11 = Utils.BytesToFloat(bytes, i); i += 4;
-                    TerrainHeightRange00 = Utils.BytesToFloat(bytes, i); i += 4;
-                    TerrainHeightRange01 = Utils.BytesToFloat(bytes, i); i += 4;
-                    TerrainHeightRange10 = Utils.BytesToFloat(bytes, i); i += 4;
-                    TerrainHeightRange11 = Utils.BytesToFloat(bytes, i); i += 4;
+                    TerrainStartHeight00 = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
+                    TerrainStartHeight01 = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
+                    TerrainStartHeight10 = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
+                    TerrainStartHeight11 = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
+                    TerrainHeightRange00 = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
+                    TerrainHeightRange01 = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
+                    TerrainHeightRange10 = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
+                    TerrainHeightRange11 = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -89,14 +89,14 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.UIntToBytes(RegionFlags, bytes, i); i += 4;
+                Utils.UIntToBytes(RegionFlags, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = SimAccess;
                 bytes[i[0]++] = (byte)SimName.length;
                 Utils.arraycopy(SimName, 0, bytes, i[0], SimName.length); i[0] +=  SimName.length;
                 SimOwner.ToBytes(bytes, i[0]); i[0] += 16;
                 bytes[i[0]++] = (byte)((IsEstateManager) ? 1 : 0);
-                Utils.FloatToBytes(WaterHeight, bytes, i); i += 4;
-                Utils.FloatToBytes(BillableFactor, bytes, i); i += 4;
+                Utils.FloatToBytes(WaterHeight, bytes, i[0]); i[0] += 4;
+                Utils.FloatToBytes(BillableFactor, bytes, i[0]); i[0] += 4;
                 CacheID.ToBytes(bytes, i[0]); i[0] += 16;
                 TerrainBase0.ToBytes(bytes, i[0]); i[0] += 16;
                 TerrainBase1.ToBytes(bytes, i[0]); i[0] += 16;
@@ -106,14 +106,14 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 TerrainDetail1.ToBytes(bytes, i[0]); i[0] += 16;
                 TerrainDetail2.ToBytes(bytes, i[0]); i[0] += 16;
                 TerrainDetail3.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.FloatToBytes(TerrainStartHeight00, bytes, i); i += 4;
-                Utils.FloatToBytes(TerrainStartHeight01, bytes, i); i += 4;
-                Utils.FloatToBytes(TerrainStartHeight10, bytes, i); i += 4;
-                Utils.FloatToBytes(TerrainStartHeight11, bytes, i); i += 4;
-                Utils.FloatToBytes(TerrainHeightRange00, bytes, i); i += 4;
-                Utils.FloatToBytes(TerrainHeightRange01, bytes, i); i += 4;
-                Utils.FloatToBytes(TerrainHeightRange10, bytes, i); i += 4;
-                Utils.FloatToBytes(TerrainHeightRange11, bytes, i); i += 4;
+                Utils.FloatToBytes(TerrainStartHeight00, bytes, i[0]); i[0] += 4;
+                Utils.FloatToBytes(TerrainStartHeight01, bytes, i[0]); i[0] += 4;
+                Utils.FloatToBytes(TerrainStartHeight10, bytes, i[0]); i[0] += 4;
+                Utils.FloatToBytes(TerrainStartHeight11, bytes, i[0]); i[0] += 4;
+                Utils.FloatToBytes(TerrainHeightRange00, bytes, i[0]); i[0] += 4;
+                Utils.FloatToBytes(TerrainHeightRange01, bytes, i[0]); i[0] += 4;
+                Utils.FloatToBytes(TerrainHeightRange10, bytes, i[0]); i[0] += 4;
+                Utils.FloatToBytes(TerrainHeightRange11, bytes, i[0]); i[0] += 4;
             }
 
         }
@@ -212,8 +212,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.IntToBytes(CPUClassID, bytes, i); i += 4;
-                Utils.IntToBytes(CPURatio, bytes, i); i += 4;
+                Utils.IntToBytes(CPUClassID, bytes, i[0]); i[0] += 4;
+                Utils.IntToBytes(CPURatio, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)ColoName.length;
                 Utils.arraycopy(ColoName, 0, bytes, i[0], ColoName.length); i[0] +=  ColoName.length;
                 bytes[i[0]++] = (byte)ProductSKU.length;

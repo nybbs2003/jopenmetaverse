@@ -96,16 +96,16 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     RegionFlags = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     SimAccess = (byte)bytes[i[0]++];
                     MaxAgents = (byte)bytes[i[0]++];
-                    BillableFactor = Utils.BytesToFloat(bytes, i); i += 4;
-                    ObjectBonusFactor = Utils.BytesToFloat(bytes, i); i += 4;
-                    WaterHeight = Utils.BytesToFloat(bytes, i); i += 4;
-                    TerrainRaiseLimit = Utils.BytesToFloat(bytes, i); i += 4;
-                    TerrainLowerLimit = Utils.BytesToFloat(bytes, i); i += 4;
+                    BillableFactor = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
+                    ObjectBonusFactor = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
+                    WaterHeight = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
+                    TerrainRaiseLimit = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
+                    TerrainLowerLimit = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
                     PricePerMeter = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     RedirectGridX = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     RedirectGridY = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     UseEstateSun = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
-                    SunHour = Utils.BytesToFloat(bytes, i); i += 4;
+                    SunHour = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -118,21 +118,21 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 bytes[i[0]++] = (byte)SimName.length;
                 Utils.arraycopy(SimName, 0, bytes, i[0], SimName.length); i[0] +=  SimName.length;
-                Utils.UIntToBytes(EstateID, bytes, i); i += 4;
-                Utils.UIntToBytes(ParentEstateID, bytes, i); i += 4;
-                Utils.UIntToBytes(RegionFlags, bytes, i); i += 4;
+                Utils.UIntToBytes(EstateID, bytes, i[0]); i[0] += 4;
+                Utils.UIntToBytes(ParentEstateID, bytes, i[0]); i[0] += 4;
+                Utils.UIntToBytes(RegionFlags, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = SimAccess;
                 bytes[i[0]++] = MaxAgents;
-                Utils.FloatToBytes(BillableFactor, bytes, i); i += 4;
-                Utils.FloatToBytes(ObjectBonusFactor, bytes, i); i += 4;
-                Utils.FloatToBytes(WaterHeight, bytes, i); i += 4;
-                Utils.FloatToBytes(TerrainRaiseLimit, bytes, i); i += 4;
-                Utils.FloatToBytes(TerrainLowerLimit, bytes, i); i += 4;
-                Utils.IntToBytes(PricePerMeter, bytes, i); i += 4;
-                Utils.IntToBytes(RedirectGridX, bytes, i); i += 4;
-                Utils.IntToBytes(RedirectGridY, bytes, i); i += 4;
+                Utils.FloatToBytes(BillableFactor, bytes, i[0]); i[0] += 4;
+                Utils.FloatToBytes(ObjectBonusFactor, bytes, i[0]); i[0] += 4;
+                Utils.FloatToBytes(WaterHeight, bytes, i[0]); i[0] += 4;
+                Utils.FloatToBytes(TerrainRaiseLimit, bytes, i[0]); i[0] += 4;
+                Utils.FloatToBytes(TerrainLowerLimit, bytes, i[0]); i[0] += 4;
+                Utils.IntToBytes(PricePerMeter, bytes, i[0]); i[0] += 4;
+                Utils.IntToBytes(RedirectGridX, bytes, i[0]); i[0] += 4;
+                Utils.IntToBytes(RedirectGridY, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)((UseEstateSun) ? 1 : 0);
-                Utils.FloatToBytes(SunHour, bytes, i); i += 4;
+                Utils.FloatToBytes(SunHour, bytes, i[0]); i[0] += 4;
             }
 
         }
@@ -192,9 +192,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 Utils.arraycopy(ProductSKU, 0, bytes, i[0], ProductSKU.length); i[0] +=  ProductSKU.length;
                 bytes[i[0]++] = (byte)ProductName.length;
                 Utils.arraycopy(ProductName, 0, bytes, i[0], ProductName.length); i[0] +=  ProductName.length;
-                Utils.UIntToBytes(MaxAgents32, bytes, i); i += 4;
-                Utils.UIntToBytes(HardMaxAgents, bytes, i); i += 4;
-                Utils.UIntToBytes(HardMaxObjects, bytes, i); i += 4;
+                Utils.UIntToBytes(MaxAgents32, bytes, i[0]); i[0] += 4;
+                Utils.UIntToBytes(HardMaxAgents, bytes, i[0]); i[0] += 4;
+                Utils.UIntToBytes(HardMaxObjects, bytes, i[0]); i[0] += 4;
             }
 
         }

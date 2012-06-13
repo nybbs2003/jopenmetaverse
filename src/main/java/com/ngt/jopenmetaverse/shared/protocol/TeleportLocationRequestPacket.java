@@ -49,7 +49,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         /// <exclude/>
         public final class InfoBlock extends PacketBlock
         {
-            public ulong RegionHandle;
+            public BigInteger RegionHandle;
             public Vector3 Position;
             public Vector3 LookAt;
 
@@ -72,7 +72,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    RegionHandle = (ulong)((ulong)bytes[i[0]++] + ((ulong)bytes[i[0]++] << 8) + ((ulong)bytes[i[0]++] << 16) + ((ulong)bytes[i[0]++] << 24) + ((ulong)bytes[i[0]++] << 32) + ((ulong)bytes[i[0]++] << 40) + ((ulong)bytes[i[0]++] << 48) + ((ulong)bytes[i[0]++] << 56));
+                    RegionHandle = new BigInteger(bytes);
                     Position.FromBytes(bytes, i[0]); i[0] += 12;
                     LookAt.FromBytes(bytes, i[0]); i[0] += 12;
                 }
@@ -85,7 +85,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.UInt64ToBytes(RegionHandle, bytes, i); i += 8;
+                Utils.ulongToBytes(RegionHandle, bytes, i[0]); i[0] += 8;
                 Position.ToBytes(bytes, i[0]); i[0] += 12;
                 LookAt.ToBytes(bytes, i[0]); i[0] += 12;
             }

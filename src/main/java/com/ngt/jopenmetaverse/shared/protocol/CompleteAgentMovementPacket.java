@@ -44,7 +44,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
                 SessionID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.UIntToBytes(CircuitCode, bytes, i); i += 4;
+                Utils.UIntToBytes(CircuitCode, bytes, i[0]); i[0] += 4;
             }
 
         }

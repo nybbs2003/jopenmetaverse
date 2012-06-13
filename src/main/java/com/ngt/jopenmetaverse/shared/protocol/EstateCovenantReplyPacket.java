@@ -50,7 +50,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 CovenantID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.UIntToBytes(CovenantTimestamp, bytes, i); i += 4;
+                Utils.UIntToBytes(CovenantTimestamp, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)EstateName.length;
                 Utils.arraycopy(EstateName, 0, bytes, i[0], EstateName.length); i[0] +=  EstateName.length;
                 EstateOwnerID.ToBytes(bytes, i[0]); i[0] += 16;

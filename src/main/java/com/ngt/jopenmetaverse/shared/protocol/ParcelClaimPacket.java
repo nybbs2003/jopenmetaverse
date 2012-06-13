@@ -119,10 +119,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    West = Utils.BytesToFloat(bytes, i); i += 4;
-                    South = Utils.BytesToFloat(bytes, i); i += 4;
-                    East = Utils.BytesToFloat(bytes, i); i += 4;
-                    North = Utils.BytesToFloat(bytes, i); i += 4;
+                    West = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
+                    South = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
+                    East = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
+                    North = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -133,10 +133,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.FloatToBytes(West, bytes, i); i += 4;
-                Utils.FloatToBytes(South, bytes, i); i += 4;
-                Utils.FloatToBytes(East, bytes, i); i += 4;
-                Utils.FloatToBytes(North, bytes, i); i += 4;
+                Utils.FloatToBytes(West, bytes, i[0]); i[0] += 4;
+                Utils.FloatToBytes(South, bytes, i[0]); i[0] += 4;
+                Utils.FloatToBytes(East, bytes, i[0]); i[0] += 4;
+                Utils.FloatToBytes(North, bytes, i[0]); i[0] += 4;
             }
 
         }

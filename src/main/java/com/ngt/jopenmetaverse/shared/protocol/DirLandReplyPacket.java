@@ -138,8 +138,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 Utils.arraycopy(Name, 0, bytes, i[0], Name.length); i[0] +=  Name.length;
                 bytes[i[0]++] = (byte)((Auction) ? 1 : 0);
                 bytes[i[0]++] = (byte)((ForSale) ? 1 : 0);
-                Utils.IntToBytes(SalePrice, bytes, i); i += 4;
-                Utils.IntToBytes(ActualArea, bytes, i); i += 4;
+                Utils.IntToBytes(SalePrice, bytes, i[0]); i[0] += 4;
+                Utils.IntToBytes(ActualArea, bytes, i[0]); i[0] += 4;
             }
 
         }

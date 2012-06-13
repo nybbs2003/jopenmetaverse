@@ -93,7 +93,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.UIntToBytes(ObjectLocalID, bytes, i); i += 4;
+                Utils.UIntToBytes(ObjectLocalID, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)MediaURL.length;
                 Utils.arraycopy(MediaURL, 0, bytes, i[0], MediaURL.length); i[0] +=  MediaURL.length;
                 bytes[i[0]++] = (byte)(TextureEntry.length % 256);

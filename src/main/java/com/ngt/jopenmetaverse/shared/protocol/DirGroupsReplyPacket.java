@@ -118,7 +118,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     GroupName = new byte[length];
                     Utils.arraycopy(bytes, i[0], GroupName, 0, length); i[0] +=  length;
                     Members = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    SearchOrder = Utils.BytesToFloat(bytes, i); i += 4;
+                    SearchOrder = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -132,8 +132,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 GroupID.ToBytes(bytes, i[0]); i[0] += 16;
                 bytes[i[0]++] = (byte)GroupName.length;
                 Utils.arraycopy(GroupName, 0, bytes, i[0], GroupName.length); i[0] +=  GroupName.length;
-                Utils.IntToBytes(Members, bytes, i); i += 4;
-                Utils.FloatToBytes(SearchOrder, bytes, i); i += 4;
+                Utils.IntToBytes(Members, bytes, i[0]); i[0] += 4;
+                Utils.FloatToBytes(SearchOrder, bytes, i[0]); i[0] += 4;
             }
 
         }

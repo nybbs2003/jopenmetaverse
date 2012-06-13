@@ -108,18 +108,18 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 ClassifiedID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.UIntToBytes(Category, bytes, i); i += 4;
+                Utils.UIntToBytes(Category, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)Name.length;
                 Utils.arraycopy(Name, 0, bytes, i[0], Name.length); i[0] +=  Name.length;
                 bytes[i[0]++] = (byte)(Desc.length % 256);
                 bytes[i[0]++] = (byte)((Desc.length >> 8) % 256);
                 Utils.arraycopy(Desc, 0, bytes, i[0], Desc.length); i[0] +=  Desc.length;
                 ParcelID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.UIntToBytes(ParentEstate, bytes, i); i += 4;
+                Utils.UIntToBytes(ParentEstate, bytes, i[0]); i[0] += 4;
                 SnapshotID.ToBytes(bytes, i[0]); i[0] += 16;
                 PosGlobal.ToBytes(bytes, i[0]); i[0] += 24;
                 bytes[i[0]++] = ClassifiedFlags;
-                Utils.IntToBytes(PriceForListing, bytes, i); i += 4;
+                Utils.IntToBytes(PriceForListing, bytes, i[0]); i[0] += 4;
             }
 
         }

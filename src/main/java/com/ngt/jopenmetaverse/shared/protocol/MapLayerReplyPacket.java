@@ -41,7 +41,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.UIntToBytes(Flags, bytes, i); i += 4;
+                Utils.UIntToBytes(Flags, bytes, i[0]); i[0] += 4;
             }
 
         }
@@ -89,10 +89,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.UIntToBytes(Left, bytes, i); i += 4;
-                Utils.UIntToBytes(Right, bytes, i); i += 4;
-                Utils.UIntToBytes(Top, bytes, i); i += 4;
-                Utils.UIntToBytes(Bottom, bytes, i); i += 4;
+                Utils.UIntToBytes(Left, bytes, i[0]); i[0] += 4;
+                Utils.UIntToBytes(Right, bytes, i[0]); i[0] += 4;
+                Utils.UIntToBytes(Top, bytes, i[0]); i[0] += 4;
+                Utils.UIntToBytes(Bottom, bytes, i[0]); i[0] += 4;
                 ImageID.ToBytes(bytes, i[0]); i[0] += 16;
             }
 

@@ -100,10 +100,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.UIntToBytes(WantToMask, bytes, i); i += 4;
+                Utils.UIntToBytes(WantToMask, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)WantToText.length;
                 Utils.arraycopy(WantToText, 0, bytes, i[0], WantToText.length); i[0] +=  WantToText.length;
-                Utils.UIntToBytes(SkillsMask, bytes, i); i += 4;
+                Utils.UIntToBytes(SkillsMask, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)SkillsText.length;
                 Utils.arraycopy(SkillsText, 0, bytes, i[0], SkillsText.length); i[0] +=  SkillsText.length;
                 bytes[i[0]++] = (byte)LanguagesText.length;

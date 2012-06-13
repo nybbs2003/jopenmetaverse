@@ -90,7 +90,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.UIntToBytes(ObjectLocalID, bytes, i); i += 4;
+                Utils.UIntToBytes(ObjectLocalID, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = Type;
                 bytes[i[0]++] = (byte)Data.length;
                 Utils.arraycopy(Data, 0, bytes, i[0], Data.length); i[0] +=  Data.length;

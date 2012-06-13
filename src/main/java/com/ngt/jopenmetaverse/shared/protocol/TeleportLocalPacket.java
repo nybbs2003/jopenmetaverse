@@ -47,10 +47,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.UIntToBytes(LocationID, bytes, i); i += 4;
+                Utils.UIntToBytes(LocationID, bytes, i[0]); i[0] += 4;
                 Position.ToBytes(bytes, i[0]); i[0] += 12;
                 LookAt.ToBytes(bytes, i[0]); i[0] += 12;
-                Utils.UIntToBytes(TeleportFlags, bytes, i); i += 4;
+                Utils.UIntToBytes(TeleportFlags, bytes, i[0]); i[0] += 4;
             }
 
         }

@@ -84,7 +84,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 GroupID.ToBytes(bytes, i[0]); i[0] += 16;
                 RequestID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.IntToBytes(MemberCount, bytes, i); i += 4;
+                Utils.IntToBytes(MemberCount, bytes, i[0]); i[0] += 4;
             }
 
         }
@@ -95,7 +95,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             public UUID AgentID;
             public int Contribution;
             public byte[] OnlineStatus;
-            public ulong AgentPowers;
+            public BigInteger AgentPowers;
             public byte[] Title;
             public bool IsOwner;
 
@@ -127,7 +127,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     length = bytes[i[0]++];
                     OnlineStatus = new byte[length];
                     Utils.arraycopy(bytes, i[0], OnlineStatus, 0, length); i[0] +=  length;
-                    AgentPowers = (ulong)((ulong)bytes[i[0]++] + ((ulong)bytes[i[0]++] << 8) + ((ulong)bytes[i[0]++] << 16) + ((ulong)bytes[i[0]++] << 24) + ((ulong)bytes[i[0]++] << 32) + ((ulong)bytes[i[0]++] << 40) + ((ulong)bytes[i[0]++] << 48) + ((ulong)bytes[i[0]++] << 56));
+                    AgentPowers = new BigInteger(bytes);
                     length = bytes[i[0]++];
                     Title = new byte[length];
                     Utils.arraycopy(bytes, i[0], Title, 0, length); i[0] +=  length;
@@ -143,10 +143,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.IntToBytes(Contribution, bytes, i); i += 4;
+                Utils.IntToBytes(Contribution, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)OnlineStatus.length;
                 Utils.arraycopy(OnlineStatus, 0, bytes, i[0], OnlineStatus.length); i[0] +=  OnlineStatus.length;
-                Utils.UInt64ToBytes(AgentPowers, bytes, i); i += 8;
+                Utils.ulongToBytes(AgentPowers, bytes, i[0]); i[0] += 8;
                 bytes[i[0]++] = (byte)Title.length;
                 Utils.arraycopy(Title, 0, bytes, i[0], Title.length); i[0] +=  Title.length;
                 bytes[i[0]++] = (byte)((IsOwner) ? 1 : 0);

@@ -139,11 +139,11 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 OwnerID.ToBytes(bytes, i[0]); i[0] += 16;
                 bytes[i[0]++] = (byte)Name.length;
                 Utils.arraycopy(Name, 0, bytes, i[0], Name.length); i[0] +=  Name.length;
-                Utils.UIntToBytes(EventID, bytes, i); i += 4;
+                Utils.UIntToBytes(EventID, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)Date.length;
                 Utils.arraycopy(Date, 0, bytes, i[0], Date.length); i[0] +=  Date.length;
-                Utils.UIntToBytes(UnixTime, bytes, i); i += 4;
-                Utils.UIntToBytes(EventFlags, bytes, i); i += 4;
+                Utils.UIntToBytes(UnixTime, bytes, i[0]); i[0] += 4;
+                Utils.UIntToBytes(EventFlags, bytes, i[0]); i[0] += 4;
             }
 
         }
@@ -183,7 +183,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.UIntToBytes(Status, bytes, i); i += 4;
+                Utils.UIntToBytes(Status, bytes, i[0]); i[0] += 4;
             }
 
         }

@@ -7,7 +7,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         public final class ReplyBlockBlock extends PacketBlock
         {
             public UUID RegionID;
-            public ulong RegionHandle;
+            public BigInteger RegionHandle;
 
             @Override
 			public int getLength()
@@ -29,7 +29,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     RegionID.FromBytes(bytes, i[0]); i[0] += 16;
-                    RegionHandle = (ulong)((ulong)bytes[i[0]++] + ((ulong)bytes[i[0]++] << 8) + ((ulong)bytes[i[0]++] << 16) + ((ulong)bytes[i[0]++] << 24) + ((ulong)bytes[i[0]++] << 32) + ((ulong)bytes[i[0]++] << 40) + ((ulong)bytes[i[0]++] << 48) + ((ulong)bytes[i[0]++] << 56));
+                    RegionHandle = new BigInteger(bytes);
                 }
                 catch (Exception e)
                 {
@@ -41,7 +41,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 RegionID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.UInt64ToBytes(RegionHandle, bytes, i); i += 8;
+                Utils.ulongToBytes(RegionHandle, bytes, i[0]); i[0] += 8;
             }
 
         }

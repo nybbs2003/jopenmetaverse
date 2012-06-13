@@ -120,7 +120,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     Utils.arraycopy(bytes, i[0], Name, 0, length); i[0] +=  length;
                     ForSale = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
                     Auction = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
-                    Dwell = Utils.BytesToFloat(bytes, i); i += 4;
+                    Dwell = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -136,7 +136,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 Utils.arraycopy(Name, 0, bytes, i[0], Name.length); i[0] +=  Name.length;
                 bytes[i[0]++] = (byte)((ForSale) ? 1 : 0);
                 bytes[i[0]++] = (byte)((Auction) ? 1 : 0);
-                Utils.FloatToBytes(Dwell, bytes, i); i += 4;
+                Utils.FloatToBytes(Dwell, bytes, i[0]); i[0] += 4;
             }
 
         }
@@ -176,7 +176,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.UIntToBytes(Status, bytes, i); i += 4;
+                Utils.UIntToBytes(Status, bytes, i[0]); i[0] += 4;
             }
 
         }

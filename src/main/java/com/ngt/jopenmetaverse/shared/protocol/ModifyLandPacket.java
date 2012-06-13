@@ -75,8 +75,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 {
                     Action = (byte)bytes[i[0]++];
                     BrushSize = (byte)bytes[i[0]++];
-                    Seconds = Utils.BytesToFloat(bytes, i); i += 4;
-                    Height = Utils.BytesToFloat(bytes, i); i += 4;
+                    Seconds = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
+                    Height = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -89,8 +89,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 bytes[i[0]++] = Action;
                 bytes[i[0]++] = BrushSize;
-                Utils.FloatToBytes(Seconds, bytes, i); i += 4;
-                Utils.FloatToBytes(Height, bytes, i); i += 4;
+                Utils.FloatToBytes(Seconds, bytes, i[0]); i[0] += 4;
+                Utils.FloatToBytes(Height, bytes, i[0]); i[0] += 4;
             }
 
         }
@@ -124,10 +124,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     LocalID = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    West = Utils.BytesToFloat(bytes, i); i += 4;
-                    South = Utils.BytesToFloat(bytes, i); i += 4;
-                    East = Utils.BytesToFloat(bytes, i); i += 4;
-                    North = Utils.BytesToFloat(bytes, i); i += 4;
+                    West = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
+                    South = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
+                    East = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
+                    North = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -138,11 +138,11 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.IntToBytes(LocalID, bytes, i); i += 4;
-                Utils.FloatToBytes(West, bytes, i); i += 4;
-                Utils.FloatToBytes(South, bytes, i); i += 4;
-                Utils.FloatToBytes(East, bytes, i); i += 4;
-                Utils.FloatToBytes(North, bytes, i); i += 4;
+                Utils.IntToBytes(LocalID, bytes, i[0]); i[0] += 4;
+                Utils.FloatToBytes(West, bytes, i[0]); i[0] += 4;
+                Utils.FloatToBytes(South, bytes, i[0]); i[0] += 4;
+                Utils.FloatToBytes(East, bytes, i[0]); i[0] += 4;
+                Utils.FloatToBytes(North, bytes, i[0]); i[0] += 4;
             }
 
         }
@@ -171,7 +171,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    BrushSize = Utils.BytesToFloat(bytes, i); i += 4;
+                    BrushSize = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -182,7 +182,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.FloatToBytes(BrushSize, bytes, i); i += 4;
+                Utils.FloatToBytes(BrushSize, bytes, i[0]); i[0] += 4;
             }
 
         }

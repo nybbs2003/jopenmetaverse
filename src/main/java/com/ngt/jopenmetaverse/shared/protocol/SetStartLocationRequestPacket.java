@@ -94,7 +94,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 bytes[i[0]++] = (byte)SimName.length;
                 Utils.arraycopy(SimName, 0, bytes, i[0], SimName.length); i[0] +=  SimName.length;
-                Utils.UIntToBytes(LocationID, bytes, i); i += 4;
+                Utils.UIntToBytes(LocationID, bytes, i[0]); i[0] += 4;
                 LocationPos.ToBytes(bytes, i[0]); i[0] += 12;
                 LocationLookAt.ToBytes(bytes, i[0]); i[0] += 12;
             }

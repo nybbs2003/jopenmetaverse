@@ -27,7 +27,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    Health = Utils.BytesToFloat(bytes, i); i += 4;
+                    Health = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -38,7 +38,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.FloatToBytes(Health, bytes, i); i += 4;
+                Utils.FloatToBytes(Health, bytes, i[0]); i[0] += 4;
             }
 
         }

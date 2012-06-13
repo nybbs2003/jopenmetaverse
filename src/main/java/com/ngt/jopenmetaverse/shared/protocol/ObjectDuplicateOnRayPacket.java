@@ -68,7 +68,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 bytes[i[0]++] = (byte)((CopyCenters) ? 1 : 0);
                 bytes[i[0]++] = (byte)((CopyRotates) ? 1 : 0);
                 RayTargetID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.UIntToBytes(DuplicateFlags, bytes, i); i += 4;
+                Utils.UIntToBytes(DuplicateFlags, bytes, i[0]); i[0] += 4;
             }
 
         }
@@ -108,7 +108,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.UIntToBytes(ObjectLocalID, bytes, i); i += 4;
+                Utils.UIntToBytes(ObjectLocalID, bytes, i[0]); i[0] += 4;
             }
 
         }

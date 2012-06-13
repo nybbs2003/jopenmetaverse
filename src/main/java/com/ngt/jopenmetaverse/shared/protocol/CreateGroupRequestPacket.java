@@ -110,7 +110,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 Utils.arraycopy(Charter, 0, bytes, i[0], Charter.length); i[0] +=  Charter.length;
                 bytes[i[0]++] = (byte)((ShowInList) ? 1 : 0);
                 InsigniaID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.IntToBytes(MembershipFee, bytes, i); i += 4;
+                Utils.IntToBytes(MembershipFee, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)((OpenEnrollment) ? 1 : 0);
                 bytes[i[0]++] = (byte)((AllowPublish) ? 1 : 0);
                 bytes[i[0]++] = (byte)((MaturePublish) ? 1 : 0);

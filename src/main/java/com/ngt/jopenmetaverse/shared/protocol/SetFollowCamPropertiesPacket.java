@@ -69,7 +69,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     Type = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    Value = Utils.BytesToFloat(bytes, i); i += 4;
+                    Value = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -80,8 +80,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.IntToBytes(Type, bytes, i); i += 4;
-                Utils.FloatToBytes(Value, bytes, i); i += 4;
+                Utils.IntToBytes(Type, bytes, i[0]); i[0] += 4;
+                Utils.FloatToBytes(Value, bytes, i[0]); i[0] += 4;
             }
 
         }

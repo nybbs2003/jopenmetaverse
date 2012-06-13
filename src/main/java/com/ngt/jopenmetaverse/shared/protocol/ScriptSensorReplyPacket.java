@@ -88,7 +88,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     Name = new byte[length];
                     Utils.arraycopy(bytes, i[0], Name, 0, length); i[0] +=  length;
                     Type = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    Range = Utils.BytesToFloat(bytes, i); i += 4;
+                    Range = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -107,8 +107,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 Rotation.ToBytes(bytes, i[0]); i[0] += 12;
                 bytes[i[0]++] = (byte)Name.length;
                 Utils.arraycopy(Name, 0, bytes, i[0], Name.length); i[0] +=  Name.length;
-                Utils.IntToBytes(Type, bytes, i); i += 4;
-                Utils.FloatToBytes(Range, bytes, i); i += 4;
+                Utils.IntToBytes(Type, bytes, i[0]); i[0] += 4;
+                Utils.FloatToBytes(Range, bytes, i[0]); i[0] += 4;
             }
 
         }

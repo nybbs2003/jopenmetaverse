@@ -38,7 +38,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.UIntToBytes(TeleportFlags, bytes, i); i += 4;
+                Utils.UIntToBytes(TeleportFlags, bytes, i[0]); i[0] += 4;
             }
 
         }

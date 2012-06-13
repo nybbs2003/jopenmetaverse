@@ -51,7 +51,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             public Vector3 Position;
             public Vector3 LookAt;
-            public ulong RegionHandle;
+            public BigInteger RegionHandle;
             public uint Timestamp;
 
             @Override
@@ -75,7 +75,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 {
                     Position.FromBytes(bytes, i[0]); i[0] += 12;
                     LookAt.FromBytes(bytes, i[0]); i[0] += 12;
-                    RegionHandle = (ulong)((ulong)bytes[i[0]++] + ((ulong)bytes[i[0]++] << 8) + ((ulong)bytes[i[0]++] << 16) + ((ulong)bytes[i[0]++] << 24) + ((ulong)bytes[i[0]++] << 32) + ((ulong)bytes[i[0]++] << 40) + ((ulong)bytes[i[0]++] << 48) + ((ulong)bytes[i[0]++] << 56));
+                    RegionHandle = new BigInteger(bytes);
                     Timestamp = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                 }
                 catch (Exception e)
@@ -89,8 +89,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 Position.ToBytes(bytes, i[0]); i[0] += 12;
                 LookAt.ToBytes(bytes, i[0]); i[0] += 12;
-                Utils.UInt64ToBytes(RegionHandle, bytes, i); i += 8;
-                Utils.UIntToBytes(Timestamp, bytes, i); i += 4;
+                Utils.ulongToBytes(RegionHandle, bytes, i[0]); i[0] += 8;
+                Utils.UIntToBytes(Timestamp, bytes, i[0]); i[0] += 4;
             }
 
         }

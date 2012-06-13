@@ -47,7 +47,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         public final class GroupDataBlock extends PacketBlock
         {
             public UUID GroupID;
-            public ulong GroupPowers;
+            public BigInteger GroupPowers;
             public bool AcceptNotices;
             public UUID GroupInsigniaID;
             public int Contribution;
@@ -76,7 +76,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     GroupID.FromBytes(bytes, i[0]); i[0] += 16;
-                    GroupPowers = (ulong)((ulong)bytes[i[0]++] + ((ulong)bytes[i[0]++] << 8) + ((ulong)bytes[i[0]++] << 16) + ((ulong)bytes[i[0]++] << 24) + ((ulong)bytes[i[0]++] << 32) + ((ulong)bytes[i[0]++] << 40) + ((ulong)bytes[i[0]++] << 48) + ((ulong)bytes[i[0]++] << 56));
+                    GroupPowers = new BigInteger(bytes);
                     AcceptNotices = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
                     GroupInsigniaID.FromBytes(bytes, i[0]); i[0] += 16;
                     Contribution = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
@@ -94,10 +94,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 GroupID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.UInt64ToBytes(GroupPowers, bytes, i); i += 8;
+                Utils.ulongToBytes(GroupPowers, bytes, i[0]); i[0] += 8;
                 bytes[i[0]++] = (byte)((AcceptNotices) ? 1 : 0);
                 GroupInsigniaID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.IntToBytes(Contribution, bytes, i); i += 4;
+                Utils.IntToBytes(Contribution, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)GroupName.length;
                 Utils.arraycopy(GroupName, 0, bytes, i[0], GroupName.length); i[0] +=  GroupName.length;
             }

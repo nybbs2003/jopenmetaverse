@@ -6,7 +6,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         /// <exclude/>
         public final class RegionDataBlock extends PacketBlock
         {
-            public ulong RegionHandle;
+            public BigInteger RegionHandle;
             public ushort TimeDilation;
 
             @Override
@@ -28,7 +28,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    RegionHandle = (ulong)((ulong)bytes[i[0]++] + ((ulong)bytes[i[0]++] << 8) + ((ulong)bytes[i[0]++] << 16) + ((ulong)bytes[i[0]++] << 24) + ((ulong)bytes[i[0]++] << 32) + ((ulong)bytes[i[0]++] << 40) + ((ulong)bytes[i[0]++] << 48) + ((ulong)bytes[i[0]++] << 56));
+                    RegionHandle = new BigInteger(bytes);
                     TimeDilation = (ushort)(bytes[i[0]++] + (bytes[i[0]++] << 8));
                 }
                 catch (Exception e)
@@ -40,7 +40,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.UInt64ToBytes(RegionHandle, bytes, i); i += 8;
+                Utils.ulongToBytes(RegionHandle, bytes, i[0]); i[0] += 8;
                 bytes[i[0]++] = (byte)(TimeDilation % 256);
                 bytes[i[0]++] = (byte)((TimeDilation >> 8) % 256);
             }
@@ -86,9 +86,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.UIntToBytes(ID, bytes, i); i += 4;
-                Utils.UIntToBytes(CRC, bytes, i); i += 4;
-                Utils.UIntToBytes(UpdateFlags, bytes, i); i += 4;
+                Utils.UIntToBytes(ID, bytes, i[0]); i[0] += 4;
+                Utils.UIntToBytes(CRC, bytes, i[0]); i[0] += 4;
+                Utils.UIntToBytes(UpdateFlags, bytes, i[0]); i[0] += 4;
             }
 
         }

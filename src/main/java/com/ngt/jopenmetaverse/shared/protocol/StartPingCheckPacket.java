@@ -41,7 +41,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 bytes[i[0]++] = PingID;
-                Utils.UIntToBytes(OldestUnacked, bytes, i); i += 4;
+                Utils.UIntToBytes(OldestUnacked, bytes, i[0]); i[0] += 4;
             }
 
         }

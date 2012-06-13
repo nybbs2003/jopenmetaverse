@@ -56,7 +56,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             public byte[] Name;
             public byte[] Description;
             public byte[] Title;
-            public ulong Powers;
+            public BigInteger Powers;
             public byte UpdateType;
 
             @Override
@@ -93,7 +93,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     length = bytes[i[0]++];
                     Title = new byte[length];
                     Utils.arraycopy(bytes, i[0], Title, 0, length); i[0] +=  length;
-                    Powers = (ulong)((ulong)bytes[i[0]++] + ((ulong)bytes[i[0]++] << 8) + ((ulong)bytes[i[0]++] << 16) + ((ulong)bytes[i[0]++] << 24) + ((ulong)bytes[i[0]++] << 32) + ((ulong)bytes[i[0]++] << 40) + ((ulong)bytes[i[0]++] << 48) + ((ulong)bytes[i[0]++] << 56));
+                    Powers = new BigInteger(bytes);
                     UpdateType = (byte)bytes[i[0]++];
                 }
                 catch (Exception e)
@@ -112,7 +112,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 Utils.arraycopy(Description, 0, bytes, i[0], Description.length); i[0] +=  Description.length;
                 bytes[i[0]++] = (byte)Title.length;
                 Utils.arraycopy(Title, 0, bytes, i[0], Title.length); i[0] +=  Title.length;
-                Utils.UInt64ToBytes(Powers, bytes, i); i += 8;
+                Utils.ulongToBytes(Powers, bytes, i[0]); i[0] += 8;
                 bytes[i[0]++] = UpdateType;
             }
 

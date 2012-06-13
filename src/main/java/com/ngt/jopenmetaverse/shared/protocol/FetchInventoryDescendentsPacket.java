@@ -91,7 +91,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 FolderID.ToBytes(bytes, i[0]); i[0] += 16;
                 OwnerID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.IntToBytes(SortOrder, bytes, i); i += 4;
+                Utils.IntToBytes(SortOrder, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)((FetchFolders) ? 1 : 0);
                 bytes[i[0]++] = (byte)((FetchItems) ? 1 : 0);
             }

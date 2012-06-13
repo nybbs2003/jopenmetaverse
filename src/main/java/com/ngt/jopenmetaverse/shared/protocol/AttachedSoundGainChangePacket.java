@@ -29,7 +29,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     ObjectID.FromBytes(bytes, i[0]); i[0] += 16;
-                    Gain = Utils.BytesToFloat(bytes, i); i += 4;
+                    Gain = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -41,7 +41,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 ObjectID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.FloatToBytes(Gain, bytes, i); i += 4;
+                Utils.FloatToBytes(Gain, bytes, i[0]); i[0] += 4;
             }
 
         }

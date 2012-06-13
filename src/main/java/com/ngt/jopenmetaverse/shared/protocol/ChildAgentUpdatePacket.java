@@ -6,7 +6,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         /// <exclude/>
         public final class AgentDataBlock extends PacketBlock
         {
-            public ulong RegionHandle;
+            public BigInteger RegionHandle;
             public uint ViewerCircuitCode;
             public UUID AgentID;
             public UUID SessionID;
@@ -56,7 +56,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    RegionHandle = (ulong)((ulong)bytes[i[0]++] + ((ulong)bytes[i[0]++] << 8) + ((ulong)bytes[i[0]++] << 16) + ((ulong)bytes[i[0]++] << 24) + ((ulong)bytes[i[0]++] << 32) + ((ulong)bytes[i[0]++] << 40) + ((ulong)bytes[i[0]++] << 48) + ((ulong)bytes[i[0]++] << 56));
+                    RegionHandle = new BigInteger(bytes);
                     ViewerCircuitCode = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
@@ -68,8 +68,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     LeftAxis.FromBytes(bytes, i[0]); i[0] += 12;
                     UpAxis.FromBytes(bytes, i[0]); i[0] += 12;
                     ChangedGrid = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
-                    Far = Utils.BytesToFloat(bytes, i); i += 4;
-                    Aspect = Utils.BytesToFloat(bytes, i); i += 4;
+                    Far = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
+                    Aspect = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
                     length = bytes[i[0]++];
                     Throttles = new byte[length];
                     Utils.arraycopy(bytes, i[0], Throttles, 0, length); i[0] +=  length;
@@ -77,7 +77,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     HeadRotation.FromBytes(bytes, i, true); i += 12;
                     BodyRotation.FromBytes(bytes, i, true); i += 12;
                     ControlFlags = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    EnergyLevel = Utils.BytesToFloat(bytes, i); i += 4;
+                    EnergyLevel = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
                     GodLevel = (byte)bytes[i[0]++];
                     AlwaysRun = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
                     PreyAgent.FromBytes(bytes, i[0]); i[0] += 16;
@@ -96,8 +96,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.UInt64ToBytes(RegionHandle, bytes, i); i += 8;
-                Utils.UIntToBytes(ViewerCircuitCode, bytes, i); i += 4;
+                Utils.ulongToBytes(RegionHandle, bytes, i[0]); i[0] += 8;
+                Utils.UIntToBytes(ViewerCircuitCode, bytes, i[0]); i[0] += 4;
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
                 SessionID.ToBytes(bytes, i[0]); i[0] += 16;
                 AgentPos.ToBytes(bytes, i[0]); i[0] += 12;
@@ -108,15 +108,15 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 LeftAxis.ToBytes(bytes, i[0]); i[0] += 12;
                 UpAxis.ToBytes(bytes, i[0]); i[0] += 12;
                 bytes[i[0]++] = (byte)((ChangedGrid) ? 1 : 0);
-                Utils.FloatToBytes(Far, bytes, i); i += 4;
-                Utils.FloatToBytes(Aspect, bytes, i); i += 4;
+                Utils.FloatToBytes(Far, bytes, i[0]); i[0] += 4;
+                Utils.FloatToBytes(Aspect, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)Throttles.length;
                 Utils.arraycopy(Throttles, 0, bytes, i[0], Throttles.length); i[0] +=  Throttles.length;
-                Utils.UIntToBytes(LocomotionState, bytes, i); i += 4;
+                Utils.UIntToBytes(LocomotionState, bytes, i[0]); i[0] += 4;
                 HeadRotation.ToBytes(bytes, i[0]); i[0] += 12;
                 BodyRotation.ToBytes(bytes, i[0]); i[0] += 12;
-                Utils.UIntToBytes(ControlFlags, bytes, i); i += 4;
-                Utils.FloatToBytes(EnergyLevel, bytes, i); i += 4;
+                Utils.UIntToBytes(ControlFlags, bytes, i[0]); i[0] += 4;
+                Utils.FloatToBytes(EnergyLevel, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = GodLevel;
                 bytes[i[0]++] = (byte)((AlwaysRun) ? 1 : 0);
                 PreyAgent.ToBytes(bytes, i[0]); i[0] += 16;
@@ -133,7 +133,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         public final class GroupDataBlock extends PacketBlock
         {
             public UUID GroupID;
-            public ulong GroupPowers;
+            public BigInteger GroupPowers;
             public bool AcceptNotices;
 
             @Override
@@ -156,7 +156,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     GroupID.FromBytes(bytes, i[0]); i[0] += 16;
-                    GroupPowers = (ulong)((ulong)bytes[i[0]++] + ((ulong)bytes[i[0]++] << 8) + ((ulong)bytes[i[0]++] << 16) + ((ulong)bytes[i[0]++] << 24) + ((ulong)bytes[i[0]++] << 32) + ((ulong)bytes[i[0]++] << 40) + ((ulong)bytes[i[0]++] << 48) + ((ulong)bytes[i[0]++] << 56));
+                    GroupPowers = new BigInteger(bytes);
                     AcceptNotices = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
                 }
                 catch (Exception e)
@@ -169,7 +169,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 GroupID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.UInt64ToBytes(GroupPowers, bytes, i); i += 8;
+                Utils.ulongToBytes(GroupPowers, bytes, i[0]); i[0] += 8;
                 bytes[i[0]++] = (byte)((AcceptNotices) ? 1 : 0);
             }
 
@@ -423,7 +423,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.UIntToBytes(Flags, bytes, i); i += 4;
+                Utils.UIntToBytes(Flags, bytes, i[0]); i[0] += 4;
             }
 
         }

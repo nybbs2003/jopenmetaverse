@@ -44,10 +44,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.UIntToBytes(RegionX, bytes, i); i += 4;
-                Utils.UIntToBytes(RegionY, bytes, i); i += 4;
-                Utils.UIntToBytes(RegionFlags, bytes, i); i += 4;
-                Utils.UIntToBytes(ObjectCapacity, bytes, i); i += 4;
+                Utils.UIntToBytes(RegionX, bytes, i[0]); i[0] += 4;
+                Utils.UIntToBytes(RegionY, bytes, i[0]); i[0] += 4;
+                Utils.UIntToBytes(RegionFlags, bytes, i[0]); i[0] += 4;
+                Utils.UIntToBytes(ObjectCapacity, bytes, i[0]); i[0] += 4;
             }
 
         }
@@ -78,7 +78,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     StatID = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    StatValue = Utils.BytesToFloat(bytes, i); i += 4;
+                    StatValue = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -89,8 +89,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.UIntToBytes(StatID, bytes, i); i += 4;
-                Utils.FloatToBytes(StatValue, bytes, i); i += 4;
+                Utils.UIntToBytes(StatID, bytes, i[0]); i[0] += 4;
+                Utils.FloatToBytes(StatValue, bytes, i[0]); i[0] += 4;
             }
 
         }
@@ -130,7 +130,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.IntToBytes(PID, bytes, i); i += 4;
+                Utils.IntToBytes(PID, bytes, i[0]); i[0] += 4;
             }
 
         }

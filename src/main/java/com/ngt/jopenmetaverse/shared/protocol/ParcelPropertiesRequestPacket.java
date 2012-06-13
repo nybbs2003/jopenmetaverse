@@ -76,10 +76,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     SequenceID = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    West = Utils.BytesToFloat(bytes, i); i += 4;
-                    South = Utils.BytesToFloat(bytes, i); i += 4;
-                    East = Utils.BytesToFloat(bytes, i); i += 4;
-                    North = Utils.BytesToFloat(bytes, i); i += 4;
+                    West = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
+                    South = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
+                    East = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
+                    North = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
                     SnapSelection = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
                 }
                 catch (Exception e)
@@ -91,11 +91,11 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.IntToBytes(SequenceID, bytes, i); i += 4;
-                Utils.FloatToBytes(West, bytes, i); i += 4;
-                Utils.FloatToBytes(South, bytes, i); i += 4;
-                Utils.FloatToBytes(East, bytes, i); i += 4;
-                Utils.FloatToBytes(North, bytes, i); i += 4;
+                Utils.IntToBytes(SequenceID, bytes, i[0]); i[0] += 4;
+                Utils.FloatToBytes(West, bytes, i[0]); i[0] += 4;
+                Utils.FloatToBytes(South, bytes, i[0]); i[0] += 4;
+                Utils.FloatToBytes(East, bytes, i[0]); i[0] += 4;
+                Utils.FloatToBytes(North, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)((SnapSelection) ? 1 : 0);
             }
 

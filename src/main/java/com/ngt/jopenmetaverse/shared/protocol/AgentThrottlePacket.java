@@ -44,7 +44,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
                 SessionID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.UIntToBytes(CircuitCode, bytes, i); i += 4;
+                Utils.UIntToBytes(CircuitCode, bytes, i[0]); i[0] += 4;
             }
 
         }
@@ -91,7 +91,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.UIntToBytes(GenCounter, bytes, i); i += 4;
+                Utils.UIntToBytes(GenCounter, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)Throttles.length;
                 Utils.arraycopy(Throttles, 0, bytes, i[0], Throttles.length); i[0] +=  Throttles.length;
             }

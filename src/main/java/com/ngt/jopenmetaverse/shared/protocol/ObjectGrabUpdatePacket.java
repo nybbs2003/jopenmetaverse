@@ -90,7 +90,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 ObjectID.ToBytes(bytes, i[0]); i[0] += 16;
                 GrabOffsetInitial.ToBytes(bytes, i[0]); i[0] += 12;
                 GrabPosition.ToBytes(bytes, i[0]); i[0] += 12;
-                Utils.UIntToBytes(TimeSinceLast, bytes, i); i += 4;
+                Utils.UIntToBytes(TimeSinceLast, bytes, i[0]); i[0] += 4;
             }
 
         }
@@ -142,7 +142,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 UVCoord.ToBytes(bytes, i[0]); i[0] += 12;
                 STCoord.ToBytes(bytes, i[0]); i[0] += 12;
-                Utils.IntToBytes(FaceIndex, bytes, i); i += 4;
+                Utils.IntToBytes(FaceIndex, bytes, i[0]); i[0] += 4;
                 Position.ToBytes(bytes, i[0]); i[0] += 12;
                 Normal.ToBytes(bytes, i[0]); i[0] += 12;
                 Binormal.ToBytes(bytes, i[0]); i[0] += 12;

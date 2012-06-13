@@ -76,7 +76,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 {
                     Image.FromBytes(bytes, i[0]); i[0] += 16;
                     DiscardLevel = (sbyte)bytes[i[0]++];
-                    DownloadPriority = Utils.BytesToFloat(bytes, i); i += 4;
+                    DownloadPriority = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
                     Packet = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     Type = (byte)bytes[i[0]++];
                 }
@@ -91,8 +91,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 Image.ToBytes(bytes, i[0]); i[0] += 16;
                 bytes[i[0]++] = (byte)DiscardLevel;
-                Utils.FloatToBytes(DownloadPriority, bytes, i); i += 4;
-                Utils.UIntToBytes(Packet, bytes, i); i += 4;
+                Utils.FloatToBytes(DownloadPriority, bytes, i[0]); i[0] += 4;
+                Utils.UIntToBytes(Packet, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = Type;
             }
 

@@ -137,9 +137,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 bytes[i[0]++] = (byte)Name.length;
                 Utils.arraycopy(Name, 0, bytes, i[0], Name.length); i[0] +=  Name.length;
                 bytes[i[0]++] = ClassifiedFlags;
-                Utils.UIntToBytes(CreationDate, bytes, i); i += 4;
-                Utils.UIntToBytes(ExpirationDate, bytes, i); i += 4;
-                Utils.IntToBytes(PriceForListing, bytes, i); i += 4;
+                Utils.UIntToBytes(CreationDate, bytes, i[0]); i[0] += 4;
+                Utils.UIntToBytes(ExpirationDate, bytes, i[0]); i[0] += 4;
+                Utils.IntToBytes(PriceForListing, bytes, i[0]); i[0] += 4;
             }
 
         }
@@ -179,7 +179,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.UIntToBytes(Status, bytes, i); i += 4;
+                Utils.UIntToBytes(Status, bytes, i[0]); i[0] += 4;
             }
 
         }

@@ -6,7 +6,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         /// <exclude/>
         public final class RegionDataBlock extends PacketBlock
         {
-            public ulong RegionHandle;
+            public BigInteger RegionHandle;
             public ushort TimeDilation;
 
             @Override
@@ -28,7 +28,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    RegionHandle = (ulong)((ulong)bytes[i[0]++] + ((ulong)bytes[i[0]++] << 8) + ((ulong)bytes[i[0]++] << 16) + ((ulong)bytes[i[0]++] << 24) + ((ulong)bytes[i[0]++] << 32) + ((ulong)bytes[i[0]++] << 40) + ((ulong)bytes[i[0]++] << 48) + ((ulong)bytes[i[0]++] << 56));
+                    RegionHandle = new BigInteger(bytes);
                     TimeDilation = (ushort)(bytes[i[0]++] + (bytes[i[0]++] << 8));
                 }
                 catch (Exception e)
@@ -40,7 +40,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.UInt64ToBytes(RegionHandle, bytes, i); i += 8;
+                Utils.ulongToBytes(RegionHandle, bytes, i[0]); i[0] += 8;
                 bytes[i[0]++] = (byte)(TimeDilation % 256);
                 bytes[i[0]++] = (byte)((TimeDilation >> 8) % 256);
             }
@@ -186,9 +186,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     Utils.arraycopy(bytes, i[0], ExtraParams, 0, length); i[0] +=  length;
                     Sound.FromBytes(bytes, i[0]); i[0] += 16;
                     OwnerID.FromBytes(bytes, i[0]); i[0] += 16;
-                    Gain = Utils.BytesToFloat(bytes, i); i += 4;
+                    Gain = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
                     Flags = (byte)bytes[i[0]++];
-                    Radius = Utils.BytesToFloat(bytes, i); i += 4;
+                    Radius = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
                     JointType = (byte)bytes[i[0]++];
                     JointPivot.FromBytes(bytes, i[0]); i[0] += 12;
                     JointAxisOrAnchor.FromBytes(bytes, i[0]); i[0] += 12;
@@ -202,18 +202,18 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.UIntToBytes(ID, bytes, i); i += 4;
+                Utils.UIntToBytes(ID, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = State;
                 FullID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.UIntToBytes(CRC, bytes, i); i += 4;
+                Utils.UIntToBytes(CRC, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = PCode;
                 bytes[i[0]++] = Material;
                 bytes[i[0]++] = ClickAction;
                 Scale.ToBytes(bytes, i[0]); i[0] += 12;
                 bytes[i[0]++] = (byte)ObjectData.length;
                 Utils.arraycopy(ObjectData, 0, bytes, i[0], ObjectData.length); i[0] +=  ObjectData.length;
-                Utils.UIntToBytes(ParentID, bytes, i); i += 4;
-                Utils.UIntToBytes(UpdateFlags, bytes, i); i += 4;
+                Utils.UIntToBytes(ParentID, bytes, i[0]); i[0] += 4;
+                Utils.UIntToBytes(UpdateFlags, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = PathCurve;
                 bytes[i[0]++] = ProfileCurve;
                 bytes[i[0]++] = (byte)(PathBegin % 256);
@@ -259,9 +259,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 Utils.arraycopy(ExtraParams, 0, bytes, i[0], ExtraParams.length); i[0] +=  ExtraParams.length;
                 Sound.ToBytes(bytes, i[0]); i[0] += 16;
                 OwnerID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.FloatToBytes(Gain, bytes, i); i += 4;
+                Utils.FloatToBytes(Gain, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = Flags;
-                Utils.FloatToBytes(Radius, bytes, i); i += 4;
+                Utils.FloatToBytes(Radius, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = JointType;
                 JointPivot.ToBytes(bytes, i[0]); i[0] += 12;
                 JointAxisOrAnchor.ToBytes(bytes, i[0]); i[0] += 12;

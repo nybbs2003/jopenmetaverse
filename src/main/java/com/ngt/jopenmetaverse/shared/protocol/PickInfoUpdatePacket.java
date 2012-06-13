@@ -118,7 +118,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 Utils.arraycopy(Desc, 0, bytes, i[0], Desc.length); i[0] +=  Desc.length;
                 SnapshotID.ToBytes(bytes, i[0]); i[0] += 16;
                 PosGlobal.ToBytes(bytes, i[0]); i[0] += 24;
-                Utils.IntToBytes(SortOrder, bytes, i); i += 4;
+                Utils.IntToBytes(SortOrder, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)((Enabled) ? 1 : 0);
             }
 

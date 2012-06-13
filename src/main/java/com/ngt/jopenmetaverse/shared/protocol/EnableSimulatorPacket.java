@@ -6,7 +6,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         /// <exclude/>
         public final class SimulatorInfoBlock extends PacketBlock
         {
-            public ulong Handle;
+            public BigInteger Handle;
             public uint IP;
             public ushort Port;
 
@@ -29,7 +29,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    Handle = (ulong)((ulong)bytes[i[0]++] + ((ulong)bytes[i[0]++] << 8) + ((ulong)bytes[i[0]++] << 16) + ((ulong)bytes[i[0]++] << 24) + ((ulong)bytes[i[0]++] << 32) + ((ulong)bytes[i[0]++] << 40) + ((ulong)bytes[i[0]++] << 48) + ((ulong)bytes[i[0]++] << 56));
+                    Handle = new BigInteger(bytes);
                     IP = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     Port = (ushort)((bytes[i[0]++] << 8) + bytes[i[0]++]);
                 }
@@ -42,8 +42,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.UInt64ToBytes(Handle, bytes, i); i += 8;
-                Utils.UIntToBytes(IP, bytes, i); i += 4;
+                Utils.ulongToBytes(Handle, bytes, i[0]); i[0] += 8;
+                Utils.UIntToBytes(IP, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)((Port >> 8) % 256);
                 bytes[i[0]++] = (byte)(Port % 256);
             }

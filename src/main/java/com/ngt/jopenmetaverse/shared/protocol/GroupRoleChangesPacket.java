@@ -90,7 +90,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 RoleID.ToBytes(bytes, i[0]); i[0] += 16;
                 MemberID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.UIntToBytes(Change, bytes, i); i += 4;
+                Utils.UIntToBytes(Change, bytes, i[0]); i[0] += 4;
             }
 
         }

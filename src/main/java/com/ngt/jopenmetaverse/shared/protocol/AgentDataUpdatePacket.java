@@ -1,5 +1,10 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
+import java.math.BigInteger;
+
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+
 
     public final class AgentDataUpdatePacket extends Packet
     {
@@ -11,7 +16,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             public byte[] LastName;
             public byte[] GroupTitle;
             public UUID ActiveGroupID;
-            public ulong GroupPowers;
+            public BigInteger GroupPowers;
             public byte[] GroupName;
 
             @Override
@@ -28,7 +33,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public AgentDataBlock() { }
-            public AgentDataBlock(byte[] bytes, int[] i)
+            public AgentDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -50,7 +55,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     GroupTitle = new byte[length];
                     Utils.arraycopy(bytes, i[0], GroupTitle, 0, length); i[0] +=  length;
                     ActiveGroupID.FromBytes(bytes, i[0]); i[0] += 16;
-                    GroupPowers = (ulong)((ulong)bytes[i[0]++] + ((ulong)bytes[i[0]++] << 8) + ((ulong)bytes[i[0]++] << 16) + ((ulong)bytes[i[0]++] << 24) + ((ulong)bytes[i[0]++] << 32) + ((ulong)bytes[i[0]++] << 40) + ((ulong)bytes[i[0]++] << 48) + ((ulong)bytes[i[0]++] << 56));
+                    GroupPowers = new BigInteger(bytes);
                     length = bytes[i[0]++];
                     GroupName = new byte[length];
                     Utils.arraycopy(bytes, i[0], GroupName, 0, length); i[0] +=  length;
@@ -72,7 +77,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 bytes[i[0]++] = (byte)GroupTitle.length;
                 Utils.arraycopy(GroupTitle, 0, bytes, i[0], GroupTitle.length); i[0] +=  GroupTitle.length;
                 ActiveGroupID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.UInt64ToBytes(GroupPowers, bytes, i); i += 8;
+                Utils.ulongToBytes(GroupPowers, bytes, i[0]); i[0] += 8;
                 bytes[i[0]++] = (byte)GroupName.length;
                 Utils.arraycopy(GroupName, 0, bytes, i[0], GroupName.length); i[0] +=  GroupName.length;
             }
@@ -102,7 +107,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             AgentData = new AgentDataBlock();
         }
 
-        public AgentDataUpdatePacket(byte[] bytes, int[] i) 
+        public AgentDataUpdatePacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -110,7 +115,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         }
 
         @Override
-		public void FromBytes(byte[] bytes, int[] i, int[] packetEnd, byte[] zeroBuffer)
+		public void FromBytes(byte[] bytes, int[] i, int[] packetEnd, byte[] zeroBuffer) throws MalformedDataException
         {
             header.FromBytes(bytes, i, packetEnd);
             if (header.Zerocoded && zeroBuffer != null)
@@ -121,7 +126,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             AgentData.FromBytes(bytes, i);
         }
 
-        public AgentDataUpdatePacket(Header head, byte[] bytes, int[] i)
+        public AgentDataUpdatePacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -129,7 +134,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         }
 
         @Override
-		public void FromBytes(Header header, byte[] bytes, int[] i, int[] packetEnd)
+		public void FromBytes(Header header, byte[] bytes, int[] i, int[] packetEnd) throws MalformedDataException
         {
             this.header =  header;
             AgentData.FromBytes(bytes, i);

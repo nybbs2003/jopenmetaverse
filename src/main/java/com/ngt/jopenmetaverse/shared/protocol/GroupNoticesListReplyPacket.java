@@ -100,7 +100,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 NoticeID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.UIntToBytes(Timestamp, bytes, i); i += 4;
+                Utils.UIntToBytes(Timestamp, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)(FromName.length % 256);
                 bytes[i[0]++] = (byte)((FromName.length >> 8) % 256);
                 Utils.arraycopy(FromName, 0, bytes, i[0], FromName.length); i[0] +=  FromName.length;

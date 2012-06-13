@@ -136,7 +136,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 bytes[i[0]++] = (byte)SimName.length;
                 Utils.arraycopy(SimName, 0, bytes, i[0], SimName.length); i[0] +=  SimName.length;
                 PosGlobal.ToBytes(bytes, i[0]); i[0] += 24;
-                Utils.IntToBytes(SortOrder, bytes, i); i += 4;
+                Utils.IntToBytes(SortOrder, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)((Enabled) ? 1 : 0);
             }
 

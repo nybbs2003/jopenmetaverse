@@ -40,7 +40,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.UIntToBytes(TargetIP, bytes, i); i += 4;
+                Utils.UIntToBytes(TargetIP, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)((TargetPort >> 8) % 256);
                 bytes[i[0]++] = (byte)(TargetPort % 256);
             }

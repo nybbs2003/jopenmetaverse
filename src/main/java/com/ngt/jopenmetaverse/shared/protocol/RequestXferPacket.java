@@ -6,7 +6,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         /// <exclude/>
         public final class XferIDBlock extends PacketBlock
         {
-            public ulong ID;
+            public BigInteger ID;
             public byte[] Filename;
             public byte FilePath;
             public bool DeleteOnCompletion;
@@ -36,7 +36,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    ID = (ulong)((ulong)bytes[i[0]++] + ((ulong)bytes[i[0]++] << 8) + ((ulong)bytes[i[0]++] << 16) + ((ulong)bytes[i[0]++] << 24) + ((ulong)bytes[i[0]++] << 32) + ((ulong)bytes[i[0]++] << 40) + ((ulong)bytes[i[0]++] << 48) + ((ulong)bytes[i[0]++] << 56));
+                    ID = new BigInteger(bytes);
                     length = bytes[i[0]++];
                     Filename = new byte[length];
                     Utils.arraycopy(bytes, i[0], Filename, 0, length); i[0] +=  length;
@@ -55,7 +55,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.UInt64ToBytes(ID, bytes, i); i += 8;
+                Utils.ulongToBytes(ID, bytes, i[0]); i[0] += 8;
                 bytes[i[0]++] = (byte)Filename.length;
                 Utils.arraycopy(Filename, 0, bytes, i[0], Filename.length); i[0] +=  Filename.length;
                 bytes[i[0]++] = FilePath;

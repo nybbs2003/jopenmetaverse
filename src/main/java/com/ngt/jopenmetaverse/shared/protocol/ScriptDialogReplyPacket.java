@@ -93,8 +93,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 ObjectID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.IntToBytes(ChatChannel, bytes, i); i += 4;
-                Utils.IntToBytes(ButtonIndex, bytes, i); i += 4;
+                Utils.IntToBytes(ChatChannel, bytes, i[0]); i[0] += 4;
+                Utils.IntToBytes(ButtonIndex, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)ButtonLabel.length;
                 Utils.arraycopy(ButtonLabel, 0, bytes, i[0], ButtonLabel.length); i[0] +=  ButtonLabel.length;
             }

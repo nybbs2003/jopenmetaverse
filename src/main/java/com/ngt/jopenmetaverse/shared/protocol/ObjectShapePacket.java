@@ -117,7 +117,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.UIntToBytes(ObjectLocalID, bytes, i); i += 4;
+                Utils.UIntToBytes(ObjectLocalID, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = PathCurve;
                 bytes[i[0]++] = ProfileCurve;
                 bytes[i[0]++] = (byte)(PathBegin % 256);

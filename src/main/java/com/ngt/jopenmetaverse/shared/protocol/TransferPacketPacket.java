@@ -52,9 +52,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 TransferID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.IntToBytes(ChannelType, bytes, i); i += 4;
-                Utils.IntToBytes(Packet, bytes, i); i += 4;
-                Utils.IntToBytes(Status, bytes, i); i += 4;
+                Utils.IntToBytes(ChannelType, bytes, i[0]); i[0] += 4;
+                Utils.IntToBytes(Packet, bytes, i[0]); i[0] += 4;
+                Utils.IntToBytes(Status, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)(Data.length % 256);
                 bytes[i[0]++] = (byte)((Data.length >> 8) % 256);
                 Utils.arraycopy(Data, 0, bytes, i[0], Data.length); i[0] +=  Data.length;

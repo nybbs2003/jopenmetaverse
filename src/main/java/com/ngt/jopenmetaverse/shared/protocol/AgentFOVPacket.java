@@ -44,7 +44,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
                 SessionID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.UIntToBytes(CircuitCode, bytes, i); i += 4;
+                Utils.UIntToBytes(CircuitCode, bytes, i[0]); i[0] += 4;
             }
 
         }
@@ -75,7 +75,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     GenCounter = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    VerticalAngle = Utils.BytesToFloat(bytes, i); i += 4;
+                    VerticalAngle = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -86,8 +86,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.UIntToBytes(GenCounter, bytes, i); i += 4;
-                Utils.FloatToBytes(VerticalAngle, bytes, i); i += 4;
+                Utils.UIntToBytes(GenCounter, bytes, i[0]); i[0] += 4;
+                Utils.FloatToBytes(VerticalAngle, bytes, i[0]); i[0] += 4;
             }
 
         }

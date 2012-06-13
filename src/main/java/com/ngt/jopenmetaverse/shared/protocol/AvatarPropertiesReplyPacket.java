@@ -128,7 +128,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 Utils.arraycopy(ProfileURL, 0, bytes, i[0], ProfileURL.length); i[0] +=  ProfileURL.length;
                 bytes[i[0]++] = (byte)CharterMember.length;
                 Utils.arraycopy(CharterMember, 0, bytes, i[0], CharterMember.length); i[0] +=  CharterMember.length;
-                Utils.UIntToBytes(Flags, bytes, i); i += 4;
+                Utils.UIntToBytes(Flags, bytes, i[0]); i[0] += 4;
             }
 
         }

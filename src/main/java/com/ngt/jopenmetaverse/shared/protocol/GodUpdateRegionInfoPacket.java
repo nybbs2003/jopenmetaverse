@@ -86,7 +86,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     EstateID = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     ParentEstateID = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     RegionFlags = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    BillableFactor = Utils.BytesToFloat(bytes, i); i += 4;
+                    BillableFactor = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
                     PricePerMeter = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     RedirectGridX = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     RedirectGridY = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
@@ -102,13 +102,13 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 bytes[i[0]++] = (byte)SimName.length;
                 Utils.arraycopy(SimName, 0, bytes, i[0], SimName.length); i[0] +=  SimName.length;
-                Utils.UIntToBytes(EstateID, bytes, i); i += 4;
-                Utils.UIntToBytes(ParentEstateID, bytes, i); i += 4;
-                Utils.UIntToBytes(RegionFlags, bytes, i); i += 4;
-                Utils.FloatToBytes(BillableFactor, bytes, i); i += 4;
-                Utils.IntToBytes(PricePerMeter, bytes, i); i += 4;
-                Utils.IntToBytes(RedirectGridX, bytes, i); i += 4;
-                Utils.IntToBytes(RedirectGridY, bytes, i); i += 4;
+                Utils.UIntToBytes(EstateID, bytes, i[0]); i[0] += 4;
+                Utils.UIntToBytes(ParentEstateID, bytes, i[0]); i[0] += 4;
+                Utils.UIntToBytes(RegionFlags, bytes, i[0]); i[0] += 4;
+                Utils.FloatToBytes(BillableFactor, bytes, i[0]); i[0] += 4;
+                Utils.IntToBytes(PricePerMeter, bytes, i[0]); i[0] += 4;
+                Utils.IntToBytes(RedirectGridX, bytes, i[0]); i[0] += 4;
+                Utils.IntToBytes(RedirectGridY, bytes, i[0]); i[0] += 4;
             }
 
         }

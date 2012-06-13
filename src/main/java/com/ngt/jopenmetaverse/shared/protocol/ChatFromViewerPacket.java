@@ -94,7 +94,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 bytes[i[0]++] = (byte)((Message.length >> 8) % 256);
                 Utils.arraycopy(Message, 0, bytes, i[0], Message.length); i[0] +=  Message.length;
                 bytes[i[0]++] = Type;
-                Utils.IntToBytes(Channel, bytes, i); i += 4;
+                Utils.IntToBytes(Channel, bytes, i[0]); i[0] += 4;
             }
 
         }

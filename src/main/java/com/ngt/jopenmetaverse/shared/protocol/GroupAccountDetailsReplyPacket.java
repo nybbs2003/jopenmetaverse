@@ -93,8 +93,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 RequestID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.IntToBytes(IntervalDays, bytes, i); i += 4;
-                Utils.IntToBytes(CurrentInterval, bytes, i); i += 4;
+                Utils.IntToBytes(IntervalDays, bytes, i[0]); i[0] += 4;
+                Utils.IntToBytes(CurrentInterval, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)StartDate.length;
                 Utils.arraycopy(StartDate, 0, bytes, i[0], StartDate.length); i[0] +=  StartDate.length;
             }
@@ -145,7 +145,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 bytes[i[0]++] = (byte)Description.length;
                 Utils.arraycopy(Description, 0, bytes, i[0], Description.length); i[0] +=  Description.length;
-                Utils.IntToBytes(Amount, bytes, i); i += 4;
+                Utils.IntToBytes(Amount, bytes, i[0]); i[0] += 4;
             }
 
         }

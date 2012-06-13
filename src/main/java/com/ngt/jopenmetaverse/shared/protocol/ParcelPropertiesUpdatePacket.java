@@ -114,7 +114,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     MediaAutoScale = (byte)bytes[i[0]++];
                     GroupID.FromBytes(bytes, i[0]); i[0] += 16;
                     PassPrice = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    PassHours = Utils.BytesToFloat(bytes, i); i += 4;
+                    PassHours = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
                     Category = (byte)bytes[i[0]++];
                     AuthBuyerID.FromBytes(bytes, i[0]); i[0] += 16;
                     SnapshotID.FromBytes(bytes, i[0]); i[0] += 16;
@@ -131,10 +131,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.IntToBytes(LocalID, bytes, i); i += 4;
-                Utils.UIntToBytes(Flags, bytes, i); i += 4;
-                Utils.UIntToBytes(ParcelFlags, bytes, i); i += 4;
-                Utils.IntToBytes(SalePrice, bytes, i); i += 4;
+                Utils.IntToBytes(LocalID, bytes, i[0]); i[0] += 4;
+                Utils.UIntToBytes(Flags, bytes, i[0]); i[0] += 4;
+                Utils.UIntToBytes(ParcelFlags, bytes, i[0]); i[0] += 4;
+                Utils.IntToBytes(SalePrice, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)Name.length;
                 Utils.arraycopy(Name, 0, bytes, i[0], Name.length); i[0] +=  Name.length;
                 bytes[i[0]++] = (byte)Desc.length;
@@ -146,8 +146,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 MediaID.ToBytes(bytes, i[0]); i[0] += 16;
                 bytes[i[0]++] = MediaAutoScale;
                 GroupID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.IntToBytes(PassPrice, bytes, i); i += 4;
-                Utils.FloatToBytes(PassHours, bytes, i); i += 4;
+                Utils.IntToBytes(PassPrice, bytes, i[0]); i[0] += 4;
+                Utils.FloatToBytes(PassHours, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = Category;
                 AuthBuyerID.ToBytes(bytes, i[0]); i[0] += 16;
                 SnapshotID.ToBytes(bytes, i[0]); i[0] += 16;

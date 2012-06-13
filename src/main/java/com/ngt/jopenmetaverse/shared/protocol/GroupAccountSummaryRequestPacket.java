@@ -89,8 +89,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 RequestID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.IntToBytes(IntervalDays, bytes, i); i += 4;
-                Utils.IntToBytes(CurrentInterval, bytes, i); i += 4;
+                Utils.IntToBytes(IntervalDays, bytes, i[0]); i[0] += 4;
+                Utils.IntToBytes(CurrentInterval, bytes, i[0]); i[0] += 4;
             }
 
         }

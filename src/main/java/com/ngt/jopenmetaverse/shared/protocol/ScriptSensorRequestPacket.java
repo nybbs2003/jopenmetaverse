@@ -15,7 +15,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             public int Type;
             public float Range;
             public float Arc;
-            public ulong RegionHandle;
+            public BigInteger RegionHandle;
             public byte SearchRegions;
 
             @Override
@@ -49,9 +49,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     SearchName = new byte[length];
                     Utils.arraycopy(bytes, i[0], SearchName, 0, length); i[0] +=  length;
                     Type = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    Range = Utils.BytesToFloat(bytes, i); i += 4;
-                    Arc = Utils.BytesToFloat(bytes, i); i += 4;
-                    RegionHandle = (ulong)((ulong)bytes[i[0]++] + ((ulong)bytes[i[0]++] << 8) + ((ulong)bytes[i[0]++] << 16) + ((ulong)bytes[i[0]++] << 24) + ((ulong)bytes[i[0]++] << 32) + ((ulong)bytes[i[0]++] << 40) + ((ulong)bytes[i[0]++] << 48) + ((ulong)bytes[i[0]++] << 56));
+                    Range = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
+                    Arc = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
+                    RegionHandle = new BigInteger(bytes);
                     SearchRegions = (byte)bytes[i[0]++];
                 }
                 catch (Exception e)
@@ -70,10 +70,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 SearchDir.ToBytes(bytes, i[0]); i[0] += 12;
                 bytes[i[0]++] = (byte)SearchName.length;
                 Utils.arraycopy(SearchName, 0, bytes, i[0], SearchName.length); i[0] +=  SearchName.length;
-                Utils.IntToBytes(Type, bytes, i); i += 4;
-                Utils.FloatToBytes(Range, bytes, i); i += 4;
-                Utils.FloatToBytes(Arc, bytes, i); i += 4;
-                Utils.UInt64ToBytes(RegionHandle, bytes, i); i += 8;
+                Utils.IntToBytes(Type, bytes, i[0]); i[0] += 4;
+                Utils.FloatToBytes(Range, bytes, i[0]); i[0] += 4;
+                Utils.FloatToBytes(Arc, bytes, i[0]); i[0] += 4;
+                Utils.ulongToBytes(RegionHandle, bytes, i[0]); i[0] += 8;
                 bytes[i[0]++] = SearchRegions;
             }
 

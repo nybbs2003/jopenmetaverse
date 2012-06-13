@@ -94,7 +94,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.UIntToBytes(CallbackID, bytes, i); i += 4;
+                Utils.UIntToBytes(CallbackID, bytes, i[0]); i[0] += 4;
                 OldAgentID.ToBytes(bytes, i[0]); i[0] += 16;
                 OldItemID.ToBytes(bytes, i[0]); i[0] += 16;
                 NewFolderID.ToBytes(bytes, i[0]); i[0] += 16;
