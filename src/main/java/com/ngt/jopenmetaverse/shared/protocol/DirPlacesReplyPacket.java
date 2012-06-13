@@ -88,8 +88,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             public UUID ParcelID;
             public byte[] Name;
-            public bool ForSale;
-            public bool Auction;
+            public boolean ForSale;
+            public boolean Auction;
             public float Dwell;
 
             @Override
@@ -118,9 +118,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     length = bytes[i[0]++];
                     Name = new byte[length];
                     Utils.arraycopy(bytes, i[0], Name, 0, length); i[0] +=  length;
-                    ForSale = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
-                    Auction = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
-                    Dwell = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
+                    ForSale = (bytes[i[0]++] != 0) ? true : false;
+                    Auction = (bytes[i[0]++] != 0) ? true : false;
+                    Dwell = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -136,7 +136,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 Utils.arraycopy(Name, 0, bytes, i[0], Name.length); i[0] +=  Name.length;
                 bytes[i[0]++] = (byte)((ForSale) ? 1 : 0);
                 bytes[i[0]++] = (byte)((Auction) ? 1 : 0);
-                Utils.FloatToBytes(Dwell, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytes(Dwell, bytes, i[0]); i[0] += 4;
             }
 
         }
@@ -144,7 +144,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         /// <exclude/>
         public final class StatusDataBlock extends PacketBlock
         {
-            public uint Status;
+            public long Status;
 
             @Override
 			public int getLength()
@@ -165,7 +165,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    Status = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    Status = Utils.bytesToUInt(bytes); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -176,7 +176,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.UIntToBytes(Status, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(Status, bytes, i[0]); i[0] += 4;
             }
 
         }

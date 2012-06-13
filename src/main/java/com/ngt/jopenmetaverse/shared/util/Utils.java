@@ -785,23 +785,44 @@ public class Utils
 	//    /// <param name="pos">Position to start reading the uint from</param>
 	//    /// <returns>An unsigned integer, will be zero if a uint can't be read
 	//    /// at the given position</returns>
-	//    public static uint BytesToUInt(byte[] bytes, int pos)
-	//    {
-	//        if (bytes.length < pos + 4) return 0;
-	//        return (uint)(bytes[pos + 0] + (bytes[pos + 1] << 8) + (bytes[pos + 2] << 16) + (bytes[pos + 3] << 24));
-	//    }
-	//
-	//    /// <summary>
-	//    /// Convert the first four bytes of the given array in little endian
-	//    /// ordering to an unsigned integer
-	//    /// </summary>
-	//    /// <param name="bytes">An array four bytes or longer</param>
-	//    /// <returns>An unsigned integer, will be zero if the array contains
-	//    /// less than four bytes</returns>
-	//    public static uint BytesToUInt(byte[] bytes)
-	//    {
-	//        return BytesToUInt(bytes, 0);
-	//    }
+	    public static long bytesToUInt(byte[] bytes, int pos)
+	    {
+	        if (bytes.length < pos + 4) return 0;
+	        return ((long)bytes[pos + 0] + ((long)bytes[pos + 1] << 8) + ((long)bytes[pos + 2] << 16) + ((long)bytes[pos + 3] << 24));
+	    }
+	
+	    /// <summary>
+	    /// Convert the first four bytes of the given array in little endian
+	    /// ordering to an unsigned integer
+	    /// </summary>
+	    /// <param name="bytes">An array four bytes or longer</param>
+	    /// <returns>An unsigned integer, will be zero if the array contains
+	    /// less than four bytes</returns>
+	    public static long bytesToUInt(byte[] bytes)
+	    {
+	        return bytesToUInt(bytes, 0);
+	    }
+	    
+	    
+	    public static BigInteger bytesToULong(byte[] bytes, int pos)
+	    {
+	        if (bytes.length < pos + 4) return new BigInteger("0");
+//	        return ((long)bytes[pos + 0] + ((long)bytes[pos + 1] << 8) + ((long)bytes[pos + 2] << 16) + ((long)bytes[pos + 3] << 24));
+	        return new BigInteger(ArrayUtils.subarray(bytes, pos, pos+7));
+	    }
+	
+	    /// <summary>
+	    /// Convert the first four bytes of the given array in little endian
+	    /// ordering to an unsigned integer
+	    /// </summary>
+	    /// <param name="bytes">An array four bytes or longer</param>
+	    /// <returns>An unsigned integer, will be zero if the array contains
+	    /// less than four bytes</returns>
+	    public static BigInteger bytesToULong(byte[] bytes)
+	    {
+	        return bytesToUInt(bytes, 0);
+	    }
+	    
 	//
 	//    /// <summary>
 	//    /// Convert the first eight bytes of the given array in little endian

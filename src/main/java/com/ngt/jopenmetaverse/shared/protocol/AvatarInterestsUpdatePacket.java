@@ -49,9 +49,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
         /// <exclude/>
         public final class PropertiesDataBlock extends PacketBlock
         {
-            public uint WantToMask;
+            public long WantToMask;
             public byte[] WantToText;
-            public uint SkillsMask;
+            public long SkillsMask;
             public byte[] SkillsText;
             public byte[] LanguagesText;
 
@@ -79,11 +79,11 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    WantToMask = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    WantToMask = Utils.bytesToUInt(bytes); i[0] += 4;
                     length = bytes[i[0]++];
                     WantToText = new byte[length];
                     Utils.arraycopy(bytes, i[0], WantToText, 0, length); i[0] +=  length;
-                    SkillsMask = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    SkillsMask = Utils.bytesToUInt(bytes); i[0] += 4;
                     length = bytes[i[0]++];
                     SkillsText = new byte[length];
                     Utils.arraycopy(bytes, i[0], SkillsText, 0, length); i[0] +=  length;
@@ -100,10 +100,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.UIntToBytes(WantToMask, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(WantToMask, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)WantToText.length;
                 Utils.arraycopy(WantToText, 0, bytes, i[0], WantToText.length); i[0] +=  WantToText.length;
-                Utils.UIntToBytes(SkillsMask, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(SkillsMask, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)SkillsText.length;
                 Utils.arraycopy(SkillsText, 0, bytes, i[0], SkillsText.length); i[0] +=  SkillsText.length;
                 bytes[i[0]++] = (byte)LanguagesText.length;

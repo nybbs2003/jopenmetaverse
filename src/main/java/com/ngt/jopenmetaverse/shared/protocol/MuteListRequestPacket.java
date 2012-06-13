@@ -49,7 +49,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         /// <exclude/>
         public final class MuteDataBlock extends PacketBlock
         {
-            public uint MuteCRC;
+            public long MuteCRC;
 
             @Override
 			public int getLength()
@@ -70,7 +70,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    MuteCRC = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    MuteCRC = Utils.bytesToUInt(bytes); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -81,7 +81,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.UIntToBytes(MuteCRC, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(MuteCRC, bytes, i[0]); i[0] += 4;
             }
 
         }

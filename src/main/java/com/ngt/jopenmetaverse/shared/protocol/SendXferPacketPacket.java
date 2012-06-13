@@ -7,7 +7,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         public final class XferIDBlock extends PacketBlock
         {
             public BigInteger ID;
-            public uint Packet;
+            public long Packet;
 
             @Override
 			public int getLength()
@@ -28,8 +28,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    ID = new BigInteger(bytes);
-                    Packet = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    ID = Utils.bytesToULong(bytes, i[0]); i[0] += 8;
+                    Packet = Utils.bytesToUInt(bytes); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -41,7 +41,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 Utils.ulongToBytes(ID, bytes, i[0]); i[0] += 8;
-                Utils.UIntToBytes(Packet, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(Packet, bytes, i[0]); i[0] += 4;
             }
 
         }

@@ -50,9 +50,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
         public final class RegionInfoBlock extends PacketBlock
         {
             public byte[] SimName;
-            public uint EstateID;
-            public uint ParentEstateID;
-            public uint RegionFlags;
+            public long EstateID;
+            public long ParentEstateID;
+            public long RegionFlags;
             public float BillableFactor;
             public int PricePerMeter;
             public int RedirectGridX;
@@ -83,10 +83,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     length = bytes[i[0]++];
                     SimName = new byte[length];
                     Utils.arraycopy(bytes, i[0], SimName, 0, length); i[0] +=  length;
-                    EstateID = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    ParentEstateID = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    RegionFlags = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    BillableFactor = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
+                    EstateID = Utils.bytesToUInt(bytes); i[0] += 4;
+                    ParentEstateID = Utils.bytesToUInt(bytes); i[0] += 4;
+                    RegionFlags = Utils.bytesToUInt(bytes); i[0] += 4;
+                    BillableFactor = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
                     PricePerMeter = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     RedirectGridX = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     RedirectGridY = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
@@ -102,13 +102,13 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 bytes[i[0]++] = (byte)SimName.length;
                 Utils.arraycopy(SimName, 0, bytes, i[0], SimName.length); i[0] +=  SimName.length;
-                Utils.UIntToBytes(EstateID, bytes, i[0]); i[0] += 4;
-                Utils.UIntToBytes(ParentEstateID, bytes, i[0]); i[0] += 4;
-                Utils.UIntToBytes(RegionFlags, bytes, i[0]); i[0] += 4;
-                Utils.FloatToBytes(BillableFactor, bytes, i[0]); i[0] += 4;
-                Utils.IntToBytes(PricePerMeter, bytes, i[0]); i[0] += 4;
-                Utils.IntToBytes(RedirectGridX, bytes, i[0]); i[0] += 4;
-                Utils.IntToBytes(RedirectGridY, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(EstateID, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(ParentEstateID, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(RegionFlags, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytes(BillableFactor, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(PricePerMeter, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(RedirectGridX, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(RedirectGridY, bytes, i[0]); i[0] += 4;
             }
 
         }

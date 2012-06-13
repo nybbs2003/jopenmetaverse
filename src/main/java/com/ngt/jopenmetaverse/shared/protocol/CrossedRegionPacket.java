@@ -49,7 +49,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         /// <exclude/>
         public final class RegionDataBlock extends PacketBlock
         {
-            public uint SimIP;
+            public long SimIP;
             public ushort SimPort;
             public BigInteger RegionHandle;
             public byte[] SeedCapability;
@@ -76,9 +76,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    SimIP = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    SimIP = Utils.bytesToUInt(bytes); i[0] += 4;
                     SimPort = (ushort)((bytes[i[0]++] << 8) + bytes[i[0]++]);
-                    RegionHandle = new BigInteger(bytes);
+                    RegionHandle = Utils.bytesToULong(bytes, i[0]); i[0] += 8;
                     length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
                     SeedCapability = new byte[length];
                     Utils.arraycopy(bytes, i[0], SeedCapability, 0, length); i[0] +=  length;
@@ -92,7 +92,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.UIntToBytes(SimIP, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(SimIP, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)((SimPort >> 8) % 256);
                 bytes[i[0]++] = (byte)(SimPort % 256);
                 Utils.ulongToBytes(RegionHandle, bytes, i[0]); i[0] += 8;

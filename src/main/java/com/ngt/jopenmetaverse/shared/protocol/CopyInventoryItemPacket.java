@@ -49,7 +49,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         /// <exclude/>
         public final class InventoryDataBlock extends PacketBlock
         {
-            public uint CallbackID;
+            public long CallbackID;
             public UUID OldAgentID;
             public UUID OldItemID;
             public UUID NewFolderID;
@@ -77,7 +77,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    CallbackID = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    CallbackID = Utils.bytesToUInt(bytes); i[0] += 4;
                     OldAgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     OldItemID.FromBytes(bytes, i[0]); i[0] += 16;
                     NewFolderID.FromBytes(bytes, i[0]); i[0] += 16;
@@ -94,7 +94,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.UIntToBytes(CallbackID, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(CallbackID, bytes, i[0]); i[0] += 4;
                 OldAgentID.ToBytes(bytes, i[0]); i[0] += 16;
                 OldItemID.ToBytes(bytes, i[0]); i[0] += 16;
                 NewFolderID.ToBytes(bytes, i[0]); i[0] += 16;

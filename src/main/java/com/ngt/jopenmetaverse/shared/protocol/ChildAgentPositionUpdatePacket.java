@@ -7,7 +7,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         public final class AgentDataBlock extends PacketBlock
         {
             public BigInteger RegionHandle;
-            public uint ViewerCircuitCode;
+            public long ViewerCircuitCode;
             public UUID AgentID;
             public UUID SessionID;
             public Vector3 AgentPos;
@@ -17,7 +17,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             public Vector3 AtAxis;
             public Vector3 LeftAxis;
             public Vector3 UpAxis;
-            public bool ChangedGrid;
+            public boolean ChangedGrid;
 
             @Override
 			public int getLength()
@@ -38,8 +38,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    RegionHandle = new BigInteger(bytes);
-                    ViewerCircuitCode = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    RegionHandle = Utils.bytesToULong(bytes, i[0]); i[0] += 8;
+                    ViewerCircuitCode = Utils.bytesToUInt(bytes); i[0] += 4;
                     AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
                     AgentPos.FromBytes(bytes, i[0]); i[0] += 12;
@@ -49,7 +49,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     AtAxis.FromBytes(bytes, i[0]); i[0] += 12;
                     LeftAxis.FromBytes(bytes, i[0]); i[0] += 12;
                     UpAxis.FromBytes(bytes, i[0]); i[0] += 12;
-                    ChangedGrid = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
+                    ChangedGrid = (bytes[i[0]++] != 0) ? true : false;
                 }
                 catch (Exception e)
                 {
@@ -61,7 +61,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 Utils.ulongToBytes(RegionHandle, bytes, i[0]); i[0] += 8;
-                Utils.UIntToBytes(ViewerCircuitCode, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(ViewerCircuitCode, bytes, i[0]); i[0] += 4;
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
                 SessionID.ToBytes(bytes, i[0]); i[0] += 16;
                 AgentPos.ToBytes(bytes, i[0]); i[0] += 12;

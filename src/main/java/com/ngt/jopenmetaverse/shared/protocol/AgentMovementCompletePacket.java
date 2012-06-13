@@ -52,7 +52,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             public Vector3 Position;
             public Vector3 LookAt;
             public BigInteger RegionHandle;
-            public uint Timestamp;
+            public long Timestamp;
 
             @Override
 			public int getLength()
@@ -75,8 +75,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 {
                     Position.FromBytes(bytes, i[0]); i[0] += 12;
                     LookAt.FromBytes(bytes, i[0]); i[0] += 12;
-                    RegionHandle = new BigInteger(bytes);
-                    Timestamp = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    RegionHandle = Utils.bytesToULong(bytes, i[0]); i[0] += 8;
+                    Timestamp = Utils.bytesToUInt(bytes); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -90,7 +90,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 Position.ToBytes(bytes, i[0]); i[0] += 12;
                 LookAt.ToBytes(bytes, i[0]); i[0] += 12;
                 Utils.ulongToBytes(RegionHandle, bytes, i[0]); i[0] += 8;
-                Utils.UIntToBytes(Timestamp, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(Timestamp, bytes, i[0]); i[0] += 4;
             }
 
         }

@@ -60,7 +60,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 Utils.arraycopy(ObjectName, 0, bytes, i[0], ObjectName.length); i[0] +=  ObjectName.length;
                 bytes[i[0]++] = (byte)ObjectOwner.length;
                 Utils.arraycopy(ObjectOwner, 0, bytes, i[0], ObjectOwner.length); i[0] +=  ObjectOwner.length;
-                Utils.IntToBytes(Questions, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(Questions, bytes, i[0]); i[0] += 4;
             }
 
         }

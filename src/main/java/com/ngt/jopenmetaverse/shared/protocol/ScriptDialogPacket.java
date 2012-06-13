@@ -74,7 +74,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 bytes[i[0]++] = (byte)(Message.length % 256);
                 bytes[i[0]++] = (byte)((Message.length >> 8) % 256);
                 Utils.arraycopy(Message, 0, bytes, i[0], Message.length); i[0] +=  Message.length;
-                Utils.IntToBytes(ChatChannel, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(ChatChannel, bytes, i[0]); i[0] += 4;
                 ImageID.ToBytes(bytes, i[0]); i[0] += 16;
             }
 

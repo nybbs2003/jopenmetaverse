@@ -6,10 +6,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
         /// <exclude/>
         public final class RegionBlock extends PacketBlock
         {
-            public uint RegionX;
-            public uint RegionY;
-            public uint RegionFlags;
-            public uint ObjectCapacity;
+            public long RegionX;
+            public long RegionY;
+            public long RegionFlags;
+            public long ObjectCapacity;
 
             @Override
 			public int getLength()
@@ -30,10 +30,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    RegionX = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    RegionY = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    RegionFlags = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    ObjectCapacity = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    RegionX = Utils.bytesToUInt(bytes); i[0] += 4;
+                    RegionY = Utils.bytesToUInt(bytes); i[0] += 4;
+                    RegionFlags = Utils.bytesToUInt(bytes); i[0] += 4;
+                    ObjectCapacity = Utils.bytesToUInt(bytes); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -44,10 +44,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.UIntToBytes(RegionX, bytes, i[0]); i[0] += 4;
-                Utils.UIntToBytes(RegionY, bytes, i[0]); i[0] += 4;
-                Utils.UIntToBytes(RegionFlags, bytes, i[0]); i[0] += 4;
-                Utils.UIntToBytes(ObjectCapacity, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(RegionX, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(RegionY, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(RegionFlags, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(ObjectCapacity, bytes, i[0]); i[0] += 4;
             }
 
         }
@@ -55,7 +55,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         /// <exclude/>
         public final class StatBlock extends PacketBlock
         {
-            public uint StatID;
+            public long StatID;
             public float StatValue;
 
             @Override
@@ -77,8 +77,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    StatID = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    StatValue = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
+                    StatID = Utils.bytesToUInt(bytes); i[0] += 4;
+                    StatValue = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -89,8 +89,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.UIntToBytes(StatID, bytes, i[0]); i[0] += 4;
-                Utils.FloatToBytes(StatValue, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(StatID, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytes(StatValue, bytes, i[0]); i[0] += 4;
             }
 
         }
@@ -130,7 +130,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.IntToBytes(PID, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(PID, bytes, i[0]); i[0] += 4;
             }
 
         }

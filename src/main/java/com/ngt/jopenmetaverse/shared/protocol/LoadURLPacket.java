@@ -9,7 +9,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             public byte[] ObjectName;
             public UUID ObjectID;
             public UUID OwnerID;
-            public bool OwnerIsGroup;
+            public boolean OwnerIsGroup;
             public byte[] Message;
             public byte[] URL;
 
@@ -42,7 +42,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     Utils.arraycopy(bytes, i[0], ObjectName, 0, length); i[0] +=  length;
                     ObjectID.FromBytes(bytes, i[0]); i[0] += 16;
                     OwnerID.FromBytes(bytes, i[0]); i[0] += 16;
-                    OwnerIsGroup = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
+                    OwnerIsGroup = (bytes[i[0]++] != 0) ? true : false;
                     length = bytes[i[0]++];
                     Message = new byte[length];
                     Utils.arraycopy(bytes, i[0], Message, 0, length); i[0] +=  length;

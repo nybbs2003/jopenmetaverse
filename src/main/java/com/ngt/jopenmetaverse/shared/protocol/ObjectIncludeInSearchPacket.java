@@ -49,8 +49,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
         /// <exclude/>
         public final class ObjectDataBlock extends PacketBlock
         {
-            public uint ObjectLocalID;
-            public bool IncludeInSearch;
+            public long ObjectLocalID;
+            public boolean IncludeInSearch;
 
             @Override
 			public int getLength()
@@ -71,8 +71,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    ObjectLocalID = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    IncludeInSearch = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
+                    ObjectLocalID = Utils.bytesToUInt(bytes); i[0] += 4;
+                    IncludeInSearch = (bytes[i[0]++] != 0) ? true : false;
                 }
                 catch (Exception e)
                 {
@@ -83,7 +83,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.UIntToBytes(ObjectLocalID, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(ObjectLocalID, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)((IncludeInSearch) ? 1 : 0);
             }
 

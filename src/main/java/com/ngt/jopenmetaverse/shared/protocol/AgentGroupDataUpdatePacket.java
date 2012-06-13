@@ -1,5 +1,12 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+
 
     public final class AgentGroupDataUpdatePacket extends Packet
     {
@@ -17,7 +24,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public AgentDataBlock() { }
-            public AgentDataBlock(byte[] bytes, int[] i)
+            public AgentDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -48,7 +55,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             public UUID GroupID;
             public BigInteger GroupPowers;
-            public bool AcceptNotices;
+            public boolean AcceptNotices;
             public UUID GroupInsigniaID;
             public int Contribution;
             public byte[] GroupName;
@@ -64,7 +71,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public GroupDataBlock() { }
-            public GroupDataBlock(byte[] bytes, int[] i)
+            public GroupDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -76,8 +83,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     GroupID.FromBytes(bytes, i[0]); i[0] += 16;
-                    GroupPowers = new BigInteger(bytes);
-                    AcceptNotices = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
+                    GroupPowers = Utils.bytesToULong(bytes, i[0]); i[0] += 8;
+                    AcceptNotices = (bytes[i[0]++] != 0) ? true : false;
                     GroupInsigniaID.FromBytes(bytes, i[0]); i[0] += 16;
                     Contribution = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     length = bytes[i[0]++];
@@ -97,7 +104,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 Utils.ulongToBytes(GroupPowers, bytes, i[0]); i[0] += 8;
                 bytes[i[0]++] = (byte)((AcceptNotices) ? 1 : 0);
                 GroupInsigniaID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.IntToBytes(Contribution, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(Contribution, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)GroupName.length;
                 Utils.arraycopy(GroupName, 0, bytes, i[0], GroupName.length); i[0] +=  GroupName.length;
             }
@@ -131,7 +138,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             GroupData = null;
         }
 
-        public AgentGroupDataUpdatePacket(byte[] bytes, int[] i) 
+        public AgentGroupDataUpdatePacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -139,7 +146,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         }
 
         @Override
-		public void FromBytes(byte[] bytes, int[] i, int[] packetEnd, byte[] zeroBuffer)
+		public void FromBytes(byte[] bytes, int[] i, int[] packetEnd, byte[] zeroBuffer) throws MalformedDataException
         {
             header.FromBytes(bytes, i, packetEnd);
             if (header.Zerocoded && zeroBuffer != null)
@@ -158,7 +165,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             { GroupData[j].FromBytes(bytes, i); }
         }
 
-        public AgentGroupDataUpdatePacket(Header head, byte[] bytes, int[] i)
+        public AgentGroupDataUpdatePacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -166,7 +173,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         }
 
         @Override
-		public void FromBytes(Header header, byte[] bytes, int[] i, int[] packetEnd)
+		public void FromBytes(Header header, byte[] bytes, int[] i, int[] packetEnd) throws MalformedDataException
         {
             this.header =  header;
             AgentData.FromBytes(bytes, i);

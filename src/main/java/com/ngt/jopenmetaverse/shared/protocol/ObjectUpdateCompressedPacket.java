@@ -28,7 +28,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    RegionHandle = new BigInteger(bytes);
+                    RegionHandle = Utils.bytesToULong(bytes, i[0]); i[0] += 8;
                     TimeDilation = (ushort)(bytes[i[0]++] + (bytes[i[0]++] << 8));
                 }
                 catch (Exception e)
@@ -50,7 +50,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         /// <exclude/>
         public final class ObjectDataBlock extends PacketBlock
         {
-            public uint UpdateFlags;
+            public long UpdateFlags;
             public byte[] Data;
 
             @Override
@@ -75,7 +75,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    UpdateFlags = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    UpdateFlags = Utils.bytesToUInt(bytes); i[0] += 4;
                     length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
                     Data = new byte[length];
                     Utils.arraycopy(bytes, i[0], Data, 0, length); i[0] +=  length;
@@ -89,7 +89,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.UIntToBytes(UpdateFlags, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(UpdateFlags, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)(Data.length % 256);
                 bytes[i[0]++] = (byte)((Data.length >> 8) % 256);
                 Utils.arraycopy(Data, 0, bytes, i[0], Data.length); i[0] +=  Data.length;

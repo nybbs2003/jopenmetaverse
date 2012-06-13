@@ -6,9 +6,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
         /// <exclude/>
         public final class DataBlock extends PacketBlock
         {
-            public bool TakeControls;
-            public uint Controls;
-            public bool PassToAgent;
+            public boolean TakeControls;
+            public long Controls;
+            public boolean PassToAgent;
 
             @Override
 			public int getLength()
@@ -29,9 +29,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    TakeControls = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
-                    Controls = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    PassToAgent = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
+                    TakeControls = (bytes[i[0]++] != 0) ? true : false;
+                    Controls = Utils.bytesToUInt(bytes); i[0] += 4;
+                    PassToAgent = (bytes[i[0]++] != 0) ? true : false;
                 }
                 catch (Exception e)
                 {
@@ -43,7 +43,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 bytes[i[0]++] = (byte)((TakeControls) ? 1 : 0);
-                Utils.UIntToBytes(Controls, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(Controls, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)((PassToAgent) ? 1 : 0);
             }
 

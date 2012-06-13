@@ -7,7 +7,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         public final class AgentDataBlock extends PacketBlock
         {
             public UUID AgentID;
-            public uint Flags;
+            public long Flags;
 
             @Override
 			public int getLength()
@@ -29,7 +29,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     AgentID.FromBytes(bytes, i[0]); i[0] += 16;
-                    Flags = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    Flags = Utils.bytesToUInt(bytes); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -41,7 +41,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.UIntToBytes(Flags, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(Flags, bytes, i[0]); i[0] += 4;
             }
 
         }
@@ -49,10 +49,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
         /// <exclude/>
         public final class LayerDataBlock extends PacketBlock
         {
-            public uint Left;
-            public uint Right;
-            public uint Top;
-            public uint Bottom;
+            public long Left;
+            public long Right;
+            public long Top;
+            public long Bottom;
             public UUID ImageID;
 
             @Override
@@ -74,10 +74,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    Left = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    Right = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    Top = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    Bottom = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    Left = Utils.bytesToUInt(bytes); i[0] += 4;
+                    Right = Utils.bytesToUInt(bytes); i[0] += 4;
+                    Top = Utils.bytesToUInt(bytes); i[0] += 4;
+                    Bottom = Utils.bytesToUInt(bytes); i[0] += 4;
                     ImageID.FromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)
@@ -89,10 +89,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.UIntToBytes(Left, bytes, i[0]); i[0] += 4;
-                Utils.UIntToBytes(Right, bytes, i[0]); i[0] += 4;
-                Utils.UIntToBytes(Top, bytes, i[0]); i[0] += 4;
-                Utils.UIntToBytes(Bottom, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(Left, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(Right, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(Top, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(Bottom, bytes, i[0]); i[0] += 4;
                 ImageID.ToBytes(bytes, i[0]); i[0] += 16;
             }
 

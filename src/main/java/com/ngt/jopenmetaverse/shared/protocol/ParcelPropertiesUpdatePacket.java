@@ -50,8 +50,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
         public final class ParcelDataBlock extends PacketBlock
         {
             public int LocalID;
-            public uint Flags;
-            public uint ParcelFlags;
+            public long Flags;
+            public long ParcelFlags;
             public int SalePrice;
             public byte[] Name;
             public byte[] Desc;
@@ -95,8 +95,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     LocalID = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    Flags = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    ParcelFlags = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    Flags = Utils.bytesToUInt(bytes); i[0] += 4;
+                    ParcelFlags = Utils.bytesToUInt(bytes); i[0] += 4;
                     SalePrice = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     length = bytes[i[0]++];
                     Name = new byte[length];
@@ -114,7 +114,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     MediaAutoScale = (byte)bytes[i[0]++];
                     GroupID.FromBytes(bytes, i[0]); i[0] += 16;
                     PassPrice = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    PassHours = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
+                    PassHours = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
                     Category = (byte)bytes[i[0]++];
                     AuthBuyerID.FromBytes(bytes, i[0]); i[0] += 16;
                     SnapshotID.FromBytes(bytes, i[0]); i[0] += 16;
@@ -131,10 +131,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.IntToBytes(LocalID, bytes, i[0]); i[0] += 4;
-                Utils.UIntToBytes(Flags, bytes, i[0]); i[0] += 4;
-                Utils.UIntToBytes(ParcelFlags, bytes, i[0]); i[0] += 4;
-                Utils.IntToBytes(SalePrice, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(LocalID, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(Flags, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(ParcelFlags, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(SalePrice, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)Name.length;
                 Utils.arraycopy(Name, 0, bytes, i[0], Name.length); i[0] +=  Name.length;
                 bytes[i[0]++] = (byte)Desc.length;
@@ -146,8 +146,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 MediaID.ToBytes(bytes, i[0]); i[0] += 16;
                 bytes[i[0]++] = MediaAutoScale;
                 GroupID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.IntToBytes(PassPrice, bytes, i[0]); i[0] += 4;
-                Utils.FloatToBytes(PassHours, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(PassPrice, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytes(PassHours, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = Category;
                 AuthBuyerID.ToBytes(bytes, i[0]); i[0] += 16;
                 SnapshotID.ToBytes(bytes, i[0]); i[0] += 16;

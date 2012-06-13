@@ -54,7 +54,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             public float South;
             public float East;
             public float North;
-            public bool SnapSelection;
+            public boolean SnapSelection;
 
             @Override
 			public int getLength()
@@ -76,11 +76,11 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     SequenceID = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    West = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
-                    South = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
-                    East = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
-                    North = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
-                    SnapSelection = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
+                    West = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
+                    South = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
+                    East = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
+                    North = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
+                    SnapSelection = (bytes[i[0]++] != 0) ? true : false;
                 }
                 catch (Exception e)
                 {
@@ -91,11 +91,11 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.IntToBytes(SequenceID, bytes, i[0]); i[0] += 4;
-                Utils.FloatToBytes(West, bytes, i[0]); i[0] += 4;
-                Utils.FloatToBytes(South, bytes, i[0]); i[0] += 4;
-                Utils.FloatToBytes(East, bytes, i[0]); i[0] += 4;
-                Utils.FloatToBytes(North, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(SequenceID, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytes(West, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytes(South, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytes(East, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytes(North, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)((SnapSelection) ? 1 : 0);
             }
 

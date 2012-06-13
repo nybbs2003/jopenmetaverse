@@ -9,7 +9,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             public UUID GodID;
             public UUID GodSessionID;
             public UUID AgentID;
-            public uint KickFlags;
+            public long KickFlags;
             public byte[] Reason;
 
             @Override
@@ -37,7 +37,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     GodID.FromBytes(bytes, i[0]); i[0] += 16;
                     GodSessionID.FromBytes(bytes, i[0]); i[0] += 16;
                     AgentID.FromBytes(bytes, i[0]); i[0] += 16;
-                    KickFlags = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    KickFlags = Utils.bytesToUInt(bytes); i[0] += 4;
                     length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
                     Reason = new byte[length];
                     Utils.arraycopy(bytes, i[0], Reason, 0, length); i[0] +=  length;
@@ -54,7 +54,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 GodID.ToBytes(bytes, i[0]); i[0] += 16;
                 GodSessionID.ToBytes(bytes, i[0]); i[0] += 16;
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.UIntToBytes(KickFlags, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(KickFlags, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)(Reason.length % 256);
                 bytes[i[0]++] = (byte)((Reason.length >> 8) % 256);
                 Utils.arraycopy(Reason, 0, bytes, i[0], Reason.length); i[0] +=  Reason.length;

@@ -7,10 +7,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
         public final class InfoBlock extends PacketBlock
         {
             public UUID AgentID;
-            public uint LocationID;
+            public long LocationID;
             public Vector3 Position;
             public Vector3 LookAt;
-            public uint TeleportFlags;
+            public long TeleportFlags;
 
             @Override
 			public int getLength()
@@ -32,10 +32,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     AgentID.FromBytes(bytes, i[0]); i[0] += 16;
-                    LocationID = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    LocationID = Utils.bytesToUInt(bytes); i[0] += 4;
                     Position.FromBytes(bytes, i[0]); i[0] += 12;
                     LookAt.FromBytes(bytes, i[0]); i[0] += 12;
-                    TeleportFlags = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    TeleportFlags = Utils.bytesToUInt(bytes); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -47,10 +47,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.UIntToBytes(LocationID, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(LocationID, bytes, i[0]); i[0] += 4;
                 Position.ToBytes(bytes, i[0]); i[0] += 12;
                 LookAt.ToBytes(bytes, i[0]); i[0] += 12;
-                Utils.UIntToBytes(TeleportFlags, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(TeleportFlags, bytes, i[0]); i[0] += 4;
             }
 
         }

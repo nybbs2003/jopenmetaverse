@@ -7,7 +7,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         public final class SimulatorInfoBlock extends PacketBlock
         {
             public BigInteger Handle;
-            public uint IP;
+            public long IP;
             public ushort Port;
 
             @Override
@@ -29,8 +29,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    Handle = new BigInteger(bytes);
-                    IP = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    Handle = Utils.bytesToULong(bytes, i[0]); i[0] += 8;
+                    IP = Utils.bytesToUInt(bytes); i[0] += 4;
                     Port = (ushort)((bytes[i[0]++] << 8) + bytes[i[0]++]);
                 }
                 catch (Exception e)
@@ -43,7 +43,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 Utils.ulongToBytes(Handle, bytes, i[0]); i[0] += 8;
-                Utils.UIntToBytes(IP, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(IP, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)((Port >> 8) % 256);
                 bytes[i[0]++] = (byte)(Port % 256);
             }

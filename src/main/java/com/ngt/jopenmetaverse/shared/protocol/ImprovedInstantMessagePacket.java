@@ -49,15 +49,15 @@ package com.ngt.jopenmetaverse.shared.protocol;
         /// <exclude/>
         public final class MessageBlockBlock extends PacketBlock
         {
-            public bool FromGroup;
+            public boolean FromGroup;
             public UUID ToAgentID;
-            public uint ParentEstateID;
+            public long ParentEstateID;
             public UUID RegionID;
             public Vector3 Position;
             public byte Offline;
             public byte Dialog;
             public UUID ID;
-            public uint Timestamp;
+            public long Timestamp;
             public byte[] FromAgentName;
             public byte[] Message;
             public byte[] BinaryBucket;
@@ -86,15 +86,15 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    FromGroup = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
+                    FromGroup = (bytes[i[0]++] != 0) ? true : false;
                     ToAgentID.FromBytes(bytes, i[0]); i[0] += 16;
-                    ParentEstateID = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    ParentEstateID = Utils.bytesToUInt(bytes); i[0] += 4;
                     RegionID.FromBytes(bytes, i[0]); i[0] += 16;
                     Position.FromBytes(bytes, i[0]); i[0] += 12;
                     Offline = (byte)bytes[i[0]++];
                     Dialog = (byte)bytes[i[0]++];
                     ID.FromBytes(bytes, i[0]); i[0] += 16;
-                    Timestamp = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    Timestamp = Utils.bytesToUInt(bytes); i[0] += 4;
                     length = bytes[i[0]++];
                     FromAgentName = new byte[length];
                     Utils.arraycopy(bytes, i[0], FromAgentName, 0, length); i[0] +=  length;
@@ -116,13 +116,13 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 bytes[i[0]++] = (byte)((FromGroup) ? 1 : 0);
                 ToAgentID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.UIntToBytes(ParentEstateID, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(ParentEstateID, bytes, i[0]); i[0] += 4;
                 RegionID.ToBytes(bytes, i[0]); i[0] += 16;
                 Position.ToBytes(bytes, i[0]); i[0] += 12;
                 bytes[i[0]++] = Offline;
                 bytes[i[0]++] = Dialog;
                 ID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.UIntToBytes(Timestamp, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(Timestamp, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)FromAgentName.length;
                 Utils.arraycopy(FromAgentName, 0, bytes, i[0], FromAgentName.length); i[0] +=  FromAgentName.length;
                 bytes[i[0]++] = (byte)(Message.length % 256);

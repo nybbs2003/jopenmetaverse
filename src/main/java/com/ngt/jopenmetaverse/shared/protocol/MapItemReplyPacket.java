@@ -7,7 +7,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         public final class AgentDataBlock extends PacketBlock
         {
             public UUID AgentID;
-            public uint Flags;
+            public long Flags;
 
             @Override
 			public int getLength()
@@ -29,7 +29,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     AgentID.FromBytes(bytes, i[0]); i[0] += 16;
-                    Flags = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    Flags = Utils.bytesToUInt(bytes); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -41,7 +41,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.UIntToBytes(Flags, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(Flags, bytes, i[0]); i[0] += 4;
             }
 
         }
@@ -49,7 +49,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         /// <exclude/>
         public final class RequestDataBlock extends PacketBlock
         {
-            public uint ItemType;
+            public long ItemType;
 
             @Override
 			public int getLength()
@@ -70,7 +70,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    ItemType = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    ItemType = Utils.bytesToUInt(bytes); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -81,7 +81,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.UIntToBytes(ItemType, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(ItemType, bytes, i[0]); i[0] += 4;
             }
 
         }
@@ -89,8 +89,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
         /// <exclude/>
         public final class DataBlock extends PacketBlock
         {
-            public uint X;
-            public uint Y;
+            public long X;
+            public long Y;
             public UUID ID;
             public int Extra;
             public int Extra2;
@@ -118,8 +118,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    X = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    Y = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    X = Utils.bytesToUInt(bytes); i[0] += 4;
+                    Y = Utils.bytesToUInt(bytes); i[0] += 4;
                     ID.FromBytes(bytes, i[0]); i[0] += 16;
                     Extra = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     Extra2 = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
@@ -136,11 +136,11 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.UIntToBytes(X, bytes, i[0]); i[0] += 4;
-                Utils.UIntToBytes(Y, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(X, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(Y, bytes, i[0]); i[0] += 4;
                 ID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.IntToBytes(Extra, bytes, i[0]); i[0] += 4;
-                Utils.IntToBytes(Extra2, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(Extra, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(Extra2, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)Name.length;
                 Utils.arraycopy(Name, 0, bytes, i[0], Name.length); i[0] +=  Name.length;
             }

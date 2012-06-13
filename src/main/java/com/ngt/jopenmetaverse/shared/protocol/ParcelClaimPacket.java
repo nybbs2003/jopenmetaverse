@@ -50,8 +50,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
         public final class DataBlock extends PacketBlock
         {
             public UUID GroupID;
-            public bool IsGroupOwned;
-            public bool Final;
+            public boolean IsGroupOwned;
+            public boolean Final;
 
             @Override
 			public int getLength()
@@ -73,8 +73,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     GroupID.FromBytes(bytes, i[0]); i[0] += 16;
-                    IsGroupOwned = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
-                    Final = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
+                    IsGroupOwned = (bytes[i[0]++] != 0) ? true : false;
+                    Final = (bytes[i[0]++] != 0) ? true : false;
                 }
                 catch (Exception e)
                 {
@@ -119,10 +119,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    West = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
-                    South = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
-                    East = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
-                    North = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
+                    West = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
+                    South = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
+                    East = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
+                    North = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -133,10 +133,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.FloatToBytes(West, bytes, i[0]); i[0] += 4;
-                Utils.FloatToBytes(South, bytes, i[0]); i[0] += 4;
-                Utils.FloatToBytes(East, bytes, i[0]); i[0] += 4;
-                Utils.FloatToBytes(North, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytes(West, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytes(South, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytes(East, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytes(North, bytes, i[0]); i[0] += 4;
             }
 
         }

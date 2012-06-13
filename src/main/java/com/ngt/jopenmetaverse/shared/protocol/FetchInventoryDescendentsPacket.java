@@ -52,8 +52,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             public UUID FolderID;
             public UUID OwnerID;
             public int SortOrder;
-            public bool FetchFolders;
-            public bool FetchItems;
+            public boolean FetchFolders;
+            public boolean FetchItems;
 
             @Override
 			public int getLength()
@@ -77,8 +77,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     FolderID.FromBytes(bytes, i[0]); i[0] += 16;
                     OwnerID.FromBytes(bytes, i[0]); i[0] += 16;
                     SortOrder = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    FetchFolders = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
-                    FetchItems = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
+                    FetchFolders = (bytes[i[0]++] != 0) ? true : false;
+                    FetchItems = (bytes[i[0]++] != 0) ? true : false;
                 }
                 catch (Exception e)
                 {
@@ -91,7 +91,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 FolderID.ToBytes(bytes, i[0]); i[0] += 16;
                 OwnerID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.IntToBytes(SortOrder, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(SortOrder, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)((FetchFolders) ? 1 : 0);
                 bytes[i[0]++] = (byte)((FetchItems) ? 1 : 0);
             }

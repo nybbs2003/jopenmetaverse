@@ -116,7 +116,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     length = bytes[i[0]++];
                     Name = new byte[length];
                     Utils.arraycopy(bytes, i[0], Name, 0, length); i[0] +=  length;
-                    Dwell = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
+                    Dwell = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -130,7 +130,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 ParcelID.ToBytes(bytes, i[0]); i[0] += 16;
                 bytes[i[0]++] = (byte)Name.length;
                 Utils.arraycopy(Name, 0, bytes, i[0], Name.length); i[0] +=  Name.length;
-                Utils.FloatToBytes(Dwell, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytes(Dwell, bytes, i[0]); i[0] += 4;
             }
 
         }

@@ -52,7 +52,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             public UUID Image;
             public sbyte DiscardLevel;
             public float DownloadPriority;
-            public uint Packet;
+            public long Packet;
             public byte Type;
 
             @Override
@@ -76,8 +76,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 {
                     Image.FromBytes(bytes, i[0]); i[0] += 16;
                     DiscardLevel = (sbyte)bytes[i[0]++];
-                    DownloadPriority = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
-                    Packet = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    DownloadPriority = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
+                    Packet = Utils.bytesToUInt(bytes); i[0] += 4;
                     Type = (byte)bytes[i[0]++];
                 }
                 catch (Exception e)
@@ -91,8 +91,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 Image.ToBytes(bytes, i[0]); i[0] += 16;
                 bytes[i[0]++] = (byte)DiscardLevel;
-                Utils.FloatToBytes(DownloadPriority, bytes, i[0]); i[0] += 4;
-                Utils.UIntToBytes(Packet, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytes(DownloadPriority, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(Packet, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = Type;
             }
 

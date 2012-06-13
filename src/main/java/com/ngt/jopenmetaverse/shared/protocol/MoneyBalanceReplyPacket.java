@@ -8,7 +8,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             public UUID AgentID;
             public UUID TransactionID;
-            public bool TransactionSuccess;
+            public boolean TransactionSuccess;
             public int MoneyBalance;
             public int SquareMetersCredit;
             public int SquareMetersCommitted;
@@ -38,7 +38,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 {
                     AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     TransactionID.FromBytes(bytes, i[0]); i[0] += 16;
-                    TransactionSuccess = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
+                    TransactionSuccess = (bytes[i[0]++] != 0) ? true : false;
                     MoneyBalance = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     SquareMetersCredit = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     SquareMetersCommitted = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
@@ -58,9 +58,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
                 TransactionID.ToBytes(bytes, i[0]); i[0] += 16;
                 bytes[i[0]++] = (byte)((TransactionSuccess) ? 1 : 0);
-                Utils.IntToBytes(MoneyBalance, bytes, i[0]); i[0] += 4;
-                Utils.IntToBytes(SquareMetersCredit, bytes, i[0]); i[0] += 4;
-                Utils.IntToBytes(SquareMetersCommitted, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(MoneyBalance, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(SquareMetersCredit, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(SquareMetersCommitted, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)Description.length;
                 Utils.arraycopy(Description, 0, bytes, i[0], Description.length); i[0] +=  Description.length;
             }
@@ -72,9 +72,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             public int TransactionType;
             public UUID SourceID;
-            public bool IsSourceGroup;
+            public boolean IsSourceGroup;
             public UUID DestID;
-            public bool IsDestGroup;
+            public boolean IsDestGroup;
             public int Amount;
             public byte[] ItemDescription;
 
@@ -102,9 +102,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 {
                     TransactionType = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     SourceID.FromBytes(bytes, i[0]); i[0] += 16;
-                    IsSourceGroup = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
+                    IsSourceGroup = (bytes[i[0]++] != 0) ? true : false;
                     DestID.FromBytes(bytes, i[0]); i[0] += 16;
-                    IsDestGroup = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
+                    IsDestGroup = (bytes[i[0]++] != 0) ? true : false;
                     Amount = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     length = bytes[i[0]++];
                     ItemDescription = new byte[length];
@@ -119,12 +119,12 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.IntToBytes(TransactionType, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(TransactionType, bytes, i[0]); i[0] += 4;
                 SourceID.ToBytes(bytes, i[0]); i[0] += 16;
                 bytes[i[0]++] = (byte)((IsSourceGroup) ? 1 : 0);
                 DestID.ToBytes(bytes, i[0]); i[0] += 16;
                 bytes[i[0]++] = (byte)((IsDestGroup) ? 1 : 0);
-                Utils.IntToBytes(Amount, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(Amount, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)ItemDescription.length;
                 Utils.arraycopy(ItemDescription, 0, bytes, i[0], ItemDescription.length); i[0] +=  ItemDescription.length;
             }

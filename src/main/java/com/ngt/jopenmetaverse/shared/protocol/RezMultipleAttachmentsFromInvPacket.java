@@ -51,7 +51,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             public UUID CompoundMsgID;
             public byte TotalObjects;
-            public bool FirstDetachAll;
+            public boolean FirstDetachAll;
 
             @Override
 			public int getLength()
@@ -74,7 +74,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 {
                     CompoundMsgID.FromBytes(bytes, i[0]); i[0] += 16;
                     TotalObjects = (byte)bytes[i[0]++];
-                    FirstDetachAll = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
+                    FirstDetachAll = (bytes[i[0]++] != 0) ? true : false;
                 }
                 catch (Exception e)
                 {
@@ -98,10 +98,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
             public UUID ItemID;
             public UUID OwnerID;
             public byte AttachmentPt;
-            public uint ItemFlags;
-            public uint GroupMask;
-            public uint EveryoneMask;
-            public uint NextOwnerMask;
+            public long ItemFlags;
+            public long GroupMask;
+            public long EveryoneMask;
+            public long NextOwnerMask;
             public byte[] Name;
             public byte[] Description;
 
@@ -131,10 +131,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     ItemID.FromBytes(bytes, i[0]); i[0] += 16;
                     OwnerID.FromBytes(bytes, i[0]); i[0] += 16;
                     AttachmentPt = (byte)bytes[i[0]++];
-                    ItemFlags = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    GroupMask = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    EveryoneMask = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    NextOwnerMask = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    ItemFlags = Utils.bytesToUInt(bytes); i[0] += 4;
+                    GroupMask = Utils.bytesToUInt(bytes); i[0] += 4;
+                    EveryoneMask = Utils.bytesToUInt(bytes); i[0] += 4;
+                    NextOwnerMask = Utils.bytesToUInt(bytes); i[0] += 4;
                     length = bytes[i[0]++];
                     Name = new byte[length];
                     Utils.arraycopy(bytes, i[0], Name, 0, length); i[0] +=  length;
@@ -154,10 +154,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 ItemID.ToBytes(bytes, i[0]); i[0] += 16;
                 OwnerID.ToBytes(bytes, i[0]); i[0] += 16;
                 bytes[i[0]++] = AttachmentPt;
-                Utils.UIntToBytes(ItemFlags, bytes, i[0]); i[0] += 4;
-                Utils.UIntToBytes(GroupMask, bytes, i[0]); i[0] += 4;
-                Utils.UIntToBytes(EveryoneMask, bytes, i[0]); i[0] += 4;
-                Utils.UIntToBytes(NextOwnerMask, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(ItemFlags, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(GroupMask, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(EveryoneMask, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(NextOwnerMask, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)Name.length;
                 Utils.arraycopy(Name, 0, bytes, i[0], Name.length); i[0] +=  Name.length;
                 bytes[i[0]++] = (byte)Description.length;

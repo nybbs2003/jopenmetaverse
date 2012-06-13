@@ -49,7 +49,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         /// <exclude/>
         public final class ObjectDataBlock extends PacketBlock
         {
-            public uint ObjectLocalID;
+            public long ObjectLocalID;
             public byte Type;
             public byte[] Data;
 
@@ -75,7 +75,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    ObjectLocalID = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    ObjectLocalID = Utils.bytesToUInt(bytes); i[0] += 4;
                     Type = (byte)bytes[i[0]++];
                     length = bytes[i[0]++];
                     Data = new byte[length];
@@ -90,7 +90,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.UIntToBytes(ObjectLocalID, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(ObjectLocalID, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = Type;
                 bytes[i[0]++] = (byte)Data.length;
                 Utils.arraycopy(Data, 0, bytes, i[0], Data.length); i[0] +=  Data.length;

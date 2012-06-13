@@ -50,11 +50,11 @@ package com.ngt.jopenmetaverse.shared.protocol;
         public final class DataBlock extends PacketBlock
         {
             public UUID ClassifiedID;
-            public uint Category;
+            public long Category;
             public byte[] Name;
             public byte[] Desc;
             public UUID ParcelID;
-            public uint ParentEstate;
+            public long ParentEstate;
             public UUID SnapshotID;
             public Vector3d PosGlobal;
             public byte ClassifiedFlags;
@@ -84,7 +84,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     ClassifiedID.FromBytes(bytes, i[0]); i[0] += 16;
-                    Category = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    Category = Utils.bytesToUInt(bytes); i[0] += 4;
                     length = bytes[i[0]++];
                     Name = new byte[length];
                     Utils.arraycopy(bytes, i[0], Name, 0, length); i[0] +=  length;
@@ -92,7 +92,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     Desc = new byte[length];
                     Utils.arraycopy(bytes, i[0], Desc, 0, length); i[0] +=  length;
                     ParcelID.FromBytes(bytes, i[0]); i[0] += 16;
-                    ParentEstate = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    ParentEstate = Utils.bytesToUInt(bytes); i[0] += 4;
                     SnapshotID.FromBytes(bytes, i[0]); i[0] += 16;
                     PosGlobal.FromBytes(bytes, i[0]); i[0] += 24;
                     ClassifiedFlags = (byte)bytes[i[0]++];
@@ -108,18 +108,18 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 ClassifiedID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.UIntToBytes(Category, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(Category, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)Name.length;
                 Utils.arraycopy(Name, 0, bytes, i[0], Name.length); i[0] +=  Name.length;
                 bytes[i[0]++] = (byte)(Desc.length % 256);
                 bytes[i[0]++] = (byte)((Desc.length >> 8) % 256);
                 Utils.arraycopy(Desc, 0, bytes, i[0], Desc.length); i[0] +=  Desc.length;
                 ParcelID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.UIntToBytes(ParentEstate, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(ParentEstate, bytes, i[0]); i[0] += 4;
                 SnapshotID.ToBytes(bytes, i[0]); i[0] += 16;
                 PosGlobal.ToBytes(bytes, i[0]); i[0] += 24;
                 bytes[i[0]++] = ClassifiedFlags;
-                Utils.IntToBytes(PriceForListing, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(PriceForListing, bytes, i[0]); i[0] += 4;
             }
 
         }

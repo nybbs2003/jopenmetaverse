@@ -41,7 +41,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 TransferID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.IntToBytes(ChannelType, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(ChannelType, bytes, i[0]); i[0] += 4;
             }
 
         }

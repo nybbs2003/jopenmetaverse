@@ -90,7 +90,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             public byte[] FirstName;
             public byte[] LastName;
             public byte[] Group;
-            public bool Online;
+            public boolean Online;
             public int Reputation;
 
             @Override
@@ -127,7 +127,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     length = bytes[i[0]++];
                     Group = new byte[length];
                     Utils.arraycopy(bytes, i[0], Group, 0, length); i[0] +=  length;
-                    Online = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
+                    Online = (bytes[i[0]++] != 0) ? true : false;
                     Reputation = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                 }
                 catch (Exception e)
@@ -147,7 +147,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 bytes[i[0]++] = (byte)Group.length;
                 Utils.arraycopy(Group, 0, bytes, i[0], Group.length); i[0] +=  Group.length;
                 bytes[i[0]++] = (byte)((Online) ? 1 : 0);
-                Utils.IntToBytes(Reputation, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(Reputation, bytes, i[0]); i[0] += 4;
             }
 
         }

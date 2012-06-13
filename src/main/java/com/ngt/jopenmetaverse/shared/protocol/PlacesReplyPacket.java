@@ -137,14 +137,14 @@ public void FromBytes(byte[] bytes, int[] i) throws MalformedDataException
                     ActualArea = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     BillableArea = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     Flags = (byte)bytes[i[0]++];
-                    GlobalX = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
-                    GlobalY = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
-                    GlobalZ = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
+                    GlobalX = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
+                    GlobalY = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
+                    GlobalZ = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
                     length = bytes[i[0]++];
                     SimName = new byte[length];
                     Utils.arraycopy(bytes, i[0], SimName, 0, length); i[0] +=  length;
                     SnapshotID.FromBytes(bytes, i[0]); i[0] += 16;
-                    Dwell = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
+                    Dwell = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
                     Price = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                 }
                 catch (Exception e)
@@ -161,17 +161,17 @@ public void FromBytes(byte[] bytes, int[] i) throws MalformedDataException
                 Utils.arraycopy(Name, 0, bytes, i[0], Name.length); i[0] +=  Name.length;
                 bytes[i[0]++] = (byte)Desc.length;
                 Utils.arraycopy(Desc, 0, bytes, i[0], Desc.length); i[0] +=  Desc.length;
-                Utils.IntToBytes(ActualArea, bytes, i[0]); i[0] += 4;
-                Utils.IntToBytes(BillableArea, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(ActualArea, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(BillableArea, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = Flags;
-                Utils.FloatToBytes(GlobalX, bytes, i[0]); i[0] += 4;
-                Utils.FloatToBytes(GlobalY, bytes, i[0]); i[0] += 4;
-                Utils.FloatToBytes(GlobalZ, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytes(GlobalX, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytes(GlobalY, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytes(GlobalZ, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)SimName.length;
                 Utils.arraycopy(SimName, 0, bytes, i[0], SimName.length); i[0] +=  SimName.length;
                 SnapshotID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.FloatToBytes(Dwell, bytes, i[0]); i[0] += 4;
-                Utils.IntToBytes(Price, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytes(Dwell, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(Price, bytes, i[0]); i[0] += 4;
             }
 
         }

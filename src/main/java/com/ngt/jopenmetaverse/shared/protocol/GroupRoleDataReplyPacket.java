@@ -84,7 +84,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 GroupID.ToBytes(bytes, i[0]); i[0] += 16;
                 RequestID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.IntToBytes(RoleCount, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(RoleCount, bytes, i[0]); i[0] += 4;
             }
 
         }
@@ -97,7 +97,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             public byte[] Title;
             public byte[] Description;
             public BigInteger Powers;
-            public uint Members;
+            public long Members;
 
             @Override
 			public int getLength()
@@ -133,8 +133,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     length = bytes[i[0]++];
                     Description = new byte[length];
                     Utils.arraycopy(bytes, i[0], Description, 0, length); i[0] +=  length;
-                    Powers = new BigInteger(bytes);
-                    Members = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    Powers = Utils.bytesToULong(bytes, i[0]); i[0] += 8;
+                    Members = Utils.bytesToUInt(bytes); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -153,7 +153,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 bytes[i[0]++] = (byte)Description.length;
                 Utils.arraycopy(Description, 0, bytes, i[0], Description.length); i[0] +=  Description.length;
                 Utils.ulongToBytes(Powers, bytes, i[0]); i[0] += 8;
-                Utils.UIntToBytes(Members, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(Members, bytes, i[0]); i[0] += 4;
             }
 
         }

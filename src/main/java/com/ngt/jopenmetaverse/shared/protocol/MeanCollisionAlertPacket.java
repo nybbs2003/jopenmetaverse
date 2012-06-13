@@ -8,7 +8,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             public UUID Victim;
             public UUID Perp;
-            public uint Time;
+            public long Time;
             public float Mag;
             public byte Type;
 
@@ -33,8 +33,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 {
                     Victim.FromBytes(bytes, i[0]); i[0] += 16;
                     Perp.FromBytes(bytes, i[0]); i[0] += 16;
-                    Time = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    Mag = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
+                    Time = Utils.bytesToUInt(bytes); i[0] += 4;
+                    Mag = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
                     Type = (byte)bytes[i[0]++];
                 }
                 catch (Exception e)
@@ -48,8 +48,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 Victim.ToBytes(bytes, i[0]); i[0] += 16;
                 Perp.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.UIntToBytes(Time, bytes, i[0]); i[0] += 4;
-                Utils.FloatToBytes(Mag, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(Time, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytes(Mag, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = Type;
             }
 

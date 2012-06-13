@@ -54,7 +54,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             public UUID RoleID;
             public UUID MemberID;
-            public uint Change;
+            public long Change;
 
             @Override
 			public int getLength()
@@ -77,7 +77,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 {
                     RoleID.FromBytes(bytes, i[0]); i[0] += 16;
                     MemberID.FromBytes(bytes, i[0]); i[0] += 16;
-                    Change = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    Change = Utils.bytesToUInt(bytes); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -90,7 +90,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 RoleID.ToBytes(bytes, i[0]); i[0] += 16;
                 MemberID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.UIntToBytes(Change, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(Change, bytes, i[0]); i[0] += 4;
             }
 
         }

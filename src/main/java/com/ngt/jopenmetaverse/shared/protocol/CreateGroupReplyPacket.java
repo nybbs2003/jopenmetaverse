@@ -47,7 +47,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         public final class ReplyDataBlock extends PacketBlock
         {
             public UUID GroupID;
-            public bool Success;
+            public boolean Success;
             public byte[] Message;
 
             @Override
@@ -73,7 +73,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     GroupID.FromBytes(bytes, i[0]); i[0] += 16;
-                    Success = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
+                    Success = (bytes[i[0]++] != 0) ? true : false;
                     length = bytes[i[0]++];
                     Message = new byte[length];
                     Utils.arraycopy(bytes, i[0], Message, 0, length); i[0] +=  length;

@@ -50,7 +50,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         public final class DataBlock extends PacketBlock
         {
             public int SequenceID;
-            public uint Flags;
+            public long Flags;
             public int LocalID;
 
             @Override
@@ -73,7 +73,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     SequenceID = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    Flags = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    Flags = Utils.bytesToUInt(bytes); i[0] += 4;
                     LocalID = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                 }
                 catch (Exception e)
@@ -85,9 +85,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.IntToBytes(SequenceID, bytes, i[0]); i[0] += 4;
-                Utils.UIntToBytes(Flags, bytes, i[0]); i[0] += 4;
-                Utils.IntToBytes(LocalID, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(SequenceID, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(Flags, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(LocalID, bytes, i[0]); i[0] += 4;
             }
 
         }

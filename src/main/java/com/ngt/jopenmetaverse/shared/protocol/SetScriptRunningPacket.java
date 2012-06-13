@@ -51,7 +51,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             public UUID ObjectID;
             public UUID ItemID;
-            public bool Running;
+            public boolean Running;
 
             @Override
 			public int getLength()
@@ -74,7 +74,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 {
                     ObjectID.FromBytes(bytes, i[0]); i[0] += 16;
                     ItemID.FromBytes(bytes, i[0]); i[0] += 16;
-                    Running = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
+                    Running = (bytes[i[0]++] != 0) ? true : false;
                 }
                 catch (Exception e)
                 {

@@ -57,13 +57,13 @@ package com.ngt.jopenmetaverse.shared.protocol;
             public Vector3 RayStart;
             public Vector3 RayEnd;
             public UUID RayTargetID;
-            public bool RayEndIsIntersection;
-            public bool RezSelected;
-            public bool RemoveItem;
-            public uint ItemFlags;
-            public uint GroupMask;
-            public uint EveryoneMask;
-            public uint NextOwnerMask;
+            public boolean RayEndIsIntersection;
+            public boolean RezSelected;
+            public boolean RemoveItem;
+            public long ItemFlags;
+            public long GroupMask;
+            public long EveryoneMask;
+            public long NextOwnerMask;
 
             @Override
 			public int getLength()
@@ -89,13 +89,13 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     RayStart.FromBytes(bytes, i[0]); i[0] += 12;
                     RayEnd.FromBytes(bytes, i[0]); i[0] += 12;
                     RayTargetID.FromBytes(bytes, i[0]); i[0] += 16;
-                    RayEndIsIntersection = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
-                    RezSelected = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
-                    RemoveItem = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
-                    ItemFlags = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    GroupMask = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    EveryoneMask = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    NextOwnerMask = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    RayEndIsIntersection = (bytes[i[0]++] != 0) ? true : false;
+                    RezSelected = (bytes[i[0]++] != 0) ? true : false;
+                    RemoveItem = (bytes[i[0]++] != 0) ? true : false;
+                    ItemFlags = Utils.bytesToUInt(bytes); i[0] += 4;
+                    GroupMask = Utils.bytesToUInt(bytes); i[0] += 4;
+                    EveryoneMask = Utils.bytesToUInt(bytes); i[0] += 4;
+                    NextOwnerMask = Utils.bytesToUInt(bytes); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -114,10 +114,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 bytes[i[0]++] = (byte)((RayEndIsIntersection) ? 1 : 0);
                 bytes[i[0]++] = (byte)((RezSelected) ? 1 : 0);
                 bytes[i[0]++] = (byte)((RemoveItem) ? 1 : 0);
-                Utils.UIntToBytes(ItemFlags, bytes, i[0]); i[0] += 4;
-                Utils.UIntToBytes(GroupMask, bytes, i[0]); i[0] += 4;
-                Utils.UIntToBytes(EveryoneMask, bytes, i[0]); i[0] += 4;
-                Utils.UIntToBytes(NextOwnerMask, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(ItemFlags, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(GroupMask, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(EveryoneMask, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(NextOwnerMask, bytes, i[0]); i[0] += 4;
             }
 
         }

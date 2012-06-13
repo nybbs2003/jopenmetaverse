@@ -8,7 +8,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             public UUID AgentID;
             public UUID SessionID;
-            public bool Stamp;
+            public boolean Stamp;
 
             @Override
 			public int getLength()
@@ -31,7 +31,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 {
                     AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
-                    Stamp = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
+                    Stamp = (bytes[i[0]++] != 0) ? true : false;
                 }
                 catch (Exception e)
                 {

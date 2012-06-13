@@ -88,8 +88,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             public UUID ParcelID;
             public byte[] Name;
-            public bool Auction;
-            public bool ForSale;
+            public boolean Auction;
+            public boolean ForSale;
             public int SalePrice;
             public int ActualArea;
 
@@ -119,8 +119,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     length = bytes[i[0]++];
                     Name = new byte[length];
                     Utils.arraycopy(bytes, i[0], Name, 0, length); i[0] +=  length;
-                    Auction = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
-                    ForSale = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
+                    Auction = (bytes[i[0]++] != 0) ? true : false;
+                    ForSale = (bytes[i[0]++] != 0) ? true : false;
                     SalePrice = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     ActualArea = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                 }
@@ -138,8 +138,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 Utils.arraycopy(Name, 0, bytes, i[0], Name.length); i[0] +=  Name.length;
                 bytes[i[0]++] = (byte)((Auction) ? 1 : 0);
                 bytes[i[0]++] = (byte)((ForSale) ? 1 : 0);
-                Utils.IntToBytes(SalePrice, bytes, i[0]); i[0] += 4;
-                Utils.IntToBytes(ActualArea, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(SalePrice, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(ActualArea, bytes, i[0]); i[0] += 4;
             }
 
         }

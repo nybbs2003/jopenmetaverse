@@ -57,7 +57,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             public byte[] BornOn;
             public byte[] ProfileURL;
             public byte[] CharterMember;
-            public uint Flags;
+            public long Flags;
 
             @Override
 			public int getLength()
@@ -103,7 +103,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     length = bytes[i[0]++];
                     CharterMember = new byte[length];
                     Utils.arraycopy(bytes, i[0], CharterMember, 0, length); i[0] +=  length;
-                    Flags = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    Flags = Utils.bytesToUInt(bytes); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -128,7 +128,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 Utils.arraycopy(ProfileURL, 0, bytes, i[0], ProfileURL.length); i[0] +=  ProfileURL.length;
                 bytes[i[0]++] = (byte)CharterMember.length;
                 Utils.arraycopy(CharterMember, 0, bytes, i[0], CharterMember.length); i[0] +=  CharterMember.length;
-                Utils.UIntToBytes(Flags, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(Flags, bytes, i[0]); i[0] += 4;
             }
 
         }

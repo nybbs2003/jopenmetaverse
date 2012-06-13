@@ -103,10 +103,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 SourceID.ToBytes(bytes, i[0]); i[0] += 16;
                 DestID.ToBytes(bytes, i[0]); i[0] += 16;
                 bytes[i[0]++] = Flags;
-                Utils.IntToBytes(Amount, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(Amount, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = AggregatePermNextOwner;
                 bytes[i[0]++] = AggregatePermInventory;
-                Utils.IntToBytes(TransactionType, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(TransactionType, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)Description.length;
                 Utils.arraycopy(Description, 0, bytes, i[0], Description.length); i[0] +=  Description.length;
             }

@@ -81,7 +81,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 AgentRelated.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.IntToBytes(RelatedRights, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(RelatedRights, bytes, i[0]); i[0] += 4;
             }
 
         }

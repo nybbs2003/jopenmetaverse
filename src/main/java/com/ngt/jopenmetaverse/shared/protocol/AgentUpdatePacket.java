@@ -16,7 +16,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             public Vector3 CameraLeftAxis;
             public Vector3 CameraUpAxis;
             public float Far;
-            public uint ControlFlags;
+            public long ControlFlags;
             public byte Flags;
 
             @Override
@@ -47,8 +47,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     CameraAtAxis.FromBytes(bytes, i[0]); i[0] += 12;
                     CameraLeftAxis.FromBytes(bytes, i[0]); i[0] += 12;
                     CameraUpAxis.FromBytes(bytes, i[0]); i[0] += 12;
-                    Far = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
-                    ControlFlags = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    Far = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
+                    ControlFlags = Utils.bytesToUInt(bytes); i[0] += 4;
                     Flags = (byte)bytes[i[0]++];
                 }
                 catch (Exception e)
@@ -69,8 +69,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 CameraAtAxis.ToBytes(bytes, i[0]); i[0] += 12;
                 CameraLeftAxis.ToBytes(bytes, i[0]); i[0] += 12;
                 CameraUpAxis.ToBytes(bytes, i[0]); i[0] += 12;
-                Utils.FloatToBytes(Far, bytes, i[0]); i[0] += 4;
-                Utils.UIntToBytes(ControlFlags, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytes(Far, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(ControlFlags, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = Flags;
             }
 

@@ -46,12 +46,12 @@ package com.ngt.jopenmetaverse.shared.protocol;
         /// <exclude/>
         public final class SitTransformBlock extends PacketBlock
         {
-            public bool AutoPilot;
+            public boolean AutoPilot;
             public Vector3 SitPosition;
             public Quaternion SitRotation;
             public Vector3 CameraEyeOffset;
             public Vector3 CameraAtOffset;
-            public bool ForceMouselook;
+            public boolean ForceMouselook;
 
             @Override
 			public int getLength()
@@ -72,12 +72,12 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    AutoPilot = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
+                    AutoPilot = (bytes[i[0]++] != 0) ? true : false;
                     SitPosition.FromBytes(bytes, i[0]); i[0] += 12;
                     SitRotation.FromBytes(bytes, i, true); i += 12;
                     CameraEyeOffset.FromBytes(bytes, i[0]); i[0] += 12;
                     CameraAtOffset.FromBytes(bytes, i[0]); i[0] += 12;
-                    ForceMouselook = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
+                    ForceMouselook = (bytes[i[0]++] != 0) ? true : false;
                 }
                 catch (Exception e)
                 {

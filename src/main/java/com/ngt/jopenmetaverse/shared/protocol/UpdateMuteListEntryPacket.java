@@ -52,7 +52,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             public UUID MuteID;
             public byte[] MuteName;
             public int MuteType;
-            public uint MuteFlags;
+            public long MuteFlags;
 
             @Override
 			public int getLength()
@@ -81,7 +81,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     MuteName = new byte[length];
                     Utils.arraycopy(bytes, i[0], MuteName, 0, length); i[0] +=  length;
                     MuteType = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    MuteFlags = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    MuteFlags = Utils.bytesToUInt(bytes); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -95,8 +95,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 MuteID.ToBytes(bytes, i[0]); i[0] += 16;
                 bytes[i[0]++] = (byte)MuteName.length;
                 Utils.arraycopy(MuteName, 0, bytes, i[0], MuteName.length); i[0] +=  MuteName.length;
-                Utils.IntToBytes(MuteType, bytes, i[0]); i[0] += 4;
-                Utils.UIntToBytes(MuteFlags, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(MuteType, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(MuteFlags, bytes, i[0]); i[0] += 4;
             }
 
         }

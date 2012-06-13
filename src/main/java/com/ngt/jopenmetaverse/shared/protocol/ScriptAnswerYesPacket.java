@@ -87,7 +87,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 TaskID.ToBytes(bytes, i[0]); i[0] += 16;
                 ItemID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.IntToBytes(Questions, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(Questions, bytes, i[0]); i[0] += 4;
             }
 
         }

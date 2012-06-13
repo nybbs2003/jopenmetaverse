@@ -8,7 +8,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             public UUID AgentID;
             public UUID SessionID;
-            public uint CircuitCode;
+            public long CircuitCode;
 
             @Override
 			public int getLength()
@@ -31,7 +31,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 {
                     AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
-                    CircuitCode = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    CircuitCode = Utils.bytesToUInt(bytes); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -44,7 +44,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
                 SessionID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.UIntToBytes(CircuitCode, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(CircuitCode, bytes, i[0]); i[0] += 4;
             }
 
         }
@@ -52,7 +52,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         /// <exclude/>
         public final class HeightWidthBlockBlock extends PacketBlock
         {
-            public uint GenCounter;
+            public long GenCounter;
             public ushort Height;
             public ushort Width;
 
@@ -75,7 +75,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    GenCounter = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    GenCounter = Utils.bytesToUInt(bytes); i[0] += 4;
                     Height = (ushort)(bytes[i[0]++] + (bytes[i[0]++] << 8));
                     Width = (ushort)(bytes[i[0]++] + (bytes[i[0]++] << 8));
                 }
@@ -88,7 +88,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.UIntToBytes(GenCounter, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(GenCounter, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)(Height % 256);
                 bytes[i[0]++] = (byte)((Height >> 8) % 256);
                 bytes[i[0]++] = (byte)(Width % 256);

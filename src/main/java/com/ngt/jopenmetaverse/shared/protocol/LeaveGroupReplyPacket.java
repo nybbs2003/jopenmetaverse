@@ -47,7 +47,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         public final class GroupDataBlock extends PacketBlock
         {
             public UUID GroupID;
-            public bool Success;
+            public boolean Success;
 
             @Override
 			public int getLength()
@@ -69,7 +69,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     GroupID.FromBytes(bytes, i[0]); i[0] += 16;
-                    Success = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
+                    Success = (bytes[i[0]++] != 0) ? true : false;
                 }
                 catch (Exception e)
                 {

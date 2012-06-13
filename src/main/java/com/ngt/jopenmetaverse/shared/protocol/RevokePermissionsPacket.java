@@ -50,7 +50,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         public final class DataBlock extends PacketBlock
         {
             public UUID ObjectID;
-            public uint ObjectPermissions;
+            public long ObjectPermissions;
 
             @Override
 			public int getLength()
@@ -72,7 +72,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     ObjectID.FromBytes(bytes, i[0]); i[0] += 16;
-                    ObjectPermissions = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    ObjectPermissions = Utils.bytesToUInt(bytes); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -84,7 +84,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 ObjectID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.UIntToBytes(ObjectPermissions, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(ObjectPermissions, bytes, i[0]); i[0] += 4;
             }
 
         }

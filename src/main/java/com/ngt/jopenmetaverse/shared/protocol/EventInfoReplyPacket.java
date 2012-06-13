@@ -46,19 +46,19 @@ package com.ngt.jopenmetaverse.shared.protocol;
         /// <exclude/>
         public final class EventDataBlock extends PacketBlock
         {
-            public uint EventID;
+            public long EventID;
             public byte[] Creator;
             public byte[] Name;
             public byte[] Category;
             public byte[] Desc;
             public byte[] Date;
-            public uint DateUTC;
-            public uint Duration;
-            public uint Cover;
-            public uint Amount;
+            public long DateUTC;
+            public long Duration;
+            public long Cover;
+            public long Amount;
             public byte[] SimName;
             public Vector3d GlobalPos;
-            public uint EventFlags;
+            public long EventFlags;
 
             @Override
 			public int getLength()
@@ -87,7 +87,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    EventID = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    EventID = Utils.bytesToUInt(bytes); i[0] += 4;
                     length = bytes[i[0]++];
                     Creator = new byte[length];
                     Utils.arraycopy(bytes, i[0], Creator, 0, length); i[0] +=  length;
@@ -103,15 +103,15 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     length = bytes[i[0]++];
                     Date = new byte[length];
                     Utils.arraycopy(bytes, i[0], Date, 0, length); i[0] +=  length;
-                    DateUTC = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    Duration = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    Cover = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    Amount = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    DateUTC = Utils.bytesToUInt(bytes); i[0] += 4;
+                    Duration = Utils.bytesToUInt(bytes); i[0] += 4;
+                    Cover = Utils.bytesToUInt(bytes); i[0] += 4;
+                    Amount = Utils.bytesToUInt(bytes); i[0] += 4;
                     length = bytes[i[0]++];
                     SimName = new byte[length];
                     Utils.arraycopy(bytes, i[0], SimName, 0, length); i[0] +=  length;
                     GlobalPos.FromBytes(bytes, i[0]); i[0] += 24;
-                    EventFlags = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    EventFlags = Utils.bytesToUInt(bytes); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -122,7 +122,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.UIntToBytes(EventID, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(EventID, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)Creator.length;
                 Utils.arraycopy(Creator, 0, bytes, i[0], Creator.length); i[0] +=  Creator.length;
                 bytes[i[0]++] = (byte)Name.length;
@@ -134,14 +134,14 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 Utils.arraycopy(Desc, 0, bytes, i[0], Desc.length); i[0] +=  Desc.length;
                 bytes[i[0]++] = (byte)Date.length;
                 Utils.arraycopy(Date, 0, bytes, i[0], Date.length); i[0] +=  Date.length;
-                Utils.UIntToBytes(DateUTC, bytes, i[0]); i[0] += 4;
-                Utils.UIntToBytes(Duration, bytes, i[0]); i[0] += 4;
-                Utils.UIntToBytes(Cover, bytes, i[0]); i[0] += 4;
-                Utils.UIntToBytes(Amount, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(DateUTC, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(Duration, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(Cover, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(Amount, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)SimName.length;
                 Utils.arraycopy(SimName, 0, bytes, i[0], SimName.length); i[0] +=  SimName.length;
                 GlobalPos.ToBytes(bytes, i[0]); i[0] += 24;
-                Utils.UIntToBytes(EventFlags, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(EventFlags, bytes, i[0]); i[0] += 4;
             }
 
         }

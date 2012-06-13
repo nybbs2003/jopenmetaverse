@@ -7,7 +7,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         public final class AgentDataBlock extends PacketBlock
         {
             public UUID AgentID;
-            public uint Flags;
+            public long Flags;
 
             @Override
 			public int getLength()
@@ -29,7 +29,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     AgentID.FromBytes(bytes, i[0]); i[0] += 16;
-                    Flags = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    Flags = Utils.bytesToUInt(bytes); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -41,7 +41,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.UIntToBytes(Flags, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(Flags, bytes, i[0]); i[0] += 4;
             }
 
         }
@@ -53,7 +53,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             public ushort Y;
             public byte[] Name;
             public byte Access;
-            public uint RegionFlags;
+            public long RegionFlags;
             public byte WaterHeight;
             public byte Agents;
             public UUID MapImageID;
@@ -86,7 +86,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     Name = new byte[length];
                     Utils.arraycopy(bytes, i[0], Name, 0, length); i[0] +=  length;
                     Access = (byte)bytes[i[0]++];
-                    RegionFlags = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    RegionFlags = Utils.bytesToUInt(bytes); i[0] += 4;
                     WaterHeight = (byte)bytes[i[0]++];
                     Agents = (byte)bytes[i[0]++];
                     MapImageID.FromBytes(bytes, i[0]); i[0] += 16;
@@ -107,7 +107,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 bytes[i[0]++] = (byte)Name.length;
                 Utils.arraycopy(Name, 0, bytes, i[0], Name.length); i[0] +=  Name.length;
                 bytes[i[0]++] = Access;
-                Utils.UIntToBytes(RegionFlags, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(RegionFlags, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = WaterHeight;
                 bytes[i[0]++] = Agents;
                 MapImageID.ToBytes(bytes, i[0]); i[0] += 16;

@@ -93,7 +93,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     length = bytes[i[0]++];
                     Title = new byte[length];
                     Utils.arraycopy(bytes, i[0], Title, 0, length); i[0] +=  length;
-                    Powers = new BigInteger(bytes);
+                    Powers = Utils.bytesToULong(bytes, i[0]); i[0] += 8;
                     UpdateType = (byte)bytes[i[0]++];
                 }
                 catch (Exception e)

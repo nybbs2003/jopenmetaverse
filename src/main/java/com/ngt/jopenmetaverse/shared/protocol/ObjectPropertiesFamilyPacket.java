@@ -6,19 +6,19 @@ package com.ngt.jopenmetaverse.shared.protocol;
         /// <exclude/>
         public final class ObjectDataBlock extends PacketBlock
         {
-            public uint RequestFlags;
+            public long RequestFlags;
             public UUID ObjectID;
             public UUID OwnerID;
             public UUID GroupID;
-            public uint BaseMask;
-            public uint OwnerMask;
-            public uint GroupMask;
-            public uint EveryoneMask;
-            public uint NextOwnerMask;
+            public long BaseMask;
+            public long OwnerMask;
+            public long GroupMask;
+            public long EveryoneMask;
+            public long NextOwnerMask;
             public int OwnershipCost;
             public byte SaleType;
             public int SalePrice;
-            public uint Category;
+            public long Category;
             public UUID LastOwnerID;
             public byte[] Name;
             public byte[] Description;
@@ -46,19 +46,19 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    RequestFlags = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    RequestFlags = Utils.bytesToUInt(bytes); i[0] += 4;
                     ObjectID.FromBytes(bytes, i[0]); i[0] += 16;
                     OwnerID.FromBytes(bytes, i[0]); i[0] += 16;
                     GroupID.FromBytes(bytes, i[0]); i[0] += 16;
-                    BaseMask = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    OwnerMask = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    GroupMask = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    EveryoneMask = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    NextOwnerMask = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    BaseMask = Utils.bytesToUInt(bytes); i[0] += 4;
+                    OwnerMask = Utils.bytesToUInt(bytes); i[0] += 4;
+                    GroupMask = Utils.bytesToUInt(bytes); i[0] += 4;
+                    EveryoneMask = Utils.bytesToUInt(bytes); i[0] += 4;
+                    NextOwnerMask = Utils.bytesToUInt(bytes); i[0] += 4;
                     OwnershipCost = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     SaleType = (byte)bytes[i[0]++];
                     SalePrice = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    Category = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    Category = Utils.bytesToUInt(bytes); i[0] += 4;
                     LastOwnerID.FromBytes(bytes, i[0]); i[0] += 16;
                     length = bytes[i[0]++];
                     Name = new byte[length];
@@ -76,19 +76,19 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.UIntToBytes(RequestFlags, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(RequestFlags, bytes, i[0]); i[0] += 4;
                 ObjectID.ToBytes(bytes, i[0]); i[0] += 16;
                 OwnerID.ToBytes(bytes, i[0]); i[0] += 16;
                 GroupID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.UIntToBytes(BaseMask, bytes, i[0]); i[0] += 4;
-                Utils.UIntToBytes(OwnerMask, bytes, i[0]); i[0] += 4;
-                Utils.UIntToBytes(GroupMask, bytes, i[0]); i[0] += 4;
-                Utils.UIntToBytes(EveryoneMask, bytes, i[0]); i[0] += 4;
-                Utils.UIntToBytes(NextOwnerMask, bytes, i[0]); i[0] += 4;
-                Utils.IntToBytes(OwnershipCost, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(BaseMask, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(OwnerMask, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(GroupMask, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(EveryoneMask, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(NextOwnerMask, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(OwnershipCost, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = SaleType;
-                Utils.IntToBytes(SalePrice, bytes, i[0]); i[0] += 4;
-                Utils.UIntToBytes(Category, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(SalePrice, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(Category, bytes, i[0]); i[0] += 4;
                 LastOwnerID.ToBytes(bytes, i[0]); i[0] += 16;
                 bytes[i[0]++] = (byte)Name.length;
                 Utils.arraycopy(Name, 0, bytes, i[0], Name.length); i[0] +=  Name.length;

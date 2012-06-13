@@ -29,7 +29,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     RegionID.FromBytes(bytes, i[0]); i[0] += 16;
-                    RegionHandle = new BigInteger(bytes);
+                    RegionHandle = Utils.bytesToULong(bytes, i[0]); i[0] += 8;
                 }
                 catch (Exception e)
                 {

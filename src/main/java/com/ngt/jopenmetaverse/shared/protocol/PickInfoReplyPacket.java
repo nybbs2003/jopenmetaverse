@@ -48,7 +48,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             public UUID PickID;
             public UUID CreatorID;
-            public bool TopPick;
+            public boolean TopPick;
             public UUID ParcelID;
             public byte[] Name;
             public byte[] Desc;
@@ -58,7 +58,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             public byte[] SimName;
             public Vector3d PosGlobal;
             public int SortOrder;
-            public bool Enabled;
+            public boolean Enabled;
 
             @Override
 			public int getLength()
@@ -88,7 +88,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 {
                     PickID.FromBytes(bytes, i[0]); i[0] += 16;
                     CreatorID.FromBytes(bytes, i[0]); i[0] += 16;
-                    TopPick = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
+                    TopPick = (bytes[i[0]++] != 0) ? true : false;
                     ParcelID.FromBytes(bytes, i[0]); i[0] += 16;
                     length = bytes[i[0]++];
                     Name = new byte[length];
@@ -108,7 +108,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     Utils.arraycopy(bytes, i[0], SimName, 0, length); i[0] +=  length;
                     PosGlobal.FromBytes(bytes, i[0]); i[0] += 24;
                     SortOrder = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    Enabled = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
+                    Enabled = (bytes[i[0]++] != 0) ? true : false;
                 }
                 catch (Exception e)
                 {
@@ -136,7 +136,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 bytes[i[0]++] = (byte)SimName.length;
                 Utils.arraycopy(SimName, 0, bytes, i[0], SimName.length); i[0] +=  SimName.length;
                 PosGlobal.ToBytes(bytes, i[0]); i[0] += 24;
-                Utils.IntToBytes(SortOrder, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(SortOrder, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)((Enabled) ? 1 : 0);
             }
 

@@ -84,7 +84,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 GroupID.ToBytes(bytes, i[0]); i[0] += 16;
                 RequestID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.IntToBytes(MemberCount, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(MemberCount, bytes, i[0]); i[0] += 4;
             }
 
         }
@@ -97,7 +97,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             public byte[] OnlineStatus;
             public BigInteger AgentPowers;
             public byte[] Title;
-            public bool IsOwner;
+            public boolean IsOwner;
 
             @Override
 			public int getLength()
@@ -127,11 +127,11 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     length = bytes[i[0]++];
                     OnlineStatus = new byte[length];
                     Utils.arraycopy(bytes, i[0], OnlineStatus, 0, length); i[0] +=  length;
-                    AgentPowers = new BigInteger(bytes);
+                    AgentPowers = Utils.bytesToULong(bytes, i[0]); i[0] += 8;
                     length = bytes[i[0]++];
                     Title = new byte[length];
                     Utils.arraycopy(bytes, i[0], Title, 0, length); i[0] +=  length;
-                    IsOwner = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
+                    IsOwner = (bytes[i[0]++] != 0) ? true : false;
                 }
                 catch (Exception e)
                 {
@@ -143,7 +143,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.IntToBytes(Contribution, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(Contribution, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)OnlineStatus.length;
                 Utils.arraycopy(OnlineStatus, 0, bytes, i[0], OnlineStatus.length); i[0] +=  OnlineStatus.length;
                 Utils.ulongToBytes(AgentPowers, bytes, i[0]); i[0] += 8;

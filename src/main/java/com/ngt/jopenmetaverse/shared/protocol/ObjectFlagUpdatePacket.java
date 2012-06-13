@@ -8,11 +8,11 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             public UUID AgentID;
             public UUID SessionID;
-            public uint ObjectLocalID;
-            public bool UsePhysics;
-            public bool IsTemporary;
-            public bool IsPhantom;
-            public bool CastsShadows;
+            public long ObjectLocalID;
+            public boolean UsePhysics;
+            public boolean IsTemporary;
+            public boolean IsPhantom;
+            public boolean CastsShadows;
 
             @Override
 			public int getLength()
@@ -35,11 +35,11 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 {
                     AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
-                    ObjectLocalID = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    UsePhysics = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
-                    IsTemporary = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
-                    IsPhantom = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
-                    CastsShadows = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
+                    ObjectLocalID = Utils.bytesToUInt(bytes); i[0] += 4;
+                    UsePhysics = (bytes[i[0]++] != 0) ? true : false;
+                    IsTemporary = (bytes[i[0]++] != 0) ? true : false;
+                    IsPhantom = (bytes[i[0]++] != 0) ? true : false;
+                    CastsShadows = (bytes[i[0]++] != 0) ? true : false;
                 }
                 catch (Exception e)
                 {
@@ -52,7 +52,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
                 SessionID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.UIntToBytes(ObjectLocalID, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(ObjectLocalID, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)((UsePhysics) ? 1 : 0);
                 bytes[i[0]++] = (byte)((IsTemporary) ? 1 : 0);
                 bytes[i[0]++] = (byte)((IsPhantom) ? 1 : 0);
@@ -90,10 +90,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     PhysicsShapeType = (byte)bytes[i[0]++];
-                    Density = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
-                    Friction = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
-                    Restitution = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
-                    GravityMultiplier = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
+                    Density = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
+                    Friction = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
+                    Restitution = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
+                    GravityMultiplier = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -105,10 +105,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 bytes[i[0]++] = PhysicsShapeType;
-                Utils.FloatToBytes(Density, bytes, i[0]); i[0] += 4;
-                Utils.FloatToBytes(Friction, bytes, i[0]); i[0] += 4;
-                Utils.FloatToBytes(Restitution, bytes, i[0]); i[0] += 4;
-                Utils.FloatToBytes(GravityMultiplier, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytes(Density, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytes(Friction, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytes(Restitution, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytes(GravityMultiplier, bytes, i[0]); i[0] += 4;
             }
 
         }

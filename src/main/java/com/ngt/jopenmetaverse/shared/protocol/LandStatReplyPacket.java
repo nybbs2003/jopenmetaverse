@@ -6,9 +6,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
         /// <exclude/>
         public final class RequestDataBlock extends PacketBlock
         {
-            public uint ReportType;
-            public uint RequestFlags;
-            public uint TotalObjectCount;
+            public long ReportType;
+            public long RequestFlags;
+            public long TotalObjectCount;
 
             @Override
 			public int getLength()
@@ -29,9 +29,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    ReportType = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    RequestFlags = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    TotalObjectCount = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    ReportType = Utils.bytesToUInt(bytes); i[0] += 4;
+                    RequestFlags = Utils.bytesToUInt(bytes); i[0] += 4;
+                    TotalObjectCount = Utils.bytesToUInt(bytes); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -42,9 +42,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.UIntToBytes(ReportType, bytes, i[0]); i[0] += 4;
-                Utils.UIntToBytes(RequestFlags, bytes, i[0]); i[0] += 4;
-                Utils.UIntToBytes(TotalObjectCount, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(ReportType, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(RequestFlags, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(TotalObjectCount, bytes, i[0]); i[0] += 4;
             }
 
         }
@@ -52,7 +52,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         /// <exclude/>
         public final class ReportDataBlock extends PacketBlock
         {
-            public uint TaskLocalID;
+            public long TaskLocalID;
             public UUID TaskID;
             public float LocationX;
             public float LocationY;
@@ -84,12 +84,12 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    TaskLocalID = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    TaskLocalID = Utils.bytesToUInt(bytes); i[0] += 4;
                     TaskID.FromBytes(bytes, i[0]); i[0] += 16;
-                    LocationX = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
-                    LocationY = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
-                    LocationZ = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
-                    Score = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
+                    LocationX = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
+                    LocationY = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
+                    LocationZ = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
+                    Score = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
                     length = bytes[i[0]++];
                     TaskName = new byte[length];
                     Utils.arraycopy(bytes, i[0], TaskName, 0, length); i[0] +=  length;
@@ -106,12 +106,12 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.UIntToBytes(TaskLocalID, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(TaskLocalID, bytes, i[0]); i[0] += 4;
                 TaskID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.FloatToBytes(LocationX, bytes, i[0]); i[0] += 4;
-                Utils.FloatToBytes(LocationY, bytes, i[0]); i[0] += 4;
-                Utils.FloatToBytes(LocationZ, bytes, i[0]); i[0] += 4;
-                Utils.FloatToBytes(Score, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytes(LocationX, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytes(LocationY, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytes(LocationZ, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytes(Score, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)TaskName.length;
                 Utils.arraycopy(TaskName, 0, bytes, i[0], TaskName.length); i[0] +=  TaskName.length;
                 bytes[i[0]++] = (byte)OwnerName.length;

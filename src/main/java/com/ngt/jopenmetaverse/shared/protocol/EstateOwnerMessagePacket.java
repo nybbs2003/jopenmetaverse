@@ -1,5 +1,8 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+
 
     public final class EstateOwnerMessagePacket extends Packet
     {
@@ -66,7 +69,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public MethodDataBlock() { }
-            public MethodDataBlock(byte[] bytes, int[] i)
+            public MethodDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }

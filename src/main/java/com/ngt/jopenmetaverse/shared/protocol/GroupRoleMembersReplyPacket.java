@@ -9,7 +9,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             public UUID AgentID;
             public UUID GroupID;
             public UUID RequestID;
-            public uint TotalPairs;
+            public long TotalPairs;
 
             @Override
 			public int getLength()
@@ -33,7 +33,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     GroupID.FromBytes(bytes, i[0]); i[0] += 16;
                     RequestID.FromBytes(bytes, i[0]); i[0] += 16;
-                    TotalPairs = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    TotalPairs = Utils.bytesToUInt(bytes); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -47,7 +47,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
                 GroupID.ToBytes(bytes, i[0]); i[0] += 16;
                 RequestID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.UIntToBytes(TotalPairs, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(TotalPairs, bytes, i[0]); i[0] += 4;
             }
 
         }

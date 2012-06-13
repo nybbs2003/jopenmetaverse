@@ -8,7 +8,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             public UUID ID;
             public byte Codec;
-            public uint Size;
+            public long Size;
             public ushort Packets;
 
             @Override
@@ -32,7 +32,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 {
                     ID.FromBytes(bytes, i[0]); i[0] += 16;
                     Codec = (byte)bytes[i[0]++];
-                    Size = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    Size = Utils.bytesToUInt(bytes); i[0] += 4;
                     Packets = (ushort)(bytes[i[0]++] + (bytes[i[0]++] << 8));
                 }
                 catch (Exception e)
@@ -46,7 +46,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 ID.ToBytes(bytes, i[0]); i[0] += 16;
                 bytes[i[0]++] = Codec;
-                Utils.UIntToBytes(Size, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(Size, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)(Packets % 256);
                 bytes[i[0]++] = (byte)((Packets >> 8) % 256);
             }

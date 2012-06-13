@@ -50,10 +50,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
         public final class DataBlock extends PacketBlock
         {
             public UUID GroupID;
-            public bool IsGroupOwned;
-            public bool RemoveContribution;
+            public boolean IsGroupOwned;
+            public boolean RemoveContribution;
             public int LocalID;
-            public bool Final;
+            public boolean Final;
 
             @Override
 			public int getLength()
@@ -75,10 +75,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     GroupID.FromBytes(bytes, i[0]); i[0] += 16;
-                    IsGroupOwned = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
-                    RemoveContribution = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
+                    IsGroupOwned = (bytes[i[0]++] != 0) ? true : false;
+                    RemoveContribution = (bytes[i[0]++] != 0) ? true : false;
                     LocalID = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    Final = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
+                    Final = (bytes[i[0]++] != 0) ? true : false;
                 }
                 catch (Exception e)
                 {
@@ -92,7 +92,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 GroupID.ToBytes(bytes, i[0]); i[0] += 16;
                 bytes[i[0]++] = (byte)((IsGroupOwned) ? 1 : 0);
                 bytes[i[0]++] = (byte)((RemoveContribution) ? 1 : 0);
-                Utils.IntToBytes(LocalID, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(LocalID, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)((Final) ? 1 : 0);
             }
 
@@ -135,8 +135,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.IntToBytes(Price, bytes, i[0]); i[0] += 4;
-                Utils.IntToBytes(Area, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(Price, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(Area, bytes, i[0]); i[0] += 4;
             }
 
         }

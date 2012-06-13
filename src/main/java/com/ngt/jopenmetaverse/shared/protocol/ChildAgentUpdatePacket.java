@@ -7,7 +7,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         public final class AgentDataBlock extends PacketBlock
         {
             public BigInteger RegionHandle;
-            public uint ViewerCircuitCode;
+            public long ViewerCircuitCode;
             public UUID AgentID;
             public UUID SessionID;
             public Vector3 AgentPos;
@@ -17,17 +17,17 @@ package com.ngt.jopenmetaverse.shared.protocol;
             public Vector3 AtAxis;
             public Vector3 LeftAxis;
             public Vector3 UpAxis;
-            public bool ChangedGrid;
+            public boolean ChangedGrid;
             public float Far;
             public float Aspect;
             public byte[] Throttles;
-            public uint LocomotionState;
+            public long LocomotionState;
             public Quaternion HeadRotation;
             public Quaternion BodyRotation;
-            public uint ControlFlags;
+            public long ControlFlags;
             public float EnergyLevel;
             public byte GodLevel;
-            public bool AlwaysRun;
+            public boolean AlwaysRun;
             public UUID PreyAgent;
             public byte AgentAccess;
             public byte[] AgentTextures;
@@ -56,8 +56,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    RegionHandle = new BigInteger(bytes);
-                    ViewerCircuitCode = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    RegionHandle = Utils.bytesToULong(bytes, i[0]); i[0] += 8;
+                    ViewerCircuitCode = Utils.bytesToUInt(bytes); i[0] += 4;
                     AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
                     AgentPos.FromBytes(bytes, i[0]); i[0] += 12;
@@ -67,19 +67,19 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     AtAxis.FromBytes(bytes, i[0]); i[0] += 12;
                     LeftAxis.FromBytes(bytes, i[0]); i[0] += 12;
                     UpAxis.FromBytes(bytes, i[0]); i[0] += 12;
-                    ChangedGrid = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
-                    Far = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
-                    Aspect = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
+                    ChangedGrid = (bytes[i[0]++] != 0) ? true : false;
+                    Far = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
+                    Aspect = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
                     length = bytes[i[0]++];
                     Throttles = new byte[length];
                     Utils.arraycopy(bytes, i[0], Throttles, 0, length); i[0] +=  length;
-                    LocomotionState = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    LocomotionState = Utils.bytesToUInt(bytes); i[0] += 4;
                     HeadRotation.FromBytes(bytes, i, true); i += 12;
                     BodyRotation.FromBytes(bytes, i, true); i += 12;
-                    ControlFlags = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    EnergyLevel = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
+                    ControlFlags = Utils.bytesToUInt(bytes); i[0] += 4;
+                    EnergyLevel = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
                     GodLevel = (byte)bytes[i[0]++];
-                    AlwaysRun = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
+                    AlwaysRun = (bytes[i[0]++] != 0) ? true : false;
                     PreyAgent.FromBytes(bytes, i[0]); i[0] += 16;
                     AgentAccess = (byte)bytes[i[0]++];
                     length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
@@ -97,7 +97,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 Utils.ulongToBytes(RegionHandle, bytes, i[0]); i[0] += 8;
-                Utils.UIntToBytes(ViewerCircuitCode, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(ViewerCircuitCode, bytes, i[0]); i[0] += 4;
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
                 SessionID.ToBytes(bytes, i[0]); i[0] += 16;
                 AgentPos.ToBytes(bytes, i[0]); i[0] += 12;
@@ -108,15 +108,15 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 LeftAxis.ToBytes(bytes, i[0]); i[0] += 12;
                 UpAxis.ToBytes(bytes, i[0]); i[0] += 12;
                 bytes[i[0]++] = (byte)((ChangedGrid) ? 1 : 0);
-                Utils.FloatToBytes(Far, bytes, i[0]); i[0] += 4;
-                Utils.FloatToBytes(Aspect, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytes(Far, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytes(Aspect, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)Throttles.length;
                 Utils.arraycopy(Throttles, 0, bytes, i[0], Throttles.length); i[0] +=  Throttles.length;
-                Utils.UIntToBytes(LocomotionState, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(LocomotionState, bytes, i[0]); i[0] += 4;
                 HeadRotation.ToBytes(bytes, i[0]); i[0] += 12;
                 BodyRotation.ToBytes(bytes, i[0]); i[0] += 12;
-                Utils.UIntToBytes(ControlFlags, bytes, i[0]); i[0] += 4;
-                Utils.FloatToBytes(EnergyLevel, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(ControlFlags, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytes(EnergyLevel, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = GodLevel;
                 bytes[i[0]++] = (byte)((AlwaysRun) ? 1 : 0);
                 PreyAgent.ToBytes(bytes, i[0]); i[0] += 16;
@@ -134,7 +134,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             public UUID GroupID;
             public BigInteger GroupPowers;
-            public bool AcceptNotices;
+            public boolean AcceptNotices;
 
             @Override
 			public int getLength()
@@ -156,8 +156,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     GroupID.FromBytes(bytes, i[0]); i[0] += 16;
-                    GroupPowers = new BigInteger(bytes);
-                    AcceptNotices = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
+                    GroupPowers = Utils.bytesToULong(bytes, i[0]); i[0] += 8;
+                    AcceptNotices = (bytes[i[0]++] != 0) ? true : false;
                 }
                 catch (Exception e)
                 {
@@ -391,7 +391,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         /// <exclude/>
         public final class AgentInfoBlock extends PacketBlock
         {
-            public uint Flags;
+            public long Flags;
 
             @Override
 			public int getLength()
@@ -412,7 +412,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    Flags = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    Flags = Utils.bytesToUInt(bytes); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -423,7 +423,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.UIntToBytes(Flags, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(Flags, bytes, i[0]); i[0] += 4;
             }
 
         }

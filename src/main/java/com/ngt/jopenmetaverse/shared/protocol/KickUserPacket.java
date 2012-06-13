@@ -6,7 +6,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         /// <exclude/>
         public final class TargetBlockBlock extends PacketBlock
         {
-            public uint TargetIP;
+            public long TargetIP;
             public ushort TargetPort;
 
             @Override
@@ -28,7 +28,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    TargetIP = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    TargetIP = Utils.bytesToUInt(bytes); i[0] += 4;
                     TargetPort = (ushort)((bytes[i[0]++] << 8) + bytes[i[0]++]);
                 }
                 catch (Exception e)
@@ -40,7 +40,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.UIntToBytes(TargetIP, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(TargetIP, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)((TargetPort >> 8) % 256);
                 bytes[i[0]++] = (byte)(TargetPort % 256);
             }

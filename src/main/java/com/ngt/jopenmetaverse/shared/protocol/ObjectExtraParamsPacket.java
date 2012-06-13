@@ -49,10 +49,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
         /// <exclude/>
         public final class ObjectDataBlock extends PacketBlock
         {
-            public uint ObjectLocalID;
+            public long ObjectLocalID;
             public ushort ParamType;
-            public bool ParamInUse;
-            public uint ParamSize;
+            public boolean ParamInUse;
+            public long ParamSize;
             public byte[] ParamData;
 
             @Override
@@ -77,10 +77,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    ObjectLocalID = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    ObjectLocalID = Utils.bytesToUInt(bytes); i[0] += 4;
                     ParamType = (ushort)(bytes[i[0]++] + (bytes[i[0]++] << 8));
-                    ParamInUse = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
-                    ParamSize = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    ParamInUse = (bytes[i[0]++] != 0) ? true : false;
+                    ParamSize = Utils.bytesToUInt(bytes); i[0] += 4;
                     length = bytes[i[0]++];
                     ParamData = new byte[length];
                     Utils.arraycopy(bytes, i[0], ParamData, 0, length); i[0] +=  length;
@@ -94,11 +94,11 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.UIntToBytes(ObjectLocalID, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(ObjectLocalID, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)(ParamType % 256);
                 bytes[i[0]++] = (byte)((ParamType >> 8) % 256);
                 bytes[i[0]++] = (byte)((ParamInUse) ? 1 : 0);
-                Utils.UIntToBytes(ParamSize, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(ParamSize, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)ParamData.length;
                 Utils.arraycopy(ParamData, 0, bytes, i[0], ParamData.length); i[0] +=  ParamData.length;
             }

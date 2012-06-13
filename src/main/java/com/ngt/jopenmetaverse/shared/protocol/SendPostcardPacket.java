@@ -15,8 +15,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             public byte[] Name;
             public byte[] Subject;
             public byte[] Msg;
-            public bool AllowPublish;
-            public bool MaturePublish;
+            public boolean AllowPublish;
+            public boolean MaturePublish;
 
             @Override
 			public int getLength()
@@ -63,8 +63,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
                     Msg = new byte[length];
                     Utils.arraycopy(bytes, i[0], Msg, 0, length); i[0] +=  length;
-                    AllowPublish = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
-                    MaturePublish = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
+                    AllowPublish = (bytes[i[0]++] != 0) ? true : false;
+                    MaturePublish = (bytes[i[0]++] != 0) ? true : false;
                 }
                 catch (Exception e)
                 {

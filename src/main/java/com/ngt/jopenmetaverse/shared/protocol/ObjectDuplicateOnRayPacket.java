@@ -11,12 +11,12 @@ package com.ngt.jopenmetaverse.shared.protocol;
             public UUID GroupID;
             public Vector3 RayStart;
             public Vector3 RayEnd;
-            public bool BypassRaycast;
-            public bool RayEndIsIntersection;
-            public bool CopyCenters;
-            public bool CopyRotates;
+            public boolean BypassRaycast;
+            public boolean RayEndIsIntersection;
+            public boolean CopyCenters;
+            public boolean CopyRotates;
             public UUID RayTargetID;
-            public uint DuplicateFlags;
+            public long DuplicateFlags;
 
             @Override
 			public int getLength()
@@ -42,12 +42,12 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     GroupID.FromBytes(bytes, i[0]); i[0] += 16;
                     RayStart.FromBytes(bytes, i[0]); i[0] += 12;
                     RayEnd.FromBytes(bytes, i[0]); i[0] += 12;
-                    BypassRaycast = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
-                    RayEndIsIntersection = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
-                    CopyCenters = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
-                    CopyRotates = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
+                    BypassRaycast = (bytes[i[0]++] != 0) ? true : false;
+                    RayEndIsIntersection = (bytes[i[0]++] != 0) ? true : false;
+                    CopyCenters = (bytes[i[0]++] != 0) ? true : false;
+                    CopyRotates = (bytes[i[0]++] != 0) ? true : false;
                     RayTargetID.FromBytes(bytes, i[0]); i[0] += 16;
-                    DuplicateFlags = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    DuplicateFlags = Utils.bytesToUInt(bytes); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -68,7 +68,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 bytes[i[0]++] = (byte)((CopyCenters) ? 1 : 0);
                 bytes[i[0]++] = (byte)((CopyRotates) ? 1 : 0);
                 RayTargetID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.UIntToBytes(DuplicateFlags, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(DuplicateFlags, bytes, i[0]); i[0] += 4;
             }
 
         }
@@ -76,7 +76,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         /// <exclude/>
         public final class ObjectDataBlock extends PacketBlock
         {
-            public uint ObjectLocalID;
+            public long ObjectLocalID;
 
             @Override
 			public int getLength()
@@ -97,7 +97,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    ObjectLocalID = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    ObjectLocalID = Utils.bytesToUInt(bytes); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -108,7 +108,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.UIntToBytes(ObjectLocalID, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(ObjectLocalID, bytes, i[0]); i[0] += 4;
             }
 
         }

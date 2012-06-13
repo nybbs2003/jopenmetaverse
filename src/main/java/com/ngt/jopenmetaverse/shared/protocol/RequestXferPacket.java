@@ -9,8 +9,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             public BigInteger ID;
             public byte[] Filename;
             public byte FilePath;
-            public bool DeleteOnCompletion;
-            public bool UseBigPackets;
+            public boolean DeleteOnCompletion;
+            public boolean UseBigPackets;
             public UUID VFileID;
             public short VFileType;
 
@@ -36,13 +36,13 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    ID = new BigInteger(bytes);
+                    ID = Utils.bytesToULong(bytes, i[0]); i[0] += 8;
                     length = bytes[i[0]++];
                     Filename = new byte[length];
                     Utils.arraycopy(bytes, i[0], Filename, 0, length); i[0] +=  length;
                     FilePath = (byte)bytes[i[0]++];
-                    DeleteOnCompletion = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
-                    UseBigPackets = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
+                    DeleteOnCompletion = (bytes[i[0]++] != 0) ? true : false;
+                    UseBigPackets = (bytes[i[0]++] != 0) ? true : false;
                     VFileID.FromBytes(bytes, i[0]); i[0] += 16;
                     VFileType = (short)(bytes[i[0]++] + (bytes[i[0]++] << 8));
                 }

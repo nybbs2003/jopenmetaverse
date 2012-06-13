@@ -28,7 +28,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    RegionHandle = new BigInteger(bytes);
+                    RegionHandle = Utils.bytesToULong(bytes, i[0]); i[0] += 8;
                     TimeDilation = (ushort)(bytes[i[0]++] + (bytes[i[0]++] << 8));
                 }
                 catch (Exception e)
@@ -50,9 +50,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
         /// <exclude/>
         public final class ObjectDataBlock extends PacketBlock
         {
-            public uint ID;
-            public uint CRC;
-            public uint UpdateFlags;
+            public long ID;
+            public long CRC;
+            public long UpdateFlags;
 
             @Override
 			public int getLength()
@@ -73,9 +73,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    ID = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    CRC = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    UpdateFlags = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    ID = Utils.bytesToUInt(bytes); i[0] += 4;
+                    CRC = Utils.bytesToUInt(bytes); i[0] += 4;
+                    UpdateFlags = Utils.bytesToUInt(bytes); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -86,9 +86,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.UIntToBytes(ID, bytes, i[0]); i[0] += 4;
-                Utils.UIntToBytes(CRC, bytes, i[0]); i[0] += 4;
-                Utils.UIntToBytes(UpdateFlags, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(ID, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(CRC, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(UpdateFlags, bytes, i[0]); i[0] += 4;
             }
 
         }

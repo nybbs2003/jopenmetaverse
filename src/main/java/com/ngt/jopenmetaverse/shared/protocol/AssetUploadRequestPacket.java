@@ -8,8 +8,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             public UUID TransactionID;
             public sbyte Type;
-            public bool Tempfile;
-            public bool StoreLocal;
+            public boolean Tempfile;
+            public boolean StoreLocal;
             public byte[] AssetData;
 
             @Override
@@ -36,8 +36,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 {
                     TransactionID.FromBytes(bytes, i[0]); i[0] += 16;
                     Type = (sbyte)bytes[i[0]++];
-                    Tempfile = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
-                    StoreLocal = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
+                    Tempfile = (bytes[i[0]++] != 0) ? true : false;
+                    StoreLocal = (bytes[i[0]++] != 0) ? true : false;
                     length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
                     AssetData = new byte[length];
                     Utils.arraycopy(bytes, i[0], AssetData, 0, length); i[0] +=  length;

@@ -7,13 +7,13 @@ package com.ngt.jopenmetaverse.shared.protocol;
         public final class InfoBlock extends PacketBlock
         {
             public UUID AgentID;
-            public uint LocationID;
-            public uint SimIP;
+            public long LocationID;
+            public long SimIP;
             public ushort SimPort;
             public BigInteger RegionHandle;
             public byte[] SeedCapability;
             public byte SimAccess;
-            public uint TeleportFlags;
+            public long TeleportFlags;
 
             @Override
 			public int getLength()
@@ -38,15 +38,15 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     AgentID.FromBytes(bytes, i[0]); i[0] += 16;
-                    LocationID = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    SimIP = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    LocationID = Utils.bytesToUInt(bytes); i[0] += 4;
+                    SimIP = Utils.bytesToUInt(bytes); i[0] += 4;
                     SimPort = (ushort)((bytes[i[0]++] << 8) + bytes[i[0]++]);
-                    RegionHandle = new BigInteger(bytes);
+                    RegionHandle = Utils.bytesToULong(bytes, i[0]); i[0] += 8;
                     length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
                     SeedCapability = new byte[length];
                     Utils.arraycopy(bytes, i[0], SeedCapability, 0, length); i[0] +=  length;
                     SimAccess = (byte)bytes[i[0]++];
-                    TeleportFlags = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    TeleportFlags = Utils.bytesToUInt(bytes); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -58,8 +58,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.UIntToBytes(LocationID, bytes, i[0]); i[0] += 4;
-                Utils.UIntToBytes(SimIP, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(LocationID, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(SimIP, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)((SimPort >> 8) % 256);
                 bytes[i[0]++] = (byte)(SimPort % 256);
                 Utils.ulongToBytes(RegionHandle, bytes, i[0]); i[0] += 8;
@@ -67,7 +67,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 bytes[i[0]++] = (byte)((SeedCapability.length >> 8) % 256);
                 Utils.arraycopy(SeedCapability, 0, bytes, i[0], SeedCapability.length); i[0] +=  SeedCapability.length;
                 bytes[i[0]++] = SimAccess;
-                Utils.UIntToBytes(TeleportFlags, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(TeleportFlags, bytes, i[0]); i[0] += 4;
             }
 
         }

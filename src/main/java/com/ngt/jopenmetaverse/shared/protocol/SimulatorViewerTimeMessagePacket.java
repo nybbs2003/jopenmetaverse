@@ -7,8 +7,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
         public final class TimeInfoBlock extends PacketBlock
         {
             public BigInteger UsecSinceStart;
-            public uint SecPerDay;
-            public uint SecPerYear;
+            public long SecPerDay;
+            public long SecPerYear;
             public Vector3 SunDirection;
             public float SunPhase;
             public Vector3 SunAngVelocity;
@@ -32,11 +32,11 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    UsecSinceStart = new BigInteger(bytes);
-                    SecPerDay = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    SecPerYear = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    UsecSinceStart = Utils.bytesToULong(bytes, i[0]); i[0] += 8;
+                    SecPerDay = Utils.bytesToUInt(bytes); i[0] += 4;
+                    SecPerYear = Utils.bytesToUInt(bytes); i[0] += 4;
                     SunDirection.FromBytes(bytes, i[0]); i[0] += 12;
-                    SunPhase = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
+                    SunPhase = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
                     SunAngVelocity.FromBytes(bytes, i[0]); i[0] += 12;
                 }
                 catch (Exception e)
@@ -49,10 +49,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 Utils.ulongToBytes(UsecSinceStart, bytes, i[0]); i[0] += 8;
-                Utils.UIntToBytes(SecPerDay, bytes, i[0]); i[0] += 4;
-                Utils.UIntToBytes(SecPerYear, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(SecPerDay, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(SecPerYear, bytes, i[0]); i[0] += 4;
                 SunDirection.ToBytes(bytes, i[0]); i[0] += 12;
-                Utils.FloatToBytes(SunPhase, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytes(SunPhase, bytes, i[0]); i[0] += 4;
                 SunAngVelocity.ToBytes(bytes, i[0]); i[0] += 12;
             }
 

@@ -53,8 +53,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             public UUID FLImageID;
             public byte[] AboutText;
             public byte[] FLAboutText;
-            public bool AllowPublish;
-            public bool MaturePublish;
+            public boolean AllowPublish;
+            public boolean MaturePublish;
             public byte[] ProfileURL;
 
             @Override
@@ -89,8 +89,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     length = bytes[i[0]++];
                     FLAboutText = new byte[length];
                     Utils.arraycopy(bytes, i[0], FLAboutText, 0, length); i[0] +=  length;
-                    AllowPublish = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
-                    MaturePublish = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
+                    AllowPublish = (bytes[i[0]++] != 0) ? true : false;
+                    MaturePublish = (bytes[i[0]++] != 0) ? true : false;
                     length = bytes[i[0]++];
                     ProfileURL = new byte[length];
                     Utils.arraycopy(bytes, i[0], ProfileURL, 0, length); i[0] +=  length;

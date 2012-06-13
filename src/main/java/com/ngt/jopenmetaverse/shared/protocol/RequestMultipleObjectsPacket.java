@@ -50,7 +50,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         public final class ObjectDataBlock extends PacketBlock
         {
             public byte CacheMissType;
-            public uint ID;
+            public long ID;
 
             @Override
 			public int getLength()
@@ -72,7 +72,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     CacheMissType = (byte)bytes[i[0]++];
-                    ID = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    ID = Utils.bytesToUInt(bytes); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -84,7 +84,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 bytes[i[0]++] = CacheMissType;
-                Utils.UIntToBytes(ID, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(ID, bytes, i[0]); i[0] += 4;
             }
 
         }

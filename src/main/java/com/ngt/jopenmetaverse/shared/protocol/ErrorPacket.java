@@ -102,7 +102,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.IntToBytes(Code, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(Code, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)Token.length;
                 Utils.arraycopy(Token, 0, bytes, i[0], Token.length); i[0] +=  Token.length;
                 ID.ToBytes(bytes, i[0]); i[0] += 16;

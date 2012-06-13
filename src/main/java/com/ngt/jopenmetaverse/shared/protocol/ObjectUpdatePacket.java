@@ -28,7 +28,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    RegionHandle = new BigInteger(bytes);
+                    RegionHandle = Utils.bytesToULong(bytes, i[0]); i[0] += 8;
                     TimeDilation = (ushort)(bytes[i[0]++] + (bytes[i[0]++] << 8));
                 }
                 catch (Exception e)
@@ -50,17 +50,17 @@ package com.ngt.jopenmetaverse.shared.protocol;
         /// <exclude/>
         public final class ObjectDataBlock extends PacketBlock
         {
-            public uint ID;
+            public long ID;
             public byte State;
             public UUID FullID;
-            public uint CRC;
+            public long CRC;
             public byte PCode;
             public byte Material;
             public byte ClickAction;
             public Vector3 Scale;
             public byte[] ObjectData;
-            public uint ParentID;
-            public uint UpdateFlags;
+            public long ParentID;
+            public long UpdateFlags;
             public byte PathCurve;
             public byte ProfileCurve;
             public ushort PathBegin;
@@ -127,10 +127,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    ID = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    ID = Utils.bytesToUInt(bytes); i[0] += 4;
                     State = (byte)bytes[i[0]++];
                     FullID.FromBytes(bytes, i[0]); i[0] += 16;
-                    CRC = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    CRC = Utils.bytesToUInt(bytes); i[0] += 4;
                     PCode = (byte)bytes[i[0]++];
                     Material = (byte)bytes[i[0]++];
                     ClickAction = (byte)bytes[i[0]++];
@@ -138,8 +138,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     length = bytes[i[0]++];
                     ObjectData = new byte[length];
                     Utils.arraycopy(bytes, i[0], ObjectData, 0, length); i[0] +=  length;
-                    ParentID = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    UpdateFlags = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    ParentID = Utils.bytesToUInt(bytes); i[0] += 4;
+                    UpdateFlags = Utils.bytesToUInt(bytes); i[0] += 4;
                     PathCurve = (byte)bytes[i[0]++];
                     ProfileCurve = (byte)bytes[i[0]++];
                     PathBegin = (ushort)(bytes[i[0]++] + (bytes[i[0]++] << 8));
@@ -186,9 +186,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     Utils.arraycopy(bytes, i[0], ExtraParams, 0, length); i[0] +=  length;
                     Sound.FromBytes(bytes, i[0]); i[0] += 16;
                     OwnerID.FromBytes(bytes, i[0]); i[0] += 16;
-                    Gain = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
+                    Gain = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
                     Flags = (byte)bytes[i[0]++];
-                    Radius = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
+                    Radius = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
                     JointType = (byte)bytes[i[0]++];
                     JointPivot.FromBytes(bytes, i[0]); i[0] += 12;
                     JointAxisOrAnchor.FromBytes(bytes, i[0]); i[0] += 12;
@@ -202,18 +202,18 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.UIntToBytes(ID, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(ID, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = State;
                 FullID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.UIntToBytes(CRC, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(CRC, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = PCode;
                 bytes[i[0]++] = Material;
                 bytes[i[0]++] = ClickAction;
                 Scale.ToBytes(bytes, i[0]); i[0] += 12;
                 bytes[i[0]++] = (byte)ObjectData.length;
                 Utils.arraycopy(ObjectData, 0, bytes, i[0], ObjectData.length); i[0] +=  ObjectData.length;
-                Utils.UIntToBytes(ParentID, bytes, i[0]); i[0] += 4;
-                Utils.UIntToBytes(UpdateFlags, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(ParentID, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(UpdateFlags, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = PathCurve;
                 bytes[i[0]++] = ProfileCurve;
                 bytes[i[0]++] = (byte)(PathBegin % 256);
@@ -259,9 +259,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 Utils.arraycopy(ExtraParams, 0, bytes, i[0], ExtraParams.length); i[0] +=  ExtraParams.length;
                 Sound.ToBytes(bytes, i[0]); i[0] += 16;
                 OwnerID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.FloatToBytes(Gain, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytes(Gain, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = Flags;
-                Utils.FloatToBytes(Radius, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytes(Radius, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = JointType;
                 JointPivot.ToBytes(bytes, i[0]); i[0] += 12;
                 JointAxisOrAnchor.ToBytes(bytes, i[0]); i[0] += 12;

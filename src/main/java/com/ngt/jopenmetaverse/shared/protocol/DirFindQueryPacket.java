@@ -51,7 +51,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             public UUID QueryID;
             public byte[] QueryText;
-            public uint QueryFlags;
+            public long QueryFlags;
             public int QueryStart;
 
             @Override
@@ -80,7 +80,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     length = bytes[i[0]++];
                     QueryText = new byte[length];
                     Utils.arraycopy(bytes, i[0], QueryText, 0, length); i[0] +=  length;
-                    QueryFlags = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    QueryFlags = Utils.bytesToUInt(bytes); i[0] += 4;
                     QueryStart = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                 }
                 catch (Exception e)
@@ -95,8 +95,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 QueryID.ToBytes(bytes, i[0]); i[0] += 16;
                 bytes[i[0]++] = (byte)QueryText.length;
                 Utils.arraycopy(QueryText, 0, bytes, i[0], QueryText.length); i[0] +=  QueryText.length;
-                Utils.UIntToBytes(QueryFlags, bytes, i[0]); i[0] += 4;
-                Utils.IntToBytes(QueryStart, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(QueryFlags, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(QueryStart, bytes, i[0]); i[0] += 4;
             }
 
         }

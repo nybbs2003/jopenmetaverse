@@ -8,7 +8,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             public UUID AgentID;
             public UUID SessionID;
-            public uint CircuitCode;
+            public long CircuitCode;
 
             @Override
 			public int getLength()
@@ -31,7 +31,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 {
                     AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
-                    CircuitCode = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    CircuitCode = Utils.bytesToUInt(bytes); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -44,7 +44,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
                 SessionID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.UIntToBytes(CircuitCode, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(CircuitCode, bytes, i[0]); i[0] += 4;
             }
 
         }
@@ -52,7 +52,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         /// <exclude/>
         public final class ThrottleBlock extends PacketBlock
         {
-            public uint GenCounter;
+            public long GenCounter;
             public byte[] Throttles;
 
             @Override
@@ -77,7 +77,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    GenCounter = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    GenCounter = Utils.bytesToUInt(bytes); i[0] += 4;
                     length = bytes[i[0]++];
                     Throttles = new byte[length];
                     Utils.arraycopy(bytes, i[0], Throttles, 0, length); i[0] +=  length;
@@ -91,7 +91,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.UIntToBytes(GenCounter, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(GenCounter, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)Throttles.length;
                 Utils.arraycopy(Throttles, 0, bytes, i[0], Throttles.length); i[0] +=  Throttles.length;
             }

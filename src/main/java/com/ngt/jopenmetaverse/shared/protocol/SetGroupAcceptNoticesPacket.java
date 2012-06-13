@@ -50,7 +50,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         public final class DataBlock extends PacketBlock
         {
             public UUID GroupID;
-            public bool AcceptNotices;
+            public boolean AcceptNotices;
 
             @Override
 			public int getLength()
@@ -72,7 +72,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     GroupID.FromBytes(bytes, i[0]); i[0] += 16;
-                    AcceptNotices = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
+                    AcceptNotices = (bytes[i[0]++] != 0) ? true : false;
                 }
                 catch (Exception e)
                 {
@@ -92,7 +92,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         /// <exclude/>
         public final class NewDataBlock extends PacketBlock
         {
-            public bool ListInProfile;
+            public boolean ListInProfile;
 
             @Override
 			public int getLength()
@@ -113,7 +113,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    ListInProfile = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
+                    ListInProfile = (bytes[i[0]++] != 0) ? true : false;
                 }
                 catch (Exception e)
                 {

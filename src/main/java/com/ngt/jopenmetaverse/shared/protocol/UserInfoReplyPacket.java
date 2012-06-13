@@ -46,7 +46,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         /// <exclude/>
         public final class UserDataBlock extends PacketBlock
         {
-            public bool IMViaEMail;
+            public boolean IMViaEMail;
             public byte[] DirectoryVisibility;
             public byte[] EMail;
 
@@ -73,7 +73,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    IMViaEMail = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
+                    IMViaEMail = (bytes[i[0]++] != 0) ? true : false;
                     length = bytes[i[0]++];
                     DirectoryVisibility = new byte[length];
                     Utils.arraycopy(bytes, i[0], DirectoryVisibility, 0, length); i[0] +=  length;

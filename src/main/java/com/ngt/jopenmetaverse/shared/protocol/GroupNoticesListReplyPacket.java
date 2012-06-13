@@ -50,10 +50,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
         public final class DataBlock extends PacketBlock
         {
             public UUID NoticeID;
-            public uint Timestamp;
+            public long Timestamp;
             public byte[] FromName;
             public byte[] Subject;
-            public bool HasAttachment;
+            public boolean HasAttachment;
             public byte AssetType;
 
             @Override
@@ -80,14 +80,14 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     NoticeID.FromBytes(bytes, i[0]); i[0] += 16;
-                    Timestamp = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    Timestamp = Utils.bytesToUInt(bytes); i[0] += 4;
                     length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
                     FromName = new byte[length];
                     Utils.arraycopy(bytes, i[0], FromName, 0, length); i[0] +=  length;
                     length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
                     Subject = new byte[length];
                     Utils.arraycopy(bytes, i[0], Subject, 0, length); i[0] +=  length;
-                    HasAttachment = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
+                    HasAttachment = (bytes[i[0]++] != 0) ? true : false;
                     AssetType = (byte)bytes[i[0]++];
                 }
                 catch (Exception e)
@@ -100,7 +100,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 NoticeID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.UIntToBytes(Timestamp, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(Timestamp, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)(FromName.length % 256);
                 bytes[i[0]++] = (byte)((FromName.length >> 8) % 256);
                 Utils.arraycopy(FromName, 0, bytes, i[0], FromName.length); i[0] +=  FromName.length;

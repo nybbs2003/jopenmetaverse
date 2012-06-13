@@ -49,7 +49,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         /// <exclude/>
         public final class InventoryDataBlock extends PacketBlock
         {
-            public uint LocalID;
+            public long LocalID;
             public UUID ItemID;
 
             @Override
@@ -71,7 +71,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    LocalID = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    LocalID = Utils.bytesToUInt(bytes); i[0] += 4;
                     ItemID.FromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)
@@ -83,7 +83,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.UIntToBytes(LocalID, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(LocalID, bytes, i[0]); i[0] += 4;
                 ItemID.ToBytes(bytes, i[0]); i[0] += 16;
             }
 

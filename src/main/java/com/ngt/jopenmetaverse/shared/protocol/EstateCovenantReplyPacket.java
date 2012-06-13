@@ -7,7 +7,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         public final class DataBlock extends PacketBlock
         {
             public UUID CovenantID;
-            public uint CovenantTimestamp;
+            public long CovenantTimestamp;
             public byte[] EstateName;
             public UUID EstateOwnerID;
 
@@ -34,7 +34,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     CovenantID.FromBytes(bytes, i[0]); i[0] += 16;
-                    CovenantTimestamp = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    CovenantTimestamp = Utils.bytesToUInt(bytes); i[0] += 4;
                     length = bytes[i[0]++];
                     EstateName = new byte[length];
                     Utils.arraycopy(bytes, i[0], EstateName, 0, length); i[0] +=  length;
@@ -50,7 +50,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 CovenantID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.UIntToBytes(CovenantTimestamp, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(CovenantTimestamp, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)EstateName.length;
                 Utils.arraycopy(EstateName, 0, bytes, i[0], EstateName.length); i[0] +=  EstateName.length;
                 EstateOwnerID.ToBytes(bytes, i[0]); i[0] += 16;

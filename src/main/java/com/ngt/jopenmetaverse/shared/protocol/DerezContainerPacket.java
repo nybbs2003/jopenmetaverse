@@ -7,7 +7,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         public final class DataBlock extends PacketBlock
         {
             public UUID ObjectID;
-            public bool Delete;
+            public boolean Delete;
 
             @Override
 			public int getLength()
@@ -29,7 +29,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     ObjectID.FromBytes(bytes, i[0]); i[0] += 16;
-                    Delete = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
+                    Delete = (bytes[i[0]++] != 0) ? true : false;
                 }
                 catch (Exception e)
                 {

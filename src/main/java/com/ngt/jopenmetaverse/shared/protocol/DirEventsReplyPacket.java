@@ -88,10 +88,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             public UUID OwnerID;
             public byte[] Name;
-            public uint EventID;
+            public long EventID;
             public byte[] Date;
-            public uint UnixTime;
-            public uint EventFlags;
+            public long UnixTime;
+            public long EventFlags;
 
             @Override
 			public int getLength()
@@ -120,12 +120,12 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     length = bytes[i[0]++];
                     Name = new byte[length];
                     Utils.arraycopy(bytes, i[0], Name, 0, length); i[0] +=  length;
-                    EventID = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    EventID = Utils.bytesToUInt(bytes); i[0] += 4;
                     length = bytes[i[0]++];
                     Date = new byte[length];
                     Utils.arraycopy(bytes, i[0], Date, 0, length); i[0] +=  length;
-                    UnixTime = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    EventFlags = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    UnixTime = Utils.bytesToUInt(bytes); i[0] += 4;
+                    EventFlags = Utils.bytesToUInt(bytes); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -139,11 +139,11 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 OwnerID.ToBytes(bytes, i[0]); i[0] += 16;
                 bytes[i[0]++] = (byte)Name.length;
                 Utils.arraycopy(Name, 0, bytes, i[0], Name.length); i[0] +=  Name.length;
-                Utils.UIntToBytes(EventID, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(EventID, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)Date.length;
                 Utils.arraycopy(Date, 0, bytes, i[0], Date.length); i[0] +=  Date.length;
-                Utils.UIntToBytes(UnixTime, bytes, i[0]); i[0] += 4;
-                Utils.UIntToBytes(EventFlags, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(UnixTime, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(EventFlags, bytes, i[0]); i[0] += 4;
             }
 
         }
@@ -151,7 +151,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         /// <exclude/>
         public final class StatusDataBlock extends PacketBlock
         {
-            public uint Status;
+            public long Status;
 
             @Override
 			public int getLength()
@@ -172,7 +172,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    Status = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    Status = Utils.bytesToUInt(bytes); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -183,7 +183,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.UIntToBytes(Status, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(Status, bytes, i[0]); i[0] += 4;
             }
 
         }

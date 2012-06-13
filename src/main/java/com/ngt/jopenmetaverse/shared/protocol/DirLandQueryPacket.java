@@ -50,8 +50,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
         public final class QueryDataBlock extends PacketBlock
         {
             public UUID QueryID;
-            public uint QueryFlags;
-            public uint SearchType;
+            public long QueryFlags;
+            public long SearchType;
             public int Price;
             public int Area;
             public int QueryStart;
@@ -76,8 +76,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     QueryID.FromBytes(bytes, i[0]); i[0] += 16;
-                    QueryFlags = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    SearchType = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    QueryFlags = Utils.bytesToUInt(bytes); i[0] += 4;
+                    SearchType = Utils.bytesToUInt(bytes); i[0] += 4;
                     Price = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     Area = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     QueryStart = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
@@ -92,11 +92,11 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 QueryID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.UIntToBytes(QueryFlags, bytes, i[0]); i[0] += 4;
-                Utils.UIntToBytes(SearchType, bytes, i[0]); i[0] += 4;
-                Utils.IntToBytes(Price, bytes, i[0]); i[0] += 4;
-                Utils.IntToBytes(Area, bytes, i[0]); i[0] += 4;
-                Utils.IntToBytes(QueryStart, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(QueryFlags, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(SearchType, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(Price, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(Area, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(QueryStart, bytes, i[0]); i[0] += 4;
             }
 
         }

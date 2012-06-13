@@ -54,7 +54,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             public byte[] Title;
             public UUID RoleID;
-            public bool Selected;
+            public boolean Selected;
 
             @Override
 			public int getLength()
@@ -82,7 +82,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     Title = new byte[length];
                     Utils.arraycopy(bytes, i[0], Title, 0, length); i[0] +=  length;
                     RoleID.FromBytes(bytes, i[0]); i[0] += 16;
-                    Selected = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
+                    Selected = (bytes[i[0]++] != 0) ? true : false;
                 }
                 catch (Exception e)
                 {

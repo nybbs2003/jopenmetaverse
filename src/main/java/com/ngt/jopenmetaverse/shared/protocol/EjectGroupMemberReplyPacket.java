@@ -86,7 +86,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         /// <exclude/>
         public final class EjectDataBlock extends PacketBlock
         {
-            public bool Success;
+            public boolean Success;
 
             @Override
 			public int getLength()
@@ -107,7 +107,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    Success = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
+                    Success = (bytes[i[0]++] != 0) ? true : false;
                 }
                 catch (Exception e)
                 {

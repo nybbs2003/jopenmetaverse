@@ -50,7 +50,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         public final class StartLocationDataBlock extends PacketBlock
         {
             public byte[] SimName;
-            public uint LocationID;
+            public long LocationID;
             public Vector3 LocationPos;
             public Vector3 LocationLookAt;
 
@@ -79,7 +79,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     length = bytes[i[0]++];
                     SimName = new byte[length];
                     Utils.arraycopy(bytes, i[0], SimName, 0, length); i[0] +=  length;
-                    LocationID = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    LocationID = Utils.bytesToUInt(bytes); i[0] += 4;
                     LocationPos.FromBytes(bytes, i[0]); i[0] += 12;
                     LocationLookAt.FromBytes(bytes, i[0]); i[0] += 12;
                 }
@@ -94,7 +94,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 bytes[i[0]++] = (byte)SimName.length;
                 Utils.arraycopy(SimName, 0, bytes, i[0], SimName.length); i[0] +=  SimName.length;
-                Utils.UIntToBytes(LocationID, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(LocationID, bytes, i[0]); i[0] += 4;
                 LocationPos.ToBytes(bytes, i[0]); i[0] += 12;
                 LocationLookAt.ToBytes(bytes, i[0]); i[0] += 12;
             }

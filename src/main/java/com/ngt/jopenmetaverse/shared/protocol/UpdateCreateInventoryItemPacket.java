@@ -7,7 +7,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         public final class AgentDataBlock extends PacketBlock
         {
             public UUID AgentID;
-            public bool SimApproved;
+            public boolean SimApproved;
             public UUID TransactionID;
 
             @Override
@@ -30,7 +30,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     AgentID.FromBytes(bytes, i[0]); i[0] += 16;
-                    SimApproved = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
+                    SimApproved = (bytes[i[0]++] != 0) ? true : false;
                     TransactionID.FromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)
@@ -54,26 +54,26 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             public UUID ItemID;
             public UUID FolderID;
-            public uint CallbackID;
+            public long CallbackID;
             public UUID CreatorID;
             public UUID OwnerID;
             public UUID GroupID;
-            public uint BaseMask;
-            public uint OwnerMask;
-            public uint GroupMask;
-            public uint EveryoneMask;
-            public uint NextOwnerMask;
-            public bool GroupOwned;
+            public long BaseMask;
+            public long OwnerMask;
+            public long GroupMask;
+            public long EveryoneMask;
+            public long NextOwnerMask;
+            public boolean GroupOwned;
             public UUID AssetID;
             public sbyte Type;
             public sbyte InvType;
-            public uint Flags;
+            public long Flags;
             public byte SaleType;
             public int SalePrice;
             public byte[] Name;
             public byte[] Description;
             public int CreationDate;
-            public uint CRC;
+            public long CRC;
 
             @Override
 			public int getLength()
@@ -100,20 +100,20 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 {
                     ItemID.FromBytes(bytes, i[0]); i[0] += 16;
                     FolderID.FromBytes(bytes, i[0]); i[0] += 16;
-                    CallbackID = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    CallbackID = Utils.bytesToUInt(bytes); i[0] += 4;
                     CreatorID.FromBytes(bytes, i[0]); i[0] += 16;
                     OwnerID.FromBytes(bytes, i[0]); i[0] += 16;
                     GroupID.FromBytes(bytes, i[0]); i[0] += 16;
-                    BaseMask = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    OwnerMask = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    GroupMask = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    EveryoneMask = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    NextOwnerMask = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    GroupOwned = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
+                    BaseMask = Utils.bytesToUInt(bytes); i[0] += 4;
+                    OwnerMask = Utils.bytesToUInt(bytes); i[0] += 4;
+                    GroupMask = Utils.bytesToUInt(bytes); i[0] += 4;
+                    EveryoneMask = Utils.bytesToUInt(bytes); i[0] += 4;
+                    NextOwnerMask = Utils.bytesToUInt(bytes); i[0] += 4;
+                    GroupOwned = (bytes[i[0]++] != 0) ? true : false;
                     AssetID.FromBytes(bytes, i[0]); i[0] += 16;
                     Type = (sbyte)bytes[i[0]++];
                     InvType = (sbyte)bytes[i[0]++];
-                    Flags = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    Flags = Utils.bytesToUInt(bytes); i[0] += 4;
                     SaleType = (byte)bytes[i[0]++];
                     SalePrice = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     length = bytes[i[0]++];
@@ -123,7 +123,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     Description = new byte[length];
                     Utils.arraycopy(bytes, i[0], Description, 0, length); i[0] +=  length;
                     CreationDate = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    CRC = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    CRC = Utils.bytesToUInt(bytes); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -136,28 +136,28 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 ItemID.ToBytes(bytes, i[0]); i[0] += 16;
                 FolderID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.UIntToBytes(CallbackID, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(CallbackID, bytes, i[0]); i[0] += 4;
                 CreatorID.ToBytes(bytes, i[0]); i[0] += 16;
                 OwnerID.ToBytes(bytes, i[0]); i[0] += 16;
                 GroupID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.UIntToBytes(BaseMask, bytes, i[0]); i[0] += 4;
-                Utils.UIntToBytes(OwnerMask, bytes, i[0]); i[0] += 4;
-                Utils.UIntToBytes(GroupMask, bytes, i[0]); i[0] += 4;
-                Utils.UIntToBytes(EveryoneMask, bytes, i[0]); i[0] += 4;
-                Utils.UIntToBytes(NextOwnerMask, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(BaseMask, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(OwnerMask, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(GroupMask, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(EveryoneMask, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(NextOwnerMask, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)((GroupOwned) ? 1 : 0);
                 AssetID.ToBytes(bytes, i[0]); i[0] += 16;
                 bytes[i[0]++] = (byte)Type;
                 bytes[i[0]++] = (byte)InvType;
-                Utils.UIntToBytes(Flags, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(Flags, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = SaleType;
-                Utils.IntToBytes(SalePrice, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(SalePrice, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)Name.length;
                 Utils.arraycopy(Name, 0, bytes, i[0], Name.length); i[0] +=  Name.length;
                 bytes[i[0]++] = (byte)Description.length;
                 Utils.arraycopy(Description, 0, bytes, i[0], Description.length); i[0] +=  Description.length;
-                Utils.IntToBytes(CreationDate, bytes, i[0]); i[0] += 4;
-                Utils.UIntToBytes(CRC, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(CreationDate, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(CRC, bytes, i[0]); i[0] += 4;
             }
 
         }

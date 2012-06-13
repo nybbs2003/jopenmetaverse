@@ -49,7 +49,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         /// <exclude/>
         public final class ObjectDataBlock extends PacketBlock
         {
-            public uint LocalID;
+            public long LocalID;
             public Vector3 GrabOffset;
 
             @Override
@@ -71,7 +71,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    LocalID = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    LocalID = Utils.bytesToUInt(bytes); i[0] += 4;
                     GrabOffset.FromBytes(bytes, i[0]); i[0] += 12;
                 }
                 catch (Exception e)
@@ -83,7 +83,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.UIntToBytes(LocalID, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(LocalID, bytes, i[0]); i[0] += 4;
                 GrabOffset.ToBytes(bytes, i[0]); i[0] += 12;
             }
 
@@ -136,7 +136,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 UVCoord.ToBytes(bytes, i[0]); i[0] += 12;
                 STCoord.ToBytes(bytes, i[0]); i[0] += 12;
-                Utils.IntToBytes(FaceIndex, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(FaceIndex, bytes, i[0]); i[0] += 4;
                 Position.ToBytes(bytes, i[0]); i[0] += 12;
                 Normal.ToBytes(bytes, i[0]); i[0] += 12;
                 Binormal.ToBytes(bytes, i[0]); i[0] += 12;

@@ -7,7 +7,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         public final class SenderBlock extends PacketBlock
         {
             public UUID ID;
-            public bool IsTrial;
+            public boolean IsTrial;
 
             @Override
 			public int getLength()
@@ -29,7 +29,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     ID.FromBytes(bytes, i[0]); i[0] += 16;
-                    IsTrial = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
+                    IsTrial = (bytes[i[0]++] != 0) ? true : false;
                 }
                 catch (Exception e)
                 {

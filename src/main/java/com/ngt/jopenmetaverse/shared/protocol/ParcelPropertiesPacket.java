@@ -8,14 +8,14 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             public int RequestResult;
             public int SequenceID;
-            public bool SnapSelection;
+            public boolean SnapSelection;
             public int SelfCount;
             public int OtherCount;
             public int PublicCount;
             public int LocalID;
             public UUID OwnerID;
-            public bool IsGroupOwned;
-            public uint AuctionID;
+            public boolean IsGroupOwned;
+            public long AuctionID;
             public int ClaimDate;
             public int ClaimPrice;
             public int RentPrice;
@@ -34,7 +34,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             public int SelectedPrims;
             public float ParcelPrimBonus;
             public int OtherCleanTime;
-            public uint ParcelFlags;
+            public long ParcelFlags;
             public int SalePrice;
             public byte[] Name;
             public byte[] Desc;
@@ -51,10 +51,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
             public Vector3 UserLocation;
             public Vector3 UserLookAt;
             public byte LandingType;
-            public bool RegionPushOverride;
-            public bool RegionDenyAnonymous;
-            public bool RegionDenyIdentified;
-            public bool RegionDenyTransacted;
+            public boolean RegionPushOverride;
+            public boolean RegionDenyAnonymous;
+            public boolean RegionDenyIdentified;
+            public boolean RegionDenyTransacted;
 
             @Override
 			public int getLength()
@@ -84,14 +84,14 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 {
                     RequestResult = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     SequenceID = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    SnapSelection = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
+                    SnapSelection = (bytes[i[0]++] != 0) ? true : false;
                     SelfCount = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     OtherCount = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     PublicCount = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     LocalID = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     OwnerID.FromBytes(bytes, i[0]); i[0] += 16;
-                    IsGroupOwned = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
-                    AuctionID = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    IsGroupOwned = (bytes[i[0]++] != 0) ? true : false;
+                    AuctionID = Utils.bytesToUInt(bytes); i[0] += 4;
                     ClaimDate = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     ClaimPrice = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     RentPrice = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
@@ -110,9 +110,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     GroupPrims = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     OtherPrims = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     SelectedPrims = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    ParcelPrimBonus = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
+                    ParcelPrimBonus = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
                     OtherCleanTime = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    ParcelFlags = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    ParcelFlags = Utils.bytesToUInt(bytes); i[0] += 4;
                     SalePrice = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     length = bytes[i[0]++];
                     Name = new byte[length];
@@ -130,17 +130,17 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     MediaAutoScale = (byte)bytes[i[0]++];
                     GroupID.FromBytes(bytes, i[0]); i[0] += 16;
                     PassPrice = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    PassHours = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
+                    PassHours = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
                     Category = (byte)bytes[i[0]++];
                     AuthBuyerID.FromBytes(bytes, i[0]); i[0] += 16;
                     SnapshotID.FromBytes(bytes, i[0]); i[0] += 16;
                     UserLocation.FromBytes(bytes, i[0]); i[0] += 12;
                     UserLookAt.FromBytes(bytes, i[0]); i[0] += 12;
                     LandingType = (byte)bytes[i[0]++];
-                    RegionPushOverride = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
-                    RegionDenyAnonymous = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
-                    RegionDenyIdentified = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
-                    RegionDenyTransacted = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
+                    RegionPushOverride = (bytes[i[0]++] != 0) ? true : false;
+                    RegionDenyAnonymous = (bytes[i[0]++] != 0) ? true : false;
+                    RegionDenyIdentified = (bytes[i[0]++] != 0) ? true : false;
+                    RegionDenyTransacted = (bytes[i[0]++] != 0) ? true : false;
                 }
                 catch (Exception e)
                 {
@@ -151,38 +151,38 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.IntToBytes(RequestResult, bytes, i[0]); i[0] += 4;
-                Utils.IntToBytes(SequenceID, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(RequestResult, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(SequenceID, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)((SnapSelection) ? 1 : 0);
-                Utils.IntToBytes(SelfCount, bytes, i[0]); i[0] += 4;
-                Utils.IntToBytes(OtherCount, bytes, i[0]); i[0] += 4;
-                Utils.IntToBytes(PublicCount, bytes, i[0]); i[0] += 4;
-                Utils.IntToBytes(LocalID, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(SelfCount, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(OtherCount, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(PublicCount, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(LocalID, bytes, i[0]); i[0] += 4;
                 OwnerID.ToBytes(bytes, i[0]); i[0] += 16;
                 bytes[i[0]++] = (byte)((IsGroupOwned) ? 1 : 0);
-                Utils.UIntToBytes(AuctionID, bytes, i[0]); i[0] += 4;
-                Utils.IntToBytes(ClaimDate, bytes, i[0]); i[0] += 4;
-                Utils.IntToBytes(ClaimPrice, bytes, i[0]); i[0] += 4;
-                Utils.IntToBytes(RentPrice, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(AuctionID, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(ClaimDate, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(ClaimPrice, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(RentPrice, bytes, i[0]); i[0] += 4;
                 AABBMin.ToBytes(bytes, i[0]); i[0] += 12;
                 AABBMax.ToBytes(bytes, i[0]); i[0] += 12;
                 bytes[i[0]++] = (byte)(Bitmap.length % 256);
                 bytes[i[0]++] = (byte)((Bitmap.length >> 8) % 256);
                 Utils.arraycopy(Bitmap, 0, bytes, i[0], Bitmap.length); i[0] +=  Bitmap.length;
-                Utils.IntToBytes(Area, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(Area, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = Status;
-                Utils.IntToBytes(SimWideMaxPrims, bytes, i[0]); i[0] += 4;
-                Utils.IntToBytes(SimWideTotalPrims, bytes, i[0]); i[0] += 4;
-                Utils.IntToBytes(MaxPrims, bytes, i[0]); i[0] += 4;
-                Utils.IntToBytes(TotalPrims, bytes, i[0]); i[0] += 4;
-                Utils.IntToBytes(OwnerPrims, bytes, i[0]); i[0] += 4;
-                Utils.IntToBytes(GroupPrims, bytes, i[0]); i[0] += 4;
-                Utils.IntToBytes(OtherPrims, bytes, i[0]); i[0] += 4;
-                Utils.IntToBytes(SelectedPrims, bytes, i[0]); i[0] += 4;
-                Utils.FloatToBytes(ParcelPrimBonus, bytes, i[0]); i[0] += 4;
-                Utils.IntToBytes(OtherCleanTime, bytes, i[0]); i[0] += 4;
-                Utils.UIntToBytes(ParcelFlags, bytes, i[0]); i[0] += 4;
-                Utils.IntToBytes(SalePrice, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(SimWideMaxPrims, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(SimWideTotalPrims, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(MaxPrims, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(TotalPrims, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(OwnerPrims, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(GroupPrims, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(OtherPrims, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(SelectedPrims, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytes(ParcelPrimBonus, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(OtherCleanTime, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(ParcelFlags, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(SalePrice, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)Name.length;
                 Utils.arraycopy(Name, 0, bytes, i[0], Name.length); i[0] +=  Name.length;
                 bytes[i[0]++] = (byte)Desc.length;
@@ -194,8 +194,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 MediaID.ToBytes(bytes, i[0]); i[0] += 16;
                 bytes[i[0]++] = MediaAutoScale;
                 GroupID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.IntToBytes(PassPrice, bytes, i[0]); i[0] += 4;
-                Utils.FloatToBytes(PassHours, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(PassPrice, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytes(PassHours, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = Category;
                 AuthBuyerID.ToBytes(bytes, i[0]); i[0] += 16;
                 SnapshotID.ToBytes(bytes, i[0]); i[0] += 16;
@@ -213,7 +213,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         /// <exclude/>
         public final class AgeVerificationBlockBlock extends PacketBlock
         {
-            public bool RegionDenyAgeUnverified;
+            public boolean RegionDenyAgeUnverified;
 
             @Override
 			public int getLength()
@@ -234,7 +234,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    RegionDenyAgeUnverified = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
+                    RegionDenyAgeUnverified = (bytes[i[0]++] != 0) ? true : false;
                 }
                 catch (Exception e)
                 {

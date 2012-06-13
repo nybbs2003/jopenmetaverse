@@ -8,7 +8,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             public UUID Hunter;
             public UUID Prey;
-            public uint SpaceIP;
+            public long SpaceIP;
 
             @Override
 			public int getLength()
@@ -31,7 +31,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 {
                     Hunter.FromBytes(bytes, i[0]); i[0] += 16;
                     Prey.FromBytes(bytes, i[0]); i[0] += 16;
-                    SpaceIP = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    SpaceIP = Utils.bytesToUInt(bytes); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -44,7 +44,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 Hunter.ToBytes(bytes, i[0]); i[0] += 16;
                 Prey.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.UIntToBytes(SpaceIP, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(SpaceIP, bytes, i[0]); i[0] += 4;
             }
 
         }

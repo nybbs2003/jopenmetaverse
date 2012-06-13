@@ -8,9 +8,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             public UUID AgentID;
             public UUID SessionID;
-            public uint Flags;
-            public uint EstateID;
-            public bool Godlike;
+            public long Flags;
+            public long EstateID;
+            public boolean Godlike;
 
             @Override
 			public int getLength()
@@ -33,9 +33,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 {
                     AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
-                    Flags = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    EstateID = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    Godlike = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
+                    Flags = Utils.bytesToUInt(bytes); i[0] += 4;
+                    EstateID = Utils.bytesToUInt(bytes); i[0] += 4;
+                    Godlike = (bytes[i[0]++] != 0) ? true : false;
                 }
                 catch (Exception e)
                 {
@@ -48,8 +48,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
                 SessionID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.UIntToBytes(Flags, bytes, i[0]); i[0] += 4;
-                Utils.UIntToBytes(EstateID, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(Flags, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(EstateID, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)((Godlike) ? 1 : 0);
             }
 

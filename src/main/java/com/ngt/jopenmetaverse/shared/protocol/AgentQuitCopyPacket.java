@@ -49,7 +49,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         /// <exclude/>
         public final class FuseBlockBlock extends PacketBlock
         {
-            public uint ViewerCircuitCode;
+            public long ViewerCircuitCode;
 
             @Override
 			public int getLength()
@@ -70,7 +70,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    ViewerCircuitCode = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    ViewerCircuitCode = Utils.bytesToUInt(bytes); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -81,7 +81,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.UIntToBytes(ViewerCircuitCode, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(ViewerCircuitCode, bytes, i[0]); i[0] += 4;
             }
 
         }

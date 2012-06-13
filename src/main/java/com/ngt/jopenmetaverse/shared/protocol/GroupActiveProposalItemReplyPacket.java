@@ -50,7 +50,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         public final class TransactionDataBlock extends PacketBlock
         {
             public UUID TransactionID;
-            public uint TotalNumItems;
+            public long TotalNumItems;
 
             @Override
 			public int getLength()
@@ -72,7 +72,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     TransactionID.FromBytes(bytes, i[0]); i[0] += 16;
-                    TotalNumItems = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    TotalNumItems = Utils.bytesToUInt(bytes); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -84,7 +84,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 TransactionID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.UIntToBytes(TotalNumItems, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(TotalNumItems, bytes, i[0]); i[0] += 4;
             }
 
         }
@@ -97,7 +97,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             public byte[] TerseDateID;
             public byte[] StartDateTime;
             public byte[] EndDateTime;
-            public bool AlreadyVoted;
+            public boolean AlreadyVoted;
             public byte[] VoteCast;
             public float Majority;
             public int Quorum;
@@ -140,11 +140,11 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     length = bytes[i[0]++];
                     EndDateTime = new byte[length];
                     Utils.arraycopy(bytes, i[0], EndDateTime, 0, length); i[0] +=  length;
-                    AlreadyVoted = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
+                    AlreadyVoted = (bytes[i[0]++] != 0) ? true : false;
                     length = bytes[i[0]++];
                     VoteCast = new byte[length];
                     Utils.arraycopy(bytes, i[0], VoteCast, 0, length); i[0] +=  length;
-                    Majority = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
+                    Majority = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
                     Quorum = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     length = bytes[i[0]++];
                     ProposalText = new byte[length];
@@ -170,8 +170,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 bytes[i[0]++] = (byte)((AlreadyVoted) ? 1 : 0);
                 bytes[i[0]++] = (byte)VoteCast.length;
                 Utils.arraycopy(VoteCast, 0, bytes, i[0], VoteCast.length); i[0] +=  VoteCast.length;
-                Utils.FloatToBytes(Majority, bytes, i[0]); i[0] += 4;
-                Utils.IntToBytes(Quorum, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytes(Majority, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(Quorum, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)ProposalText.length;
                 Utils.arraycopy(ProposalText, 0, bytes, i[0], ProposalText.length); i[0] +=  ProposalText.length;
             }

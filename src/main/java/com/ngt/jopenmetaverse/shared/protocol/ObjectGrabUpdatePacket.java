@@ -52,7 +52,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             public UUID ObjectID;
             public Vector3 GrabOffsetInitial;
             public Vector3 GrabPosition;
-            public uint TimeSinceLast;
+            public long TimeSinceLast;
 
             @Override
 			public int getLength()
@@ -76,7 +76,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     ObjectID.FromBytes(bytes, i[0]); i[0] += 16;
                     GrabOffsetInitial.FromBytes(bytes, i[0]); i[0] += 12;
                     GrabPosition.FromBytes(bytes, i[0]); i[0] += 12;
-                    TimeSinceLast = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    TimeSinceLast = Utils.bytesToUInt(bytes); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -90,7 +90,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 ObjectID.ToBytes(bytes, i[0]); i[0] += 16;
                 GrabOffsetInitial.ToBytes(bytes, i[0]); i[0] += 12;
                 GrabPosition.ToBytes(bytes, i[0]); i[0] += 12;
-                Utils.UIntToBytes(TimeSinceLast, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(TimeSinceLast, bytes, i[0]); i[0] += 4;
             }
 
         }
@@ -142,7 +142,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 UVCoord.ToBytes(bytes, i[0]); i[0] += 12;
                 STCoord.ToBytes(bytes, i[0]); i[0] += 12;
-                Utils.IntToBytes(FaceIndex, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(FaceIndex, bytes, i[0]); i[0] += 4;
                 Position.ToBytes(bytes, i[0]); i[0] += 12;
                 Normal.ToBytes(bytes, i[0]); i[0] += 12;
                 Binormal.ToBytes(bytes, i[0]); i[0] += 12;

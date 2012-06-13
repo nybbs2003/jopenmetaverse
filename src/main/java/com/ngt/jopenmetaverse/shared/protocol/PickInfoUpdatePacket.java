@@ -51,14 +51,14 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             public UUID PickID;
             public UUID CreatorID;
-            public bool TopPick;
+            public boolean TopPick;
             public UUID ParcelID;
             public byte[] Name;
             public byte[] Desc;
             public UUID SnapshotID;
             public Vector3d PosGlobal;
             public int SortOrder;
-            public bool Enabled;
+            public boolean Enabled;
 
             @Override
 			public int getLength()
@@ -85,7 +85,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 {
                     PickID.FromBytes(bytes, i[0]); i[0] += 16;
                     CreatorID.FromBytes(bytes, i[0]); i[0] += 16;
-                    TopPick = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
+                    TopPick = (bytes[i[0]++] != 0) ? true : false;
                     ParcelID.FromBytes(bytes, i[0]); i[0] += 16;
                     length = bytes[i[0]++];
                     Name = new byte[length];
@@ -96,7 +96,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     SnapshotID.FromBytes(bytes, i[0]); i[0] += 16;
                     PosGlobal.FromBytes(bytes, i[0]); i[0] += 24;
                     SortOrder = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    Enabled = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
+                    Enabled = (bytes[i[0]++] != 0) ? true : false;
                 }
                 catch (Exception e)
                 {
@@ -118,7 +118,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 Utils.arraycopy(Desc, 0, bytes, i[0], Desc.length); i[0] +=  Desc.length;
                 SnapshotID.ToBytes(bytes, i[0]); i[0] += 16;
                 PosGlobal.ToBytes(bytes, i[0]); i[0] += 24;
-                Utils.IntToBytes(SortOrder, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(SortOrder, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)((Enabled) ? 1 : 0);
             }
 

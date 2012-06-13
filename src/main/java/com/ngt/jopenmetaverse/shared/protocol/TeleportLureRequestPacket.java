@@ -9,7 +9,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             public UUID AgentID;
             public UUID SessionID;
             public UUID LureID;
-            public uint TeleportFlags;
+            public long TeleportFlags;
 
             @Override
 			public int getLength()
@@ -33,7 +33,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
                     LureID.FromBytes(bytes, i[0]); i[0] += 16;
-                    TeleportFlags = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    TeleportFlags = Utils.bytesToUInt(bytes); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -47,7 +47,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
                 SessionID.ToBytes(bytes, i[0]); i[0] += 16;
                 LureID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.UIntToBytes(TeleportFlags, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(TeleportFlags, bytes, i[0]); i[0] += 4;
             }
 
         }

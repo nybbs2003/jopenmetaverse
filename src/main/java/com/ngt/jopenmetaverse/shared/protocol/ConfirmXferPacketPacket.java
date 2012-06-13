@@ -1,5 +1,9 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
+import java.math.BigInteger;
+
+import com.ngt.jopenmetaverse.shared.util.Utils;
+
 
     public final class ConfirmXferPacketPacket extends Packet
     {
@@ -7,7 +11,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         public final class XferIDBlock extends PacketBlock
         {
             public BigInteger ID;
-            public uint Packet;
+            public long Packet;
 
             @Override
 			public int getLength()
@@ -28,8 +32,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    ID = new BigInteger(bytes);
-                    Packet = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    ID = Utils.bytesToULong(bytes, i[0]); i[0] += 8;
+                    Packet = Utils.bytesToUInt(bytes); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -41,7 +45,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 Utils.ulongToBytes(ID, bytes, i[0]); i[0] += 8;
-                Utils.UIntToBytes(Packet, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(Packet, bytes, i[0]); i[0] += 4;
             }
 
         }
@@ -51,7 +55,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
                         {
                 int length = 7;
-                length += XferID.length;
+                length += XferID.getLength();
                 return length;
             }
         }
@@ -68,7 +72,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             XferID = new XferIDBlock();
         }
 
-        public ConfirmXferPacketPacket(byte[] bytes, int[] i) 
+        public ConfirmXferPacketPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -76,7 +80,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         }
 
         @Override
-		public void FromBytes(byte[] bytes, int[] i, int[] packetEnd, byte[] zeroBuffer)
+		public void FromBytes(byte[] bytes, int[] i, int[] packetEnd, byte[] zeroBuffer) throws MalformedDataException
         {
             header.FromBytes(bytes, i, packetEnd);
             if (header.Zerocoded && zeroBuffer != null)
@@ -87,7 +91,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             XferID.FromBytes(bytes, i);
         }
 
-        public ConfirmXferPacketPacket(Header head, byte[] bytes, int[] i)
+        public ConfirmXferPacketPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -95,7 +99,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         }
 
         @Override
-		public void FromBytes(Header header, byte[] bytes, int[] i, int[] packetEnd)
+		public void FromBytes(Header header, byte[] bytes, int[] i, int[] packetEnd) throws MalformedDataException
         {
             this.header =  header;
             XferID.FromBytes(bytes, i);

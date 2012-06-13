@@ -46,7 +46,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         /// <exclude/>
         public final class InfoBlock extends PacketBlock
         {
-            public uint TeleportFlags;
+            public long TeleportFlags;
             public byte[] Message;
 
             @Override
@@ -71,7 +71,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    TeleportFlags = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    TeleportFlags = Utils.bytesToUInt(bytes); i[0] += 4;
                     length = bytes[i[0]++];
                     Message = new byte[length];
                     Utils.arraycopy(bytes, i[0], Message, 0, length); i[0] +=  length;
@@ -85,7 +85,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.UIntToBytes(TeleportFlags, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(TeleportFlags, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)Message.length;
                 Utils.arraycopy(Message, 0, bytes, i[0], Message.length); i[0] +=  Message.length;
             }

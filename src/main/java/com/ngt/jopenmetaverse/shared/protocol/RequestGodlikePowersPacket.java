@@ -49,7 +49,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         /// <exclude/>
         public final class RequestBlockBlock extends PacketBlock
         {
-            public bool Godlike;
+            public boolean Godlike;
             public UUID Token;
 
             @Override
@@ -71,7 +71,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    Godlike = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
+                    Godlike = (bytes[i[0]++] != 0) ? true : false;
                     Token.FromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)

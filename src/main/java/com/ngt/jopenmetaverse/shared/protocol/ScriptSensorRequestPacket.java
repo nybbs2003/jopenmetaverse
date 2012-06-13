@@ -49,9 +49,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     SearchName = new byte[length];
                     Utils.arraycopy(bytes, i[0], SearchName, 0, length); i[0] +=  length;
                     Type = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    Range = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
-                    Arc = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
-                    RegionHandle = new BigInteger(bytes);
+                    Range = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
+                    Arc = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
+                    RegionHandle = Utils.bytesToULong(bytes, i[0]); i[0] += 8;
                     SearchRegions = (byte)bytes[i[0]++];
                 }
                 catch (Exception e)
@@ -70,9 +70,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 SearchDir.ToBytes(bytes, i[0]); i[0] += 12;
                 bytes[i[0]++] = (byte)SearchName.length;
                 Utils.arraycopy(SearchName, 0, bytes, i[0], SearchName.length); i[0] +=  SearchName.length;
-                Utils.IntToBytes(Type, bytes, i[0]); i[0] += 4;
-                Utils.FloatToBytes(Range, bytes, i[0]); i[0] += 4;
-                Utils.FloatToBytes(Arc, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(Type, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytes(Range, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytes(Arc, bytes, i[0]); i[0] += 4;
                 Utils.ulongToBytes(RegionHandle, bytes, i[0]); i[0] += 8;
                 bytes[i[0]++] = SearchRegions;
             }

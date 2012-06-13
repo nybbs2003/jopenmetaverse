@@ -7,7 +7,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         public final class PingIDBlock extends PacketBlock
         {
             public byte PingID;
-            public uint OldestUnacked;
+            public long OldestUnacked;
 
             @Override
 			public int getLength()
@@ -29,7 +29,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     PingID = (byte)bytes[i[0]++];
-                    OldestUnacked = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    OldestUnacked = Utils.bytesToUInt(bytes); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -41,7 +41,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 bytes[i[0]++] = PingID;
-                Utils.UIntToBytes(OldestUnacked, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(OldestUnacked, bytes, i[0]); i[0] += 4;
             }
 
         }

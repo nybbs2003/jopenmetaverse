@@ -50,7 +50,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         public final class QueryDataBlock extends PacketBlock
         {
             public UUID QueryID;
-            public uint QueryFlags;
+            public long QueryFlags;
 
             @Override
 			public int getLength()
@@ -72,7 +72,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     QueryID.FromBytes(bytes, i[0]); i[0] += 16;
-                    QueryFlags = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    QueryFlags = Utils.bytesToUInt(bytes); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -84,7 +84,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 QueryID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.UIntToBytes(QueryFlags, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(QueryFlags, bytes, i[0]); i[0] += 4;
             }
 
         }

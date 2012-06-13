@@ -35,7 +35,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 {
                     AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     GroupID.FromBytes(bytes, i[0]); i[0] += 16;
-                    AgentPowers = new BigInteger(bytes);
+                    AgentPowers = Utils.bytesToULong(bytes, i[0]); i[0] += 8;
                     length = bytes[i[0]++];
                     GroupTitle = new byte[length];
                     Utils.arraycopy(bytes, i[0], GroupTitle, 0, length); i[0] +=  length;

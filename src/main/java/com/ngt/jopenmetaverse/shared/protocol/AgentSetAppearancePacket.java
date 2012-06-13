@@ -8,7 +8,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             public UUID AgentID;
             public UUID SessionID;
-            public uint SerialNum;
+            public long SerialNum;
             public Vector3 Size;
 
             @Override
@@ -32,7 +32,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 {
                     AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
-                    SerialNum = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    SerialNum = Utils.bytesToUInt(bytes); i[0] += 4;
                     Size.FromBytes(bytes, i[0]); i[0] += 12;
                 }
                 catch (Exception e)
@@ -46,7 +46,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
                 SessionID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.UIntToBytes(SerialNum, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytes(SerialNum, bytes, i[0]); i[0] += 4;
                 Size.ToBytes(bytes, i[0]); i[0] += 12;
             }
 

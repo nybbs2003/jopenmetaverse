@@ -37,7 +37,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     TransferID.FromBytes(bytes, i[0]); i[0] += 16;
                     ChannelType = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     SourceType = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    Priority = Utils.BytesToFloat(bytes, i[0]); i[0] += 4;
+                    Priority = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
                     length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
                     Params = new byte[length];
                     Utils.arraycopy(bytes, i[0], Params, 0, length); i[0] +=  length;
@@ -52,9 +52,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 TransferID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.IntToBytes(ChannelType, bytes, i[0]); i[0] += 4;
-                Utils.IntToBytes(SourceType, bytes, i[0]); i[0] += 4;
-                Utils.FloatToBytes(Priority, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(ChannelType, bytes, i[0]); i[0] += 4;
+                Utils.intToBytes(SourceType, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytes(Priority, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)(Params.length % 256);
                 bytes[i[0]++] = (byte)((Params.length >> 8) % 256);
                 Utils.arraycopy(Params, 0, bytes, i[0], Params.length); i[0] +=  Params.length;

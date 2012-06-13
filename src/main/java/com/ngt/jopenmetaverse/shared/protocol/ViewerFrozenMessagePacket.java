@@ -6,7 +6,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         /// <exclude/>
         public final class FrozenDataBlock extends PacketBlock
         {
-            public bool Data;
+            public boolean Data;
 
             @Override
 			public int getLength()
@@ -27,7 +27,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    Data = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
+                    Data = (bytes[i[0]++] != 0) ? true : false;
                 }
                 catch (Exception e)
                 {
