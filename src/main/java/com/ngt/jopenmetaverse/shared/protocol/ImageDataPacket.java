@@ -82,7 +82,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 {
                     length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
                     Data = new byte[length];
-                    Utils.arraycopy(bytes, i, Data, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], Data, 0, length); i[0] +=  length;
                 }
                 catch (Exception e)
                 {
@@ -95,7 +95,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 bytes[i[0]++] = (byte)(Data.length % 256);
                 bytes[i[0]++] = (byte)((Data.length >> 8) % 256);
-                Utils.arraycopy(Data, 0, bytes, i, Data.length); i[0] +=  Data.length;
+                Utils.arraycopy(Data, 0, bytes, i[0], Data.length); i[0] +=  Data.length;
             }
 
         }
@@ -168,7 +168,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             length += ImageData.length;
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
-            int i = 0;
+            int[] i = new int[]{0};
             header.ToBytes(bytes, i);
             ImageID.ToBytes(bytes, i);
             ImageData.ToBytes(bytes, i);

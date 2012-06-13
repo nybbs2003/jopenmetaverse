@@ -126,11 +126,11 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     Contribution = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     length = bytes[i[0]++];
                     OnlineStatus = new byte[length];
-                    Utils.arraycopy(bytes, i, OnlineStatus, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], OnlineStatus, 0, length); i[0] +=  length;
                     AgentPowers = (ulong)((ulong)bytes[i[0]++] + ((ulong)bytes[i[0]++] << 8) + ((ulong)bytes[i[0]++] << 16) + ((ulong)bytes[i[0]++] << 24) + ((ulong)bytes[i[0]++] << 32) + ((ulong)bytes[i[0]++] << 40) + ((ulong)bytes[i[0]++] << 48) + ((ulong)bytes[i[0]++] << 56));
                     length = bytes[i[0]++];
                     Title = new byte[length];
-                    Utils.arraycopy(bytes, i, Title, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], Title, 0, length); i[0] +=  length;
                     IsOwner = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
                 }
                 catch (Exception e)
@@ -145,10 +145,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
                 Utils.IntToBytes(Contribution, bytes, i); i += 4;
                 bytes[i[0]++] = (byte)OnlineStatus.length;
-                Utils.arraycopy(OnlineStatus, 0, bytes, i, OnlineStatus.length); i[0] +=  OnlineStatus.length;
+                Utils.arraycopy(OnlineStatus, 0, bytes, i[0], OnlineStatus.length); i[0] +=  OnlineStatus.length;
                 Utils.UInt64ToBytes(AgentPowers, bytes, i); i += 8;
                 bytes[i[0]++] = (byte)Title.length;
-                Utils.arraycopy(Title, 0, bytes, i, Title.length); i[0] +=  Title.length;
+                Utils.arraycopy(Title, 0, bytes, i[0], Title.length); i[0] +=  Title.length;
                 bytes[i[0]++] = (byte)((IsOwner) ? 1 : 0);
             }
 
@@ -245,7 +245,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             for (int j = 0; j < MemberData.length; j++) { length += MemberData[j].getLength(); }
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
-            int i = 0;
+            int[] i = new int[]{0};
             header.ToBytes(bytes, i);
             AgentData.ToBytes(bytes, i);
             GroupData.ToBytes(bytes, i);
@@ -259,7 +259,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public byte[][] ToBytesMultiple()
         {
             List<byte[]> packets = new ArrayList<byte[]>();
-            int i = 0;
+            int[] i = new int[]{0};
             int fixedLength = 10;
 
             byte[] ackBytes = null;
@@ -284,15 +284,15 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int variableLength = 0;
                 int MemberDataCount = 0;
 
-                i = MemberDataStart;
-                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i < MemberData.length) {
-                    int blockLength = MemberData[i].getLength();
+              i[0] =MemberDataStart;
+                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i[0] < MemberData.length) {
+                    int blockLength = MemberData[i[0]].getLength();
                     if (fixedLength + variableLength + blockLength + acksLength[0] <= MTU) {
                         variableLength += blockLength;
                         ++MemberDataCount;
                     }
                     else { break; }
-                    ++i;
+                    i[0]++;
                 }
 
                 byte[] packet = new byte[fixedLength + variableLength + acksLength[0]];
@@ -301,7 +301,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 if (packets.size() > 0) { packet[0] = (byte)(packet[0] & ~0x10); }
 
                 packet[length[0]++] = (byte)MemberDataCount;
-                for (i = MemberDataStart; i < MemberDataStart + MemberDataCount; i++) { MemberData[i].ToBytes(packet, length); }
+                for (i[0] = MemberDataStart; i[0] < MemberDataStart + MemberDataCount; i[0]++) { MemberData[i[0]].ToBytes(packet, length); }
                 MemberDataStart += MemberDataCount;
 
                 if (acksLength[0] > 0) {

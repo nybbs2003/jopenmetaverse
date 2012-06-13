@@ -90,19 +90,19 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     PartnerID.FromBytes(bytes, i[0]); i[0] += 16;
                     length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
                     AboutText = new byte[length];
-                    Utils.arraycopy(bytes, i, AboutText, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], AboutText, 0, length); i[0] +=  length;
                     length = bytes[i[0]++];
                     FLAboutText = new byte[length];
-                    Utils.arraycopy(bytes, i, FLAboutText, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], FLAboutText, 0, length); i[0] +=  length;
                     length = bytes[i[0]++];
                     BornOn = new byte[length];
-                    Utils.arraycopy(bytes, i, BornOn, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], BornOn, 0, length); i[0] +=  length;
                     length = bytes[i[0]++];
                     ProfileURL = new byte[length];
-                    Utils.arraycopy(bytes, i, ProfileURL, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], ProfileURL, 0, length); i[0] +=  length;
                     length = bytes[i[0]++];
                     CharterMember = new byte[length];
-                    Utils.arraycopy(bytes, i, CharterMember, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], CharterMember, 0, length); i[0] +=  length;
                     Flags = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                 }
                 catch (Exception e)
@@ -119,15 +119,15 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 PartnerID.ToBytes(bytes, i[0]); i[0] += 16;
                 bytes[i[0]++] = (byte)(AboutText.length % 256);
                 bytes[i[0]++] = (byte)((AboutText.length >> 8) % 256);
-                Utils.arraycopy(AboutText, 0, bytes, i, AboutText.length); i[0] +=  AboutText.length;
+                Utils.arraycopy(AboutText, 0, bytes, i[0], AboutText.length); i[0] +=  AboutText.length;
                 bytes[i[0]++] = (byte)FLAboutText.length;
-                Utils.arraycopy(FLAboutText, 0, bytes, i, FLAboutText.length); i[0] +=  FLAboutText.length;
+                Utils.arraycopy(FLAboutText, 0, bytes, i[0], FLAboutText.length); i[0] +=  FLAboutText.length;
                 bytes[i[0]++] = (byte)BornOn.length;
-                Utils.arraycopy(BornOn, 0, bytes, i, BornOn.length); i[0] +=  BornOn.length;
+                Utils.arraycopy(BornOn, 0, bytes, i[0], BornOn.length); i[0] +=  BornOn.length;
                 bytes[i[0]++] = (byte)ProfileURL.length;
-                Utils.arraycopy(ProfileURL, 0, bytes, i, ProfileURL.length); i[0] +=  ProfileURL.length;
+                Utils.arraycopy(ProfileURL, 0, bytes, i[0], ProfileURL.length); i[0] +=  ProfileURL.length;
                 bytes[i[0]++] = (byte)CharterMember.length;
-                Utils.arraycopy(CharterMember, 0, bytes, i, CharterMember.length); i[0] +=  CharterMember.length;
+                Utils.arraycopy(CharterMember, 0, bytes, i[0], CharterMember.length); i[0] +=  CharterMember.length;
                 Utils.UIntToBytes(Flags, bytes, i); i += 4;
             }
 
@@ -202,7 +202,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             length += PropertiesData.length;
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
-            int i = 0;
+            int[] i = new int[]{0};
             header.ToBytes(bytes, i);
             AgentData.ToBytes(bytes, i);
             PropertiesData.ToBytes(bytes, i);

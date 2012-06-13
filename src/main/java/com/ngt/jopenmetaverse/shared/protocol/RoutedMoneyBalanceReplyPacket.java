@@ -88,7 +88,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     SquareMetersCommitted = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     length = bytes[i[0]++];
                     Description = new byte[length];
-                    Utils.arraycopy(bytes, i, Description, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], Description, 0, length); i[0] +=  length;
                 }
                 catch (Exception e)
                 {
@@ -106,7 +106,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 Utils.IntToBytes(SquareMetersCredit, bytes, i); i += 4;
                 Utils.IntToBytes(SquareMetersCommitted, bytes, i); i += 4;
                 bytes[i[0]++] = (byte)Description.length;
-                Utils.arraycopy(Description, 0, bytes, i, Description.length); i[0] +=  Description.length;
+                Utils.arraycopy(Description, 0, bytes, i[0], Description.length); i[0] +=  Description.length;
             }
 
         }
@@ -152,7 +152,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     Amount = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     length = bytes[i[0]++];
                     ItemDescription = new byte[length];
-                    Utils.arraycopy(bytes, i, ItemDescription, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], ItemDescription, 0, length); i[0] +=  length;
                 }
                 catch (Exception e)
                 {
@@ -170,7 +170,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 bytes[i[0]++] = (byte)((IsDestGroup) ? 1 : 0);
                 Utils.IntToBytes(Amount, bytes, i); i += 4;
                 bytes[i[0]++] = (byte)ItemDescription.length;
-                Utils.arraycopy(ItemDescription, 0, bytes, i, ItemDescription.length); i[0] +=  ItemDescription.length;
+                Utils.arraycopy(ItemDescription, 0, bytes, i[0], ItemDescription.length); i[0] +=  ItemDescription.length;
             }
 
         }
@@ -250,7 +250,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             length += TransactionInfo.length;
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
-            int i = 0;
+            int[] i = new int[]{0};
             header.ToBytes(bytes, i);
             TargetBlock.ToBytes(bytes, i);
             MoneyData.ToBytes(bytes, i);

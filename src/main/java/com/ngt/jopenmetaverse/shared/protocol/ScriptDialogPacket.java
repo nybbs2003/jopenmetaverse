@@ -42,16 +42,16 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     ObjectID.FromBytes(bytes, i[0]); i[0] += 16;
                     length = bytes[i[0]++];
                     FirstName = new byte[length];
-                    Utils.arraycopy(bytes, i, FirstName, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], FirstName, 0, length); i[0] +=  length;
                     length = bytes[i[0]++];
                     LastName = new byte[length];
-                    Utils.arraycopy(bytes, i, LastName, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], LastName, 0, length); i[0] +=  length;
                     length = bytes[i[0]++];
                     ObjectName = new byte[length];
-                    Utils.arraycopy(bytes, i, ObjectName, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], ObjectName, 0, length); i[0] +=  length;
                     length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
                     Message = new byte[length];
-                    Utils.arraycopy(bytes, i, Message, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], Message, 0, length); i[0] +=  length;
                     ChatChannel = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     ImageID.FromBytes(bytes, i[0]); i[0] += 16;
                 }
@@ -66,14 +66,14 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 ObjectID.ToBytes(bytes, i[0]); i[0] += 16;
                 bytes[i[0]++] = (byte)FirstName.length;
-                Utils.arraycopy(FirstName, 0, bytes, i, FirstName.length); i[0] +=  FirstName.length;
+                Utils.arraycopy(FirstName, 0, bytes, i[0], FirstName.length); i[0] +=  FirstName.length;
                 bytes[i[0]++] = (byte)LastName.length;
-                Utils.arraycopy(LastName, 0, bytes, i, LastName.length); i[0] +=  LastName.length;
+                Utils.arraycopy(LastName, 0, bytes, i[0], LastName.length); i[0] +=  LastName.length;
                 bytes[i[0]++] = (byte)ObjectName.length;
-                Utils.arraycopy(ObjectName, 0, bytes, i, ObjectName.length); i[0] +=  ObjectName.length;
+                Utils.arraycopy(ObjectName, 0, bytes, i[0], ObjectName.length); i[0] +=  ObjectName.length;
                 bytes[i[0]++] = (byte)(Message.length % 256);
                 bytes[i[0]++] = (byte)((Message.length >> 8) % 256);
-                Utils.arraycopy(Message, 0, bytes, i, Message.length); i[0] +=  Message.length;
+                Utils.arraycopy(Message, 0, bytes, i[0], Message.length); i[0] +=  Message.length;
                 Utils.IntToBytes(ChatChannel, bytes, i); i += 4;
                 ImageID.ToBytes(bytes, i[0]); i[0] += 16;
             }
@@ -109,7 +109,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 {
                     length = bytes[i[0]++];
                     ButtonLabel = new byte[length];
-                    Utils.arraycopy(bytes, i, ButtonLabel, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], ButtonLabel, 0, length); i[0] +=  length;
                 }
                 catch (Exception e)
                 {
@@ -121,7 +121,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 bytes[i[0]++] = (byte)ButtonLabel.length;
-                Utils.arraycopy(ButtonLabel, 0, bytes, i, ButtonLabel.length); i[0] +=  ButtonLabel.length;
+                Utils.arraycopy(ButtonLabel, 0, bytes, i[0], ButtonLabel.length); i[0] +=  ButtonLabel.length;
             }
 
         }
@@ -273,7 +273,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             for (int j = 0; j < OwnerData.length; j++) { length += OwnerData[j].getLength(); }
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
-            int i = 0;
+            int[] i = new int[]{0};
             header.ToBytes(bytes, i);
             Data.ToBytes(bytes, i);
             bytes[i[0]++] = (byte)Buttons.length;
@@ -288,7 +288,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public byte[][] ToBytesMultiple()
         {
             List<byte[]> packets = new ArrayList<byte[]>();
-            int i = 0;
+            int[] i = new int[]{0};
             int fixedLength = 10;
 
             byte[] ackBytes = null;
@@ -313,26 +313,26 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int ButtonsCount = 0;
                 int OwnerDataCount = 0;
 
-                i = ButtonsStart;
-                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i < Buttons.length) {
-                    int blockLength = Buttons[i].getLength();
+              i[0] =ButtonsStart;
+                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i[0] < Buttons.length) {
+                    int blockLength = Buttons[i[0]].getLength();
                     if (fixedLength + variableLength + blockLength + acksLength[0] <= MTU) {
                         variableLength += blockLength;
                         ++ButtonsCount;
                     }
                     else { break; }
-                    ++i;
+                    i[0]++;
                 }
 
-                i = OwnerDataStart;
-                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i < OwnerData.length) {
-                    int blockLength = OwnerData[i].getLength();
+              i[0] =OwnerDataStart;
+                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i[0] < OwnerData.length) {
+                    int blockLength = OwnerData[i[0]].getLength();
                     if (fixedLength + variableLength + blockLength + acksLength[0] <= MTU) {
                         variableLength += blockLength;
                         ++OwnerDataCount;
                     }
                     else { break; }
-                    ++i;
+                    i[0]++;
                 }
 
                 byte[] packet = new byte[fixedLength + variableLength + acksLength[0]];
@@ -341,11 +341,11 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 if (packets.size() > 0) { packet[0] = (byte)(packet[0] & ~0x10); }
 
                 packet[length[0]++] = (byte)ButtonsCount;
-                for (i = ButtonsStart; i < ButtonsStart + ButtonsCount; i++) { Buttons[i].ToBytes(packet, length); }
+                for (i[0] = ButtonsStart; i[0] < ButtonsStart + ButtonsCount; i[0]++) { Buttons[i[0]].ToBytes(packet, length); }
                 ButtonsStart += ButtonsCount;
 
                 packet[length[0]++] = (byte)OwnerDataCount;
-                for (i = OwnerDataStart; i < OwnerDataStart + OwnerDataCount; i++) { OwnerData[i].ToBytes(packet, length); }
+                for (i[0] = OwnerDataStart; i[0] < OwnerDataStart + OwnerDataCount; i[0]++) { OwnerData[i[0]].ToBytes(packet, length); }
                 OwnerDataStart += OwnerDataCount;
 
                 if (acksLength[0] > 0) {

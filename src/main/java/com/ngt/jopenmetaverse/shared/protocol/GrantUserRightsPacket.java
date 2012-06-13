@@ -173,7 +173,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             for (int j = 0; j < Rights.length; j++) { length += Rights[j].getLength(); }
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
-            int i = 0;
+            int[] i = new int[]{0};
             header.ToBytes(bytes, i);
             AgentData.ToBytes(bytes, i);
             bytes[i[0]++] = (byte)Rights.length;
@@ -186,7 +186,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public byte[][] ToBytesMultiple()
         {
             List<byte[]> packets = new ArrayList<byte[]>();
-            int i = 0;
+            int[] i = new int[]{0};
             int fixedLength = 10;
 
             byte[] ackBytes = null;
@@ -209,15 +209,15 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int variableLength = 0;
                 int RightsCount = 0;
 
-                i = RightsStart;
-                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i < Rights.length) {
-                    int blockLength = Rights[i].getLength();
+              i[0] =RightsStart;
+                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i[0] < Rights.length) {
+                    int blockLength = Rights[i[0]].getLength();
                     if (fixedLength + variableLength + blockLength + acksLength[0] <= MTU) {
                         variableLength += blockLength;
                         ++RightsCount;
                     }
                     else { break; }
-                    ++i;
+                    i[0]++;
                 }
 
                 byte[] packet = new byte[fixedLength + variableLength + acksLength[0]];
@@ -226,7 +226,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 if (packets.size() > 0) { packet[0] = (byte)(packet[0] & ~0x10); }
 
                 packet[length[0]++] = (byte)RightsCount;
-                for (i = RightsStart; i < RightsStart + RightsCount; i++) { Rights[i].ToBytes(packet, length); }
+                for (i[0] = RightsStart; i[0] < RightsStart + RightsCount; i[0]++) { Rights[i[0]].ToBytes(packet, length); }
                 RightsStart += RightsCount;
 
                 if (acksLength[0] > 0) {

@@ -96,17 +96,17 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     AbuserID.FromBytes(bytes, i[0]); i[0] += 16;
                     length = bytes[i[0]++];
                     AbuseRegionName = new byte[length];
-                    Utils.arraycopy(bytes, i, AbuseRegionName, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], AbuseRegionName, 0, length); i[0] +=  length;
                     AbuseRegionID.FromBytes(bytes, i[0]); i[0] += 16;
                     length = bytes[i[0]++];
                     Summary = new byte[length];
-                    Utils.arraycopy(bytes, i, Summary, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], Summary, 0, length); i[0] +=  length;
                     length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
                     Details = new byte[length];
-                    Utils.arraycopy(bytes, i, Details, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], Details, 0, length); i[0] +=  length;
                     length = bytes[i[0]++];
                     VersionString = new byte[length];
-                    Utils.arraycopy(bytes, i, VersionString, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], VersionString, 0, length); i[0] +=  length;
                 }
                 catch (Exception e)
                 {
@@ -125,15 +125,15 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 ObjectID.ToBytes(bytes, i[0]); i[0] += 16;
                 AbuserID.ToBytes(bytes, i[0]); i[0] += 16;
                 bytes[i[0]++] = (byte)AbuseRegionName.length;
-                Utils.arraycopy(AbuseRegionName, 0, bytes, i, AbuseRegionName.length); i[0] +=  AbuseRegionName.length;
+                Utils.arraycopy(AbuseRegionName, 0, bytes, i[0], AbuseRegionName.length); i[0] +=  AbuseRegionName.length;
                 AbuseRegionID.ToBytes(bytes, i[0]); i[0] += 16;
                 bytes[i[0]++] = (byte)Summary.length;
-                Utils.arraycopy(Summary, 0, bytes, i, Summary.length); i[0] +=  Summary.length;
+                Utils.arraycopy(Summary, 0, bytes, i[0], Summary.length); i[0] +=  Summary.length;
                 bytes[i[0]++] = (byte)(Details.length % 256);
                 bytes[i[0]++] = (byte)((Details.length >> 8) % 256);
-                Utils.arraycopy(Details, 0, bytes, i, Details.length); i[0] +=  Details.length;
+                Utils.arraycopy(Details, 0, bytes, i[0], Details.length); i[0] +=  Details.length;
                 bytes[i[0]++] = (byte)VersionString.length;
-                Utils.arraycopy(VersionString, 0, bytes, i, VersionString.length); i[0] +=  VersionString.length;
+                Utils.arraycopy(VersionString, 0, bytes, i[0], VersionString.length); i[0] +=  VersionString.length;
             }
 
         }
@@ -207,7 +207,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             length += ReportData.length;
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
-            int i = 0;
+            int[] i = new int[]{0};
             header.ToBytes(bytes, i);
             AgentData.ToBytes(bytes, i);
             ReportData.ToBytes(bytes, i);

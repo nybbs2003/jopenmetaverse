@@ -80,7 +80,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     GenCounter = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     length = bytes[i[0]++];
                     Throttles = new byte[length];
-                    Utils.arraycopy(bytes, i, Throttles, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], Throttles, 0, length); i[0] +=  length;
                 }
                 catch (Exception e)
                 {
@@ -93,7 +93,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 Utils.UIntToBytes(GenCounter, bytes, i); i += 4;
                 bytes[i[0]++] = (byte)Throttles.length;
-                Utils.arraycopy(Throttles, 0, bytes, i, Throttles.length); i[0] +=  Throttles.length;
+                Utils.arraycopy(Throttles, 0, bytes, i[0], Throttles.length); i[0] +=  Throttles.length;
             }
 
         }
@@ -167,7 +167,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             length += Throttle.length;
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
-            int i = 0;
+            int[] i = new int[]{0};
             header.ToBytes(bytes, i);
             AgentData.ToBytes(bytes, i);
             Throttle.ToBytes(bytes, i);

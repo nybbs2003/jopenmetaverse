@@ -1,5 +1,11 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+
 
     public final class AgentCachedTextureResponsePacket extends Packet
     {
@@ -19,7 +25,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public AgentDataBlock() { }
-            public AgentDataBlock(byte[] bytes, int[] i)
+            public AgentDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -67,7 +73,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public WearableDataBlock() { }
-            public WearableDataBlock(byte[] bytes, int[] i)
+            public WearableDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -82,7 +88,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     TextureIndex = (byte)bytes[i[0]++];
                     length = bytes[i[0]++];
                     HostName = new byte[length];
-                    Utils.arraycopy(bytes, i, HostName, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], HostName, 0, length); i[0] +=  length;
                 }
                 catch (Exception e)
                 {
@@ -96,7 +102,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 TextureID.ToBytes(bytes, i[0]); i[0] += 16;
                 bytes[i[0]++] = TextureIndex;
                 bytes[i[0]++] = (byte)HostName.length;
-                Utils.arraycopy(HostName, 0, bytes, i, HostName.length); i[0] +=  HostName.length;
+                Utils.arraycopy(HostName, 0, bytes, i[0], HostName.length); i[0] +=  HostName.length;
             }
 
         }
@@ -127,7 +133,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             WearableData = null;
         }
 
-        public AgentCachedTextureResponsePacket(byte[] bytes, int[] i) 
+        public AgentCachedTextureResponsePacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -135,7 +141,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         }
 
         @Override
-		public void FromBytes(byte[] bytes, int[] i, int[] packetEnd, byte[] zeroBuffer)
+		public void FromBytes(byte[] bytes, int[] i, int[] packetEnd, byte[] zeroBuffer) throws MalformedDataException
         {
             header.FromBytes(bytes, i, packetEnd);
             if (header.Zerocoded && zeroBuffer != null)
@@ -154,7 +160,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             { WearableData[j].FromBytes(bytes, i); }
         }
 
-        public AgentCachedTextureResponsePacket(Header head, byte[] bytes, int[] i)
+        public AgentCachedTextureResponsePacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -162,7 +168,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         }
 
         @Override
-		public void FromBytes(Header header, byte[] bytes, int[] i, int[] packetEnd)
+		public void FromBytes(Header header, byte[] bytes, int[] i, int[] packetEnd) throws MalformedDataException
         {
             this.header =  header;
             AgentData.FromBytes(bytes, i);
@@ -185,7 +191,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             for (int j = 0; j < WearableData.length; j++) { length += WearableData[j].getLength(); }
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
-            int i = 0;
+            int[] i = new int[]{0};
             header.ToBytes(bytes, i);
             AgentData.ToBytes(bytes, i);
             bytes[i[0]++] = (byte)WearableData.length;
@@ -198,7 +204,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public byte[][] ToBytesMultiple()
         {
             List<byte[]> packets = new ArrayList<byte[]>();
-            int i = 0;
+            int[] i = new int[]{0};
             int fixedLength = 10;
 
             byte[] ackBytes = null;
@@ -221,15 +227,15 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int variableLength = 0;
                 int WearableDataCount = 0;
 
-                i = WearableDataStart;
-                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i < WearableData.length) {
-                    int blockLength = WearableData[i].getLength();
+              i[0] =WearableDataStart;
+                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i[0] < WearableData.length) {
+                    int blockLength = WearableData[i[0]].getLength();
                     if (fixedLength + variableLength + blockLength + acksLength[0] <= MTU) {
                         variableLength += blockLength;
                         ++WearableDataCount;
                     }
                     else { break; }
-                    ++i;
+                    i[0]++;
                 }
 
                 byte[] packet = new byte[fixedLength + variableLength + acksLength[0]];
@@ -238,7 +244,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 if (packets.size() > 0) { packet[0] = (byte)(packet[0] & ~0x10); }
 
                 packet[length[0]++] = (byte)WearableDataCount;
-                for (i = WearableDataStart; i < WearableDataStart + WearableDataCount; i++) { WearableData[i].ToBytes(packet, length); }
+                for (i[0] = WearableDataStart; i[0] < WearableDataStart + WearableDataCount; i[0]++) { WearableData[i[0]].ToBytes(packet, length); }
                 WearableDataStart += WearableDataCount;
 
                 if (acksLength[0] > 0) {

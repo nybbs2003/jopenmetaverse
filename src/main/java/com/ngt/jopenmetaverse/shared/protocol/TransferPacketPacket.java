@@ -40,7 +40,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     Status = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
                     Data = new byte[length];
-                    Utils.arraycopy(bytes, i, Data, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], Data, 0, length); i[0] +=  length;
                 }
                 catch (Exception e)
                 {
@@ -57,7 +57,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 Utils.IntToBytes(Status, bytes, i); i += 4;
                 bytes[i[0]++] = (byte)(Data.length % 256);
                 bytes[i[0]++] = (byte)((Data.length >> 8) % 256);
-                Utils.arraycopy(Data, 0, bytes, i, Data.length); i[0] +=  Data.length;
+                Utils.arraycopy(Data, 0, bytes, i[0], Data.length); i[0] +=  Data.length;
             }
 
         }
@@ -124,7 +124,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             length += TransferData.length;
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
-            int i = 0;
+            int[] i = new int[]{0};
             header.ToBytes(bytes, i);
             TransferData.ToBytes(bytes, i);
             if (header.AckList != null && header.AckList.length > 0) { header.AcksToBytes(bytes, i); }

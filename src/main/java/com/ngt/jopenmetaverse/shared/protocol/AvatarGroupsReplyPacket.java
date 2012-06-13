@@ -83,11 +83,11 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     AcceptNotices = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
                     length = bytes[i[0]++];
                     GroupTitle = new byte[length];
-                    Utils.arraycopy(bytes, i, GroupTitle, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], GroupTitle, 0, length); i[0] +=  length;
                     GroupID.FromBytes(bytes, i[0]); i[0] += 16;
                     length = bytes[i[0]++];
                     GroupName = new byte[length];
-                    Utils.arraycopy(bytes, i, GroupName, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], GroupName, 0, length); i[0] +=  length;
                     GroupInsigniaID.FromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)
@@ -102,10 +102,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 Utils.UInt64ToBytes(GroupPowers, bytes, i); i += 8;
                 bytes[i[0]++] = (byte)((AcceptNotices) ? 1 : 0);
                 bytes[i[0]++] = (byte)GroupTitle.length;
-                Utils.arraycopy(GroupTitle, 0, bytes, i, GroupTitle.length); i[0] +=  GroupTitle.length;
+                Utils.arraycopy(GroupTitle, 0, bytes, i[0], GroupTitle.length); i[0] +=  GroupTitle.length;
                 GroupID.ToBytes(bytes, i[0]); i[0] += 16;
                 bytes[i[0]++] = (byte)GroupName.length;
-                Utils.arraycopy(GroupName, 0, bytes, i, GroupName.length); i[0] +=  GroupName.length;
+                Utils.arraycopy(GroupName, 0, bytes, i[0], GroupName.length); i[0] +=  GroupName.length;
                 GroupInsigniaID.ToBytes(bytes, i[0]); i[0] += 16;
             }
 
@@ -242,7 +242,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             for (int j = 0; j < GroupData.length; j++) { length += GroupData[j].getLength(); }
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
-            int i = 0;
+            int[] i = new int[]{0};
             header.ToBytes(bytes, i);
             AgentData.ToBytes(bytes, i);
             bytes[i[0]++] = (byte)GroupData.length;

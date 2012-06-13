@@ -47,7 +47,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     SearchDir.FromBytes(bytes, i, true); i += 12;
                     length = bytes[i[0]++];
                     SearchName = new byte[length];
-                    Utils.arraycopy(bytes, i, SearchName, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], SearchName, 0, length); i[0] +=  length;
                     Type = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     Range = Utils.BytesToFloat(bytes, i); i += 4;
                     Arc = Utils.BytesToFloat(bytes, i); i += 4;
@@ -69,7 +69,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 SearchPos.ToBytes(bytes, i[0]); i[0] += 12;
                 SearchDir.ToBytes(bytes, i[0]); i[0] += 12;
                 bytes[i[0]++] = (byte)SearchName.length;
-                Utils.arraycopy(SearchName, 0, bytes, i, SearchName.length); i[0] +=  SearchName.length;
+                Utils.arraycopy(SearchName, 0, bytes, i[0], SearchName.length); i[0] +=  SearchName.length;
                 Utils.IntToBytes(Type, bytes, i); i += 4;
                 Utils.FloatToBytes(Range, bytes, i); i += 4;
                 Utils.FloatToBytes(Arc, bytes, i); i += 4;
@@ -142,7 +142,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             length += Requester.length;
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
-            int i = 0;
+            int[] i = new int[]{0};
             header.ToBytes(bytes, i);
             Requester.ToBytes(bytes, i);
             if (header.AckList != null && header.AckList.length > 0) { header.AcksToBytes(bytes, i); }

@@ -81,7 +81,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     ButtonIndex = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     length = bytes[i[0]++];
                     ButtonLabel = new byte[length];
-                    Utils.arraycopy(bytes, i, ButtonLabel, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], ButtonLabel, 0, length); i[0] +=  length;
                 }
                 catch (Exception e)
                 {
@@ -96,7 +96,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 Utils.IntToBytes(ChatChannel, bytes, i); i += 4;
                 Utils.IntToBytes(ButtonIndex, bytes, i); i += 4;
                 bytes[i[0]++] = (byte)ButtonLabel.length;
-                Utils.arraycopy(ButtonLabel, 0, bytes, i, ButtonLabel.length); i[0] +=  ButtonLabel.length;
+                Utils.arraycopy(ButtonLabel, 0, bytes, i[0], ButtonLabel.length); i[0] +=  ButtonLabel.length;
             }
 
         }
@@ -170,7 +170,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             length += Data.length;
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
-            int i = 0;
+            int[] i = new int[]{0};
             header.ToBytes(bytes, i);
             AgentData.ToBytes(bytes, i);
             Data.ToBytes(bytes, i);

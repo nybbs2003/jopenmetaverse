@@ -79,10 +79,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     ObjectLocalID = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     length = bytes[i[0]++];
                     MediaURL = new byte[length];
-                    Utils.arraycopy(bytes, i, MediaURL, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], MediaURL, 0, length); i[0] +=  length;
                     length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
                     TextureEntry = new byte[length];
-                    Utils.arraycopy(bytes, i, TextureEntry, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], TextureEntry, 0, length); i[0] +=  length;
                 }
                 catch (Exception e)
                 {
@@ -95,10 +95,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 Utils.UIntToBytes(ObjectLocalID, bytes, i); i += 4;
                 bytes[i[0]++] = (byte)MediaURL.length;
-                Utils.arraycopy(MediaURL, 0, bytes, i, MediaURL.length); i[0] +=  MediaURL.length;
+                Utils.arraycopy(MediaURL, 0, bytes, i[0], MediaURL.length); i[0] +=  MediaURL.length;
                 bytes[i[0]++] = (byte)(TextureEntry.length % 256);
                 bytes[i[0]++] = (byte)((TextureEntry.length >> 8) % 256);
-                Utils.arraycopy(TextureEntry, 0, bytes, i, TextureEntry.length); i[0] +=  TextureEntry.length;
+                Utils.arraycopy(TextureEntry, 0, bytes, i[0], TextureEntry.length); i[0] +=  TextureEntry.length;
             }
 
         }
@@ -188,7 +188,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             for (int j = 0; j < ObjectData.length; j++) { length += ObjectData[j].getLength(); }
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
-            int i = 0;
+            int[] i = new int[]{0};
             header.ToBytes(bytes, i);
             AgentData.ToBytes(bytes, i);
             bytes[i[0]++] = (byte)ObjectData.length;
@@ -201,7 +201,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public byte[][] ToBytesMultiple()
         {
             List<byte[]> packets = new ArrayList<byte[]>();
-            int i = 0;
+            int[] i = new int[]{0};
             int fixedLength = 10;
 
             byte[] ackBytes = null;
@@ -224,15 +224,15 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int variableLength = 0;
                 int ObjectDataCount = 0;
 
-                i = ObjectDataStart;
-                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i < ObjectData.length) {
-                    int blockLength = ObjectData[i].getLength();
+              i[0] =ObjectDataStart;
+                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i[0] < ObjectData.length) {
+                    int blockLength = ObjectData[i[0]].getLength();
                     if (fixedLength + variableLength + blockLength + acksLength[0] <= MTU) {
                         variableLength += blockLength;
                         ++ObjectDataCount;
                     }
                     else { break; }
-                    ++i;
+                    i[0]++;
                 }
 
                 byte[] packet = new byte[fixedLength + variableLength + acksLength[0]];
@@ -241,7 +241,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 if (packets.size() > 0) { packet[0] = (byte)(packet[0] & ~0x10); }
 
                 packet[length[0]++] = (byte)ObjectDataCount;
-                for (i = ObjectDataStart; i < ObjectDataStart + ObjectDataCount; i++) { ObjectData[i].ToBytes(packet, length); }
+                for (i[0] = ObjectDataStart; i[0] < ObjectDataStart + ObjectDataCount; i[0]++) { ObjectData[i[0]].ToBytes(packet, length); }
                 ObjectDataStart += ObjectDataCount;
 
                 if (acksLength[0] > 0) {

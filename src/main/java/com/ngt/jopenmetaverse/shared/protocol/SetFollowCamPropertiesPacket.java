@@ -170,7 +170,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             for (int j = 0; j < CameraProperty.length; j++) { length += CameraProperty[j].getLength(); }
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
-            int i = 0;
+            int[] i = new int[]{0};
             header.ToBytes(bytes, i);
             ObjectData.ToBytes(bytes, i);
             bytes[i[0]++] = (byte)CameraProperty.length;
@@ -183,7 +183,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public byte[][] ToBytesMultiple()
         {
             List<byte[]> packets = new ArrayList<byte[]>();
-            int i = 0;
+            int[] i = new int[]{0};
             int fixedLength = 10;
 
             byte[] ackBytes = null;
@@ -206,15 +206,15 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int variableLength = 0;
                 int CameraPropertyCount = 0;
 
-                i = CameraPropertyStart;
-                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i < CameraProperty.length) {
-                    int blockLength = CameraProperty[i].getLength();
+              i[0] =CameraPropertyStart;
+                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i[0] < CameraProperty.length) {
+                    int blockLength = CameraProperty[i[0]].getLength();
                     if (fixedLength + variableLength + blockLength + acksLength[0] <= MTU) {
                         variableLength += blockLength;
                         ++CameraPropertyCount;
                     }
                     else { break; }
-                    ++i;
+                    i[0]++;
                 }
 
                 byte[] packet = new byte[fixedLength + variableLength + acksLength[0]];
@@ -223,7 +223,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 if (packets.size() > 0) { packet[0] = (byte)(packet[0] & ~0x10); }
 
                 packet[length[0]++] = (byte)CameraPropertyCount;
-                for (i = CameraPropertyStart; i < CameraPropertyStart + CameraPropertyCount; i++) { CameraProperty[i].ToBytes(packet, length); }
+                for (i[0] = CameraPropertyStart; i[0] < CameraPropertyStart + CameraPropertyCount; i[0]++) { CameraProperty[i[0]].ToBytes(packet, length); }
                 CameraPropertyStart += CameraPropertyCount;
 
                 if (acksLength[0] > 0) {

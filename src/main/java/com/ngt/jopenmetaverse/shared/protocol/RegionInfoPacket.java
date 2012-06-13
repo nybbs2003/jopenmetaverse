@@ -90,7 +90,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 {
                     length = bytes[i[0]++];
                     SimName = new byte[length];
-                    Utils.arraycopy(bytes, i, SimName, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], SimName, 0, length); i[0] +=  length;
                     EstateID = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     ParentEstateID = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     RegionFlags = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
@@ -117,7 +117,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 bytes[i[0]++] = (byte)SimName.length;
-                Utils.arraycopy(SimName, 0, bytes, i, SimName.length); i[0] +=  SimName.length;
+                Utils.arraycopy(SimName, 0, bytes, i[0], SimName.length); i[0] +=  SimName.length;
                 Utils.UIntToBytes(EstateID, bytes, i); i += 4;
                 Utils.UIntToBytes(ParentEstateID, bytes, i); i += 4;
                 Utils.UIntToBytes(RegionFlags, bytes, i); i += 4;
@@ -171,10 +171,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 {
                     length = bytes[i[0]++];
                     ProductSKU = new byte[length];
-                    Utils.arraycopy(bytes, i, ProductSKU, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], ProductSKU, 0, length); i[0] +=  length;
                     length = bytes[i[0]++];
                     ProductName = new byte[length];
-                    Utils.arraycopy(bytes, i, ProductName, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], ProductName, 0, length); i[0] +=  length;
                     MaxAgents32 = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     HardMaxAgents = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     HardMaxObjects = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
@@ -189,9 +189,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 bytes[i[0]++] = (byte)ProductSKU.length;
-                Utils.arraycopy(ProductSKU, 0, bytes, i, ProductSKU.length); i[0] +=  ProductSKU.length;
+                Utils.arraycopy(ProductSKU, 0, bytes, i[0], ProductSKU.length); i[0] +=  ProductSKU.length;
                 bytes[i[0]++] = (byte)ProductName.length;
-                Utils.arraycopy(ProductName, 0, bytes, i, ProductName.length); i[0] +=  ProductName.length;
+                Utils.arraycopy(ProductName, 0, bytes, i[0], ProductName.length); i[0] +=  ProductName.length;
                 Utils.UIntToBytes(MaxAgents32, bytes, i); i += 4;
                 Utils.UIntToBytes(HardMaxAgents, bytes, i); i += 4;
                 Utils.UIntToBytes(HardMaxObjects, bytes, i); i += 4;
@@ -274,7 +274,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             length += RegionInfo2.length;
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
-            int i = 0;
+            int[] i = new int[]{0};
             header.ToBytes(bytes, i);
             AgentData.ToBytes(bytes, i);
             RegionInfo.ToBytes(bytes, i);

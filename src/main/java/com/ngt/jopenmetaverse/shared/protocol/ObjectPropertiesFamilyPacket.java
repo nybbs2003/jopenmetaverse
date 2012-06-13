@@ -62,10 +62,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     LastOwnerID.FromBytes(bytes, i[0]); i[0] += 16;
                     length = bytes[i[0]++];
                     Name = new byte[length];
-                    Utils.arraycopy(bytes, i, Name, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], Name, 0, length); i[0] +=  length;
                     length = bytes[i[0]++];
                     Description = new byte[length];
-                    Utils.arraycopy(bytes, i, Description, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], Description, 0, length); i[0] +=  length;
                 }
                 catch (Exception e)
                 {
@@ -91,9 +91,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 Utils.UIntToBytes(Category, bytes, i); i += 4;
                 LastOwnerID.ToBytes(bytes, i[0]); i[0] += 16;
                 bytes[i[0]++] = (byte)Name.length;
-                Utils.arraycopy(Name, 0, bytes, i, Name.length); i[0] +=  Name.length;
+                Utils.arraycopy(Name, 0, bytes, i[0], Name.length); i[0] +=  Name.length;
                 bytes[i[0]++] = (byte)Description.length;
-                Utils.arraycopy(Description, 0, bytes, i, Description.length); i[0] +=  Description.length;
+                Utils.arraycopy(Description, 0, bytes, i[0], Description.length); i[0] +=  Description.length;
             }
 
         }
@@ -161,7 +161,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             length += ObjectData.length;
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
-            int i = 0;
+            int[] i = new int[]{0};
             header.ToBytes(bytes, i);
             ObjectData.ToBytes(bytes, i);
             if (header.AckList != null && header.AckList.length > 0) { header.AcksToBytes(bytes, i); }

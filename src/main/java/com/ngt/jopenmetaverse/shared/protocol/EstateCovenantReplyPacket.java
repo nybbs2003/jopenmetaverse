@@ -37,7 +37,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     CovenantTimestamp = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     length = bytes[i[0]++];
                     EstateName = new byte[length];
-                    Utils.arraycopy(bytes, i, EstateName, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], EstateName, 0, length); i[0] +=  length;
                     EstateOwnerID.FromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)
@@ -52,7 +52,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 CovenantID.ToBytes(bytes, i[0]); i[0] += 16;
                 Utils.UIntToBytes(CovenantTimestamp, bytes, i); i += 4;
                 bytes[i[0]++] = (byte)EstateName.length;
-                Utils.arraycopy(EstateName, 0, bytes, i, EstateName.length); i[0] +=  EstateName.length;
+                Utils.arraycopy(EstateName, 0, bytes, i[0], EstateName.length); i[0] +=  EstateName.length;
                 EstateOwnerID.ToBytes(bytes, i[0]); i[0] += 16;
             }
 
@@ -120,7 +120,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             length += Data.length;
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
-            int i = 0;
+            int[] i = new int[]{0};
             header.ToBytes(bytes, i);
             Data.ToBytes(bytes, i);
             if (header.AckList != null && header.AckList.length > 0) { header.AcksToBytes(bytes, i); }

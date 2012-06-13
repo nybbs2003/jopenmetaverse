@@ -74,10 +74,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 {
                     length = bytes[i[0]++];
                     SimFilename = new byte[length];
-                    Utils.arraycopy(bytes, i, SimFilename, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], SimFilename, 0, length); i[0] +=  length;
                     length = bytes[i[0]++];
                     ViewerFilename = new byte[length];
-                    Utils.arraycopy(bytes, i, ViewerFilename, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], ViewerFilename, 0, length); i[0] +=  length;
                 }
                 catch (Exception e)
                 {
@@ -89,9 +89,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 bytes[i[0]++] = (byte)SimFilename.length;
-                Utils.arraycopy(SimFilename, 0, bytes, i, SimFilename.length); i[0] +=  SimFilename.length;
+                Utils.arraycopy(SimFilename, 0, bytes, i[0], SimFilename.length); i[0] +=  SimFilename.length;
                 bytes[i[0]++] = (byte)ViewerFilename.length;
-                Utils.arraycopy(ViewerFilename, 0, bytes, i, ViewerFilename.length); i[0] +=  ViewerFilename.length;
+                Utils.arraycopy(ViewerFilename, 0, bytes, i[0], ViewerFilename.length); i[0] +=  ViewerFilename.length;
             }
 
         }
@@ -164,7 +164,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             length += FileData.length;
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
-            int i = 0;
+            int[] i = new int[]{0};
             header.ToBytes(bytes, i);
             AgentData.ToBytes(bytes, i);
             FileData.ToBytes(bytes, i);

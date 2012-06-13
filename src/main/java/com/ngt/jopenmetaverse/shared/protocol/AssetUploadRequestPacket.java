@@ -40,7 +40,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     StoreLocal = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
                     length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
                     AssetData = new byte[length];
-                    Utils.arraycopy(bytes, i, AssetData, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], AssetData, 0, length); i[0] +=  length;
                 }
                 catch (Exception e)
                 {
@@ -57,7 +57,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 bytes[i[0]++] = (byte)((StoreLocal) ? 1 : 0);
                 bytes[i[0]++] = (byte)(AssetData.length % 256);
                 bytes[i[0]++] = (byte)((AssetData.length >> 8) % 256);
-                Utils.arraycopy(AssetData, 0, bytes, i, AssetData.length); i[0] +=  AssetData.length;
+                Utils.arraycopy(AssetData, 0, bytes, i[0], AssetData.length); i[0] +=  AssetData.length;
             }
 
         }
@@ -124,7 +124,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             length += AssetBlock.length;
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
-            int i = 0;
+            int[] i = new int[]{0};
             header.ToBytes(bytes, i);
             AssetBlock.ToBytes(bytes, i);
             if (header.AckList != null && header.AckList.length > 0) { header.AcksToBytes(bytes, i); }

@@ -179,7 +179,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             for (int j = 0; j < RoleChange.length; j++) { length += RoleChange[j].getLength(); }
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
-            int i = 0;
+            int[] i = new int[]{0};
             header.ToBytes(bytes, i);
             AgentData.ToBytes(bytes, i);
             bytes[i[0]++] = (byte)RoleChange.length;
@@ -192,7 +192,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public byte[][] ToBytesMultiple()
         {
             List<byte[]> packets = new ArrayList<byte[]>();
-            int i = 0;
+            int[] i = new int[]{0};
             int fixedLength = 10;
 
             byte[] ackBytes = null;
@@ -215,15 +215,15 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int variableLength = 0;
                 int RoleChangeCount = 0;
 
-                i = RoleChangeStart;
-                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i < RoleChange.length) {
-                    int blockLength = RoleChange[i].getLength();
+              i[0] =RoleChangeStart;
+                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i[0] < RoleChange.length) {
+                    int blockLength = RoleChange[i[0]].getLength();
                     if (fixedLength + variableLength + blockLength + acksLength[0] <= MTU) {
                         variableLength += blockLength;
                         ++RoleChangeCount;
                     }
                     else { break; }
-                    ++i;
+                    i[0]++;
                 }
 
                 byte[] packet = new byte[fixedLength + variableLength + acksLength[0]];
@@ -232,7 +232,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 if (packets.size() > 0) { packet[0] = (byte)(packet[0] & ~0x10); }
 
                 packet[length[0]++] = (byte)RoleChangeCount;
-                for (i = RoleChangeStart; i < RoleChangeStart + RoleChangeCount; i++) { RoleChange[i].ToBytes(packet, length); }
+                for (i[0] = RoleChangeStart; i[0] < RoleChangeStart + RoleChangeCount; i[0]++) { RoleChange[i[0]].ToBytes(packet, length); }
                 RoleChangeStart += RoleChangeCount;
 
                 if (acksLength[0] > 0) {

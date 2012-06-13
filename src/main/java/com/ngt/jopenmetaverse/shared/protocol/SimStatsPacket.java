@@ -225,7 +225,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             for (int j = 0; j < Stat.length; j++) { length += Stat[j].getLength(); }
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
-            int i = 0;
+            int[] i = new int[]{0};
             header.ToBytes(bytes, i);
             Region.ToBytes(bytes, i);
             bytes[i[0]++] = (byte)Stat.length;

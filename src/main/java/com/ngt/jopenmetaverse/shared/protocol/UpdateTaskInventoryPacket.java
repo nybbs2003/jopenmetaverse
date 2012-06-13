@@ -156,10 +156,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     SalePrice = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     length = bytes[i[0]++];
                     Name = new byte[length];
-                    Utils.arraycopy(bytes, i, Name, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], Name, 0, length); i[0] +=  length;
                     length = bytes[i[0]++];
                     Description = new byte[length];
-                    Utils.arraycopy(bytes, i, Description, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], Description, 0, length); i[0] +=  length;
                     CreationDate = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     CRC = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                 }
@@ -190,9 +190,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 bytes[i[0]++] = SaleType;
                 Utils.IntToBytes(SalePrice, bytes, i); i += 4;
                 bytes[i[0]++] = (byte)Name.length;
-                Utils.arraycopy(Name, 0, bytes, i, Name.length); i[0] +=  Name.length;
+                Utils.arraycopy(Name, 0, bytes, i[0], Name.length); i[0] +=  Name.length;
                 bytes[i[0]++] = (byte)Description.length;
-                Utils.arraycopy(Description, 0, bytes, i, Description.length); i[0] +=  Description.length;
+                Utils.arraycopy(Description, 0, bytes, i[0], Description.length); i[0] +=  Description.length;
                 Utils.IntToBytes(CreationDate, bytes, i); i += 4;
                 Utils.UIntToBytes(CRC, bytes, i); i += 4;
             }
@@ -274,7 +274,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             length += InventoryData.length;
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
-            int i = 0;
+            int[] i = new int[]{0};
             header.ToBytes(bytes, i);
             AgentData.ToBytes(bytes, i);
             UpdateData.ToBytes(bytes, i);

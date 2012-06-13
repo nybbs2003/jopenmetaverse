@@ -82,12 +82,12 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     QueryID.FromBytes(bytes, i[0]); i[0] += 16;
                     length = bytes[i[0]++];
                     QueryText = new byte[length];
-                    Utils.arraycopy(bytes, i, QueryText, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], QueryText, 0, length); i[0] +=  length;
                     QueryFlags = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     Category = (sbyte)bytes[i[0]++];
                     length = bytes[i[0]++];
                     SimName = new byte[length];
-                    Utils.arraycopy(bytes, i, SimName, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], SimName, 0, length); i[0] +=  length;
                     QueryStart = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                 }
                 catch (Exception e)
@@ -101,11 +101,11 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 QueryID.ToBytes(bytes, i[0]); i[0] += 16;
                 bytes[i[0]++] = (byte)QueryText.length;
-                Utils.arraycopy(QueryText, 0, bytes, i, QueryText.length); i[0] +=  QueryText.length;
+                Utils.arraycopy(QueryText, 0, bytes, i[0], QueryText.length); i[0] +=  QueryText.length;
                 Utils.UIntToBytes(QueryFlags, bytes, i); i += 4;
                 bytes[i[0]++] = (byte)Category;
                 bytes[i[0]++] = (byte)SimName.length;
-                Utils.arraycopy(SimName, 0, bytes, i, SimName.length); i[0] +=  SimName.length;
+                Utils.arraycopy(SimName, 0, bytes, i[0], SimName.length); i[0] +=  SimName.length;
                 Utils.IntToBytes(QueryStart, bytes, i); i += 4;
             }
 
@@ -180,7 +180,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             length += QueryData.length;
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
-            int i = 0;
+            int[] i = new int[]{0};
             header.ToBytes(bytes, i);
             AgentData.ToBytes(bytes, i);
             QueryData.ToBytes(bytes, i);

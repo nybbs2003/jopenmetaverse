@@ -34,7 +34,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     length = bytes[i[0]++];
                     Reason = new byte[length];
-                    Utils.arraycopy(bytes, i, Reason, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], Reason, 0, length); i[0] +=  length;
                 }
                 catch (Exception e)
                 {
@@ -47,7 +47,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
                 bytes[i[0]++] = (byte)Reason.length;
-                Utils.arraycopy(Reason, 0, bytes, i, Reason.length); i[0] +=  Reason.length;
+                Utils.arraycopy(Reason, 0, bytes, i[0], Reason.length); i[0] +=  Reason.length;
             }
 
         }
@@ -83,10 +83,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 {
                     length = bytes[i[0]++];
                     Message = new byte[length];
-                    Utils.arraycopy(bytes, i, Message, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], Message, 0, length); i[0] +=  length;
                     length = bytes[i[0]++];
                     ExtraParams = new byte[length];
-                    Utils.arraycopy(bytes, i, ExtraParams, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], ExtraParams, 0, length); i[0] +=  length;
                 }
                 catch (Exception e)
                 {
@@ -98,9 +98,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 bytes[i[0]++] = (byte)Message.length;
-                Utils.arraycopy(Message, 0, bytes, i, Message.length); i[0] +=  Message.length;
+                Utils.arraycopy(Message, 0, bytes, i[0], Message.length); i[0] +=  Message.length;
                 bytes[i[0]++] = (byte)ExtraParams.length;
-                Utils.arraycopy(ExtraParams, 0, bytes, i, ExtraParams.length); i[0] +=  ExtraParams.length;
+                Utils.arraycopy(ExtraParams, 0, bytes, i[0], ExtraParams.length); i[0] +=  ExtraParams.length;
             }
 
         }
@@ -189,7 +189,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             for (int j = 0; j < AlertInfo.length; j++) { length += AlertInfo[j].getLength(); }
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
-            int i = 0;
+            int[] i = new int[]{0};
             header.ToBytes(bytes, i);
             Info.ToBytes(bytes, i);
             bytes[i[0]++] = (byte)AlertInfo.length;
@@ -202,7 +202,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public byte[][] ToBytesMultiple()
         {
             List<byte[]> packets = new ArrayList<byte[]>();
-            int i = 0;
+            int[] i = new int[]{0};
             int fixedLength = 10;
 
             byte[] ackBytes = null;
@@ -225,15 +225,15 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int variableLength = 0;
                 int AlertInfoCount = 0;
 
-                i = AlertInfoStart;
-                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i < AlertInfo.length) {
-                    int blockLength = AlertInfo[i].getLength();
+              i[0] =AlertInfoStart;
+                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i[0] < AlertInfo.length) {
+                    int blockLength = AlertInfo[i[0]].getLength();
                     if (fixedLength + variableLength + blockLength + acksLength[0] <= MTU) {
                         variableLength += blockLength;
                         ++AlertInfoCount;
                     }
                     else { break; }
-                    ++i;
+                    i[0]++;
                 }
 
                 byte[] packet = new byte[fixedLength + variableLength + acksLength[0]];
@@ -242,7 +242,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 if (packets.size() > 0) { packet[0] = (byte)(packet[0] & ~0x10); }
 
                 packet[length[0]++] = (byte)AlertInfoCount;
-                for (i = AlertInfoStart; i < AlertInfoStart + AlertInfoCount; i++) { AlertInfo[i].ToBytes(packet, length); }
+                for (i[0] = AlertInfoStart; i[0] < AlertInfoStart + AlertInfoCount; i[0]++) { AlertInfo[i[0]].ToBytes(packet, length); }
                 AlertInfoStart += AlertInfoCount;
 
                 if (acksLength[0] > 0) {

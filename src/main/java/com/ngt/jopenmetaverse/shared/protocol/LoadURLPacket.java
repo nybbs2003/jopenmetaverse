@@ -39,16 +39,16 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 {
                     length = bytes[i[0]++];
                     ObjectName = new byte[length];
-                    Utils.arraycopy(bytes, i, ObjectName, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], ObjectName, 0, length); i[0] +=  length;
                     ObjectID.FromBytes(bytes, i[0]); i[0] += 16;
                     OwnerID.FromBytes(bytes, i[0]); i[0] += 16;
                     OwnerIsGroup = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
                     length = bytes[i[0]++];
                     Message = new byte[length];
-                    Utils.arraycopy(bytes, i, Message, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], Message, 0, length); i[0] +=  length;
                     length = bytes[i[0]++];
                     URL = new byte[length];
-                    Utils.arraycopy(bytes, i, URL, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], URL, 0, length); i[0] +=  length;
                 }
                 catch (Exception e)
                 {
@@ -60,14 +60,14 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 bytes[i[0]++] = (byte)ObjectName.length;
-                Utils.arraycopy(ObjectName, 0, bytes, i, ObjectName.length); i[0] +=  ObjectName.length;
+                Utils.arraycopy(ObjectName, 0, bytes, i[0], ObjectName.length); i[0] +=  ObjectName.length;
                 ObjectID.ToBytes(bytes, i[0]); i[0] += 16;
                 OwnerID.ToBytes(bytes, i[0]); i[0] += 16;
                 bytes[i[0]++] = (byte)((OwnerIsGroup) ? 1 : 0);
                 bytes[i[0]++] = (byte)Message.length;
-                Utils.arraycopy(Message, 0, bytes, i, Message.length); i[0] +=  Message.length;
+                Utils.arraycopy(Message, 0, bytes, i[0], Message.length); i[0] +=  Message.length;
                 bytes[i[0]++] = (byte)URL.length;
-                Utils.arraycopy(URL, 0, bytes, i, URL.length); i[0] +=  URL.length;
+                Utils.arraycopy(URL, 0, bytes, i[0], URL.length); i[0] +=  URL.length;
             }
 
         }
@@ -134,7 +134,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             length += Data.length;
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
-            int i = 0;
+            int[] i = new int[]{0};
             header.ToBytes(bytes, i);
             Data.ToBytes(bytes, i);
             if (header.AckList != null && header.AckList.length > 0) { header.AcksToBytes(bytes, i); }

@@ -77,7 +77,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 {
                     length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
                     Message = new byte[length];
-                    Utils.arraycopy(bytes, i, Message, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], Message, 0, length); i[0] +=  length;
                     Type = (byte)bytes[i[0]++];
                     Channel = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                 }
@@ -92,7 +92,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 bytes[i[0]++] = (byte)(Message.length % 256);
                 bytes[i[0]++] = (byte)((Message.length >> 8) % 256);
-                Utils.arraycopy(Message, 0, bytes, i, Message.length); i[0] +=  Message.length;
+                Utils.arraycopy(Message, 0, bytes, i[0], Message.length); i[0] +=  Message.length;
                 bytes[i[0]++] = Type;
                 Utils.IntToBytes(Channel, bytes, i); i += 4;
             }
@@ -168,7 +168,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             length += ChatData.length;
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
-            int i = 0;
+            int[] i = new int[]{0};
             header.ToBytes(bytes, i);
             AgentData.ToBytes(bytes, i);
             ChatData.ToBytes(bytes, i);

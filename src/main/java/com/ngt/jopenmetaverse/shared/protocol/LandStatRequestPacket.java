@@ -80,7 +80,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     RequestFlags = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     length = bytes[i[0]++];
                     Filter = new byte[length];
-                    Utils.arraycopy(bytes, i, Filter, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], Filter, 0, length); i[0] +=  length;
                     ParcelLocalID = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                 }
                 catch (Exception e)
@@ -95,7 +95,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 Utils.UIntToBytes(ReportType, bytes, i); i += 4;
                 Utils.UIntToBytes(RequestFlags, bytes, i); i += 4;
                 bytes[i[0]++] = (byte)Filter.length;
-                Utils.arraycopy(Filter, 0, bytes, i, Filter.length); i[0] +=  Filter.length;
+                Utils.arraycopy(Filter, 0, bytes, i[0], Filter.length); i[0] +=  Filter.length;
                 Utils.IntToBytes(ParcelLocalID, bytes, i); i += 4;
             }
 
@@ -169,7 +169,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             length += RequestData.length;
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
-            int i = 0;
+            int[] i = new int[]{0};
             header.ToBytes(bytes, i);
             AgentData.ToBytes(bytes, i);
             RequestData.ToBytes(bytes, i);

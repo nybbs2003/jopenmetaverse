@@ -83,10 +83,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 {
                     length = bytes[i[0]++];
                     Name = new byte[length];
-                    Utils.arraycopy(bytes, i, Name, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], Name, 0, length); i[0] +=  length;
                     length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
                     Charter = new byte[length];
-                    Utils.arraycopy(bytes, i, Charter, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], Charter, 0, length); i[0] +=  length;
                     ShowInList = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
                     InsigniaID.FromBytes(bytes, i[0]); i[0] += 16;
                     MembershipFee = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
@@ -104,10 +104,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 bytes[i[0]++] = (byte)Name.length;
-                Utils.arraycopy(Name, 0, bytes, i, Name.length); i[0] +=  Name.length;
+                Utils.arraycopy(Name, 0, bytes, i[0], Name.length); i[0] +=  Name.length;
                 bytes[i[0]++] = (byte)(Charter.length % 256);
                 bytes[i[0]++] = (byte)((Charter.length >> 8) % 256);
-                Utils.arraycopy(Charter, 0, bytes, i, Charter.length); i[0] +=  Charter.length;
+                Utils.arraycopy(Charter, 0, bytes, i[0], Charter.length); i[0] +=  Charter.length;
                 bytes[i[0]++] = (byte)((ShowInList) ? 1 : 0);
                 InsigniaID.ToBytes(bytes, i[0]); i[0] += 16;
                 Utils.IntToBytes(MembershipFee, bytes, i); i += 4;
@@ -187,7 +187,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             length += GroupData.length;
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
-            int i = 0;
+            int[] i = new int[]{0};
             header.ToBytes(bytes, i);
             AgentData.ToBytes(bytes, i);
             GroupData.ToBytes(bytes, i);

@@ -77,7 +77,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     MuteID.FromBytes(bytes, i[0]); i[0] += 16;
                     length = bytes[i[0]++];
                     MuteName = new byte[length];
-                    Utils.arraycopy(bytes, i, MuteName, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], MuteName, 0, length); i[0] +=  length;
                 }
                 catch (Exception e)
                 {
@@ -90,7 +90,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 MuteID.ToBytes(bytes, i[0]); i[0] += 16;
                 bytes[i[0]++] = (byte)MuteName.length;
-                Utils.arraycopy(MuteName, 0, bytes, i, MuteName.length); i[0] +=  MuteName.length;
+                Utils.arraycopy(MuteName, 0, bytes, i[0], MuteName.length); i[0] +=  MuteName.length;
             }
 
         }
@@ -163,7 +163,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             length += MuteData.length;
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
-            int i = 0;
+            int[] i = new int[]{0};
             header.ToBytes(bytes, i);
             AgentData.ToBytes(bytes, i);
             MuteData.ToBytes(bytes, i);

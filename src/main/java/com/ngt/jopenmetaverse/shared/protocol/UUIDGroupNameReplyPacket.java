@@ -34,7 +34,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     ID.FromBytes(bytes, i[0]); i[0] += 16;
                     length = bytes[i[0]++];
                     GroupName = new byte[length];
-                    Utils.arraycopy(bytes, i, GroupName, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], GroupName, 0, length); i[0] +=  length;
                 }
                 catch (Exception e)
                 {
@@ -47,7 +47,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 ID.ToBytes(bytes, i[0]); i[0] += 16;
                 bytes[i[0]++] = (byte)GroupName.length;
-                Utils.arraycopy(GroupName, 0, bytes, i, GroupName.length); i[0] +=  GroupName.length;
+                Utils.arraycopy(GroupName, 0, bytes, i[0], GroupName.length); i[0] +=  GroupName.length;
             }
 
         }
@@ -130,7 +130,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             for (int j = 0; j < UUIDNameBlock.length; j++) { length += UUIDNameBlock[j].getLength(); }
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
-            int i = 0;
+            int[] i = new int[]{0};
             header.ToBytes(bytes, i);
             bytes[i[0]++] = (byte)UUIDNameBlock.length;
             for (int j = 0; j < UUIDNameBlock.length; j++) { UUIDNameBlock[j].ToBytes(bytes, i); }
@@ -142,7 +142,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public byte[][] ToBytesMultiple()
         {
             List<byte[]> packets = new ArrayList<byte[]>();
-            int i = 0;
+            int[] i = new int[]{0};
             int fixedLength = 10;
 
             byte[] ackBytes = null;
@@ -163,15 +163,15 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int variableLength = 0;
                 int UUIDNameBlockCount = 0;
 
-                i = UUIDNameBlockStart;
-                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i < UUIDNameBlock.length) {
-                    int blockLength = UUIDNameBlock[i].getLength();
+              i[0] =UUIDNameBlockStart;
+                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i[0] < UUIDNameBlock.length) {
+                    int blockLength = UUIDNameBlock[i[0]].getLength();
                     if (fixedLength + variableLength + blockLength + acksLength[0] <= MTU) {
                         variableLength += blockLength;
                         ++UUIDNameBlockCount;
                     }
                     else { break; }
-                    ++i;
+                    i[0]++;
                 }
 
                 byte[] packet = new byte[fixedLength + variableLength + acksLength[0]];
@@ -180,7 +180,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 if (packets.size() > 0) { packet[0] = (byte)(packet[0] & ~0x10); }
 
                 packet[length[0]++] = (byte)UUIDNameBlockCount;
-                for (i = UUIDNameBlockStart; i < UUIDNameBlockStart + UUIDNameBlockCount; i++) { UUIDNameBlock[i].ToBytes(packet, length); }
+                for (i[0] = UUIDNameBlockStart; i[0] < UUIDNameBlockStart + UUIDNameBlockCount; i[0]++) { UUIDNameBlock[i[0]].ToBytes(packet, length); }
                 UUIDNameBlockStart += UUIDNameBlockCount;
 
                 if (acksLength[0] > 0) {

@@ -174,7 +174,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             for (int j = 0; j < WearableData.length; j++) { length += WearableData[j].getLength(); }
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
-            int i = 0;
+            int[] i = new int[]{0};
             header.ToBytes(bytes, i);
             AgentData.ToBytes(bytes, i);
             bytes[i[0]++] = (byte)WearableData.length;
@@ -187,7 +187,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public byte[][] ToBytesMultiple()
         {
             List<byte[]> packets = new ArrayList<byte[]>();
-            int i = 0;
+            int[] i = new int[]{0};
             int fixedLength = 10;
 
             byte[] ackBytes = null;
@@ -210,15 +210,15 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int variableLength = 0;
                 int WearableDataCount = 0;
 
-                i = WearableDataStart;
-                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i < WearableData.length) {
-                    int blockLength = WearableData[i].getLength();
+              i[0] =WearableDataStart;
+                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i[0] < WearableData.length) {
+                    int blockLength = WearableData[i[0]].getLength();
                     if (fixedLength + variableLength + blockLength + acksLength[0] <= MTU) {
                         variableLength += blockLength;
                         ++WearableDataCount;
                     }
                     else { break; }
-                    ++i;
+                    i[0]++;
                 }
 
                 byte[] packet = new byte[fixedLength + variableLength + acksLength[0]];
@@ -227,7 +227,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 if (packets.size() > 0) { packet[0] = (byte)(packet[0] & ~0x10); }
 
                 packet[length[0]++] = (byte)WearableDataCount;
-                for (i = WearableDataStart; i < WearableDataStart + WearableDataCount; i++) { WearableData[i].ToBytes(packet, length); }
+                for (i[0] = WearableDataStart; i[0] < WearableDataStart + WearableDataCount; i[0]++) { WearableData[i[0]].ToBytes(packet, length); }
                 WearableDataStart += WearableDataCount;
 
                 if (acksLength[0] > 0) {

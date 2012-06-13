@@ -240,7 +240,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             for (int j = 0; j < AgentData.getLength(); j++) { length += AgentData[j].getLength(); }
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
-            int i = 0;
+            int[] i = new int[]{0};
             header.ToBytes(bytes, i);
             bytes[i[0]++] = (byte)Location.length;
             for (int j = 0; j < Location.length; j++) { Location[j].ToBytes(bytes, i); }

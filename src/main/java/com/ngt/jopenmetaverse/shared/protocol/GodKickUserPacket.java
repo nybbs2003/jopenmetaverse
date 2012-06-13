@@ -40,7 +40,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     KickFlags = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
                     Reason = new byte[length];
-                    Utils.arraycopy(bytes, i, Reason, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], Reason, 0, length); i[0] +=  length;
                 }
                 catch (Exception e)
                 {
@@ -57,7 +57,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 Utils.UIntToBytes(KickFlags, bytes, i); i += 4;
                 bytes[i[0]++] = (byte)(Reason.length % 256);
                 bytes[i[0]++] = (byte)((Reason.length >> 8) % 256);
-                Utils.arraycopy(Reason, 0, bytes, i, Reason.length); i[0] +=  Reason.length;
+                Utils.arraycopy(Reason, 0, bytes, i[0], Reason.length); i[0] +=  Reason.length;
             }
 
         }
@@ -124,7 +124,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             length += UserInfo.length;
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
-            int i = 0;
+            int[] i = new int[]{0};
             header.ToBytes(bytes, i);
             UserInfo.ToBytes(bytes, i);
             if (header.AckList != null && header.AckList.length > 0) { header.AcksToBytes(bytes, i); }

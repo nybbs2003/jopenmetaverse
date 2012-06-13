@@ -182,7 +182,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             for (int j = 0; j < RequestImage.length; j++) { length += RequestImage[j].getLength(); }
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
-            int i = 0;
+            int[] i = new int[]{0};
             header.ToBytes(bytes, i);
             AgentData.ToBytes(bytes, i);
             bytes[i[0]++] = (byte)RequestImage.length;
@@ -195,7 +195,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public byte[][] ToBytesMultiple()
         {
             List<byte[]> packets = new ArrayList<byte[]>();
-            int i = 0;
+            int[] i = new int[]{0};
             int fixedLength = 7;
 
             byte[] ackBytes = null;
@@ -218,15 +218,15 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int variableLength = 0;
                 int RequestImageCount = 0;
 
-                i = RequestImageStart;
-                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i < RequestImage.length) {
-                    int blockLength = RequestImage[i].getLength();
+              i[0] =RequestImageStart;
+                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i[0] < RequestImage.length) {
+                    int blockLength = RequestImage[i[0]].getLength();
                     if (fixedLength + variableLength + blockLength + acksLength[0] <= MTU) {
                         variableLength += blockLength;
                         ++RequestImageCount;
                     }
                     else { break; }
-                    ++i;
+                    i[0]++;
                 }
 
                 byte[] packet = new byte[fixedLength + variableLength + acksLength[0]];
@@ -235,7 +235,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 if (packets.size() > 0) { packet[0] = (byte)(packet[0] & ~0x10); }
 
                 packet[length[0]++] = (byte)RequestImageCount;
-                for (i = RequestImageStart; i < RequestImageStart + RequestImageCount; i++) { RequestImage[i].ToBytes(packet, length); }
+                for (i[0] = RequestImageStart; i[0] < RequestImageStart + RequestImageCount; i[0]++) { RequestImage[i[0]].ToBytes(packet, length); }
                 RequestImageStart += RequestImageCount;
 
                 if (acksLength[0] > 0) {

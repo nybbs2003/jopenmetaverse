@@ -81,7 +81,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     CurrentInterval = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     length = bytes[i[0]++];
                     StartDate = new byte[length];
-                    Utils.arraycopy(bytes, i, StartDate, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], StartDate, 0, length); i[0] +=  length;
                 }
                 catch (Exception e)
                 {
@@ -96,7 +96,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 Utils.IntToBytes(IntervalDays, bytes, i); i += 4;
                 Utils.IntToBytes(CurrentInterval, bytes, i); i += 4;
                 bytes[i[0]++] = (byte)StartDate.length;
-                Utils.arraycopy(StartDate, 0, bytes, i, StartDate.length); i[0] +=  StartDate.length;
+                Utils.arraycopy(StartDate, 0, bytes, i[0], StartDate.length); i[0] +=  StartDate.length;
             }
 
         }
@@ -136,14 +136,14 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 {
                     length = bytes[i[0]++];
                     Time = new byte[length];
-                    Utils.arraycopy(bytes, i, Time, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], Time, 0, length); i[0] +=  length;
                     length = bytes[i[0]++];
                     User = new byte[length];
-                    Utils.arraycopy(bytes, i, User, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], User, 0, length); i[0] +=  length;
                     Type = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     length = bytes[i[0]++];
                     Item = new byte[length];
-                    Utils.arraycopy(bytes, i, Item, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], Item, 0, length); i[0] +=  length;
                     Amount = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                 }
                 catch (Exception e)
@@ -156,12 +156,12 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 bytes[i[0]++] = (byte)Time.length;
-                Utils.arraycopy(Time, 0, bytes, i, Time.length); i[0] +=  Time.length;
+                Utils.arraycopy(Time, 0, bytes, i[0], Time.length); i[0] +=  Time.length;
                 bytes[i[0]++] = (byte)User.length;
-                Utils.arraycopy(User, 0, bytes, i, User.length); i[0] +=  User.length;
+                Utils.arraycopy(User, 0, bytes, i[0], User.length); i[0] +=  User.length;
                 Utils.IntToBytes(Type, bytes, i); i += 4;
                 bytes[i[0]++] = (byte)Item.length;
-                Utils.arraycopy(Item, 0, bytes, i, Item.length); i[0] +=  Item.length;
+                Utils.arraycopy(Item, 0, bytes, i[0], Item.length); i[0] +=  Item.length;
                 Utils.IntToBytes(Amount, bytes, i); i += 4;
             }
 
@@ -258,7 +258,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             for (int j = 0; j < HistoryData.length; j++) { length += HistoryData[j].getLength(); }
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
-            int i = 0;
+            int[] i = new int[]{0};
             header.ToBytes(bytes, i);
             AgentData.ToBytes(bytes, i);
             MoneyData.ToBytes(bytes, i);
@@ -272,7 +272,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public byte[][] ToBytesMultiple()
         {
             List<byte[]> packets = new ArrayList<byte[]>();
-            int i = 0;
+            int[] i = new int[]{0};
             int fixedLength = 10;
 
             byte[] ackBytes = null;
@@ -297,15 +297,15 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int variableLength = 0;
                 int HistoryDataCount = 0;
 
-                i = HistoryDataStart;
-                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i < HistoryData.length) {
-                    int blockLength = HistoryData[i].getLength();
+              i[0] =HistoryDataStart;
+                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i[0] < HistoryData.length) {
+                    int blockLength = HistoryData[i[0]].getLength();
                     if (fixedLength + variableLength + blockLength + acksLength[0] <= MTU) {
                         variableLength += blockLength;
                         ++HistoryDataCount;
                     }
                     else { break; }
-                    ++i;
+                    i[0]++;
                 }
 
                 byte[] packet = new byte[fixedLength + variableLength + acksLength[0]];
@@ -314,7 +314,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 if (packets.size() > 0) { packet[0] = (byte)(packet[0] & ~0x10); }
 
                 packet[length[0]++] = (byte)HistoryDataCount;
-                for (i = HistoryDataStart; i < HistoryDataStart + HistoryDataCount; i++) { HistoryData[i].ToBytes(packet, length); }
+                for (i[0] = HistoryDataStart; i[0] < HistoryDataStart + HistoryDataCount; i[0]++) { HistoryData[i[0]].ToBytes(packet, length); }
                 HistoryDataStart += HistoryDataCount;
 
                 if (acksLength[0] > 0) {

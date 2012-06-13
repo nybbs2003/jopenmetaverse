@@ -80,7 +80,7 @@ import com.ngt.jopenmetaverse.shared.types.UUID;
                 {
                     length = bytes[i[0]++];
                     Name = new byte[length];
-                    Utils.arraycopy(bytes, i, Name, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], Name, 0, length); i[0] +=  length;
                 }
                 catch (Exception e)
                 {
@@ -92,7 +92,7 @@ import com.ngt.jopenmetaverse.shared.types.UUID;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 bytes[i[0]++] = (byte)Name.length;
-                Utils.arraycopy(Name, 0, bytes, i, Name.length); i[0] +=  Name.length;
+                Utils.arraycopy(Name, 0, bytes, i[0], Name.length); i[0] +=  Name.length;
             }
 
         }
@@ -165,7 +165,7 @@ import com.ngt.jopenmetaverse.shared.types.UUID;
             length += Data.length;
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
-            int i = 0;
+            int[] i = new int[]{0};
             header.ToBytes(bytes, i);
             AgentData.ToBytes(bytes, i);
             Data.ToBytes(bytes, i);

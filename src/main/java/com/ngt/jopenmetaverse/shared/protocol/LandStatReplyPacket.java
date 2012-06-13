@@ -92,10 +92,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     Score = Utils.BytesToFloat(bytes, i); i += 4;
                     length = bytes[i[0]++];
                     TaskName = new byte[length];
-                    Utils.arraycopy(bytes, i, TaskName, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], TaskName, 0, length); i[0] +=  length;
                     length = bytes[i[0]++];
                     OwnerName = new byte[length];
-                    Utils.arraycopy(bytes, i, OwnerName, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], OwnerName, 0, length); i[0] +=  length;
                 }
                 catch (Exception e)
                 {
@@ -113,9 +113,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 Utils.FloatToBytes(LocationZ, bytes, i); i += 4;
                 Utils.FloatToBytes(Score, bytes, i); i += 4;
                 bytes[i[0]++] = (byte)TaskName.length;
-                Utils.arraycopy(TaskName, 0, bytes, i, TaskName.length); i[0] +=  TaskName.length;
+                Utils.arraycopy(TaskName, 0, bytes, i[0], TaskName.length); i[0] +=  TaskName.length;
                 bytes[i[0]++] = (byte)OwnerName.length;
-                Utils.arraycopy(OwnerName, 0, bytes, i, OwnerName.length); i[0] +=  OwnerName.length;
+                Utils.arraycopy(OwnerName, 0, bytes, i[0], OwnerName.length); i[0] +=  OwnerName.length;
             }
 
         }
@@ -204,7 +204,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             for (int j = 0; j < ReportData.length; j++) { length += ReportData[j].getLength(); }
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
-            int i = 0;
+            int[] i = new int[]{0};
             header.ToBytes(bytes, i);
             RequestData.ToBytes(bytes, i);
             bytes[i[0]++] = (byte)ReportData.length;
@@ -217,7 +217,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public byte[][] ToBytesMultiple()
         {
             List<byte[]> packets = new ArrayList<byte[]>();
-            int i = 0;
+            int[] i = new int[]{0};
             int fixedLength = 10;
 
             byte[] ackBytes = null;
@@ -240,15 +240,15 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int variableLength = 0;
                 int ReportDataCount = 0;
 
-                i = ReportDataStart;
-                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i < ReportData.length) {
-                    int blockLength = ReportData[i].getLength();
+              i[0] =ReportDataStart;
+                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i[0] < ReportData.length) {
+                    int blockLength = ReportData[i[0]].getLength();
                     if (fixedLength + variableLength + blockLength + acksLength[0] <= MTU) {
                         variableLength += blockLength;
                         ++ReportDataCount;
                     }
                     else { break; }
-                    ++i;
+                    i[0]++;
                 }
 
                 byte[] packet = new byte[fixedLength + variableLength + acksLength[0]];
@@ -257,7 +257,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 if (packets.size() > 0) { packet[0] = (byte)(packet[0] & ~0x10); }
 
                 packet[length[0]++] = (byte)ReportDataCount;
-                for (i = ReportDataStart; i < ReportDataStart + ReportDataCount; i++) { ReportData[i].ToBytes(packet, length); }
+                for (i[0] = ReportDataStart; i[0] < ReportDataStart + ReportDataCount; i[0]++) { ReportData[i[0]].ToBytes(packet, length); }
                 ReportDataStart += ReportDataCount;
 
                 if (acksLength[0] > 0) {

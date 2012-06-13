@@ -130,10 +130,10 @@ public void FromBytes(byte[] bytes, int[] i) throws MalformedDataException
                     OwnerID.FromBytes(bytes, i[0]); i[0] += 16;
                     length = bytes[i[0]++];
                     Name = new byte[length];
-                    Utils.arraycopy(bytes, i, Name, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], Name, 0, length); i[0] +=  length;
                     length = bytes[i[0]++];
                     Desc = new byte[length];
-                    Utils.arraycopy(bytes, i, Desc, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], Desc, 0, length); i[0] +=  length;
                     ActualArea = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     BillableArea = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     Flags = (byte)bytes[i[0]++];
@@ -142,7 +142,7 @@ public void FromBytes(byte[] bytes, int[] i) throws MalformedDataException
                     GlobalZ = Utils.BytesToFloat(bytes, i); i += 4;
                     length = bytes[i[0]++];
                     SimName = new byte[length];
-                    Utils.arraycopy(bytes, i, SimName, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], SimName, 0, length); i[0] +=  length;
                     SnapshotID.FromBytes(bytes, i[0]); i[0] += 16;
                     Dwell = Utils.BytesToFloat(bytes, i); i += 4;
                     Price = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
@@ -158,9 +158,9 @@ public void FromBytes(byte[] bytes, int[] i) throws MalformedDataException
             {
                 OwnerID.ToBytes(bytes, i[0]); i[0] += 16;
                 bytes[i[0]++] = (byte)Name.length;
-                Utils.arraycopy(Name, 0, bytes, i, Name.length); i[0] +=  Name.length;
+                Utils.arraycopy(Name, 0, bytes, i[0], Name.length); i[0] +=  Name.length;
                 bytes[i[0]++] = (byte)Desc.length;
-                Utils.arraycopy(Desc, 0, bytes, i, Desc.length); i[0] +=  Desc.length;
+                Utils.arraycopy(Desc, 0, bytes, i[0], Desc.length); i[0] +=  Desc.length;
                 Utils.IntToBytes(ActualArea, bytes, i); i += 4;
                 Utils.IntToBytes(BillableArea, bytes, i); i += 4;
                 bytes[i[0]++] = Flags;
@@ -168,7 +168,7 @@ public void FromBytes(byte[] bytes, int[] i) throws MalformedDataException
                 Utils.FloatToBytes(GlobalY, bytes, i); i += 4;
                 Utils.FloatToBytes(GlobalZ, bytes, i); i += 4;
                 bytes[i[0]++] = (byte)SimName.length;
-                Utils.arraycopy(SimName, 0, bytes, i, SimName.length); i[0] +=  SimName.length;
+                Utils.arraycopy(SimName, 0, bytes, i[0], SimName.length); i[0] +=  SimName.length;
                 SnapshotID.ToBytes(bytes, i[0]); i[0] += 16;
                 Utils.FloatToBytes(Dwell, bytes, i); i += 4;
                 Utils.IntToBytes(Price, bytes, i); i += 4;
@@ -267,7 +267,7 @@ public void FromBytes(byte[] bytes, int[] i) throws MalformedDataException
             for (int j = 0; j < QueryData.length; j++) { length += QueryData[j].getLength(); }
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
-            int i = 0;
+            int[] i = new int[]{0};
             header.ToBytes(bytes, i);
             AgentData.ToBytes(bytes, i);
             TransactionData.ToBytes(bytes, i);
@@ -281,7 +281,7 @@ public void FromBytes(byte[] bytes, int[] i) throws MalformedDataException
 			public byte[][] ToBytesMultiple()
         {
             List<byte[]> packets = new ArrayList<byte[]>();
-            int i = 0;
+            int[] i = new int[]{0};
             int fixedLength = 10;
 
             byte[] ackBytes = null;
@@ -306,15 +306,15 @@ public void FromBytes(byte[] bytes, int[] i) throws MalformedDataException
                 int variableLength = 0;
                 int QueryDataCount = 0;
 
-                i = QueryDataStart;
-                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i < QueryData.length) {
-                    int blockLength = QueryData[i].getLength();
+              i[0] =QueryDataStart;
+                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i[0] < QueryData.length) {
+                    int blockLength = QueryData[i[0]].getLength();
                     if (fixedLength + variableLength + blockLength + acksLength[0] <= MTU) {
                         variableLength += blockLength;
                         ++QueryDataCount;
                     }
                     else { break; }
-                    ++i;
+                    i[0]++;
                 }
 
                 byte[] packet = new byte[fixedLength + variableLength + acksLength[0]];
@@ -323,7 +323,7 @@ public void FromBytes(byte[] bytes, int[] i) throws MalformedDataException
                 if (packets.size() > 0) { packet[0] = (byte)(packet[0] & ~0x10); }
 
                 packet[length[0]++] = (byte)QueryDataCount;
-                for (i = QueryDataStart; i < QueryDataStart + QueryDataCount; i++) { QueryData[i].ToBytes(packet, length); }
+                for (i[0] = QueryDataStart; i[0] < QueryDataStart + QueryDataCount; i[0]++) { QueryData[i[0]].ToBytes(packet, length); }
                 QueryDataStart += QueryDataCount;
 
                 if (acksLength[0] > 0) {

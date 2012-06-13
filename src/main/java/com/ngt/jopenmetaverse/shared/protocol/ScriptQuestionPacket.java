@@ -39,10 +39,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     ItemID.FromBytes(bytes, i[0]); i[0] += 16;
                     length = bytes[i[0]++];
                     ObjectName = new byte[length];
-                    Utils.arraycopy(bytes, i, ObjectName, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], ObjectName, 0, length); i[0] +=  length;
                     length = bytes[i[0]++];
                     ObjectOwner = new byte[length];
-                    Utils.arraycopy(bytes, i, ObjectOwner, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], ObjectOwner, 0, length); i[0] +=  length;
                     Questions = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                 }
                 catch (Exception e)
@@ -57,9 +57,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 TaskID.ToBytes(bytes, i[0]); i[0] += 16;
                 ItemID.ToBytes(bytes, i[0]); i[0] += 16;
                 bytes[i[0]++] = (byte)ObjectName.length;
-                Utils.arraycopy(ObjectName, 0, bytes, i, ObjectName.length); i[0] +=  ObjectName.length;
+                Utils.arraycopy(ObjectName, 0, bytes, i[0], ObjectName.length); i[0] +=  ObjectName.length;
                 bytes[i[0]++] = (byte)ObjectOwner.length;
-                Utils.arraycopy(ObjectOwner, 0, bytes, i, ObjectOwner.length); i[0] +=  ObjectOwner.length;
+                Utils.arraycopy(ObjectOwner, 0, bytes, i[0], ObjectOwner.length); i[0] +=  ObjectOwner.length;
                 Utils.IntToBytes(Questions, bytes, i); i += 4;
             }
 
@@ -127,7 +127,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             length += Data.length;
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
-            int i = 0;
+            int[] i = new int[]{0};
             header.ToBytes(bytes, i);
             Data.ToBytes(bytes, i);
             if (header.AckList != null && header.AckList.length > 0) { header.AcksToBytes(bytes, i); }

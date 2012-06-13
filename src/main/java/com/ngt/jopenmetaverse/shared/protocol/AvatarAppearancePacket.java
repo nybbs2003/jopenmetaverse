@@ -75,7 +75,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 {
                     length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
                     TextureEntry = new byte[length];
-                    Utils.arraycopy(bytes, i, TextureEntry, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], TextureEntry, 0, length); i[0] +=  length;
                 }
                 catch (Exception e)
                 {
@@ -88,7 +88,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 bytes[i[0]++] = (byte)(TextureEntry.length % 256);
                 bytes[i[0]++] = (byte)((TextureEntry.length >> 8) % 256);
-                Utils.arraycopy(TextureEntry, 0, bytes, i, TextureEntry.length); i[0] +=  TextureEntry.length;
+                Utils.arraycopy(TextureEntry, 0, bytes, i[0], TextureEntry.length); i[0] +=  TextureEntry.length;
             }
 
         }
@@ -224,7 +224,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             for (int j = 0; j < VisualParam.length; j++) { length += VisualParam[j].getLength(); }
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
-            int i = 0;
+            int[] i = new int[]{0};
             header.ToBytes(bytes, i);
             Sender.ToBytes(bytes, i);
             ObjectData.ToBytes(bytes, i);
@@ -238,7 +238,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public byte[][] ToBytesMultiple()
         {
             List<byte[]> packets = new ArrayList<byte[]>();
-            int i = 0;
+            int[] i = new int[]{0};
             int fixedLength = 10;
 
             byte[] ackBytes = null;
@@ -263,15 +263,15 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int variableLength = 0;
                 int VisualParamCount = 0;
 
-                i = VisualParamStart;
-                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i < VisualParam.length) {
-                    int blockLength = VisualParam[i].getLength();
+              i[0] =VisualParamStart;
+                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i[0] < VisualParam.length) {
+                    int blockLength = VisualParam[i[0]].getLength();
                     if (fixedLength + variableLength + blockLength + acksLength[0] <= MTU) {
                         variableLength += blockLength;
                         ++VisualParamCount;
                     }
                     else { break; }
-                    ++i;
+                    i[0]++;
                 }
 
                 byte[] packet = new byte[fixedLength + variableLength + acksLength[0]];
@@ -280,7 +280,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 if (packets.size() > 0) { packet[0] = (byte)(packet[0] & ~0x10); }
 
                 packet[length[0]++] = (byte)VisualParamCount;
-                for (i = VisualParamStart; i < VisualParamStart + VisualParamCount; i++) { VisualParam[i].ToBytes(packet, length); }
+                for (i[0] = VisualParamStart; i[0] < VisualParamStart + VisualParamCount; i[0]++) { VisualParam[i[0]].ToBytes(packet, length); }
                 VisualParamStart += VisualParamCount;
 
                 if (acksLength[0] > 0) {

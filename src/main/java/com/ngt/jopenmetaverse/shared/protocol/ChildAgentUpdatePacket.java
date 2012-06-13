@@ -72,7 +72,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     Aspect = Utils.BytesToFloat(bytes, i); i += 4;
                     length = bytes[i[0]++];
                     Throttles = new byte[length];
-                    Utils.arraycopy(bytes, i, Throttles, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], Throttles, 0, length); i[0] +=  length;
                     LocomotionState = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     HeadRotation.FromBytes(bytes, i, true); i += 12;
                     BodyRotation.FromBytes(bytes, i, true); i += 12;
@@ -84,7 +84,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     AgentAccess = (byte)bytes[i[0]++];
                     length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
                     AgentTextures = new byte[length];
-                    Utils.arraycopy(bytes, i, AgentTextures, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], AgentTextures, 0, length); i[0] +=  length;
                     ActiveGroupID.FromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)
@@ -111,7 +111,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 Utils.FloatToBytes(Far, bytes, i); i += 4;
                 Utils.FloatToBytes(Aspect, bytes, i); i += 4;
                 bytes[i[0]++] = (byte)Throttles.length;
-                Utils.arraycopy(Throttles, 0, bytes, i, Throttles.length); i[0] +=  Throttles.length;
+                Utils.arraycopy(Throttles, 0, bytes, i[0], Throttles.length); i[0] +=  Throttles.length;
                 Utils.UIntToBytes(LocomotionState, bytes, i); i += 4;
                 HeadRotation.ToBytes(bytes, i[0]); i[0] += 12;
                 BodyRotation.ToBytes(bytes, i[0]); i[0] += 12;
@@ -123,7 +123,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 bytes[i[0]++] = AgentAccess;
                 bytes[i[0]++] = (byte)(AgentTextures.length % 256);
                 bytes[i[0]++] = (byte)((AgentTextures.length >> 8) % 256);
-                Utils.arraycopy(AgentTextures, 0, bytes, i, AgentTextures.length); i[0] +=  AgentTextures.length;
+                Utils.arraycopy(AgentTextures, 0, bytes, i[0], AgentTextures.length); i[0] +=  AgentTextures.length;
                 ActiveGroupID.ToBytes(bytes, i[0]); i[0] += 16;
             }
 
@@ -287,7 +287,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 {
                     length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
                     NVPairs = new byte[length];
-                    Utils.arraycopy(bytes, i, NVPairs, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], NVPairs, 0, length); i[0] +=  length;
                 }
                 catch (Exception e)
                 {
@@ -300,7 +300,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 bytes[i[0]++] = (byte)(NVPairs.length % 256);
                 bytes[i[0]++] = (byte)((NVPairs.length >> 8) % 256);
-                Utils.arraycopy(NVPairs, 0, bytes, i, NVPairs.length); i[0] +=  NVPairs.length;
+                Utils.arraycopy(NVPairs, 0, bytes, i[0], NVPairs.length); i[0] +=  NVPairs.length;
             }
 
         }
@@ -645,7 +645,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             for (int j = 0; j < AgentInfo.length; j++) { length += AgentInfo[j].getLength(); }
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
-            int i = 0;
+            int[] i = new int[]{0};
             header.ToBytes(bytes, i);
             AgentData.ToBytes(bytes, i);
             bytes[i[0]++] = (byte)GroupData.length;
@@ -670,7 +670,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public byte[][] ToBytesMultiple()
         {
             List<byte[]> packets = new ArrayList<byte[]>();
-            int i = 0;
+            int[] i = new int[]{0};
             int fixedLength = 7;
 
             byte[] ackBytes = null;
@@ -705,81 +705,81 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int AgentAccessCount = 0;
                 int AgentInfoCount = 0;
 
-                i = GroupDataStart;
-                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i < GroupData.length) {
-                    int blockLength = GroupData[i].getLength();
+              i[0] =GroupDataStart;
+                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i[0] < GroupData.length) {
+                    int blockLength = GroupData[i[0]].getLength();
                     if (fixedLength + variableLength + blockLength + acksLength[0] <= MTU) {
                         variableLength += blockLength;
                         ++GroupDataCount;
                     }
                     else { break; }
-                    ++i;
+                    i[0]++;
                 }
 
-                i = AnimationDataStart;
-                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i < AnimationData.length) {
-                    int blockLength = AnimationData[i].getLength();
+              i[0] =AnimationDataStart;
+                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i[0] < AnimationData.length) {
+                    int blockLength = AnimationData[i[0]].getLength();
                     if (fixedLength + variableLength + blockLength + acksLength[0] <= MTU) {
                         variableLength += blockLength;
                         ++AnimationDataCount;
                     }
                     else { break; }
-                    ++i;
+                    i[0]++;
                 }
 
-                i = GranterBlockStart;
-                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i < GranterBlock.length) {
-                    int blockLength = GranterBlock[i].getLength();
+              i[0] =GranterBlockStart;
+                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i[0] < GranterBlock.length) {
+                    int blockLength = GranterBlock[i[0]].getLength();
                     if (fixedLength + variableLength + blockLength + acksLength[0] <= MTU) {
                         variableLength += blockLength;
                         ++GranterBlockCount;
                     }
                     else { break; }
-                    ++i;
+                    i[0]++;
                 }
 
-                i = NVPairDataStart;
-                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i < NVPairData.length) {
-                    int blockLength = NVPairData[i].getLength();
+              i[0] =NVPairDataStart;
+                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i[0] < NVPairData.length) {
+                    int blockLength = NVPairData[i[0]].getLength();
                     if (fixedLength + variableLength + blockLength + acksLength[0] <= MTU) {
                         variableLength += blockLength;
                         ++NVPairDataCount;
                     }
                     else { break; }
-                    ++i;
+                    i[0]++;
                 }
 
-                i = VisualParamStart;
-                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i < VisualParam.length) {
-                    int blockLength = VisualParam[i].getLength();
+              i[0] =VisualParamStart;
+                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i[0] < VisualParam.length) {
+                    int blockLength = VisualParam[i[0]].getLength();
                     if (fixedLength + variableLength + blockLength + acksLength[0] <= MTU) {
                         variableLength += blockLength;
                         ++VisualParamCount;
                     }
                     else { break; }
-                    ++i;
+                    i[0]++;
                 }
 
-                i = AgentAccessStart;
-                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i < AgentAccess.length) {
-                    int blockLength = AgentAccess[i].getLength();
+              i[0] =AgentAccessStart;
+                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i[0] < AgentAccess.length) {
+                    int blockLength = AgentAccess[i[0]].getLength();
                     if (fixedLength + variableLength + blockLength + acksLength[0] <= MTU) {
                         variableLength += blockLength;
                         ++AgentAccessCount;
                     }
                     else { break; }
-                    ++i;
+                    i[0]++;
                 }
 
-                i = AgentInfoStart;
-                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i < AgentInfo.length) {
-                    int blockLength = AgentInfo[i].getLength();
+              i[0] =AgentInfoStart;
+                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i[0] < AgentInfo.length) {
+                    int blockLength = AgentInfo[i[0]].getLength();
                     if (fixedLength + variableLength + blockLength + acksLength[0] <= MTU) {
                         variableLength += blockLength;
                         ++AgentInfoCount;
                     }
                     else { break; }
-                    ++i;
+                    i[0]++;
                 }
 
                 byte[] packet = new byte[fixedLength + variableLength + acksLength[0]];
@@ -788,31 +788,31 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 if (packets.size() > 0) { packet[0] = (byte)(packet[0] & ~0x10); }
 
                 packet[length[0]++] = (byte)GroupDataCount;
-                for (i = GroupDataStart; i < GroupDataStart + GroupDataCount; i++) { GroupData[i].ToBytes(packet, length); }
+                for (i[0] = GroupDataStart; i[0] < GroupDataStart + GroupDataCount; i[0]++) { GroupData[i[0]].ToBytes(packet, length); }
                 GroupDataStart += GroupDataCount;
 
                 packet[length[0]++] = (byte)AnimationDataCount;
-                for (i = AnimationDataStart; i < AnimationDataStart + AnimationDataCount; i++) { AnimationData[i].ToBytes(packet, length); }
+                for (i[0] = AnimationDataStart; i[0] < AnimationDataStart + AnimationDataCount; i[0]++) { AnimationData[i[0]].ToBytes(packet, length); }
                 AnimationDataStart += AnimationDataCount;
 
                 packet[length[0]++] = (byte)GranterBlockCount;
-                for (i = GranterBlockStart; i < GranterBlockStart + GranterBlockCount; i++) { GranterBlock[i].ToBytes(packet, length); }
+                for (i[0] = GranterBlockStart; i[0] < GranterBlockStart + GranterBlockCount; i[0]++) { GranterBlock[i[0]].ToBytes(packet, length); }
                 GranterBlockStart += GranterBlockCount;
 
                 packet[length[0]++] = (byte)NVPairDataCount;
-                for (i = NVPairDataStart; i < NVPairDataStart + NVPairDataCount; i++) { NVPairData[i].ToBytes(packet, length); }
+                for (i[0] = NVPairDataStart; i[0] < NVPairDataStart + NVPairDataCount; i[0]++) { NVPairData[i[0]].ToBytes(packet, length); }
                 NVPairDataStart += NVPairDataCount;
 
                 packet[length[0]++] = (byte)VisualParamCount;
-                for (i = VisualParamStart; i < VisualParamStart + VisualParamCount; i++) { VisualParam[i].ToBytes(packet, length); }
+                for (i[0] = VisualParamStart; i[0] < VisualParamStart + VisualParamCount; i[0]++) { VisualParam[i[0]].ToBytes(packet, length); }
                 VisualParamStart += VisualParamCount;
 
                 packet[length[0]++] = (byte)AgentAccessCount;
-                for (i = AgentAccessStart; i < AgentAccessStart + AgentAccessCount; i++) { AgentAccess[i].ToBytes(packet, length); }
+                for (i[0] = AgentAccessStart; i[0] < AgentAccessStart + AgentAccessCount; i[0]++) { AgentAccess[i[0]].ToBytes(packet, length); }
                 AgentAccessStart += AgentAccessCount;
 
                 packet[length[0]++] = (byte)AgentInfoCount;
-                for (i = AgentInfoStart; i < AgentInfoStart + AgentInfoCount; i++) { AgentInfo[i].ToBytes(packet, length); }
+                for (i[0] = AgentInfoStart; i[0] < AgentInfoStart + AgentInfoCount; i[0]++) { AgentInfo[i[0]].ToBytes(packet, length); }
                 AgentInfoStart += AgentInfoCount;
 
                 if (acksLength[0] > 0) {

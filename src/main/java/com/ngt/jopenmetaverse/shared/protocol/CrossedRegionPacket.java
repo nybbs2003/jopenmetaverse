@@ -81,7 +81,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     RegionHandle = (ulong)((ulong)bytes[i[0]++] + ((ulong)bytes[i[0]++] << 8) + ((ulong)bytes[i[0]++] << 16) + ((ulong)bytes[i[0]++] << 24) + ((ulong)bytes[i[0]++] << 32) + ((ulong)bytes[i[0]++] << 40) + ((ulong)bytes[i[0]++] << 48) + ((ulong)bytes[i[0]++] << 56));
                     length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
                     SeedCapability = new byte[length];
-                    Utils.arraycopy(bytes, i, SeedCapability, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], SeedCapability, 0, length); i[0] +=  length;
                 }
                 catch (Exception e)
                 {
@@ -98,7 +98,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 Utils.UInt64ToBytes(RegionHandle, bytes, i); i += 8;
                 bytes[i[0]++] = (byte)(SeedCapability.length % 256);
                 bytes[i[0]++] = (byte)((SeedCapability.length >> 8) % 256);
-                Utils.arraycopy(SeedCapability, 0, bytes, i, SeedCapability.length); i[0] +=  SeedCapability.length;
+                Utils.arraycopy(SeedCapability, 0, bytes, i[0], SeedCapability.length); i[0] +=  SeedCapability.length;
             }
 
         }
@@ -220,7 +220,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             length += Info.length;
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
-            int i = 0;
+            int[] i = new int[]{0};
             header.ToBytes(bytes, i);
             AgentData.ToBytes(bytes, i);
             RegionData.ToBytes(bytes, i);

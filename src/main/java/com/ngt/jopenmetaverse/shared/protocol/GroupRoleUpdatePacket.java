@@ -86,13 +86,13 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     RoleID.FromBytes(bytes, i[0]); i[0] += 16;
                     length = bytes[i[0]++];
                     Name = new byte[length];
-                    Utils.arraycopy(bytes, i, Name, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], Name, 0, length); i[0] +=  length;
                     length = bytes[i[0]++];
                     Description = new byte[length];
-                    Utils.arraycopy(bytes, i, Description, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], Description, 0, length); i[0] +=  length;
                     length = bytes[i[0]++];
                     Title = new byte[length];
-                    Utils.arraycopy(bytes, i, Title, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], Title, 0, length); i[0] +=  length;
                     Powers = (ulong)((ulong)bytes[i[0]++] + ((ulong)bytes[i[0]++] << 8) + ((ulong)bytes[i[0]++] << 16) + ((ulong)bytes[i[0]++] << 24) + ((ulong)bytes[i[0]++] << 32) + ((ulong)bytes[i[0]++] << 40) + ((ulong)bytes[i[0]++] << 48) + ((ulong)bytes[i[0]++] << 56));
                     UpdateType = (byte)bytes[i[0]++];
                 }
@@ -107,11 +107,11 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 RoleID.ToBytes(bytes, i[0]); i[0] += 16;
                 bytes[i[0]++] = (byte)Name.length;
-                Utils.arraycopy(Name, 0, bytes, i, Name.length); i[0] +=  Name.length;
+                Utils.arraycopy(Name, 0, bytes, i[0], Name.length); i[0] +=  Name.length;
                 bytes[i[0]++] = (byte)Description.length;
-                Utils.arraycopy(Description, 0, bytes, i, Description.length); i[0] +=  Description.length;
+                Utils.arraycopy(Description, 0, bytes, i[0], Description.length); i[0] +=  Description.length;
                 bytes[i[0]++] = (byte)Title.length;
-                Utils.arraycopy(Title, 0, bytes, i, Title.length); i[0] +=  Title.length;
+                Utils.arraycopy(Title, 0, bytes, i[0], Title.length); i[0] +=  Title.length;
                 Utils.UInt64ToBytes(Powers, bytes, i); i += 8;
                 bytes[i[0]++] = UpdateType;
             }
@@ -202,7 +202,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             for (int j = 0; j < RoleData.length; j++) { length += RoleData[j].getLength(); }
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
-            int i = 0;
+            int[] i = new int[]{0};
             header.ToBytes(bytes, i);
             AgentData.ToBytes(bytes, i);
             bytes[i[0]++] = (byte)RoleData.length;
@@ -215,7 +215,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public byte[][] ToBytesMultiple()
         {
             List<byte[]> packets = new ArrayList<byte[]>();
-            int i = 0;
+            int[] i = new int[]{0};
             int fixedLength = 10;
 
             byte[] ackBytes = null;
@@ -238,15 +238,15 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int variableLength = 0;
                 int RoleDataCount = 0;
 
-                i = RoleDataStart;
-                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i < RoleData.length) {
-                    int blockLength = RoleData[i].getLength();
+              i[0] =RoleDataStart;
+                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i[0] < RoleData.length) {
+                    int blockLength = RoleData[i[0]].getLength();
                     if (fixedLength + variableLength + blockLength + acksLength[0] <= MTU) {
                         variableLength += blockLength;
                         ++RoleDataCount;
                     }
                     else { break; }
-                    ++i;
+                    i[0]++;
                 }
 
                 byte[] packet = new byte[fixedLength + variableLength + acksLength[0]];
@@ -255,7 +255,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 if (packets.size() > 0) { packet[0] = (byte)(packet[0] & ~0x10); }
 
                 packet[length[0]++] = (byte)RoleDataCount;
-                for (i = RoleDataStart; i < RoleDataStart + RoleDataCount; i++) { RoleData[i].ToBytes(packet, length); }
+                for (i[0] = RoleDataStart; i[0] < RoleDataStart + RoleDataCount; i[0]++) { RoleData[i[0]].ToBytes(packet, length); }
                 RoleDataStart += RoleDataCount;
 
                 if (acksLength[0] > 0) {

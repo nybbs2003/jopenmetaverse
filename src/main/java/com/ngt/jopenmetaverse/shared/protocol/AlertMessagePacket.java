@@ -1,5 +1,9 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
+import java.util.ArrayList;
+import java.util.List;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+
 
     public final class AlertMessagePacket extends Packet
     {
@@ -19,7 +23,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public AlertDataBlock() { }
-            public AlertDataBlock(byte[] bytes, int[] i)
+            public AlertDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -32,7 +36,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 {
                     length = bytes[i[0]++];
                     Message = new byte[length];
-                    Utils.arraycopy(bytes, i, Message, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], Message, 0, length); i[0] +=  length;
                 }
                 catch (Exception e)
                 {
@@ -44,7 +48,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 bytes[i[0]++] = (byte)Message.length;
-                Utils.arraycopy(Message, 0, bytes, i, Message.length); i[0] +=  Message.length;
+                Utils.arraycopy(Message, 0, bytes, i[0], Message.length); i[0] +=  Message.length;
             }
 
         }
@@ -67,7 +71,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public AlertInfoBlock() { }
-            public AlertInfoBlock(byte[] bytes, int[] i)
+            public AlertInfoBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -80,10 +84,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 {
                     length = bytes[i[0]++];
                     Message = new byte[length];
-                    Utils.arraycopy(bytes, i, Message, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], Message, 0, length); i[0] +=  length;
                     length = bytes[i[0]++];
                     ExtraParams = new byte[length];
-                    Utils.arraycopy(bytes, i, ExtraParams, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], ExtraParams, 0, length); i[0] +=  length;
                 }
                 catch (Exception e)
                 {
@@ -95,9 +99,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 bytes[i[0]++] = (byte)Message.length;
-                Utils.arraycopy(Message, 0, bytes, i, Message.length); i[0] +=  Message.length;
+                Utils.arraycopy(Message, 0, bytes, i[0], Message.length); i[0] +=  Message.length;
                 bytes[i[0]++] = (byte)ExtraParams.length;
-                Utils.arraycopy(ExtraParams, 0, bytes, i, ExtraParams.length); i[0] +=  ExtraParams.length;
+                Utils.arraycopy(ExtraParams, 0, bytes, i[0], ExtraParams.length); i[0] +=  ExtraParams.length;
             }
 
         }
@@ -128,7 +132,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             AlertInfo = null;
         }
 
-        public AlertMessagePacket(byte[] bytes, int[] i) 
+        public AlertMessagePacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -136,7 +140,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         }
 
         @Override
-		public void FromBytes(byte[] bytes, int[] i, int[] packetEnd, byte[] zeroBuffer)
+		public void FromBytes(byte[] bytes, int[] i, int[] packetEnd, byte[] zeroBuffer) throws MalformedDataException
         {
             header.FromBytes(bytes, i, packetEnd);
             if (header.Zerocoded && zeroBuffer != null)
@@ -155,7 +159,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             { AlertInfo[j].FromBytes(bytes, i); }
         }
 
-        public AlertMessagePacket(Header head, byte[] bytes, int[] i)
+        public AlertMessagePacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -163,7 +167,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         }
 
         @Override
-		public void FromBytes(Header header, byte[] bytes, int[] i, int[] packetEnd)
+		public void FromBytes(Header header, byte[] bytes, int[] i, int[] packetEnd) throws MalformedDataException
         {
             this.header =  header;
             AlertData.FromBytes(bytes, i);
@@ -186,7 +190,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             for (int j = 0; j < AlertInfo.length; j++) { length += AlertInfo[j].getLength(); }
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
-            int i = 0;
+            int[] i = new int[]{0};
             header.ToBytes(bytes, i);
             AlertData.ToBytes(bytes, i);
             bytes[i[0]++] = (byte)AlertInfo.length;
@@ -199,7 +203,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public byte[][] ToBytesMultiple()
         {
             List<byte[]> packets = new ArrayList<byte[]>();
-            int i = 0;
+            int[] i = new int[]{0};
             int fixedLength = 10;
 
             byte[] ackBytes = null;
@@ -210,7 +214,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 header.AcksToBytes(ackBytes, acksLength);
             }
 
-            fixedLength += AlertData.length;
+            fixedLength += AlertData.getLength();
             byte[] fixedBytes = new byte[fixedLength];
             header.ToBytes(fixedBytes, i);
             AlertData.ToBytes(fixedBytes, i);
@@ -222,15 +226,15 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int variableLength = 0;
                 int AlertInfoCount = 0;
 
-                i = AlertInfoStart;
-                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i < AlertInfo.length) {
-                    int blockLength = AlertInfo[i].getLength();
+                i[0] = AlertInfoStart;
+                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i[0] < AlertInfo.length) {
+                    int blockLength = AlertInfo[i[0]].getLength();
                     if (fixedLength + variableLength + blockLength + acksLength[0] <= MTU) {
                         variableLength += blockLength;
                         ++AlertInfoCount;
                     }
                     else { break; }
-                    ++i;
+                    ++i[0];
                 }
 
                 byte[] packet = new byte[fixedLength + variableLength + acksLength[0]];
@@ -239,7 +243,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 if (packets.size() > 0) { packet[0] = (byte)(packet[0] & ~0x10); }
 
                 packet[length[0]++] = (byte)AlertInfoCount;
-                for (i = AlertInfoStart; i < AlertInfoStart + AlertInfoCount; i++) { AlertInfo[i].ToBytes(packet, length); }
+                for (i[0] = AlertInfoStart; i[0] < AlertInfoStart + AlertInfoCount; i[0]++) { AlertInfo[i[0]].ToBytes(packet, length); }
                 AlertInfoStart += AlertInfoCount;
 
                 if (acksLength[0] > 0) {

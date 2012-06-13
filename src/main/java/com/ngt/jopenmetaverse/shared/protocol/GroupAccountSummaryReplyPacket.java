@@ -99,7 +99,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     CurrentInterval = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     length = bytes[i[0]++];
                     StartDate = new byte[length];
-                    Utils.arraycopy(bytes, i, StartDate, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], StartDate, 0, length); i[0] +=  length;
                     Balance = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     TotalCredits = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     TotalDebits = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
@@ -116,10 +116,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     NonExemptMembers = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     length = bytes[i[0]++];
                     LastTaxDate = new byte[length];
-                    Utils.arraycopy(bytes, i, LastTaxDate, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], LastTaxDate, 0, length); i[0] +=  length;
                     length = bytes[i[0]++];
                     TaxDate = new byte[length];
-                    Utils.arraycopy(bytes, i, TaxDate, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], TaxDate, 0, length); i[0] +=  length;
                 }
                 catch (Exception e)
                 {
@@ -134,7 +134,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 Utils.IntToBytes(IntervalDays, bytes, i); i += 4;
                 Utils.IntToBytes(CurrentInterval, bytes, i); i += 4;
                 bytes[i[0]++] = (byte)StartDate.length;
-                Utils.arraycopy(StartDate, 0, bytes, i, StartDate.length); i[0] +=  StartDate.length;
+                Utils.arraycopy(StartDate, 0, bytes, i[0], StartDate.length); i[0] +=  StartDate.length;
                 Utils.IntToBytes(Balance, bytes, i); i += 4;
                 Utils.IntToBytes(TotalCredits, bytes, i); i += 4;
                 Utils.IntToBytes(TotalDebits, bytes, i); i += 4;
@@ -150,9 +150,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 Utils.IntToBytes(ParcelDirFeeEstimate, bytes, i); i += 4;
                 Utils.IntToBytes(NonExemptMembers, bytes, i); i += 4;
                 bytes[i[0]++] = (byte)LastTaxDate.length;
-                Utils.arraycopy(LastTaxDate, 0, bytes, i, LastTaxDate.length); i[0] +=  LastTaxDate.length;
+                Utils.arraycopy(LastTaxDate, 0, bytes, i[0], LastTaxDate.length); i[0] +=  LastTaxDate.length;
                 bytes[i[0]++] = (byte)TaxDate.length;
-                Utils.arraycopy(TaxDate, 0, bytes, i, TaxDate.length); i[0] +=  TaxDate.length;
+                Utils.arraycopy(TaxDate, 0, bytes, i[0], TaxDate.length); i[0] +=  TaxDate.length;
             }
 
         }
@@ -226,7 +226,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             length += MoneyData.length;
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
-            int i = 0;
+            int[] i = new int[]{0};
             header.ToBytes(bytes, i);
             AgentData.ToBytes(bytes, i);
             MoneyData.ToBytes(bytes, i);

@@ -75,7 +75,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 {
                     length = bytes[i[0]++];
                     Filename = new byte[length];
-                    Utils.arraycopy(bytes, i, Filename, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], Filename, 0, length); i[0] +=  length;
                 }
                 catch (Exception e)
                 {
@@ -87,7 +87,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 bytes[i[0]++] = (byte)Filename.length;
-                Utils.arraycopy(Filename, 0, bytes, i, Filename.length); i[0] +=  Filename.length;
+                Utils.arraycopy(Filename, 0, bytes, i[0], Filename.length); i[0] +=  Filename.length;
             }
 
         }
@@ -160,7 +160,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             length += DataBlock.length;
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
-            int i = 0;
+            int[] i = new int[]{0};
             header.ToBytes(bytes, i);
             AgentData.ToBytes(bytes, i);
             DataBlock.ToBytes(bytes, i);

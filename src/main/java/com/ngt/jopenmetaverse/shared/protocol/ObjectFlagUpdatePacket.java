@@ -198,7 +198,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             for (int j = 0; j < ExtraPhysics.length; j++) { length += ExtraPhysics[j].getLength(); }
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
-            int i = 0;
+            int[] i = new int[]{0};
             header.ToBytes(bytes, i);
             AgentData.ToBytes(bytes, i);
             bytes[i[0]++] = (byte)ExtraPhysics.length;
@@ -211,7 +211,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public byte[][] ToBytesMultiple()
         {
             List<byte[]> packets = new ArrayList<byte[]>();
-            int i = 0;
+            int[] i = new int[]{0};
             int fixedLength = 10;
 
             byte[] ackBytes = null;
@@ -234,15 +234,15 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int variableLength = 0;
                 int ExtraPhysicsCount = 0;
 
-                i = ExtraPhysicsStart;
-                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i < ExtraPhysics.length) {
-                    int blockLength = ExtraPhysics[i].getLength();
+              i[0] =ExtraPhysicsStart;
+                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i[0] < ExtraPhysics.length) {
+                    int blockLength = ExtraPhysics[i[0]].getLength();
                     if (fixedLength + variableLength + blockLength + acksLength[0] <= MTU) {
                         variableLength += blockLength;
                         ++ExtraPhysicsCount;
                     }
                     else { break; }
-                    ++i;
+                    i[0]++;
                 }
 
                 byte[] packet = new byte[fixedLength + variableLength + acksLength[0]];
@@ -251,7 +251,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 if (packets.size() > 0) { packet[0] = (byte)(packet[0] & ~0x10); }
 
                 packet[length[0]++] = (byte)ExtraPhysicsCount;
-                for (i = ExtraPhysicsStart; i < ExtraPhysicsStart + ExtraPhysicsCount; i++) { ExtraPhysics[i].ToBytes(packet, length); }
+                for (i[0] = ExtraPhysicsStart; i[0] < ExtraPhysicsStart + ExtraPhysicsCount; i[0]++) { ExtraPhysics[i[0]].ToBytes(packet, length); }
                 ExtraPhysicsStart += ExtraPhysicsCount;
 
                 if (acksLength[0] > 0) {

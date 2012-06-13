@@ -134,7 +134,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             for (int j = 0; j < MeanCollision.length; j++) { length += MeanCollision[j].getLength(); }
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
-            int i = 0;
+            int[] i = new int[]{0};
             header.ToBytes(bytes, i);
             bytes[i[0]++] = (byte)MeanCollision.length;
             for (int j = 0; j < MeanCollision.length; j++) { MeanCollision[j].ToBytes(bytes, i); }
@@ -146,7 +146,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public byte[][] ToBytesMultiple()
         {
             List<byte[]> packets = new ArrayList<byte[]>();
-            int i = 0;
+            int[] i = new int[]{0};
             int fixedLength = 10;
 
             byte[] ackBytes = null;
@@ -167,15 +167,15 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int variableLength = 0;
                 int MeanCollisionCount = 0;
 
-                i = MeanCollisionStart;
-                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i < MeanCollision.length) {
-                    int blockLength = MeanCollision[i].getLength();
+              i[0] =MeanCollisionStart;
+                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i[0] < MeanCollision.length) {
+                    int blockLength = MeanCollision[i[0]].getLength();
                     if (fixedLength + variableLength + blockLength + acksLength[0] <= MTU) {
                         variableLength += blockLength;
                         ++MeanCollisionCount;
                     }
                     else { break; }
-                    ++i;
+                    i[0]++;
                 }
 
                 byte[] packet = new byte[fixedLength + variableLength + acksLength[0]];
@@ -184,7 +184,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 if (packets.size() > 0) { packet[0] = (byte)(packet[0] & ~0x10); }
 
                 packet[length[0]++] = (byte)MeanCollisionCount;
-                for (i = MeanCollisionStart; i < MeanCollisionStart + MeanCollisionCount; i++) { MeanCollision[i].ToBytes(packet, length); }
+                for (i[0] = MeanCollisionStart; i[0] < MeanCollisionStart + MeanCollisionCount; i[0]++) { MeanCollision[i[0]].ToBytes(packet, length); }
                 MeanCollisionStart += MeanCollisionCount;
 
                 if (acksLength[0] > 0) {

@@ -39,7 +39,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     ID = (ulong)((ulong)bytes[i[0]++] + ((ulong)bytes[i[0]++] << 8) + ((ulong)bytes[i[0]++] << 16) + ((ulong)bytes[i[0]++] << 24) + ((ulong)bytes[i[0]++] << 32) + ((ulong)bytes[i[0]++] << 40) + ((ulong)bytes[i[0]++] << 48) + ((ulong)bytes[i[0]++] << 56));
                     length = bytes[i[0]++];
                     Filename = new byte[length];
-                    Utils.arraycopy(bytes, i, Filename, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], Filename, 0, length); i[0] +=  length;
                     FilePath = (byte)bytes[i[0]++];
                     DeleteOnCompletion = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
                     UseBigPackets = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
@@ -57,7 +57,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 Utils.UInt64ToBytes(ID, bytes, i); i += 8;
                 bytes[i[0]++] = (byte)Filename.length;
-                Utils.arraycopy(Filename, 0, bytes, i, Filename.length); i[0] +=  Filename.length;
+                Utils.arraycopy(Filename, 0, bytes, i[0], Filename.length); i[0] +=  Filename.length;
                 bytes[i[0]++] = FilePath;
                 bytes[i[0]++] = (byte)((DeleteOnCompletion) ? 1 : 0);
                 bytes[i[0]++] = (byte)((UseBigPackets) ? 1 : 0);
@@ -131,7 +131,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             length += XferID.length;
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
-            int i = 0;
+            int[] i = new int[]{0};
             header.ToBytes(bytes, i);
             XferID.ToBytes(bytes, i);
             if (header.AckList != null && header.AckList.length > 0) { header.AcksToBytes(bytes, i); }

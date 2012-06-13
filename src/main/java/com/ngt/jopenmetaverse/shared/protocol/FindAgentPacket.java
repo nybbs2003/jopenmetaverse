@@ -176,7 +176,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             for (int j = 0; j < LocationBlock.length; j++) { length += LocationBlock[j].getLength(); }
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
-            int i = 0;
+            int[] i = new int[]{0};
             header.ToBytes(bytes, i);
             AgentBlock.ToBytes(bytes, i);
             bytes[i[0]++] = (byte)LocationBlock.length;
@@ -189,7 +189,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public byte[][] ToBytesMultiple()
         {
             List<byte[]> packets = new ArrayList<byte[]>();
-            int i = 0;
+            int[] i = new int[]{0};
             int fixedLength = 10;
 
             byte[] ackBytes = null;
@@ -212,15 +212,15 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int variableLength = 0;
                 int LocationBlockCount = 0;
 
-                i = LocationBlockStart;
-                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i < LocationBlock.length) {
-                    int blockLength = LocationBlock[i].getLength();
+              i[0] =LocationBlockStart;
+                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i[0] < LocationBlock.length) {
+                    int blockLength = LocationBlock[i[0]].getLength();
                     if (fixedLength + variableLength + blockLength + acksLength[0] <= MTU) {
                         variableLength += blockLength;
                         ++LocationBlockCount;
                     }
                     else { break; }
-                    ++i;
+                    i[0]++;
                 }
 
                 byte[] packet = new byte[fixedLength + variableLength + acksLength[0]];
@@ -229,7 +229,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 if (packets.size() > 0) { packet[0] = (byte)(packet[0] & ~0x10); }
 
                 packet[length[0]++] = (byte)LocationBlockCount;
-                for (i = LocationBlockStart; i < LocationBlockStart + LocationBlockCount; i++) { LocationBlock[i].ToBytes(packet, length); }
+                for (i[0] = LocationBlockStart; i[0] < LocationBlockStart + LocationBlockCount; i[0]++) { LocationBlock[i[0]].ToBytes(packet, length); }
                 LocationBlockStart += LocationBlockCount;
 
                 if (acksLength[0] > 0) {

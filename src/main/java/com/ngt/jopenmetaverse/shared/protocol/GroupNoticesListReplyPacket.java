@@ -83,10 +83,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     Timestamp = (uint)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
                     FromName = new byte[length];
-                    Utils.arraycopy(bytes, i, FromName, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], FromName, 0, length); i[0] +=  length;
                     length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
                     Subject = new byte[length];
-                    Utils.arraycopy(bytes, i, Subject, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], Subject, 0, length); i[0] +=  length;
                     HasAttachment = (bytes[i[0]++] != 0) ? (bool)true : (bool)false;
                     AssetType = (byte)bytes[i[0]++];
                 }
@@ -103,10 +103,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 Utils.UIntToBytes(Timestamp, bytes, i); i += 4;
                 bytes[i[0]++] = (byte)(FromName.length % 256);
                 bytes[i[0]++] = (byte)((FromName.length >> 8) % 256);
-                Utils.arraycopy(FromName, 0, bytes, i, FromName.length); i[0] +=  FromName.length;
+                Utils.arraycopy(FromName, 0, bytes, i[0], FromName.length); i[0] +=  FromName.length;
                 bytes[i[0]++] = (byte)(Subject.length % 256);
                 bytes[i[0]++] = (byte)((Subject.length >> 8) % 256);
-                Utils.arraycopy(Subject, 0, bytes, i, Subject.length); i[0] +=  Subject.length;
+                Utils.arraycopy(Subject, 0, bytes, i[0], Subject.length); i[0] +=  Subject.length;
                 bytes[i[0]++] = (byte)((HasAttachment) ? 1 : 0);
                 bytes[i[0]++] = AssetType;
             }
@@ -197,7 +197,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             for (int j = 0; j < Data.length; j++) { length += Data[j].getLength(); }
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
-            int i = 0;
+            int[] i = new int[]{0};
             header.ToBytes(bytes, i);
             AgentData.ToBytes(bytes, i);
             bytes[i[0]++] = (byte)Data.length;
@@ -210,7 +210,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public byte[][] ToBytesMultiple()
         {
             List<byte[]> packets = new ArrayList<byte[]>();
-            int i = 0;
+            int[] i = new int[]{0};
             int fixedLength = 10;
 
             byte[] ackBytes = null;
@@ -233,15 +233,15 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int variableLength = 0;
                 int DataCount = 0;
 
-                i = DataStart;
-                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i < Data.length) {
-                    int blockLength = Data[i].getLength();
+              i[0] =DataStart;
+                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i[0] < Data.length) {
+                    int blockLength = Data[i[0]].getLength();
                     if (fixedLength + variableLength + blockLength + acksLength[0] <= MTU) {
                         variableLength += blockLength;
                         ++DataCount;
                     }
                     else { break; }
-                    ++i;
+                    i[0]++;
                 }
 
                 byte[] packet = new byte[fixedLength + variableLength + acksLength[0]];
@@ -250,7 +250,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 if (packets.size() > 0) { packet[0] = (byte)(packet[0] & ~0x10); }
 
                 packet[length[0]++] = (byte)DataCount;
-                for (i = DataStart; i < DataStart + DataCount; i++) { Data[i].ToBytes(packet, length); }
+                for (i[0] = DataStart; i[0] < DataStart + DataCount; i[0]++) { Data[i[0]].ToBytes(packet, length); }
                 DataStart += DataCount;
 
                 if (acksLength[0] > 0) {

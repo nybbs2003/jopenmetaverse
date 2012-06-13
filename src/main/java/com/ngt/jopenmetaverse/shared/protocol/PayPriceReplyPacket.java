@@ -170,7 +170,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             for (int j = 0; j < ButtonData.length; j++) { length += ButtonData[j].getLength(); }
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
-            int i = 0;
+            int[] i = new int[]{0};
             header.ToBytes(bytes, i);
             ObjectData.ToBytes(bytes, i);
             bytes[i[0]++] = (byte)ButtonData.length;
@@ -183,7 +183,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public byte[][] ToBytesMultiple()
         {
             List<byte[]> packets = new ArrayList<byte[]>();
-            int i = 0;
+            int[] i = new int[]{0};
             int fixedLength = 10;
 
             byte[] ackBytes = null;
@@ -206,15 +206,15 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int variableLength = 0;
                 int ButtonDataCount = 0;
 
-                i = ButtonDataStart;
-                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i < ButtonData.length) {
-                    int blockLength = ButtonData[i].getLength();
+              i[0] =ButtonDataStart;
+                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i[0] < ButtonData.length) {
+                    int blockLength = ButtonData[i[0]].getLength();
                     if (fixedLength + variableLength + blockLength + acksLength[0] <= MTU) {
                         variableLength += blockLength;
                         ++ButtonDataCount;
                     }
                     else { break; }
-                    ++i;
+                    i[0]++;
                 }
 
                 byte[] packet = new byte[fixedLength + variableLength + acksLength[0]];
@@ -223,7 +223,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 if (packets.size() > 0) { packet[0] = (byte)(packet[0] & ~0x10); }
 
                 packet[length[0]++] = (byte)ButtonDataCount;
-                for (i = ButtonDataStart; i < ButtonDataStart + ButtonDataCount; i++) { ButtonData[i].ToBytes(packet, length); }
+                for (i[0] = ButtonDataStart; i[0] < ButtonDataStart + ButtonDataCount; i[0]++) { ButtonData[i[0]].ToBytes(packet, length); }
                 ButtonDataStart += ButtonDataCount;
 
                 if (acksLength[0] > 0) {

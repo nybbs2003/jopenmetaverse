@@ -216,7 +216,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             for (int j = 0; j < EjectData.length; j++) { length += EjectData[j].getLength(); }
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
-            int i = 0;
+            int[] i = new int[]{0};
             header.ToBytes(bytes, i);
             AgentData.ToBytes(bytes, i);
             GroupData.ToBytes(bytes, i);
@@ -230,7 +230,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public byte[][] ToBytesMultiple()
         {
             List<byte[]> packets = new ArrayList<byte[]>();
-            int i = 0;
+            int[] i = new int[]{0};
             int fixedLength = 10;
 
             byte[] ackBytes = null;
@@ -255,15 +255,15 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int variableLength = 0;
                 int EjectDataCount = 0;
 
-                i = EjectDataStart;
-                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i < EjectData.length) {
-                    int blockLength = EjectData[i].getLength();
+              i[0] =EjectDataStart;
+                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i[0] < EjectData.length) {
+                    int blockLength = EjectData[i[0]].getLength();
                     if (fixedLength + variableLength + blockLength + acksLength[0] <= MTU) {
                         variableLength += blockLength;
                         ++EjectDataCount;
                     }
                     else { break; }
-                    ++i;
+                    i[0]++;
                 }
 
                 byte[] packet = new byte[fixedLength + variableLength + acksLength[0]];
@@ -272,7 +272,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 if (packets.size() > 0) { packet[0] = (byte)(packet[0] & ~0x10); }
 
                 packet[length[0]++] = (byte)EjectDataCount;
-                for (i = EjectDataStart; i < EjectDataStart + EjectDataCount; i++) { EjectData[i].ToBytes(packet, length); }
+                for (i[0] = EjectDataStart; i[0] < EjectDataStart + EjectDataCount; i[0]++) { EjectData[i[0]].ToBytes(packet, length); }
                 EjectDataStart += EjectDataCount;
 
                 if (acksLength[0] > 0) {

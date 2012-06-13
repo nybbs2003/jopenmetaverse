@@ -81,7 +81,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     Type = (sbyte)bytes[i[0]++];
                     length = bytes[i[0]++];
                     Name = new byte[length];
-                    Utils.arraycopy(bytes, i, Name, 0, length); i[0] +=  length;
+                    Utils.arraycopy(bytes, i[0], Name, 0, length); i[0] +=  length;
                 }
                 catch (Exception e)
                 {
@@ -96,7 +96,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 ParentID.ToBytes(bytes, i[0]); i[0] += 16;
                 bytes[i[0]++] = (byte)Type;
                 bytes[i[0]++] = (byte)Name.length;
-                Utils.arraycopy(Name, 0, bytes, i, Name.length); i[0] +=  Name.length;
+                Utils.arraycopy(Name, 0, bytes, i[0], Name.length); i[0] +=  Name.length;
             }
 
         }
@@ -185,7 +185,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             for (int j = 0; j < FolderData.length; j++) { length += FolderData[j].getLength(); }
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
-            int i = 0;
+            int[] i = new int[]{0};
             header.ToBytes(bytes, i);
             AgentData.ToBytes(bytes, i);
             bytes[i[0]++] = (byte)FolderData.length;
@@ -198,7 +198,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public byte[][] ToBytesMultiple()
         {
             List<byte[]> packets = new ArrayList<byte[]>();
-            int i = 0;
+            int[] i = new int[]{0};
             int fixedLength = 10;
 
             byte[] ackBytes = null;
@@ -221,15 +221,15 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int variableLength = 0;
                 int FolderDataCount = 0;
 
-                i = FolderDataStart;
-                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i < FolderData.length) {
-                    int blockLength = FolderData[i].getLength();
+              i[0] =FolderDataStart;
+                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i[0] < FolderData.length) {
+                    int blockLength = FolderData[i[0]].getLength();
                     if (fixedLength + variableLength + blockLength + acksLength[0] <= MTU) {
                         variableLength += blockLength;
                         ++FolderDataCount;
                     }
                     else { break; }
-                    ++i;
+                    i[0]++;
                 }
 
                 byte[] packet = new byte[fixedLength + variableLength + acksLength[0]];
@@ -238,7 +238,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 if (packets.size() > 0) { packet[0] = (byte)(packet[0] & ~0x10); }
 
                 packet[length[0]++] = (byte)FolderDataCount;
-                for (i = FolderDataStart; i < FolderDataStart + FolderDataCount; i++) { FolderData[i].ToBytes(packet, length); }
+                for (i[0] = FolderDataStart; i[0] < FolderDataStart + FolderDataCount; i[0]++) { FolderData[i[0]].ToBytes(packet, length); }
                 FolderDataStart += FolderDataCount;
 
                 if (acksLength[0] > 0) {
