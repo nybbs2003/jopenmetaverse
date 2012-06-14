@@ -1,5 +1,11 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+
 
     public final class PayPriceReplyPacket extends Packet
     {
@@ -18,7 +24,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public ObjectDataBlock() { }
-            public ObjectDataBlock(byte[] bytes, int[] i)
+            public ObjectDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -60,7 +66,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public ButtonDataBlock() { }
-            public ButtonDataBlock(byte[] bytes, int[] i)
+            public ButtonDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -91,7 +97,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
                         {
                 int length = 11;
-                length += ObjectData.length;
+                length += ObjectData.getLength();
                 for (int j = 0; j < ButtonData.length; j++)
                     length += ButtonData[j].getLength();
                 return length;
@@ -112,7 +118,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             ButtonData = null;
         }
 
-        public PayPriceReplyPacket(byte[] bytes, int[] i) 
+        public PayPriceReplyPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -120,7 +126,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         }
 
         @Override
-		public void FromBytes(byte[] bytes, int[] i, int[] packetEnd, byte[] zeroBuffer)
+		public void FromBytes(byte[] bytes, int[] i, int[] packetEnd, byte[] zeroBuffer) throws MalformedDataException
         {
             header.FromBytes(bytes, i, packetEnd);
             if (header.Zerocoded && zeroBuffer != null)
@@ -139,7 +145,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             { ButtonData[j].FromBytes(bytes, i); }
         }
 
-        public PayPriceReplyPacket(Header head, byte[] bytes, int[] i)
+        public PayPriceReplyPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -147,7 +153,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         }
 
         @Override
-		public void FromBytes(Header header, byte[] bytes, int[] i, int[] packetEnd)
+		public void FromBytes(Header header, byte[] bytes, int[] i, int[] packetEnd) throws MalformedDataException
         {
             this.header =  header;
             ObjectData.FromBytes(bytes, i);
@@ -165,7 +171,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public byte[] ToBytes()
         {
             int length = 10;
-            length += ObjectData.length;
+            length += ObjectData.getLength();
             length++;
             for (int j = 0; j < ButtonData.length; j++) { length += ButtonData[j].getLength(); }
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
@@ -194,7 +200,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 header.AcksToBytes(ackBytes, acksLength);
             }
 
-            fixedLength += ObjectData.length;
+            fixedLength += ObjectData.getLength();
             byte[] fixedBytes = new byte[fixedLength];
             header.ToBytes(fixedBytes, i);
             ObjectData.ToBytes(fixedBytes, i);
