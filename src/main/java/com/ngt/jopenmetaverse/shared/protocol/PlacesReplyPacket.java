@@ -1,5 +1,11 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+
 
     public final class PlacesReplyPacket extends Packet
     {
@@ -18,7 +24,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public AgentDataBlock() { }
-            public AgentDataBlock(byte[] bytes, int[] i)
+            public AgentDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -60,7 +66,7 @@ public void FromBytes(byte[] bytes, int[] i) throws MalformedDataException
             }
 
             public TransactionDataBlock() { }
-            public TransactionDataBlock(byte[] bytes, int[] i)
+            public TransactionDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -116,7 +122,7 @@ public void FromBytes(byte[] bytes, int[] i) throws MalformedDataException
             }
 
             public QueryDataBlock() { }
-            public QueryDataBlock(byte[] bytes, int[] i)
+            public QueryDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -182,7 +188,7 @@ public void FromBytes(byte[] bytes, int[] i) throws MalformedDataException
                         {
                 int length = 11;
                 length += AgentData.getLength();
-                length += TransactionData.length;
+                length += TransactionData.getLength();
                 for (int j = 0; j < QueryData.length; j++)
                     length += QueryData[j].getLength();
                 return length;
@@ -206,7 +212,7 @@ public void FromBytes(byte[] bytes, int[] i) throws MalformedDataException
             QueryData = null;
         }
 
-        public PlacesReplyPacket(byte[] bytes, int[] i) 
+        public PlacesReplyPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -214,7 +220,7 @@ public void FromBytes(byte[] bytes, int[] i) throws MalformedDataException
         }
 
         @Override
-		public void FromBytes(byte[] bytes, int[] i, int[] packetEnd, byte[] zeroBuffer)
+		public void FromBytes(byte[] bytes, int[] i, int[] packetEnd, byte[] zeroBuffer) throws MalformedDataException
         {
             header.FromBytes(bytes, i, packetEnd);
             if (header.Zerocoded && zeroBuffer != null)
@@ -234,7 +240,7 @@ public void FromBytes(byte[] bytes, int[] i) throws MalformedDataException
             { QueryData[j].FromBytes(bytes, i); }
         }
 
-        public PlacesReplyPacket(Header head, byte[] bytes, int[] i)
+        public PlacesReplyPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -242,7 +248,7 @@ public void FromBytes(byte[] bytes, int[] i) throws MalformedDataException
         }
 
         @Override
-		public void FromBytes(Header header, byte[] bytes, int[] i, int[] packetEnd)
+		public void FromBytes(Header header, byte[] bytes, int[] i, int[] packetEnd) throws MalformedDataException
         {
             this.header =  header;
             AgentData.FromBytes(bytes, i);
@@ -262,7 +268,7 @@ public void FromBytes(byte[] bytes, int[] i) throws MalformedDataException
         {
             int length = 10;
             length += AgentData.getLength();
-            length += TransactionData.length;
+            length += TransactionData.getLength();
             length++;
             for (int j = 0; j < QueryData.length; j++) { length += QueryData[j].getLength(); }
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
@@ -293,7 +299,7 @@ public void FromBytes(byte[] bytes, int[] i) throws MalformedDataException
             }
 
             fixedLength += AgentData.getLength();
-            fixedLength += TransactionData.length;
+            fixedLength += TransactionData.getLength();
             byte[] fixedBytes = new byte[fixedLength];
             header.ToBytes(fixedBytes, i);
             AgentData.ToBytes(fixedBytes, i);
