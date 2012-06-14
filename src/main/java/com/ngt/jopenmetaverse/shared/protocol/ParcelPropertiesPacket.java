@@ -1,9 +1,12 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.types.Vector3;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+
 
     public final class ParcelPropertiesPacket extends Packet
     {
-        /// <exclude/>
         public final class ParcelDataBlock extends PacketBlock
         {
             public int RequestResult;
@@ -71,7 +74,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public ParcelDataBlock() { }
-            public ParcelDataBlock(byte[] bytes, int[] i)
+            public ParcelDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -95,8 +98,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     ClaimDate = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     ClaimPrice = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
                     RentPrice = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    AABBMin.FromBytes(bytes, i[0]); i[0] += 12;
-                    AABBMax.FromBytes(bytes, i[0]); i[0] += 12;
+                    AABBMin.fromBytes(bytes, i[0]); i[0] += 12;
+                    AABBMax.fromBytes(bytes, i[0]); i[0] += 12;
                     length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
                     Bitmap = new byte[length];
                     Utils.arraycopy(bytes, i[0], Bitmap, 0, length); i[0] +=  length;
@@ -134,8 +137,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     Category = (byte)bytes[i[0]++];
                     AuthBuyerID.FromBytes(bytes, i[0]); i[0] += 16;
                     SnapshotID.FromBytes(bytes, i[0]); i[0] += 16;
-                    UserLocation.FromBytes(bytes, i[0]); i[0] += 12;
-                    UserLookAt.FromBytes(bytes, i[0]); i[0] += 12;
+                    UserLocation.fromBytes(bytes, i[0]); i[0] += 12;
+                    UserLookAt.fromBytes(bytes, i[0]); i[0] += 12;
                     LandingType = (byte)bytes[i[0]++];
                     RegionPushOverride = (bytes[i[0]++] != 0) ? true : false;
                     RegionDenyAnonymous = (bytes[i[0]++] != 0) ? true : false;
@@ -164,8 +167,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 Utils.intToBytes(ClaimDate, bytes, i[0]); i[0] += 4;
                 Utils.intToBytes(ClaimPrice, bytes, i[0]); i[0] += 4;
                 Utils.intToBytes(RentPrice, bytes, i[0]); i[0] += 4;
-                AABBMin.ToBytes(bytes, i[0]); i[0] += 12;
-                AABBMax.ToBytes(bytes, i[0]); i[0] += 12;
+                AABBMin.toBytes(bytes, i[0]); i[0] += 12;
+                AABBMax.toBytes(bytes, i[0]); i[0] += 12;
                 bytes[i[0]++] = (byte)(Bitmap.length % 256);
                 bytes[i[0]++] = (byte)((Bitmap.length >> 8) % 256);
                 Utils.arraycopy(Bitmap, 0, bytes, i[0], Bitmap.length); i[0] +=  Bitmap.length;
@@ -199,8 +202,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 bytes[i[0]++] = Category;
                 AuthBuyerID.ToBytes(bytes, i[0]); i[0] += 16;
                 SnapshotID.ToBytes(bytes, i[0]); i[0] += 16;
-                UserLocation.ToBytes(bytes, i[0]); i[0] += 12;
-                UserLookAt.ToBytes(bytes, i[0]); i[0] += 12;
+                UserLocation.toBytes(bytes, i[0]); i[0] += 12;
+                UserLookAt.toBytes(bytes, i[0]); i[0] += 12;
                 bytes[i[0]++] = LandingType;
                 bytes[i[0]++] = (byte)((RegionPushOverride) ? 1 : 0);
                 bytes[i[0]++] = (byte)((RegionDenyAnonymous) ? 1 : 0);
@@ -210,7 +213,6 @@ package com.ngt.jopenmetaverse.shared.protocol;
 
         }
 
-        /// <exclude/>
         public final class AgeVerificationBlockBlock extends PacketBlock
         {
             public boolean RegionDenyAgeUnverified;
@@ -218,13 +220,11 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public int getLength()
             {
-                                {
                     return 1;
-                }
             }
 
             public AgeVerificationBlockBlock() { }
-            public AgeVerificationBlockBlock(byte[] bytes, int[] i)
+            public AgeVerificationBlockBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -255,8 +255,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
                         {
                 int length = 7;
-                length += ParcelData.length;
-                length += AgeVerificationBlock.length;
+                length += ParcelData.getLength();
+                length += AgeVerificationBlock.getLength();
                 return length;
             }
         }
@@ -276,7 +276,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             AgeVerificationBlock = new AgeVerificationBlockBlock();
         }
 
-        public ParcelPropertiesPacket(byte[] bytes, int[] i) 
+        public ParcelPropertiesPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -284,7 +284,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         }
 
         @Override
-		public void FromBytes(byte[] bytes, int[] i, int[] packetEnd, byte[] zeroBuffer)
+		public void FromBytes(byte[] bytes, int[] i, int[] packetEnd, byte[] zeroBuffer) throws MalformedDataException
         {
             header.FromBytes(bytes, i, packetEnd);
             if (header.Zerocoded && zeroBuffer != null)
@@ -296,7 +296,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             AgeVerificationBlock.FromBytes(bytes, i);
         }
 
-        public ParcelPropertiesPacket(Header head, byte[] bytes, int[] i)
+        public ParcelPropertiesPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -304,7 +304,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         }
 
         @Override
-		public void FromBytes(Header header, byte[] bytes, int[] i, int[] packetEnd)
+		public void FromBytes(Header header, byte[] bytes, int[] i, int[] packetEnd) throws MalformedDataException
         {
             this.header =  header;
             ParcelData.FromBytes(bytes, i);
@@ -315,8 +315,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public byte[] ToBytes()
         {
             int length = 7;
-            length += ParcelData.length;
-            length += AgeVerificationBlock.length;
+            length += ParcelData.getLength();
+            length += AgeVerificationBlock.getLength();
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
             int[] i = new int[]{0};
@@ -333,5 +333,3 @@ package com.ngt.jopenmetaverse.shared.protocol;
             return new byte[][] { ToBytes() };
         }
     }
-
-    /// <exclude/>
