@@ -1,5 +1,9 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.types.Vector3;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+
 
     public final class ParcelPropertiesUpdatePacket extends Packet
     {
@@ -18,7 +22,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public AgentDataBlock() { }
-            public AgentDataBlock(byte[] bytes, int[] i)
+            public AgentDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -83,7 +87,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public ParcelDataBlock() { }
-            public ParcelDataBlock(byte[] bytes, int[] i)
+            public ParcelDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -118,8 +122,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     Category = (byte)bytes[i[0]++];
                     AuthBuyerID.FromBytes(bytes, i[0]); i[0] += 16;
                     SnapshotID.FromBytes(bytes, i[0]); i[0] += 16;
-                    UserLocation.FromBytes(bytes, i[0]); i[0] += 12;
-                    UserLookAt.FromBytes(bytes, i[0]); i[0] += 12;
+                    UserLocation.fromBytes(bytes, i[0]); i[0] += 12;
+                    UserLookAt.fromBytes(bytes, i[0]); i[0] += 12;
                     LandingType = (byte)bytes[i[0]++];
                 }
                 catch (Exception e)
@@ -151,8 +155,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 bytes[i[0]++] = Category;
                 AuthBuyerID.ToBytes(bytes, i[0]); i[0] += 16;
                 SnapshotID.ToBytes(bytes, i[0]); i[0] += 16;
-                UserLocation.ToBytes(bytes, i[0]); i[0] += 12;
-                UserLookAt.ToBytes(bytes, i[0]); i[0] += 12;
+                UserLocation.toBytes(bytes, i[0]); i[0] += 12;
+                UserLookAt.toBytes(bytes, i[0]); i[0] += 12;
                 bytes[i[0]++] = LandingType;
             }
 
@@ -164,7 +168,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                         {
                 int length = 10;
                 length += AgentData.getLength();
-                length += ParcelData.length;
+                length += ParcelData.getLength();
                 return length;
             }
         }
@@ -184,7 +188,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             ParcelData = new ParcelDataBlock();
         }
 
-        public ParcelPropertiesUpdatePacket(byte[] bytes, int[] i) 
+        public ParcelPropertiesUpdatePacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -192,7 +196,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         }
 
         @Override
-		public void FromBytes(byte[] bytes, int[] i, int[] packetEnd, byte[] zeroBuffer)
+		public void FromBytes(byte[] bytes, int[] i, int[] packetEnd, byte[] zeroBuffer) throws MalformedDataException
         {
             header.FromBytes(bytes, i, packetEnd);
             if (header.Zerocoded && zeroBuffer != null)
@@ -204,7 +208,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             ParcelData.FromBytes(bytes, i);
         }
 
-        public ParcelPropertiesUpdatePacket(Header head, byte[] bytes, int[] i)
+        public ParcelPropertiesUpdatePacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -212,7 +216,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         }
 
         @Override
-		public void FromBytes(Header header, byte[] bytes, int[] i, int[] packetEnd)
+		public void FromBytes(Header header, byte[] bytes, int[] i, int[] packetEnd) throws MalformedDataException
         {
             this.header =  header;
             AgentData.FromBytes(bytes, i);
@@ -224,7 +228,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             int length = 10;
             length += AgentData.getLength();
-            length += ParcelData.length;
+            length += ParcelData.getLength();
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
             int[] i = new int[]{0};
@@ -241,5 +245,3 @@ package com.ngt.jopenmetaverse.shared.protocol;
             return new byte[][] { ToBytes() };
         }
     }
-
-    /// <exclude/>
