@@ -1,5 +1,6 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import com.ngt.jopenmetaverse.shared.types.UUID;

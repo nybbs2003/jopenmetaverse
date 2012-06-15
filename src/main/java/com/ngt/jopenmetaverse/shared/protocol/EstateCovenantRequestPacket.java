@@ -1,5 +1,7 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
+import com.ngt.jopenmetaverse.shared.types.UUID;
+
 
     public final class EstateCovenantRequestPacket extends Packet
     {
