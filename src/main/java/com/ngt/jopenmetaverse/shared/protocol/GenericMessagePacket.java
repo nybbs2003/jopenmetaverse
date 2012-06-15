@@ -174,7 +174,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             ParamList = null;
         }
 
-        public GenericMessagePacket(byte[] bytes, int[] i) 
+        public GenericMessagePacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -202,7 +202,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             { ParamList[j].FromBytes(bytes, i); }
         }
 
-        public GenericMessagePacket(Header head, byte[] bytes, int[] i)
+        public GenericMessagePacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

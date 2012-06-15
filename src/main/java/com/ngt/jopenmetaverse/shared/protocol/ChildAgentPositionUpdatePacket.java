@@ -1,5 +1,11 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
+import java.math.BigInteger;
+
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.types.Vector3;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+
 
     public final class ChildAgentPositionUpdatePacket extends Packet
     {
@@ -42,13 +48,13 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     ViewerCircuitCode = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                     AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
-                    AgentPos.FromBytes(bytes, i[0]); i[0] += 12;
-                    AgentVel.FromBytes(bytes, i[0]); i[0] += 12;
-                    Center.FromBytes(bytes, i[0]); i[0] += 12;
-                    Size.FromBytes(bytes, i[0]); i[0] += 12;
-                    AtAxis.FromBytes(bytes, i[0]); i[0] += 12;
-                    LeftAxis.FromBytes(bytes, i[0]); i[0] += 12;
-                    UpAxis.FromBytes(bytes, i[0]); i[0] += 12;
+                    AgentPos.fromBytes(bytes, i[0]); i[0] += 12;
+                    AgentVel.fromBytes(bytes, i[0]); i[0] += 12;
+                    Center.fromBytes(bytes, i[0]); i[0] += 12;
+                    Size.fromBytes(bytes, i[0]); i[0] += 12;
+                    AtAxis.fromBytes(bytes, i[0]); i[0] += 12;
+                    LeftAxis.fromBytes(bytes, i[0]); i[0] += 12;
+                    UpAxis.fromBytes(bytes, i[0]); i[0] += 12;
                     ChangedGrid = (bytes[i[0]++] != 0) ? true : false;
                 }
                 catch (Exception e)
@@ -64,13 +70,13 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 Utils.uintToBytes(ViewerCircuitCode, bytes, i[0]); i[0] += 4;
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
                 SessionID.ToBytes(bytes, i[0]); i[0] += 16;
-                AgentPos.ToBytes(bytes, i[0]); i[0] += 12;
-                AgentVel.ToBytes(bytes, i[0]); i[0] += 12;
-                Center.ToBytes(bytes, i[0]); i[0] += 12;
-                Size.ToBytes(bytes, i[0]); i[0] += 12;
-                AtAxis.ToBytes(bytes, i[0]); i[0] += 12;
-                LeftAxis.ToBytes(bytes, i[0]); i[0] += 12;
-                UpAxis.ToBytes(bytes, i[0]); i[0] += 12;
+                AgentPos.toBytes(bytes, i[0]); i[0] += 12;
+                AgentVel.toBytes(bytes, i[0]); i[0] += 12;
+                Center.toBytes(bytes, i[0]); i[0] += 12;
+                Size.toBytes(bytes, i[0]); i[0] += 12;
+                AtAxis.toBytes(bytes, i[0]); i[0] += 12;
+                LeftAxis.toBytes(bytes, i[0]); i[0] += 12;
+                UpAxis.toBytes(bytes, i[0]); i[0] += 12;
                 bytes[i[0]++] = (byte)((ChangedGrid) ? 1 : 0);
             }
 
@@ -98,7 +104,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             AgentData = new AgentDataBlock();
         }
 
-        public ChildAgentPositionUpdatePacket(byte[] bytes, int[] i) 
+        public ChildAgentPositionUpdatePacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -117,7 +123,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             AgentData.FromBytes(bytes, i);
         }
 
-        public ChildAgentPositionUpdatePacket(Header head, byte[] bytes, int[] i)
+        public ChildAgentPositionUpdatePacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

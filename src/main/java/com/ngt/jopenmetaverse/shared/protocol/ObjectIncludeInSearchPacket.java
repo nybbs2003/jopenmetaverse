@@ -115,7 +115,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             ObjectData = null;
         }
 
-        public ObjectIncludeInSearchPacket(byte[] bytes, int[] i) 
+        public ObjectIncludeInSearchPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -142,7 +142,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             { ObjectData[j].FromBytes(bytes, i); }
         }
 
-        public ObjectIncludeInSearchPacket(Header head, byte[] bytes, int[] i)
+        public ObjectIncludeInSearchPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

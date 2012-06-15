@@ -164,7 +164,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             InventoryBlock = new InventoryBlockBlock();
         }
 
-        public CreateLandmarkForEventPacket(byte[] bytes, int[] i) 
+        public CreateLandmarkForEventPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -185,7 +185,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             InventoryBlock.FromBytes(bytes, i);
         }
 
-        public CreateLandmarkForEventPacket(Header head, byte[] bytes, int[] i)
+        public CreateLandmarkForEventPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

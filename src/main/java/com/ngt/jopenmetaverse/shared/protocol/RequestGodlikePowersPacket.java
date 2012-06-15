@@ -114,7 +114,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             RequestBlock = new RequestBlockBlock();
         }
 
-        public RequestGodlikePowersPacket(byte[] bytes, int[] i) 
+        public RequestGodlikePowersPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -134,7 +134,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             RequestBlock.FromBytes(bytes, i);
         }
 
-        public RequestGodlikePowersPacket(Header head, byte[] bytes, int[] i)
+        public RequestGodlikePowersPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

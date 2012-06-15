@@ -121,7 +121,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             FileData = new FileDataBlock();
         }
 
-        public InitiateDownloadPacket(byte[] bytes, int[] i) 
+        public InitiateDownloadPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -141,7 +141,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             FileData.FromBytes(bytes, i);
         }
 
-        public InitiateDownloadPacket(Header head, byte[] bytes, int[] i)
+        public InitiateDownloadPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

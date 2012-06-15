@@ -65,7 +65,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             FrozenData = new FrozenDataBlock();
         }
 
-        public ViewerFrozenMessagePacket(byte[] bytes, int[] i) 
+        public ViewerFrozenMessagePacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -84,7 +84,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             FrozenData.FromBytes(bytes, i);
         }
 
-        public ViewerFrozenMessagePacket(Header head, byte[] bytes, int[] i)
+        public ViewerFrozenMessagePacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

@@ -111,7 +111,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             GroupData = new GroupDataBlock();
         }
 
-        public LeaveGroupReplyPacket(byte[] bytes, int[] i) 
+        public LeaveGroupReplyPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -131,7 +131,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             GroupData.FromBytes(bytes, i);
         }
 
-        public LeaveGroupReplyPacket(Header head, byte[] bytes, int[] i)
+        public LeaveGroupReplyPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

@@ -22,7 +22,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             header.Reliable = true;
         }
 
-        public CloseCircuitPacket(byte[] bytes, int[] i) 
+        public CloseCircuitPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -40,7 +40,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
         }
 
-        public CloseCircuitPacket(Header head, byte[] bytes, int[] i)
+        public CloseCircuitPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

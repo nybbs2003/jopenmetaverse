@@ -177,7 +177,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             ParamList = null;
         }
 
-        public EstateOwnerMessagePacket(byte[] bytes, int[] i) 
+        public EstateOwnerMessagePacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -205,7 +205,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             { ParamList[j].FromBytes(bytes, i); }
         }
 
-        public EstateOwnerMessagePacket(Header head, byte[] bytes, int[] i)
+        public EstateOwnerMessagePacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

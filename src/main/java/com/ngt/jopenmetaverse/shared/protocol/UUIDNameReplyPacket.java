@@ -82,7 +82,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             UUIDNameBlock = null;
         }
 
-        public UUIDNameReplyPacket(byte[] bytes, int[] i) 
+        public UUIDNameReplyPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -108,7 +108,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             { UUIDNameBlock[j].FromBytes(bytes, i); }
         }
 
-        public UUIDNameReplyPacket(Header head, byte[] bytes, int[] i)
+        public UUIDNameReplyPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

@@ -228,7 +228,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             RegionInfo2 = new RegionInfo2Block();
         }
 
-        public RegionInfoPacket(byte[] bytes, int[] i) 
+        public RegionInfoPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -249,7 +249,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             RegionInfo2.FromBytes(bytes, i);
         }
 
-        public RegionInfoPacket(Header head, byte[] bytes, int[] i)
+        public RegionInfoPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

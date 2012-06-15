@@ -151,7 +151,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             EjectData = new EjectDataBlock();
         }
 
-        public EjectGroupMemberReplyPacket(byte[] bytes, int[] i) 
+        public EjectGroupMemberReplyPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -172,7 +172,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             EjectData.FromBytes(bytes, i);
         }
 
-        public EjectGroupMemberReplyPacket(Header head, byte[] bytes, int[] i)
+        public EjectGroupMemberReplyPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

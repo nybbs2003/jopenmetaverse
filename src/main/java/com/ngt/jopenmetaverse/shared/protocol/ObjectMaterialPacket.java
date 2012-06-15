@@ -116,7 +116,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             ObjectData = null;
         }
 
-        public ObjectMaterialPacket(byte[] bytes, int[] i) 
+        public ObjectMaterialPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -143,7 +143,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             { ObjectData[j].FromBytes(bytes, i); }
         }
 
-        public ObjectMaterialPacket(Header head, byte[] bytes, int[] i)
+        public ObjectMaterialPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

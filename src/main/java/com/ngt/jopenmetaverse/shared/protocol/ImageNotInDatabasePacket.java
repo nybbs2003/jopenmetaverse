@@ -65,7 +65,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             ImageID = new ImageIDBlock();
         }
 
-        public ImageNotInDatabasePacket(byte[] bytes, int[] i) 
+        public ImageNotInDatabasePacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -84,7 +84,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             ImageID.FromBytes(bytes, i);
         }
 
-        public ImageNotInDatabasePacket(Header head, byte[] bytes, int[] i)
+        public ImageNotInDatabasePacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

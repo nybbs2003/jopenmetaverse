@@ -112,7 +112,7 @@ public final class EconomyDataPacket extends Packet
             info = new InfoBlock();
         }
 
-        public EconomyDataPacket(byte[] bytes, int[] i)
+        public EconomyDataPacket(byte[] bytes, int[] i) throws MalformedDataException
         {
         	this();
             int[] packetEnd = new int[1];
@@ -137,7 +137,7 @@ public final class EconomyDataPacket extends Packet
 			}
         }
 
-        public EconomyDataPacket(Header head, byte[] bytes, int[] i)
+        public EconomyDataPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
         {
         	this();
         	int[] packetEnd = new int[1];

@@ -65,7 +65,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             TextureData = new TextureDataBlock();
         }
 
-        public RebakeAvatarTexturesPacket(byte[] bytes, int[] i) 
+        public RebakeAvatarTexturesPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -84,7 +84,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             TextureData.FromBytes(bytes, i);
         }
 
-        public RebakeAvatarTexturesPacket(Header head, byte[] bytes, int[] i)
+        public RebakeAvatarTexturesPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

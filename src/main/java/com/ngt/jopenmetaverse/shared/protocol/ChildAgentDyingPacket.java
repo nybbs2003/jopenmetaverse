@@ -1,5 +1,7 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
+import com.ngt.jopenmetaverse.shared.types.UUID;
+
 
     public final class ChildAgentDyingPacket extends Packet
     {
@@ -69,7 +71,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             AgentData = new AgentDataBlock();
         }
 
-        public ChildAgentDyingPacket(byte[] bytes, int[] i) 
+        public ChildAgentDyingPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -88,7 +90,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             AgentData.FromBytes(bytes, i);
         }
 
-        public ChildAgentDyingPacket(Header head, byte[] bytes, int[] i)
+        public ChildAgentDyingPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

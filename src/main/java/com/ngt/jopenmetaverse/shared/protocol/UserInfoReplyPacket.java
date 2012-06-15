@@ -125,7 +125,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             UserData = new UserDataBlock();
         }
 
-        public UserInfoReplyPacket(byte[] bytes, int[] i) 
+        public UserInfoReplyPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -145,7 +145,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             UserData.FromBytes(bytes, i);
         }
 
-        public UserInfoReplyPacket(Header head, byte[] bytes, int[] i)
+        public UserInfoReplyPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

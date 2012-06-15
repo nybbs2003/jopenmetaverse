@@ -72,7 +72,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             DataBlock = null;
         }
 
-        public PreloadSoundPacket(byte[] bytes, int[] i) 
+        public PreloadSoundPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -98,7 +98,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             { DataBlock[j].FromBytes(bytes, i); }
         }
 
-        public PreloadSoundPacket(Header head, byte[] bytes, int[] i)
+        public PreloadSoundPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

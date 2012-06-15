@@ -114,7 +114,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             Script = new ScriptBlock();
         }
 
-        public ScriptResetPacket(byte[] bytes, int[] i) 
+        public ScriptResetPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -134,7 +134,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             Script.FromBytes(bytes, i);
         }
 
-        public ScriptResetPacket(Header head, byte[] bytes, int[] i)
+        public ScriptResetPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

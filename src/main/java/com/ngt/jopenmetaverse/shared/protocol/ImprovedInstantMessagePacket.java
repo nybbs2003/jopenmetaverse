@@ -161,7 +161,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             MessageBlock = new MessageBlockBlock();
         }
 
-        public ImprovedInstantMessagePacket(byte[] bytes, int[] i) 
+        public ImprovedInstantMessagePacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -181,7 +181,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             MessageBlock.FromBytes(bytes, i);
         }
 
-        public ImprovedInstantMessagePacket(Header head, byte[] bytes, int[] i)
+        public ImprovedInstantMessagePacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

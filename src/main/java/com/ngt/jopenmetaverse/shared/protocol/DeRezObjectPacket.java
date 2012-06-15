@@ -171,7 +171,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             ObjectData = null;
         }
 
-        public DeRezObjectPacket(byte[] bytes, int[] i) 
+        public DeRezObjectPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -199,7 +199,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             { ObjectData[j].FromBytes(bytes, i); }
         }
 
-        public DeRezObjectPacket(Header head, byte[] bytes, int[] i)
+        public DeRezObjectPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

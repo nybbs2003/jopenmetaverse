@@ -66,7 +66,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             Packets = null;
         }
 
-        public PacketAckPacket(byte[] bytes, int[] i) 
+        public PacketAckPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -92,7 +92,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             { Packets[j].FromBytes(bytes, i); }
         }
 
-        public PacketAckPacket(Header head, byte[] bytes, int[] i)
+        public PacketAckPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

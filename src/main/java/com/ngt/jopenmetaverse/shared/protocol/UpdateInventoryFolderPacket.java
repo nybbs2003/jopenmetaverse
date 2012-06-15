@@ -127,7 +127,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             FolderData = null;
         }
 
-        public UpdateInventoryFolderPacket(byte[] bytes, int[] i) 
+        public UpdateInventoryFolderPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -154,7 +154,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             { FolderData[j].FromBytes(bytes, i); }
         }
 
-        public UpdateInventoryFolderPacket(Header head, byte[] bytes, int[] i)
+        public UpdateInventoryFolderPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

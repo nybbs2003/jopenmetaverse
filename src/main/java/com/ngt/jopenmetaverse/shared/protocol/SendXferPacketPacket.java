@@ -118,7 +118,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             DataPacket = new DataPacketBlock();
         }
 
-        public SendXferPacketPacket(byte[] bytes, int[] i) 
+        public SendXferPacketPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -138,7 +138,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             DataPacket.FromBytes(bytes, i);
         }
 
-        public SendXferPacketPacket(Header head, byte[] bytes, int[] i)
+        public SendXferPacketPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

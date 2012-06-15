@@ -65,7 +65,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             Info = new InfoBlock();
         }
 
-        public TeleportStartPacket(byte[] bytes, int[] i) 
+        public TeleportStartPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -84,7 +84,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             Info.FromBytes(bytes, i);
         }
 
-        public TeleportStartPacket(Header head, byte[] bytes, int[] i)
+        public TeleportStartPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

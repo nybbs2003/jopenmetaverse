@@ -74,7 +74,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             MuteData = new MuteDataBlock();
         }
 
-        public MuteListUpdatePacket(byte[] bytes, int[] i) 
+        public MuteListUpdatePacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -93,7 +93,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             MuteData.FromBytes(bytes, i);
         }
 
-        public MuteListUpdatePacket(Header head, byte[] bytes, int[] i)
+        public MuteListUpdatePacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

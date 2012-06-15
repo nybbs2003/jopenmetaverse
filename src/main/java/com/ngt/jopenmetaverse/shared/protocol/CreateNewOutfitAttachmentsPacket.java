@@ -158,7 +158,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             ObjectData = null;
         }
 
-        public CreateNewOutfitAttachmentsPacket(byte[] bytes, int[] i) 
+        public CreateNewOutfitAttachmentsPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -186,7 +186,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             { ObjectData[j].FromBytes(bytes, i); }
         }
 
-        public CreateNewOutfitAttachmentsPacket(Header head, byte[] bytes, int[] i)
+        public CreateNewOutfitAttachmentsPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

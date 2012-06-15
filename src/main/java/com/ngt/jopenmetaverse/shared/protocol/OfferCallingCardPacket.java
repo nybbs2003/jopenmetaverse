@@ -114,7 +114,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             AgentBlock = new AgentBlockBlock();
         }
 
-        public OfferCallingCardPacket(byte[] bytes, int[] i) 
+        public OfferCallingCardPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -134,7 +134,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             AgentBlock.FromBytes(bytes, i);
         }
 
-        public OfferCallingCardPacket(Header head, byte[] bytes, int[] i)
+        public OfferCallingCardPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

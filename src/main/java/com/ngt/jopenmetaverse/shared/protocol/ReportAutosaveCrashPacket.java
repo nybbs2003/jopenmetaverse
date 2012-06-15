@@ -68,7 +68,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             AutosaveData = new AutosaveDataBlock();
         }
 
-        public ReportAutosaveCrashPacket(byte[] bytes, int[] i) 
+        public ReportAutosaveCrashPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -87,7 +87,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             AutosaveData.FromBytes(bytes, i);
         }
 
-        public ReportAutosaveCrashPacket(Header head, byte[] bytes, int[] i)
+        public ReportAutosaveCrashPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

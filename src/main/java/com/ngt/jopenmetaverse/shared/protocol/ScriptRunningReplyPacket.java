@@ -71,7 +71,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             Script = new ScriptBlock();
         }
 
-        public ScriptRunningReplyPacket(byte[] bytes, int[] i) 
+        public ScriptRunningReplyPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -90,7 +90,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             Script.FromBytes(bytes, i);
         }
 
-        public ScriptRunningReplyPacket(Header head, byte[] bytes, int[] i)
+        public ScriptRunningReplyPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

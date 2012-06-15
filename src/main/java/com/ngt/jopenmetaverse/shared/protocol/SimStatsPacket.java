@@ -164,7 +164,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             PidStat = new PidStatBlock();
         }
 
-        public SimStatsPacket(byte[] bytes, int[] i) 
+        public SimStatsPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -192,7 +192,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             PidStat.FromBytes(bytes, i);
         }
 
-        public SimStatsPacket(Header head, byte[] bytes, int[] i)
+        public SimStatsPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

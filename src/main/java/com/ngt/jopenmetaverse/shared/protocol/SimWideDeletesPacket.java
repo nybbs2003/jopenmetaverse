@@ -114,7 +114,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             DataBlock = new DataBlockBlock();
         }
 
-        public SimWideDeletesPacket(byte[] bytes, int[] i) 
+        public SimWideDeletesPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -134,7 +134,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             DataBlock.FromBytes(bytes, i);
         }
 
-        public SimWideDeletesPacket(Header head, byte[] bytes, int[] i)
+        public SimWideDeletesPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

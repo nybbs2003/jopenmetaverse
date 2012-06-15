@@ -68,7 +68,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             PingID = new PingIDBlock();
         }
 
-        public StartPingCheckPacket(byte[] bytes, int[] i) 
+        public StartPingCheckPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -87,7 +87,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             PingID.FromBytes(bytes, i);
         }
 
-        public StartPingCheckPacket(Header head, byte[] bytes, int[] i)
+        public StartPingCheckPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

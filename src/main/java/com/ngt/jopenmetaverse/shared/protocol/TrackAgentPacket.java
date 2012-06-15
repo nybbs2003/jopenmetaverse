@@ -111,7 +111,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             TargetData = new TargetDataBlock();
         }
 
-        public TrackAgentPacket(byte[] bytes, int[] i) 
+        public TrackAgentPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -131,7 +131,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             TargetData.FromBytes(bytes, i);
         }
 
-        public TrackAgentPacket(Header head, byte[] bytes, int[] i)
+        public TrackAgentPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

@@ -1,5 +1,14 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.ngt.jopenmetaverse.shared.types.Quaternion;
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.types.Vector3;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+
 
     public final class ChildAgentUpdatePacket extends Packet
     {
@@ -60,13 +69,13 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     ViewerCircuitCode = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                     AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
-                    AgentPos.FromBytes(bytes, i[0]); i[0] += 12;
-                    AgentVel.FromBytes(bytes, i[0]); i[0] += 12;
-                    Center.FromBytes(bytes, i[0]); i[0] += 12;
-                    Size.FromBytes(bytes, i[0]); i[0] += 12;
-                    AtAxis.FromBytes(bytes, i[0]); i[0] += 12;
-                    LeftAxis.FromBytes(bytes, i[0]); i[0] += 12;
-                    UpAxis.FromBytes(bytes, i[0]); i[0] += 12;
+                    AgentPos.fromBytes(bytes, i[0]); i[0] += 12;
+                    AgentVel.fromBytes(bytes, i[0]); i[0] += 12;
+                    Center.fromBytes(bytes, i[0]); i[0] += 12;
+                    Size.fromBytes(bytes, i[0]); i[0] += 12;
+                    AtAxis.fromBytes(bytes, i[0]); i[0] += 12;
+                    LeftAxis.fromBytes(bytes, i[0]); i[0] += 12;
+                    UpAxis.fromBytes(bytes, i[0]); i[0] += 12;
                     ChangedGrid = (bytes[i[0]++] != 0) ? true : false;
                     Far = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
                     Aspect = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
@@ -74,8 +83,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     Throttles = new byte[length];
                     Utils.arraycopy(bytes, i[0], Throttles, 0, length); i[0] +=  length;
                     LocomotionState = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    HeadRotation.FromBytes(bytes, i[0], true); i[0] += 12;
-                    BodyRotation.FromBytes(bytes, i[0], true); i[0] += 12;
+                    HeadRotation.fromBytes(bytes, i[0], true); i[0] += 12;
+                    BodyRotation.fromBytes(bytes, i[0], true); i[0] += 12;
                     ControlFlags = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                     EnergyLevel = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
                     GodLevel = (byte)bytes[i[0]++];
@@ -100,21 +109,21 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 Utils.uintToBytes(ViewerCircuitCode, bytes, i[0]); i[0] += 4;
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
                 SessionID.ToBytes(bytes, i[0]); i[0] += 16;
-                AgentPos.ToBytes(bytes, i[0]); i[0] += 12;
-                AgentVel.ToBytes(bytes, i[0]); i[0] += 12;
-                Center.ToBytes(bytes, i[0]); i[0] += 12;
-                Size.ToBytes(bytes, i[0]); i[0] += 12;
-                AtAxis.ToBytes(bytes, i[0]); i[0] += 12;
-                LeftAxis.ToBytes(bytes, i[0]); i[0] += 12;
-                UpAxis.ToBytes(bytes, i[0]); i[0] += 12;
+                AgentPos.toBytes(bytes, i[0]); i[0] += 12;
+                AgentVel.toBytes(bytes, i[0]); i[0] += 12;
+                Center.toBytes(bytes, i[0]); i[0] += 12;
+                Size.toBytes(bytes, i[0]); i[0] += 12;
+                AtAxis.toBytes(bytes, i[0]); i[0] += 12;
+                LeftAxis.toBytes(bytes, i[0]); i[0] += 12;
+                UpAxis.toBytes(bytes, i[0]); i[0] += 12;
                 bytes[i[0]++] = (byte)((ChangedGrid) ? 1 : 0);
                 Utils.floatToBytes(Far, bytes, i[0]); i[0] += 4;
                 Utils.floatToBytes(Aspect, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)Throttles.length;
                 Utils.arraycopy(Throttles, 0, bytes, i[0], Throttles.length); i[0] +=  Throttles.length;
                 Utils.uintToBytes(LocomotionState, bytes, i[0]); i[0] += 4;
-                HeadRotation.ToBytes(bytes, i[0]); i[0] += 12;
-                BodyRotation.ToBytes(bytes, i[0]); i[0] += 12;
+                HeadRotation.toBytes(bytes, i[0]); i[0] += 12;
+                BodyRotation.toBytes(bytes, i[0]); i[0] += 12;
                 Utils.uintToBytes(ControlFlags, bytes, i[0]); i[0] += 4;
                 Utils.floatToBytes(EnergyLevel, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = GodLevel;
@@ -145,7 +154,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public GroupDataBlock() { }
-            public GroupDataBlock(byte[] bytes, int[] i)
+            public GroupDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -190,7 +199,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public AnimationDataBlock() { }
-            public AnimationDataBlock(byte[] bytes, int[] i)
+            public AnimationDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -232,7 +241,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public GranterBlockBlock() { }
-            public GranterBlockBlock(byte[] bytes, int[] i)
+            public GranterBlockBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -274,7 +283,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public NVPairDataBlock() { }
-            public NVPairDataBlock(byte[] bytes, int[] i)
+            public NVPairDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -319,7 +328,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public VisualParamBlock() { }
-            public VisualParamBlock(byte[] bytes, int[] i)
+            public VisualParamBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -360,7 +369,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public AgentAccessBlock() { }
-            public AgentAccessBlock(byte[] bytes, int[] i)
+            public AgentAccessBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -402,7 +411,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public AgentInfoBlock() { }
-            public AgentInfoBlock(byte[] bytes, int[] i)
+            public AgentInfoBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -479,7 +488,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             AgentInfo = null;
         }
 
-        public ChildAgentUpdatePacket(byte[] bytes, int[] i) 
+        public ChildAgentUpdatePacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -554,7 +563,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             { AgentInfo[j].FromBytes(bytes, i); }
         }
 
-        public ChildAgentUpdatePacket(Header head, byte[] bytes, int[] i)
+        public ChildAgentUpdatePacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

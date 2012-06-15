@@ -1,5 +1,9 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.types.Vector3;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+
 
     public final class ChatFromSimulatorPacket extends Packet
     {
@@ -27,7 +31,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public ChatDataBlock() { }
-            public ChatDataBlock(byte[] bytes, int[] i)
+            public ChatDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -46,7 +50,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     SourceType = (byte)bytes[i[0]++];
                     ChatType = (byte)bytes[i[0]++];
                     Audible = (byte)bytes[i[0]++];
-                    Position.FromBytes(bytes, i[0]); i[0] += 12;
+                    Position.fromBytes(bytes, i[0]); i[0] += 12;
                     length = Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
                     Message = new byte[length];
                     Utils.arraycopy(bytes, i[0], Message, 0, length); i[0] +=  length;
@@ -67,7 +71,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 bytes[i[0]++] = SourceType;
                 bytes[i[0]++] = ChatType;
                 bytes[i[0]++] = Audible;
-                Position.ToBytes(bytes, i[0]); i[0] += 12;
+                Position.toBytes(bytes, i[0]); i[0] += 12;
                 bytes[i[0]++] = (byte)(Message.length % 256);
                 bytes[i[0]++] = (byte)((Message.length >> 8) % 256);
                 Utils.arraycopy(Message, 0, bytes, i[0], Message.length); i[0] +=  Message.length;
@@ -80,7 +84,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
                         {
                 int length = 10;
-                length += ChatData.length;
+                length += ChatData.getLength();
                 return length;
             }
         }
@@ -97,7 +101,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             ChatData = new ChatDataBlock();
         }
 
-        public ChatFromSimulatorPacket(byte[] bytes, int[] i) 
+        public ChatFromSimulatorPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -116,7 +120,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             ChatData.FromBytes(bytes, i);
         }
 
-        public ChatFromSimulatorPacket(Header head, byte[] bytes, int[] i)
+        public ChatFromSimulatorPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -134,7 +138,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public byte[] ToBytes()
         {
             int length = 10;
-            length += ChatData.length;
+            length += ChatData.getLength();
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
             int[] i = new int[]{0};

@@ -112,7 +112,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             CameraProperty = null;
         }
 
-        public SetFollowCamPropertiesPacket(byte[] bytes, int[] i) 
+        public SetFollowCamPropertiesPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -139,7 +139,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             { CameraProperty[j].FromBytes(bytes, i); }
         }
 
-        public SetFollowCamPropertiesPacket(Header head, byte[] bytes, int[] i)
+        public SetFollowCamPropertiesPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

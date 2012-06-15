@@ -80,7 +80,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             TimeInfo = new TimeInfoBlock();
         }
 
-        public SimulatorViewerTimeMessagePacket(byte[] bytes, int[] i) 
+        public SimulatorViewerTimeMessagePacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -99,7 +99,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             TimeInfo.FromBytes(bytes, i);
         }
 
-        public SimulatorViewerTimeMessagePacket(Header head, byte[] bytes, int[] i)
+        public SimulatorViewerTimeMessagePacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

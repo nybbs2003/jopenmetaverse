@@ -91,7 +91,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             XferID = new XferIDBlock();
         }
 
-        public RequestXferPacket(byte[] bytes, int[] i) 
+        public RequestXferPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -110,7 +110,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             XferID.FromBytes(bytes, i);
         }
 
-        public RequestXferPacket(Header head, byte[] bytes, int[] i)
+        public RequestXferPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

@@ -165,7 +165,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             QueryReplies = null;
         }
 
-        public DirPopularReplyPacket(byte[] bytes, int[] i) 
+        public DirPopularReplyPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -193,7 +193,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             { QueryReplies[j].FromBytes(bytes, i); }
         }
 
-        public DirPopularReplyPacket(Header head, byte[] bytes, int[] i)
+        public DirPopularReplyPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

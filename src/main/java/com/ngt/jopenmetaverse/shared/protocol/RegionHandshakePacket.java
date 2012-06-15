@@ -253,7 +253,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             RegionInfo3 = new RegionInfo3Block();
         }
 
-        public RegionHandshakePacket(byte[] bytes, int[] i) 
+        public RegionHandshakePacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -274,7 +274,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             RegionInfo3.FromBytes(bytes, i);
         }
 
-        public RegionHandshakePacket(Header head, byte[] bytes, int[] i)
+        public RegionHandshakePacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

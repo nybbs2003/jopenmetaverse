@@ -164,7 +164,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             TargetData = null;
         }
 
-        public StartLurePacket(byte[] bytes, int[] i) 
+        public StartLurePacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -192,7 +192,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             { TargetData[j].FromBytes(bytes, i); }
         }
 
-        public StartLurePacket(Header head, byte[] bytes, int[] i)
+        public StartLurePacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

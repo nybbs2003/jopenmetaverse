@@ -65,7 +65,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             RequestBlock = new RequestBlockBlock();
         }
 
-        public RegionHandleRequestPacket(byte[] bytes, int[] i) 
+        public RegionHandleRequestPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -84,7 +84,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             RequestBlock.FromBytes(bytes, i);
         }
 
-        public RegionHandleRequestPacket(Header head, byte[] bytes, int[] i)
+        public RegionHandleRequestPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

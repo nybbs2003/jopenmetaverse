@@ -111,7 +111,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             EventData = new EventDataBlock();
         }
 
-        public EventInfoRequestPacket(byte[] bytes, int[] i) 
+        public EventInfoRequestPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -131,7 +131,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             EventData.FromBytes(bytes, i);
         }
 
-        public EventInfoRequestPacket(Header head, byte[] bytes, int[] i)
+        public EventInfoRequestPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

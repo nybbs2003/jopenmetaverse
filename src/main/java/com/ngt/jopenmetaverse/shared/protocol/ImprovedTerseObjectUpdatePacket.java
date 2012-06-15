@@ -127,7 +127,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             ObjectData = null;
         }
 
-        public ImprovedTerseObjectUpdatePacket(byte[] bytes, int[] i) 
+        public ImprovedTerseObjectUpdatePacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -154,7 +154,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             { ObjectData[j].FromBytes(bytes, i); }
         }
 
-        public ImprovedTerseObjectUpdatePacket(Header head, byte[] bytes, int[] i)
+        public ImprovedTerseObjectUpdatePacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

@@ -66,7 +66,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             AgentBlock = null;
         }
 
-        public OnlineNotificationPacket(byte[] bytes, int[] i) 
+        public OnlineNotificationPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -92,7 +92,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             { AgentBlock[j].FromBytes(bytes, i); }
         }
 
-        public OnlineNotificationPacket(Header head, byte[] bytes, int[] i)
+        public OnlineNotificationPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

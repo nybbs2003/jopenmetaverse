@@ -124,7 +124,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             LayerData = null;
         }
 
-        public MapLayerReplyPacket(byte[] bytes, int[] i) 
+        public MapLayerReplyPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -151,7 +151,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             { LayerData[j].FromBytes(bytes, i); }
         }
 
-        public MapLayerReplyPacket(Header head, byte[] bytes, int[] i)
+        public MapLayerReplyPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

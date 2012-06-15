@@ -158,7 +158,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             InviteData = null;
         }
 
-        public InviteGroupRequestPacket(byte[] bytes, int[] i) 
+        public InviteGroupRequestPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -186,7 +186,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             { InviteData[j].FromBytes(bytes, i); }
         }
 
-        public InviteGroupRequestPacket(Header head, byte[] bytes, int[] i)
+        public InviteGroupRequestPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

@@ -114,7 +114,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             GroupData = new GroupDataBlock();
         }
 
-        public GroupRoleDataRequestPacket(byte[] bytes, int[] i) 
+        public GroupRoleDataRequestPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -134,7 +134,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             GroupData.FromBytes(bytes, i);
         }
 
-        public GroupRoleDataRequestPacket(Header head, byte[] bytes, int[] i)
+        public GroupRoleDataRequestPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

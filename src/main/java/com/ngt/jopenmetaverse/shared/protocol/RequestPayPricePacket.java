@@ -65,7 +65,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             ObjectData = new ObjectDataBlock();
         }
 
-        public RequestPayPricePacket(byte[] bytes, int[] i) 
+        public RequestPayPricePacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -84,7 +84,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             ObjectData.FromBytes(bytes, i);
         }
 
-        public RequestPayPricePacket(Header head, byte[] bytes, int[] i)
+        public RequestPayPricePacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

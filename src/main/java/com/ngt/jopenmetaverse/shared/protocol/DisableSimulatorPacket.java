@@ -22,7 +22,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             header.Reliable = true;
         }
 
-        public DisableSimulatorPacket(byte[] bytes, int[] i) 
+        public DisableSimulatorPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -40,7 +40,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
         }
 
-        public DisableSimulatorPacket(Header head, byte[] bytes, int[] i)
+        public DisableSimulatorPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

@@ -154,7 +154,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             TransactionData = new TransactionDataBlock();
         }
 
-        public GroupActiveProposalsRequestPacket(byte[] bytes, int[] i) 
+        public GroupActiveProposalsRequestPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -175,7 +175,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             TransactionData.FromBytes(bytes, i);
         }
 
-        public GroupActiveProposalsRequestPacket(Header head, byte[] bytes, int[] i)
+        public GroupActiveProposalsRequestPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

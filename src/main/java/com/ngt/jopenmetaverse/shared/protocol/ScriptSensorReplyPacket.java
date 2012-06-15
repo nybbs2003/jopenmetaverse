@@ -140,7 +140,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             SensedData = null;
         }
 
-        public ScriptSensorReplyPacket(byte[] bytes, int[] i) 
+        public ScriptSensorReplyPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -167,7 +167,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             { SensedData[j].FromBytes(bytes, i); }
         }
 
-        public ScriptSensorReplyPacket(Header head, byte[] bytes, int[] i)
+        public ScriptSensorReplyPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

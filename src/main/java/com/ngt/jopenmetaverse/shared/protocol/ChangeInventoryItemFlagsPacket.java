@@ -1,5 +1,8 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+
 
     public final class ChangeInventoryItemFlagsPacket extends Packet
     {
@@ -61,7 +64,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public InventoryDataBlock() { }
-            public InventoryDataBlock(byte[] bytes, int[] i)
+            public InventoryDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -115,7 +118,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             InventoryData = null;
         }
 
-        public ChangeInventoryItemFlagsPacket(byte[] bytes, int[] i) 
+        public ChangeInventoryItemFlagsPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -142,7 +145,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             { InventoryData[j].FromBytes(bytes, i); }
         }
 
-        public ChangeInventoryItemFlagsPacket(Header head, byte[] bytes, int[] i)
+        public ChangeInventoryItemFlagsPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

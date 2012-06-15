@@ -107,7 +107,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public DataBlock() { }
-            public DataBlock(byte[] bytes, int[] i)
+            public DataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -176,7 +176,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             Data = null;
         }
 
-        public MapItemReplyPacket(byte[] bytes, int[] i) 
+        public MapItemReplyPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -204,7 +204,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             { Data[j].FromBytes(bytes, i); }
         }
 
-        public MapItemReplyPacket(Header head, byte[] bytes, int[] i)
+        public MapItemReplyPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

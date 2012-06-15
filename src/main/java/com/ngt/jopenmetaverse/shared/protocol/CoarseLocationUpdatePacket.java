@@ -164,7 +164,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             AgentData = null;
         }
 
-        public CoarseLocationUpdatePacket(byte[] bytes, int[] i) 
+        public CoarseLocationUpdatePacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -199,7 +199,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             { AgentData[j].FromBytes(bytes, i); }
         }
 
-        public CoarseLocationUpdatePacket(Header head, byte[] bytes, int[] i)
+        public CoarseLocationUpdatePacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

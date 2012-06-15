@@ -112,7 +112,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             ObjectData = new ObjectDataBlock();
         }
 
-        public ObjectSpinStopPacket(byte[] bytes, int[] i) 
+        public ObjectSpinStopPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -132,7 +132,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             ObjectData.FromBytes(bytes, i);
         }
 
-        public ObjectSpinStopPacket(Header head, byte[] bytes, int[] i)
+        public ObjectSpinStopPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

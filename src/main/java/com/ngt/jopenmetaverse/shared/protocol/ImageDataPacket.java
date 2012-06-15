@@ -125,7 +125,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             ImageData = new ImageDataBlock();
         }
 
-        public ImageDataPacket(byte[] bytes, int[] i) 
+        public ImageDataPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -145,7 +145,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             ImageData.FromBytes(bytes, i);
         }
 
-        public ImageDataPacket(Header head, byte[] bytes, int[] i)
+        public ImageDataPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

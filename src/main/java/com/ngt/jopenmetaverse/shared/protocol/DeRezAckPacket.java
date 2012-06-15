@@ -68,7 +68,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             TransactionData = new TransactionDataBlock();
         }
 
-        public DeRezAckPacket(byte[] bytes, int[] i) 
+        public DeRezAckPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -87,7 +87,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             TransactionData.FromBytes(bytes, i);
         }
 
-        public DeRezAckPacket(Header head, byte[] bytes, int[] i)
+        public DeRezAckPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

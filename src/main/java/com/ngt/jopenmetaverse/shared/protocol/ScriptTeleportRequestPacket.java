@@ -23,7 +23,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public DataBlock() { }
-            public DataBlock(byte[] bytes, int[] i)
+            public DataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -84,7 +84,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             Data = new DataBlock();
         }
 
-        public ScriptTeleportRequestPacket(byte[] bytes, int[] i) 
+        public ScriptTeleportRequestPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -103,7 +103,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             Data.FromBytes(bytes, i);
         }
 
-        public ScriptTeleportRequestPacket(Header head, byte[] bytes, int[] i)
+        public ScriptTeleportRequestPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

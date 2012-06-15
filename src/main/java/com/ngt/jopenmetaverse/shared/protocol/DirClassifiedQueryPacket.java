@@ -130,7 +130,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             QueryData = new QueryDataBlock();
         }
 
-        public DirClassifiedQueryPacket(byte[] bytes, int[] i) 
+        public DirClassifiedQueryPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -150,7 +150,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             QueryData.FromBytes(bytes, i);
         }
 
-        public DirClassifiedQueryPacket(Header head, byte[] bytes, int[] i)
+        public DirClassifiedQueryPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

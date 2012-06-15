@@ -181,7 +181,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             InventoryData = new InventoryDataBlock();
         }
 
-        public RezRestoreToWorldPacket(byte[] bytes, int[] i) 
+        public RezRestoreToWorldPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -201,7 +201,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             InventoryData.FromBytes(bytes, i);
         }
 
-        public RezRestoreToWorldPacket(Header head, byte[] bytes, int[] i)
+        public RezRestoreToWorldPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

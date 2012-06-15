@@ -81,7 +81,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             MeanCollision = null;
         }
 
-        public MeanCollisionAlertPacket(byte[] bytes, int[] i) 
+        public MeanCollisionAlertPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -107,7 +107,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             { MeanCollision[j].FromBytes(bytes, i); }
         }
 
-        public MeanCollisionAlertPacket(Header head, byte[] bytes, int[] i)
+        public MeanCollisionAlertPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

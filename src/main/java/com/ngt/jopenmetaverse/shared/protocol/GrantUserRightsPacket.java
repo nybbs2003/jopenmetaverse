@@ -115,7 +115,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             Rights = null;
         }
 
-        public GrantUserRightsPacket(byte[] bytes, int[] i) 
+        public GrantUserRightsPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -142,7 +142,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             { Rights[j].FromBytes(bytes, i); }
         }
 
-        public GrantUserRightsPacket(Header head, byte[] bytes, int[] i)
+        public GrantUserRightsPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

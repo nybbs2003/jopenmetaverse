@@ -164,7 +164,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             ReportData = new ReportDataBlock();
         }
 
-        public UserReportPacket(byte[] bytes, int[] i) 
+        public UserReportPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -184,7 +184,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             ReportData.FromBytes(bytes, i);
         }
 
-        public UserReportPacket(Header head, byte[] bytes, int[] i)
+        public UserReportPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

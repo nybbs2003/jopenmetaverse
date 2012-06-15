@@ -111,7 +111,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             TransactionBlock = new TransactionBlockBlock();
         }
 
-        public DeclineCallingCardPacket(byte[] bytes, int[] i) 
+        public DeclineCallingCardPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -131,7 +131,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             TransactionBlock.FromBytes(bytes, i);
         }
 
-        public DeclineCallingCardPacket(Header head, byte[] bytes, int[] i)
+        public DeclineCallingCardPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

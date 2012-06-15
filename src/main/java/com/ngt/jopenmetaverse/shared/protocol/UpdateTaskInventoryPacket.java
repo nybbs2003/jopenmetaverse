@@ -228,7 +228,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             InventoryData = new InventoryDataBlock();
         }
 
-        public UpdateTaskInventoryPacket(byte[] bytes, int[] i) 
+        public UpdateTaskInventoryPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -249,7 +249,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             InventoryData.FromBytes(bytes, i);
         }
 
-        public UpdateTaskInventoryPacket(Header head, byte[] bytes, int[] i)
+        public UpdateTaskInventoryPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

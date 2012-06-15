@@ -127,7 +127,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             QueryData = new QueryDataBlock();
         }
 
-        public DirFindQueryPacket(byte[] bytes, int[] i) 
+        public DirFindQueryPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -147,7 +147,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             QueryData.FromBytes(bytes, i);
         }
 
-        public DirFindQueryPacket(Header head, byte[] bytes, int[] i)
+        public DirFindQueryPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

@@ -196,7 +196,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             ObjectData = null;
         }
 
-        public RezMultipleAttachmentsFromInvPacket(byte[] bytes, int[] i) 
+        public RezMultipleAttachmentsFromInvPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -224,7 +224,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             { ObjectData[j].FromBytes(bytes, i); }
         }
 
-        public RezMultipleAttachmentsFromInvPacket(Header head, byte[] bytes, int[] i)
+        public RezMultipleAttachmentsFromInvPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

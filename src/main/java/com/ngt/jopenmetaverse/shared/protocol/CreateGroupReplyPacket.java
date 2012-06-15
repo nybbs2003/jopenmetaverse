@@ -120,7 +120,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             ReplyData = new ReplyDataBlock();
         }
 
-        public CreateGroupReplyPacket(byte[] bytes, int[] i) 
+        public CreateGroupReplyPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -140,7 +140,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             ReplyData.FromBytes(bytes, i);
         }
 
-        public CreateGroupReplyPacket(Header head, byte[] bytes, int[] i)
+        public CreateGroupReplyPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

@@ -84,7 +84,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             UserInfo = new UserInfoBlock();
         }
 
-        public GodKickUserPacket(byte[] bytes, int[] i) 
+        public GodKickUserPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -103,7 +103,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             UserInfo.FromBytes(bytes, i);
         }
 
-        public GodKickUserPacket(Header head, byte[] bytes, int[] i)
+        public GodKickUserPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

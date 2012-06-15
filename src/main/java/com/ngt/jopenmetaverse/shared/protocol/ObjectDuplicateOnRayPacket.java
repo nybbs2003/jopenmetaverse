@@ -140,7 +140,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             ObjectData = null;
         }
 
-        public ObjectDuplicateOnRayPacket(byte[] bytes, int[] i) 
+        public ObjectDuplicateOnRayPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -167,7 +167,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             { ObjectData[j].FromBytes(bytes, i); }
         }
 
-        public ObjectDuplicateOnRayPacket(Header head, byte[] bytes, int[] i)
+        public ObjectDuplicateOnRayPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

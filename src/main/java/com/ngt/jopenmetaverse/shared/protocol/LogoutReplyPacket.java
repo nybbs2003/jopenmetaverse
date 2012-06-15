@@ -113,7 +113,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             InventoryData = null;
         }
 
-        public LogoutReplyPacket(byte[] bytes, int[] i) 
+        public LogoutReplyPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -140,7 +140,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             { InventoryData[j].FromBytes(bytes, i); }
         }
 
-        public LogoutReplyPacket(Header head, byte[] bytes, int[] i)
+        public LogoutReplyPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

@@ -1,5 +1,11 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+
 
     public final class ChangeUserRightsPacket extends Packet
     {
@@ -58,7 +64,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public RightsBlock() { }
-            public RightsBlock(byte[] bytes, int[] i)
+            public RightsBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -112,7 +118,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             Rights = null;
         }
 
-        public ChangeUserRightsPacket(byte[] bytes, int[] i) 
+        public ChangeUserRightsPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -139,7 +145,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             { Rights[j].FromBytes(bytes, i); }
         }
 
-        public ChangeUserRightsPacket(Header head, byte[] bytes, int[] i)
+        public ChangeUserRightsPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

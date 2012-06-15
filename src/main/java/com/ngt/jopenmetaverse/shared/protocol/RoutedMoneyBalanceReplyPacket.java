@@ -204,7 +204,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             TransactionInfo = new TransactionInfoBlock();
         }
 
-        public RoutedMoneyBalanceReplyPacket(byte[] bytes, int[] i) 
+        public RoutedMoneyBalanceReplyPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -225,7 +225,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             TransactionInfo.FromBytes(bytes, i);
         }
 
-        public RoutedMoneyBalanceReplyPacket(Header head, byte[] bytes, int[] i)
+        public RoutedMoneyBalanceReplyPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

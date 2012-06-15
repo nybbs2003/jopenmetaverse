@@ -117,7 +117,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             DataBlock = new DataBlockBlock();
         }
 
-        public StateSavePacket(byte[] bytes, int[] i) 
+        public StateSavePacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -137,7 +137,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             DataBlock.FromBytes(bytes, i);
         }
 
-        public StateSavePacket(Header head, byte[] bytes, int[] i)
+        public StateSavePacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

@@ -121,7 +121,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             MoneyData = new MoneyDataBlock();
         }
 
-        public GroupAccountDetailsRequestPacket(byte[] bytes, int[] i) 
+        public GroupAccountDetailsRequestPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -141,7 +141,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             MoneyData.FromBytes(bytes, i);
         }
 
-        public GroupAccountDetailsRequestPacket(Header head, byte[] bytes, int[] i)
+        public GroupAccountDetailsRequestPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

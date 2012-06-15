@@ -72,7 +72,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             SimulatorInfo = new SimulatorInfoBlock();
         }
 
-        public EnableSimulatorPacket(byte[] bytes, int[] i) 
+        public EnableSimulatorPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -91,7 +91,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             SimulatorInfo.FromBytes(bytes, i);
         }
 
-        public EnableSimulatorPacket(Header head, byte[] bytes, int[] i)
+        public EnableSimulatorPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

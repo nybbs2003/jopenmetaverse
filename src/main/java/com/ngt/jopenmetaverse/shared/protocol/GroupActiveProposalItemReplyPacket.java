@@ -208,7 +208,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             ProposalData = null;
         }
 
-        public GroupActiveProposalItemReplyPacket(byte[] bytes, int[] i) 
+        public GroupActiveProposalItemReplyPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -236,7 +236,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             { ProposalData[j].FromBytes(bytes, i); }
         }
 
-        public GroupActiveProposalItemReplyPacket(Header head, byte[] bytes, int[] i)
+        public GroupActiveProposalItemReplyPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

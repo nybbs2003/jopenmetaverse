@@ -61,7 +61,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public DataBlock() { }
-            public DataBlock(byte[] bytes, int[] i)
+            public DataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -157,7 +157,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             NewData = new NewDataBlock();
         }
 
-        public SetGroupAcceptNoticesPacket(byte[] bytes, int[] i) 
+        public SetGroupAcceptNoticesPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -178,7 +178,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             NewData.FromBytes(bytes, i);
         }
 
-        public SetGroupAcceptNoticesPacket(Header head, byte[] bytes, int[] i)
+        public SetGroupAcceptNoticesPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

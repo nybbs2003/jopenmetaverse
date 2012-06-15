@@ -111,7 +111,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             ParcelData = new ParcelDataBlock();
         }
 
-        public ParcelBuyPassPacket(byte[] bytes, int[] i) 
+        public ParcelBuyPassPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -131,7 +131,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             ParcelData.FromBytes(bytes, i);
         }
 
-        public ParcelBuyPassPacket(Header head, byte[] bytes, int[] i)
+        public ParcelBuyPassPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

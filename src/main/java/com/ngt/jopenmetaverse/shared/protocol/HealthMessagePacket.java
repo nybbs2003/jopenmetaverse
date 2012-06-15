@@ -66,7 +66,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             HealthData = new HealthDataBlock();
         }
 
-        public HealthMessagePacket(byte[] bytes, int[] i) 
+        public HealthMessagePacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -85,7 +85,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             HealthData.FromBytes(bytes, i);
         }
 
-        public HealthMessagePacket(Header head, byte[] bytes, int[] i)
+        public HealthMessagePacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

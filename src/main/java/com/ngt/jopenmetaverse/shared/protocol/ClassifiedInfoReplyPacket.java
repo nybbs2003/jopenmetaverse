@@ -1,5 +1,9 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.types.Vector3d;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+
 
     public final class ClassifiedInfoReplyPacket extends Packet
     {
@@ -76,7 +80,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public DataBlock() { }
-            public DataBlock(byte[] bytes, int[] i)
+            public DataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -104,7 +108,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     SimName = new byte[length];
                     Utils.arraycopy(bytes, i[0], SimName, 0, length); i[0] +=  length;
-                    PosGlobal.FromBytes(bytes, i[0]); i[0] += 24;
+                    PosGlobal.fromBytes(bytes, i[0]); i[0] += 24;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     ParcelName = new byte[length];
                     Utils.arraycopy(bytes, i[0], ParcelName, 0, length); i[0] +=  length;
@@ -135,7 +139,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 SnapshotID.ToBytes(bytes, i[0]); i[0] += 16;
                 bytes[i[0]++] = (byte)SimName.length;
                 Utils.arraycopy(SimName, 0, bytes, i[0], SimName.length); i[0] +=  SimName.length;
-                PosGlobal.ToBytes(bytes, i[0]); i[0] += 24;
+                PosGlobal.toBytes(bytes, i[0]); i[0] += 24;
                 bytes[i[0]++] = (byte)ParcelName.length;
                 Utils.arraycopy(ParcelName, 0, bytes, i[0], ParcelName.length); i[0] +=  ParcelName.length;
                 bytes[i[0]++] = ClassifiedFlags;
@@ -150,7 +154,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                         {
                 int length = 10;
                 length += AgentData.getLength();
-                length += Data.length;
+                length += Data.getLength();
                 return length;
             }
         }
@@ -169,7 +173,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             Data = new DataBlock();
         }
 
-        public ClassifiedInfoReplyPacket(byte[] bytes, int[] i) 
+        public ClassifiedInfoReplyPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -189,7 +193,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             Data.FromBytes(bytes, i);
         }
 
-        public ClassifiedInfoReplyPacket(Header head, byte[] bytes, int[] i)
+        public ClassifiedInfoReplyPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

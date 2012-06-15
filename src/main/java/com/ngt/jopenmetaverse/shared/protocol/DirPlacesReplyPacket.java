@@ -216,7 +216,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             StatusData = null;
         }
 
-        public DirPlacesReplyPacket(byte[] bytes, int[] i) 
+        public DirPlacesReplyPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -259,7 +259,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             { StatusData[j].FromBytes(bytes, i); }
         }
 
-        public DirPlacesReplyPacket(Header head, byte[] bytes, int[] i)
+        public DirPlacesReplyPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

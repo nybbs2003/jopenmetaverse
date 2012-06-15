@@ -146,7 +146,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             ReportData = null;
         }
 
-        public LandStatReplyPacket(byte[] bytes, int[] i) 
+        public LandStatReplyPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -173,7 +173,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             { ReportData[j].FromBytes(bytes, i); }
         }
 
-        public LandStatReplyPacket(Header head, byte[] bytes, int[] i)
+        public LandStatReplyPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

@@ -68,7 +68,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             RequestData = new RequestDataBlock();
         }
 
-        public LiveHelpGroupRequestPacket(byte[] bytes, int[] i) 
+        public LiveHelpGroupRequestPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -87,7 +87,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             RequestData.FromBytes(bytes, i);
         }
 
-        public LiveHelpGroupRequestPacket(Header head, byte[] bytes, int[] i)
+        public LiveHelpGroupRequestPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

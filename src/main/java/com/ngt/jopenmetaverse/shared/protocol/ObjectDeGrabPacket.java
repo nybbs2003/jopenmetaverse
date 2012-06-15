@@ -170,7 +170,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             SurfaceInfo = null;
         }
 
-        public ObjectDeGrabPacket(byte[] bytes, int[] i) 
+        public ObjectDeGrabPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -198,7 +198,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             { SurfaceInfo[j].FromBytes(bytes, i); }
         }
 
-        public ObjectDeGrabPacket(Header head, byte[] bytes, int[] i)
+        public ObjectDeGrabPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

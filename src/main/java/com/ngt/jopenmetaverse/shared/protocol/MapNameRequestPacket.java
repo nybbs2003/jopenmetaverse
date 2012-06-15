@@ -126,7 +126,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             NameData = new NameDataBlock();
         }
 
-        public MapNameRequestPacket(byte[] bytes, int[] i) 
+        public MapNameRequestPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -146,7 +146,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             NameData.FromBytes(bytes, i);
         }
 
-        public MapNameRequestPacket(Header head, byte[] bytes, int[] i)
+        public MapNameRequestPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

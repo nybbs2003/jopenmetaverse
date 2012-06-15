@@ -77,7 +77,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             ReplyData = new ReplyDataBlock();
         }
 
-        public LiveHelpGroupReplyPacket(byte[] bytes, int[] i) 
+        public LiveHelpGroupReplyPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -96,7 +96,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             ReplyData.FromBytes(bytes, i);
         }
 
-        public LiveHelpGroupReplyPacket(Header head, byte[] bytes, int[] i)
+        public LiveHelpGroupReplyPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

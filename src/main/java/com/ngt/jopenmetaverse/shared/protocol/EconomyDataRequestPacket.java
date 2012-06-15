@@ -20,7 +20,7 @@ public final class EconomyDataRequestPacket extends Packet
 		header.Reliable = true;
 	}
 
-	public EconomyDataRequestPacket(byte[] bytes, int[] i)
+	public EconomyDataRequestPacket(byte[] bytes, int[] i) throws MalformedDataException
 	{
 		this();
 		int[] packetEnd = new int[] {bytes.length - 1};
@@ -38,7 +38,7 @@ public final class EconomyDataRequestPacket extends Packet
 		}
 	}
 
-	public EconomyDataRequestPacket(Header head, byte[] bytes, int[] i)
+	public EconomyDataRequestPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 	{
 		this();
 		int[] packetEnd = new int[] {bytes.length - 1};
