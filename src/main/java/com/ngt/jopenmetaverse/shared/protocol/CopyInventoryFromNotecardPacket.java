@@ -1,5 +1,11 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+
 
     public final class CopyInventoryFromNotecardPacket extends Packet
     {
@@ -61,7 +67,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public NotecardDataBlock() { }
-            public NotecardDataBlock(byte[] bytes, int[] i)
+            public NotecardDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -104,7 +110,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public InventoryDataBlock() { }
-            public InventoryDataBlock(byte[] bytes, int[] i)
+            public InventoryDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -138,7 +144,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                         {
                 int length = 11;
                 length += AgentData.getLength();
-                length += NotecardData.length;
+                length += NotecardData.getLength();
                 for (int j = 0; j < InventoryData.length; j++)
                     length += InventoryData[j].getLength();
                 return length;
@@ -218,7 +224,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             int length = 10;
             length += AgentData.getLength();
-            length += NotecardData.length;
+            length += NotecardData.getLength();
             length++;
             for (int j = 0; j < InventoryData.length; j++) { length += InventoryData[j].getLength(); }
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
@@ -249,7 +255,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             fixedLength += AgentData.getLength();
-            fixedLength += NotecardData.length;
+            fixedLength += NotecardData.getLength();
             byte[] fixedBytes = new byte[fixedLength];
             header.ToBytes(fixedBytes, i);
             AgentData.ToBytes(fixedBytes, i);

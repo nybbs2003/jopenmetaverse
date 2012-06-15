@@ -1,5 +1,8 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+
 
     public final class EventInfoRequestPacket extends Packet
     {
@@ -60,7 +63,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public EventDataBlock() { }
-            public EventDataBlock(byte[] bytes, int[] i)
+            public EventDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -92,7 +95,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                         {
                 int length = 10;
                 length += AgentData.getLength();
-                length += EventData.length;
+                length += EventData.getLength();
                 return length;
             }
         }
@@ -151,7 +154,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             int length = 10;
             length += AgentData.getLength();
-            length += EventData.length;
+            length += EventData.getLength();
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
             int[] i = new int[]{0};

@@ -1,7 +1,10 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
-
-    public final class RezScriptPacket extends Packet
+import java.util.ArrayList;
+import java.util.List;
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+	public final class RezScriptPacket extends Packet
     {
         /// <exclude/>
         public final class AgentDataBlock extends PacketBlock
@@ -64,7 +67,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public UpdateBlockBlock() { }
-            public UpdateBlockBlock(byte[] bytes, int[] i)
+            public UpdateBlockBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -129,7 +132,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public InventoryBlockBlock() { }
-            public InventoryBlockBlock(byte[] bytes, int[] i)
+            public InventoryBlockBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }

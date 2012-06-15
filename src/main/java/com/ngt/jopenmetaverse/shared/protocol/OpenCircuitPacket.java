@@ -1,13 +1,17 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
-
-    public final class OpenCircuitPacket extends Packet
+import java.util.ArrayList;
+import java.util.List;
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+	public final class OpenCircuitPacket extends Packet
     {
         /// <exclude/>
         public final class CircuitInfoBlock extends PacketBlock
         {
             public long IP;
-            public ushort Port;
+            /** Unsigned Short **/
+            public int Port;
 
             @Override
 			public int getLength()
@@ -18,7 +22,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public CircuitInfoBlock() { }
-            public CircuitInfoBlock(byte[] bytes, int[] i)
+            public CircuitInfoBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -52,7 +56,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
                         {
                 int length = 10;
-                length += CircuitInfo.length;
+                length += CircuitInfo.getLength();
                 return length;
             }
         }
@@ -106,7 +110,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public byte[] ToBytes()
         {
             int length = 10;
-            length += CircuitInfo.length;
+            length += CircuitInfo.getLength();
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
             int[] i = new int[]{0};

@@ -1,7 +1,10 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
-
-    public final class DisableSimulatorPacket extends Packet
+import java.util.ArrayList;
+import java.util.List;
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+	public final class DisableSimulatorPacket extends Packet
     {
         @Override
 			public int getLength()

@@ -1,7 +1,11 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
-
-    public final class ObjectPositionPacket extends Packet
+import java.util.ArrayList;
+import java.util.List;
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.types.Vector3;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+	public final class ObjectPositionPacket extends Packet
     {
         /// <exclude/>
         public final class AgentDataBlock extends PacketBlock
@@ -61,7 +65,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public ObjectDataBlock() { }
-            public ObjectDataBlock(byte[] bytes, int[] i)
+            public ObjectDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -72,7 +76,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     ObjectLocalID = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    Position.FromBytes(bytes, i[0]); i[0] += 12;
+                    Position.fromBytes(bytes, i[0]); i[0] += 12;
                 }
                 catch (Exception e)
                 {
@@ -84,7 +88,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 Utils.uintToBytes(ObjectLocalID, bytes, i[0]); i[0] += 4;
-                Position.ToBytes(bytes, i[0]); i[0] += 12;
+                Position.toBytes(bytes, i[0]); i[0] += 12;
             }
 
         }

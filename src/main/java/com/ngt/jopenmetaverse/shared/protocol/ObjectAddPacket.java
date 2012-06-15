@@ -1,7 +1,13 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
+import java.util.ArrayList;
+import java.util.List;
 
-    public final class ObjectAddPacket extends Packet
+import com.ngt.jopenmetaverse.shared.types.Quaternion;
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.types.Vector3;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+	public final class ObjectAddPacket extends Packet
     {
         /// <exclude/>
         public final class AgentDataBlock extends PacketBlock
@@ -57,8 +63,12 @@ package com.ngt.jopenmetaverse.shared.protocol;
             public long AddFlags;
             public byte PathCurve;
             public byte ProfileCurve;
-            public ushort PathBegin;
-            public ushort PathEnd;
+            
+            /**Unsigned Short **/
+            public int PathBegin;
+            /**Unsigned Short **/
+            public int PathEnd;
+
             public byte PathScaleX;
             public byte PathScaleY;
             public byte PathShearX;
@@ -70,9 +80,14 @@ package com.ngt.jopenmetaverse.shared.protocol;
             public sbyte PathTaperY;
             public byte PathRevolutions;
             public sbyte PathSkew;
-            public ushort ProfileBegin;
-            public ushort ProfileEnd;
-            public ushort ProfileHollow;
+            
+            /**Unsigned Short **/
+            public int ProfileBegin;
+            /**Unsigned Short **/
+            public int ProfileEnd;
+            /**Unsigned Short **/
+            public int ProfileHollow;
+            
             public byte BypassRaycast;
             public Vector3 RayStart;
             public Vector3 RayEnd;
@@ -91,7 +106,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public ObjectDataBlock() { }
-            public ObjectDataBlock(byte[] bytes, int[] i)
+            public ObjectDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -123,12 +138,12 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     ProfileEnd = (int)Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
                     ProfileHollow = (int)Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
                     BypassRaycast = (byte)bytes[i[0]++];
-                    RayStart.FromBytes(bytes, i[0]); i[0] += 12;
-                    RayEnd.FromBytes(bytes, i[0]); i[0] += 12;
+                    RayStart.fromBytes(bytes, i[0]); i[0] += 12;
+                    RayEnd.fromBytes(bytes, i[0]); i[0] += 12;
                     RayTargetID.FromBytes(bytes, i[0]); i[0] += 16;
                     RayEndIsIntersection = (byte)bytes[i[0]++];
-                    Scale.FromBytes(bytes, i[0]); i[0] += 12;
-                    Rotation.FromBytes(bytes, i[0], true); i[0] += 12;
+                    Scale.fromBytes(bytes, i[0]); i[0] += 12;
+                    Rotation.fromBytes(bytes, i[0], true); i[0] += 12;
                     State = (byte)bytes[i[0]++];
                 }
                 catch (Exception e)
@@ -167,12 +182,12 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 bytes[i[0]++] = (byte)(ProfileHollow % 256);
                 bytes[i[0]++] = (byte)((ProfileHollow >> 8) % 256);
                 bytes[i[0]++] = BypassRaycast;
-                RayStart.ToBytes(bytes, i[0]); i[0] += 12;
-                RayEnd.ToBytes(bytes, i[0]); i[0] += 12;
+                RayStart.toBytes(bytes, i[0]); i[0] += 12;
+                RayEnd.toBytes(bytes, i[0]); i[0] += 12;
                 RayTargetID.ToBytes(bytes, i[0]); i[0] += 16;
                 bytes[i[0]++] = RayEndIsIntersection;
-                Scale.ToBytes(bytes, i[0]); i[0] += 12;
-                Rotation.ToBytes(bytes, i[0]); i[0] += 12;
+                Scale.toBytes(bytes, i[0]); i[0] += 12;
+                Rotation.toBytes(bytes, i[0]); i[0] += 12;
                 bytes[i[0]++] = State;
             }
 
@@ -184,7 +199,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                         {
                 int length = 8;
                 length += AgentData.getLength();
-                length += ObjectData.length;
+                length += ObjectData.getLength();
                 return length;
             }
         }
@@ -244,7 +259,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             int length = 8;
             length += AgentData.getLength();
-            length += ObjectData.length;
+            length += ObjectData.getLength();
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
             int[] i = new int[]{0};

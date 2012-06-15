@@ -1,7 +1,10 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
-
-    public final class GroupVoteHistoryItemReplyPacket extends Packet
+import java.util.ArrayList;
+import java.util.List;
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+	public final class GroupVoteHistoryItemReplyPacket extends Packet
     {
         /// <exclude/>
         public final class AgentDataBlock extends PacketBlock
@@ -61,7 +64,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public TransactionDataBlock() { }
-            public TransactionDataBlock(byte[] bytes, int[] i)
+            public TransactionDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -119,7 +122,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public HistoryItemDataBlock() { }
-            public HistoryItemDataBlock(byte[] bytes, int[] i)
+            public HistoryItemDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -201,7 +204,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public VoteItemBlock() { }
-            public VoteItemBlock(byte[] bytes, int[] i)
+            public VoteItemBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -241,8 +244,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
                         {
                 int length = 11;
                 length += AgentData.getLength();
-                length += TransactionData.length;
-                length += HistoryItemData.length;
+                length += TransactionData.getLength();
+                length += HistoryItemData.getLength();
                 for (int j = 0; j < VoteItem.length; j++)
                     length += VoteItem[j].getLength();
                 return length;
@@ -326,8 +329,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             int length = 10;
             length += AgentData.getLength();
-            length += TransactionData.length;
-            length += HistoryItemData.length;
+            length += TransactionData.getLength();
+            length += HistoryItemData.getLength();
             length++;
             for (int j = 0; j < VoteItem.length; j++) { length += VoteItem[j].getLength(); }
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
@@ -359,8 +362,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             fixedLength += AgentData.getLength();
-            fixedLength += TransactionData.length;
-            fixedLength += HistoryItemData.length;
+            fixedLength += TransactionData.getLength();
+            fixedLength += HistoryItemData.getLength();
             byte[] fixedBytes = new byte[fixedLength];
             header.ToBytes(fixedBytes, i);
             AgentData.ToBytes(fixedBytes, i);

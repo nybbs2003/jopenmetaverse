@@ -1,7 +1,10 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
-
-    public final class ScriptDialogPacket extends Packet
+import java.util.ArrayList;
+import java.util.List;
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+	public final class ScriptDialogPacket extends Packet
     {
         /// <exclude/>
         public final class DataBlock extends PacketBlock
@@ -96,7 +99,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public ButtonsBlock() { }
-            public ButtonsBlock(byte[] bytes, int[] i)
+            public ButtonsBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -140,7 +143,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public OwnerDataBlock() { }
-            public OwnerDataBlock(byte[] bytes, int[] i)
+            public OwnerDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -171,7 +174,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
                         {
                 int length = 12;
-                length += Data.length;
+                length += Data.getLength();
                 for (int j = 0; j < Buttons.length; j++)
                     length += Buttons[j].getLength();
                 for (int j = 0; j < OwnerData.length; j++)
@@ -266,7 +269,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public byte[] ToBytes()
         {
             int length = 10;
-            length += Data.length;
+            length += Data.getLength();
             length++;
             for (int j = 0; j < Buttons.length; j++) { length += Buttons[j].getLength(); }
             length++;
@@ -299,7 +302,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 header.AcksToBytes(ackBytes, acksLength);
             }
 
-            fixedLength += Data.length;
+            fixedlength += Data.getLength();
             byte[] fixedBytes = new byte[fixedLength];
             header.ToBytes(fixedBytes, i);
             Data.ToBytes(fixedBytes, i);

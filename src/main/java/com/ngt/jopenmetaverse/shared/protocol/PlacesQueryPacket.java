@@ -112,7 +112,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             }
 
             public QueryDataBlock() { }
-            public QueryDataBlock(byte[] bytes, int[] i)
+            public QueryDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }

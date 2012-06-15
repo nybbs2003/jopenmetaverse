@@ -1,7 +1,10 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
-
-    public final class ReportAutosaveCrashPacket extends Packet
+import java.util.ArrayList;
+import java.util.List;
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+	public final class ReportAutosaveCrashPacket extends Packet
     {
         /// <exclude/>
         public final class AutosaveDataBlock extends PacketBlock
@@ -18,7 +21,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public AutosaveDataBlock() { }
-            public AutosaveDataBlock(byte[] bytes, int[] i)
+            public AutosaveDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }

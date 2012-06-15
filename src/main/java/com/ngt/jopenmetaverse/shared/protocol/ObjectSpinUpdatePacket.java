@@ -1,7 +1,12 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
+import java.util.ArrayList;
+import java.util.List;
 
-    public final class ObjectSpinUpdatePacket extends Packet
+import com.ngt.jopenmetaverse.shared.types.Quaternion;
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+	public final class ObjectSpinUpdatePacket extends Packet
     {
         /// <exclude/>
         public final class AgentDataBlock extends PacketBlock
@@ -61,7 +66,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public ObjectDataBlock() { }
-            public ObjectDataBlock(byte[] bytes, int[] i)
+            public ObjectDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -72,7 +77,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     ObjectID.FromBytes(bytes, i[0]); i[0] += 16;
-                    Rotation.FromBytes(bytes, i[0], true); i[0] += 12;
+                    Rotation.fromBytes(bytes, i[0], true); i[0] += 12;
                 }
                 catch (Exception e)
                 {
@@ -84,7 +89,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 ObjectID.ToBytes(bytes, i[0]); i[0] += 16;
-                Rotation.ToBytes(bytes, i[0]); i[0] += 12;
+                Rotation.toBytes(bytes, i[0]); i[0] += 12;
             }
 
         }
@@ -95,7 +100,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                         {
                 int length = 10;
                 length += AgentData.getLength();
-                length += ObjectData.length;
+                length += ObjectData.getLength();
                 return length;
             }
         }
@@ -155,7 +160,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             int length = 10;
             length += AgentData.getLength();
-            length += ObjectData.length;
+            length += ObjectData.getLength();
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
             int[] i = new int[]{0};

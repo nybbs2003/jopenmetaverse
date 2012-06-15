@@ -1,7 +1,10 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
-
-    public final class StartPingCheckPacket extends Packet
+import java.util.ArrayList;
+import java.util.List;
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+	public final class StartPingCheckPacket extends Packet
     {
         /// <exclude/>
         public final class PingIDBlock extends PacketBlock
@@ -18,7 +21,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public PingIDBlock() { }
-            public PingIDBlock(byte[] bytes, int[] i)
+            public PingIDBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }

@@ -1,5 +1,9 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.types.Vector3d;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+
 
     public final class EventInfoReplyPacket extends Packet
     {
@@ -76,7 +80,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public EventDataBlock() { }
-            public EventDataBlock(byte[] bytes, int[] i)
+            public EventDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -110,7 +114,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     SimName = new byte[length];
                     Utils.arraycopy(bytes, i[0], SimName, 0, length); i[0] +=  length;
-                    GlobalPos.FromBytes(bytes, i[0]); i[0] += 24;
+                    GlobalPos.fromBytes(bytes, i[0]); i[0] += 24;
                     EventFlags = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
@@ -140,7 +144,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 Utils.uintToBytes(Amount, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)SimName.length;
                 Utils.arraycopy(SimName, 0, bytes, i[0], SimName.length); i[0] +=  SimName.length;
-                GlobalPos.ToBytes(bytes, i[0]); i[0] += 24;
+                GlobalPos.toBytes(bytes, i[0]); i[0] += 24;
                 Utils.uintToBytes(EventFlags, bytes, i[0]); i[0] += 4;
             }
 
@@ -152,7 +156,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                         {
                 int length = 10;
                 length += AgentData.getLength();
-                length += EventData.length;
+                length += EventData.getLength();
                 return length;
             }
         }
@@ -211,7 +215,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             int length = 10;
             length += AgentData.getLength();
-            length += EventData.length;
+            length += EventData.getLength();
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
             int[] i = new int[]{0};

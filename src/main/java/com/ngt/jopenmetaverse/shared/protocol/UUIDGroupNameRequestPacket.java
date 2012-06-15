@@ -1,7 +1,10 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
-
-    public final class UUIDGroupNameRequestPacket extends Packet
+import java.util.ArrayList;
+import java.util.List;
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+	public final class UUIDGroupNameRequestPacket extends Packet
     {
         /// <exclude/>
         public final class UUIDNameBlockBlock extends PacketBlock
@@ -17,7 +20,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public UUIDNameBlockBlock() { }
-            public UUIDNameBlockBlock(byte[] bytes, int[] i)
+            public UUIDNameBlockBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }

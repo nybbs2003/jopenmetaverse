@@ -1,5 +1,7 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.util.Utils;
 
     public final class ForceObjectSelectPacket extends Packet
     {
@@ -17,7 +19,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public HeaderBlock() { }
-            public HeaderBlock(byte[] bytes, int[] i)
+            public HeaderBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }

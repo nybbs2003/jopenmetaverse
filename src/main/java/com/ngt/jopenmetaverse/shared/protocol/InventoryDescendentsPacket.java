@@ -1,7 +1,10 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
-
-    public final class InventoryDescendentsPacket extends Packet
+import java.util.ArrayList;
+import java.util.List;
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+	public final class InventoryDescendentsPacket extends Packet
     {
         /// <exclude/>
         public final class AgentDataBlock extends PacketBlock
@@ -74,7 +77,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public FolderDataBlock() { }
-            public FolderDataBlock(byte[] bytes, int[] i)
+            public FolderDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -147,7 +150,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public ItemDataBlock() { }
-            public ItemDataBlock(byte[] bytes, int[] i)
+            public ItemDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }

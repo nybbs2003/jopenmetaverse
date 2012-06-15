@@ -1,5 +1,8 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.ngt.jopenmetaverse.shared.types.UUID;
 import com.ngt.jopenmetaverse.shared.util.Utils;
 
@@ -117,7 +120,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             }
 
             public ParamListBlock() { }
-            public ParamListBlock(byte[] bytes, int[] i)
+            public ParamListBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -153,7 +156,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                         {
                 int length = 11;
                 length += AgentData.getLength();
-                length += MethodData.length;
+                length += MethodData.getLength();
                 for (int j = 0; j < ParamList.length; j++)
                     length += ParamList[j].getLength();
                 return length;
@@ -233,7 +236,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         {
             int length = 10;
             length += AgentData.getLength();
-            length += MethodData.length;
+            length += MethodData.getLength();
             length++;
             for (int j = 0; j < ParamList.length; j++) { length += ParamList[j].getLength(); }
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
@@ -264,7 +267,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             }
 
             fixedLength += AgentData.getLength();
-            fixedLength += MethodData.length;
+            fixedLength += MethodData.getLength();
             byte[] fixedBytes = new byte[fixedLength];
             header.ToBytes(fixedBytes, i);
             AgentData.ToBytes(fixedBytes, i);

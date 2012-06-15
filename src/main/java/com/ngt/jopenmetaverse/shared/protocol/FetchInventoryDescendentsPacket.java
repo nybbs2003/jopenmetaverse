@@ -64,7 +64,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public InventoryDataBlock() { }
-            public InventoryDataBlock(byte[] bytes, int[] i)
+            public InventoryDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }

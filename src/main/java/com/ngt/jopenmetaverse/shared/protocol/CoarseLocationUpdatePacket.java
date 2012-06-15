@@ -1,5 +1,8 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+
 
     public final class CoarseLocationUpdatePacket extends Packet
     {
@@ -19,7 +22,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public LocationBlock() { }
-            public LocationBlock(byte[] bytes, int[] i)
+            public LocationBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -64,7 +67,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public IndexBlock() { }
-            public IndexBlock(byte[] bytes, int[] i)
+            public IndexBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -141,8 +144,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length = 10;
                 for (int j = 0; j < Location.length; j++)
                     length += Location[j].getLength();
-                length += Index.length;
-                for (int j = 0; j < AgentData.getLength(); j++)
+                length += Index.getLength();
+                for (int j = 0; j < AgentData.length; j++)
                     length += AgentData[j].getLength();
                 return length;
             }
@@ -190,7 +193,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             { Location[j].FromBytes(bytes, i); }
             Index.FromBytes(bytes, i);
             count = Utils.ubyteToInt(bytes[i[0]++]);
-            if(AgentData == null || AgentData.getLength() != -1) {
+            if(AgentData == null || AgentData.length != -1) {
                 AgentData = new AgentDataBlock[count];
                 for(int j = 0; j < count; j++)
                 { AgentData[j] = new AgentDataBlock(); }
@@ -220,7 +223,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             { Location[j].FromBytes(bytes, i); }
             Index.FromBytes(bytes, i);
             count = Utils.ubyteToInt(bytes[i[0]++]);
-            if(AgentData == null || AgentData.getLength() != count) {
+            if(AgentData == null || AgentData.length != count) {
                 AgentData = new AgentDataBlock[count];
                 for(int j = 0; j < count; j++)
                 { AgentData[j] = new AgentDataBlock(); }
@@ -233,11 +236,11 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public byte[] ToBytes()
         {
             int length = 8;
-            length += Index.length;
+            length += Index.getLength();
             length++;
             for (int j = 0; j < Location.length; j++) { length += Location[j].getLength(); }
             length++;
-            for (int j = 0; j < AgentData.getLength(); j++) { length += AgentData[j].getLength(); }
+            for (int j = 0; j < AgentData.length; j++) { length += AgentData[j].getLength(); }
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
             int[] i = new int[]{0};
@@ -245,8 +248,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             bytes[i[0]++] = (byte)Location.length;
             for (int j = 0; j < Location.length; j++) { Location[j].ToBytes(bytes, i); }
             Index.ToBytes(bytes, i);
-            bytes[i[0]++] = (byte)AgentData.getLength();
-            for (int j = 0; j < AgentData.getLength(); j++) { AgentData[j].ToBytes(bytes, i); }
+            bytes[i[0]++] = (byte)AgentData.length;
+            for (int j = 0; j < AgentData.length; j++) { AgentData[j].ToBytes(bytes, i); }
             if (header.AckList != null && header.AckList.length > 0) { header.AcksToBytes(bytes, i); }
             return bytes;
         }

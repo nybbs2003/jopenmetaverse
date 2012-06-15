@@ -1,7 +1,10 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
-
-    public final class SendXferPacketPacket extends Packet
+import java.util.ArrayList;
+import java.util.List;
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+	public final class SendXferPacketPacket extends Packet
     {
         /// <exclude/>
         public final class XferIDBlock extends PacketBlock
@@ -18,7 +21,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public XferIDBlock() { }
-            public XferIDBlock(byte[] bytes, int[] i)
+            public XferIDBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -56,13 +59,13 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                                 {
                     int length = 2;
-                    if (Data != null) { length += Data.length; }
+                    if (Data != null) { length += Data.getLength(); }
                     return length;
                 }
             }
 
             public DataPacketBlock() { }
-            public DataPacketBlock(byte[] bytes, int[] i)
+            public DataPacketBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }

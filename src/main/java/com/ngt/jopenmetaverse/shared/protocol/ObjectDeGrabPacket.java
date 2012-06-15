@@ -1,7 +1,11 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
-
-    public final class ObjectDeGrabPacket extends Packet
+import java.util.ArrayList;
+import java.util.List;
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.types.Vector3;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+	public final class ObjectDeGrabPacket extends Packet
     {
         /// <exclude/>
         public final class AgentDataBlock extends PacketBlock
@@ -60,7 +64,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public ObjectDataBlock() { }
-            public ObjectDataBlock(byte[] bytes, int[] i)
+            public ObjectDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -105,7 +109,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public SurfaceInfoBlock() { }
-            public SurfaceInfoBlock(byte[] bytes, int[] i)
+            public SurfaceInfoBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -115,12 +119,12 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    UVCoord.FromBytes(bytes, i[0]); i[0] += 12;
-                    STCoord.FromBytes(bytes, i[0]); i[0] += 12;
+                    UVCoord.fromBytes(bytes, i[0]); i[0] += 12;
+                    STCoord.fromBytes(bytes, i[0]); i[0] += 12;
                     FaceIndex = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
-                    Position.FromBytes(bytes, i[0]); i[0] += 12;
-                    Normal.FromBytes(bytes, i[0]); i[0] += 12;
-                    Binormal.FromBytes(bytes, i[0]); i[0] += 12;
+                    Position.fromBytes(bytes, i[0]); i[0] += 12;
+                    Normal.fromBytes(bytes, i[0]); i[0] += 12;
+                    Binormal.fromBytes(bytes, i[0]); i[0] += 12;
                 }
                 catch (Exception e)
                 {
@@ -131,12 +135,12 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                UVCoord.ToBytes(bytes, i[0]); i[0] += 12;
-                STCoord.ToBytes(bytes, i[0]); i[0] += 12;
+                UVCoord.toBytes(bytes, i[0]); i[0] += 12;
+                STCoord.toBytes(bytes, i[0]); i[0] += 12;
                 Utils.intToBytes(FaceIndex, bytes, i[0]); i[0] += 4;
-                Position.ToBytes(bytes, i[0]); i[0] += 12;
-                Normal.ToBytes(bytes, i[0]); i[0] += 12;
-                Binormal.ToBytes(bytes, i[0]); i[0] += 12;
+                Position.toBytes(bytes, i[0]); i[0] += 12;
+                Normal.toBytes(bytes, i[0]); i[0] += 12;
+                Binormal.toBytes(bytes, i[0]); i[0] += 12;
             }
 
         }
@@ -147,7 +151,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                         {
                 int length = 11;
                 length += AgentData.getLength();
-                length += ObjectData.length;
+                length += ObjectData.getLength();
                 for (int j = 0; j < SurfaceInfo.length; j++)
                     length += SurfaceInfo[j].getLength();
                 return length;
@@ -226,7 +230,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             int length = 10;
             length += AgentData.getLength();
-            length += ObjectData.length;
+            length += ObjectData.getLength();
             length++;
             for (int j = 0; j < SurfaceInfo.length; j++) { length += SurfaceInfo[j].getLength(); }
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
@@ -257,7 +261,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             fixedLength += AgentData.getLength();
-            fixedLength += ObjectData.length;
+            fixedLength += ObjectData.getLength();
             byte[] fixedBytes = new byte[fixedLength];
             header.ToBytes(fixedBytes, i);
             AgentData.ToBytes(fixedBytes, i);

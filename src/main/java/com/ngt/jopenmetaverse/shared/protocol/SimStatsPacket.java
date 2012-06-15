@@ -1,7 +1,10 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
-
-    public final class SimStatsPacket extends Packet
+import java.util.ArrayList;
+import java.util.List;
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+	public final class SimStatsPacket extends Packet
     {
         /// <exclude/>
         public final class RegionBlock extends PacketBlock
@@ -20,7 +23,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public RegionBlock() { }
-            public RegionBlock(byte[] bytes, int[] i)
+            public RegionBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -67,7 +70,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public StatBlock() { }
-            public StatBlock(byte[] bytes, int[] i)
+            public StatBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -109,7 +112,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public PidStatBlock() { }
-            public PidStatBlock(byte[] bytes, int[] i)
+            public PidStatBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }

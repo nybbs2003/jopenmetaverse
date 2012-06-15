@@ -60,7 +60,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public HeaderDataBlock() { }
-            public HeaderDataBlock(byte[] bytes, int[] i)
+            public HeaderDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -101,7 +101,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public ObjectDataBlock() { }
-            public ObjectDataBlock(byte[] bytes, int[] i)
+            public ObjectDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }

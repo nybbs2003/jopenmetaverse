@@ -1,7 +1,10 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
-
-    public final class ParcelAccessListReplyPacket extends Packet
+import java.util.ArrayList;
+import java.util.List;
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+	public final class ParcelAccessListReplyPacket extends Packet
     {
         /// <exclude/>
         public final class DataBlock extends PacketBlock
@@ -68,7 +71,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public ListBlock() { }
-            public ListBlock(byte[] bytes, int[] i)
+            public ListBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -103,7 +106,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
                         {
                 int length = 11;
-                length += Data.length;
+                length += Data.getLength();
                 for (int j = 0; j < List.length; j++)
                     length += List[j].getLength();
                 return length;
@@ -178,7 +181,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public byte[] ToBytes()
         {
             int length = 10;
-            length += Data.length;
+            length += Data.getLength();
             length++;
             for (int j = 0; j < List.length; j++) { length += List[j].getLength(); }
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
@@ -207,7 +210,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 header.AcksToBytes(ackBytes, acksLength);
             }
 
-            fixedLength += Data.length;
+            fixedlength += Data.getLength();
             byte[] fixedBytes = new byte[fixedLength];
             header.ToBytes(fixedBytes, i);
             Data.ToBytes(fixedBytes, i);

@@ -1,13 +1,21 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
-
-    public final class ImagePacketPacket extends Packet
+import java.util.ArrayList;
+import java.util.List;
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+	public final class ImagePacketPacket extends Packet
     {
         /// <exclude/>
         public final class ImageIDBlock extends PacketBlock
         {
             public UUID ID;
-            public ushort Packet;
+            /**
+             * Unsigned short
+             * Only 2 of its least significant bytes should be used 
+             * 
+             */
+            public int Packet;
 
             @Override
 			public int getLength()
@@ -18,7 +26,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public ImageIDBlock() { }
-            public ImageIDBlock(byte[] bytes, int[] i)
+            public ImageIDBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -63,7 +71,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public ImageDataBlock() { }
-            public ImageDataBlock(byte[] bytes, int[] i)
+            public ImageDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -99,8 +107,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
                         {
                 int length = 7;
-                length += ImageID.length;
-                length += ImageData.length;
+                length += ImageID.getLength();
+                length += ImageData.getLength();
                 return length;
             }
         }
@@ -158,8 +166,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public byte[] ToBytes()
         {
             int length = 7;
-            length += ImageID.length;
-            length += ImageData.length;
+            length += ImageID.getLength();
+            length += ImageData.getLength();
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
             int[] i = new int[]{0};

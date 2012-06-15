@@ -1,5 +1,11 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
+import java.math.BigInteger;
+
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.types.Vector3;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+
 
     public final class CrossedRegionPacket extends Packet
     {
@@ -50,7 +56,11 @@ package com.ngt.jopenmetaverse.shared.protocol;
         public final class RegionDataBlock extends PacketBlock
         {
             public long SimIP;
-            public ushort SimPort;
+            /**
+             * Unsigned Short
+             * Only two of the least significant bytes should be used
+             */
+            public int SimPort;
             public BigInteger RegionHandle;
             public byte[] SeedCapability;
 
@@ -65,7 +75,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public RegionDataBlock() { }
-            public RegionDataBlock(byte[] bytes, int[] i)
+            public RegionDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -118,7 +128,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public InfoBlock() { }
-            public InfoBlock(byte[] bytes, int[] i)
+            public InfoBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -128,8 +138,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    Position.FromBytes(bytes, i[0]); i[0] += 12;
-                    LookAt.FromBytes(bytes, i[0]); i[0] += 12;
+                    Position.fromBytes(bytes, i[0]); i[0] += 12;
+                    LookAt.fromBytes(bytes, i[0]); i[0] += 12;
                 }
                 catch (Exception e)
                 {
@@ -140,8 +150,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Position.ToBytes(bytes, i[0]); i[0] += 12;
-                LookAt.ToBytes(bytes, i[0]); i[0] += 12;
+                Position.toBytes(bytes, i[0]); i[0] += 12;
+                LookAt.toBytes(bytes, i[0]); i[0] += 12;
             }
 
         }
@@ -152,8 +162,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
                         {
                 int length = 8;
                 length += AgentData.getLength();
-                length += RegionData.length;
-                length += Info.length;
+                length += RegionData.getLength();
+                length += Info.getLength();
                 return length;
             }
         }
@@ -216,8 +226,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             int length = 8;
             length += AgentData.getLength();
-            length += RegionData.length;
-            length += Info.length;
+            length += RegionData.getLength();
+            length += Info.getLength();
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
             int[] i = new int[]{0};

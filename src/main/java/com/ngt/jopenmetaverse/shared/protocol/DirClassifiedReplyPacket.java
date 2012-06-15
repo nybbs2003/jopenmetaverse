@@ -1,5 +1,11 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+
 
     public final class DirClassifiedReplyPacket extends Packet
     {
@@ -57,7 +63,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public QueryDataBlock() { }
-            public QueryDataBlock(byte[] bytes, int[] i)
+            public QueryDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -104,7 +110,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public QueryRepliesBlock() { }
-            public QueryRepliesBlock(byte[] bytes, int[] i)
+            public QueryRepliesBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -158,7 +164,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public StatusDataBlock() { }
-            public StatusDataBlock(byte[] bytes, int[] i)
+            public StatusDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -190,7 +196,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                         {
                 int length = 12;
                 length += AgentData.getLength();
-                length += QueryData.length;
+                length += QueryData.getLength();
                 for (int j = 0; j < QueryReplies.length; j++)
                     length += QueryReplies[j].getLength();
                 for (int j = 0; j < StatusData.length; j++)
@@ -290,7 +296,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             int length = 10;
             length += AgentData.getLength();
-            length += QueryData.length;
+            length += QueryData.getLength();
             length++;
             for (int j = 0; j < QueryReplies.length; j++) { length += QueryReplies[j].getLength(); }
             length++;
@@ -325,7 +331,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             fixedLength += AgentData.getLength();
-            fixedLength += QueryData.length;
+            fixedLength += QueryData.getLength();
             byte[] fixedBytes = new byte[fixedLength];
             header.ToBytes(fixedBytes, i);
             AgentData.ToBytes(fixedBytes, i);

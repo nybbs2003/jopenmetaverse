@@ -1,7 +1,10 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
-
-    public final class ObjectShapePacket extends Packet
+import java.util.ArrayList;
+import java.util.List;
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+	public final class ObjectShapePacket extends Packet
     {
         /// <exclude/>
         public final class AgentDataBlock extends PacketBlock
@@ -52,8 +55,11 @@ package com.ngt.jopenmetaverse.shared.protocol;
             public long ObjectLocalID;
             public byte PathCurve;
             public byte ProfileCurve;
-            public ushort PathBegin;
-            public ushort PathEnd;
+            /**Unsigned Short**/
+            public int PathBegin;
+            /**Unsigned Short**/
+            public int PathEnd;
+            
             public byte PathScaleX;
             public byte PathScaleY;
             public byte PathShearX;
@@ -65,9 +71,12 @@ package com.ngt.jopenmetaverse.shared.protocol;
             public sbyte PathTaperY;
             public byte PathRevolutions;
             public sbyte PathSkew;
-            public ushort ProfileBegin;
-            public ushort ProfileEnd;
-            public ushort ProfileHollow;
+            /**Unsigned Short**/
+            public int ProfileBegin;
+            /**Unsigned Short**/
+            public int ProfileEnd;
+            /**Unsigned Short**/
+            public int ProfileHollow;
 
             @Override
 			public int getLength()
@@ -78,7 +87,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public ObjectDataBlock() { }
-            public ObjectDataBlock(byte[] bytes, int[] i)
+            public ObjectDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }

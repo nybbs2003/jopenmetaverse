@@ -1,7 +1,10 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
-
-    public final class ModifyLandPacket extends Packet
+import java.util.ArrayList;
+import java.util.List;
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+	public final class ModifyLandPacket extends Packet
     {
         /// <exclude/>
         public final class AgentDataBlock extends PacketBlock
@@ -63,7 +66,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public ModifyBlockBlock() { }
-            public ModifyBlockBlock(byte[] bytes, int[] i)
+            public ModifyBlockBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -113,7 +116,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public ParcelDataBlock() { }
-            public ParcelDataBlock(byte[] bytes, int[] i)
+            public ParcelDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -161,7 +164,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public ModifyBlockExtendedBlock() { }
-            public ModifyBlockExtendedBlock(byte[] bytes, int[] i)
+            public ModifyBlockExtendedBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -193,7 +196,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                         {
                 int length = 12;
                 length += AgentData.getLength();
-                length += ModifyBlock.length;
+                length += ModifyBlock.getLength();
                 for (int j = 0; j < ParcelData.length; j++)
                     length += ParcelData[j].getLength();
                 for (int j = 0; j < ModifyBlockExtended.length; j++)
@@ -293,7 +296,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             int length = 10;
             length += AgentData.getLength();
-            length += ModifyBlock.length;
+            length += ModifyBlock.getLength();
             length++;
             for (int j = 0; j < ParcelData.length; j++) { length += ParcelData[j].getLength(); }
             length++;
@@ -328,7 +331,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             fixedLength += AgentData.getLength();
-            fixedLength += ModifyBlock.length;
+            fixedLength += ModifyBlock.getLength();
             byte[] fixedBytes = new byte[fixedLength];
             header.ToBytes(fixedBytes, i);
             AgentData.ToBytes(fixedBytes, i);

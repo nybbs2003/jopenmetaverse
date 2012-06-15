@@ -1,7 +1,12 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
+import java.util.ArrayList;
+import java.util.List;
 
-    public final class ObjectRotationPacket extends Packet
+import com.ngt.jopenmetaverse.shared.types.Quaternion;
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+	public final class ObjectRotationPacket extends Packet
     {
         /// <exclude/>
         public final class AgentDataBlock extends PacketBlock
@@ -61,7 +66,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public ObjectDataBlock() { }
-            public ObjectDataBlock(byte[] bytes, int[] i)
+            public ObjectDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -72,7 +77,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     ObjectLocalID = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    Rotation.FromBytes(bytes, i[0], true); i[0] += 12;
+                    Rotation.fromBytes(bytes, i[0], true); i[0] += 12;
                 }
                 catch (Exception e)
                 {
@@ -84,7 +89,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 Utils.uintToBytes(ObjectLocalID, bytes, i[0]); i[0] += 4;
-                Rotation.ToBytes(bytes, i[0]); i[0] += 12;
+                Rotation.toBytes(bytes, i[0]); i[0] += 12;
             }
 
         }

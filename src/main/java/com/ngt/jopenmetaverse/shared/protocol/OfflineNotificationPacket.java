@@ -1,7 +1,10 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
-
-    public final class OfflineNotificationPacket extends Packet
+import java.util.ArrayList;
+import java.util.List;
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+	public final class OfflineNotificationPacket extends Packet
     {
         /// <exclude/>
         public final class AgentBlockBlock extends PacketBlock
@@ -17,7 +20,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public AgentBlockBlock() { }
-            public AgentBlockBlock(byte[] bytes, int[] i)
+            public AgentBlockBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }

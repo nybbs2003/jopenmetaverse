@@ -1,5 +1,11 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+
 
     public final class DirGroupsReplyPacket extends Packet
     {
@@ -57,7 +63,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public QueryDataBlock() { }
-            public QueryDataBlock(byte[] bytes, int[] i)
+            public QueryDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -102,7 +108,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public QueryRepliesBlock() { }
-            public QueryRepliesBlock(byte[] bytes, int[] i)
+            public QueryRepliesBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -144,7 +150,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                         {
                 int length = 11;
                 length += AgentData.getLength();
-                length += QueryData.length;
+                length += QueryData.getLength();
                 for (int j = 0; j < QueryReplies.length; j++)
                     length += QueryReplies[j].getLength();
                 return length;
@@ -224,7 +230,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             int length = 10;
             length += AgentData.getLength();
-            length += QueryData.length;
+            length += QueryData.getLength();
             length++;
             for (int j = 0; j < QueryReplies.length; j++) { length += QueryReplies[j].getLength(); }
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
@@ -255,7 +261,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             fixedLength += AgentData.getLength();
-            fixedLength += QueryData.length;
+            fixedLength += QueryData.getLength();
             byte[] fixedBytes = new byte[fixedLength];
             header.ToBytes(fixedBytes, i);
             AgentData.ToBytes(fixedBytes, i);

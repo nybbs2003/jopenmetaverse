@@ -1,5 +1,11 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+
 
     public final class DirPlacesReplyPacket extends Packet
     {
@@ -57,7 +63,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public QueryDataBlock() { }
-            public QueryDataBlock(byte[] bytes, int[] i)
+            public QueryDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -103,7 +109,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public QueryRepliesBlock() { }
-            public QueryRepliesBlock(byte[] bytes, int[] i)
+            public QueryRepliesBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -155,7 +161,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public StatusDataBlock() { }
-            public StatusDataBlock(byte[] bytes, int[] i)
+            public StatusDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }

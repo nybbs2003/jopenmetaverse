@@ -71,7 +71,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             }
 
             public FolderDataBlock() { }
-            public FolderDataBlock(byte[] bytes, int[] i)
+            public FolderDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -145,7 +145,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             }
 
             public ItemDataBlock() { }
-            public ItemDataBlock(byte[] bytes, int[] i)
+            public ItemDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }

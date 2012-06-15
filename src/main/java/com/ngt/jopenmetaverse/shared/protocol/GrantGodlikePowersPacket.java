@@ -1,6 +1,9 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
 
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+
     public final class GrantGodlikePowersPacket extends Packet
     {
         /// <exclude/>
@@ -61,7 +64,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public GrantDataBlock() { }
-            public GrantDataBlock(byte[] bytes, int[] i)
+            public GrantDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -95,7 +98,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                         {
                 int length = 10;
                 length += AgentData.getLength();
-                length += GrantData.length;
+                length += GrantData.getLength();
                 return length;
             }
         }
@@ -154,7 +157,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             int length = 10;
             length += AgentData.getLength();
-            length += GrantData.length;
+            length += GrantData.getLength();
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
             int[] i = new int[]{0};

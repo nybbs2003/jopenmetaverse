@@ -1,7 +1,10 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
-
-    public final class LandStatReplyPacket extends Packet
+import java.util.ArrayList;
+import java.util.List;
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+	public final class LandStatReplyPacket extends Packet
     {
         /// <exclude/>
         public final class RequestDataBlock extends PacketBlock
@@ -19,7 +22,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public RequestDataBlock() { }
-            public RequestDataBlock(byte[] bytes, int[] i)
+            public RequestDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -73,7 +76,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public ReportDataBlock() { }
-            public ReportDataBlock(byte[] bytes, int[] i)
+            public ReportDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -125,7 +128,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
                         {
                 int length = 11;
-                length += RequestData.length;
+                length += RequestData.getLength();
                 for (int j = 0; j < ReportData.length; j++)
                     length += ReportData[j].getLength();
                 return length;
@@ -199,7 +202,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public byte[] ToBytes()
         {
             int length = 10;
-            length += RequestData.length;
+            length += RequestData.getLength();
             length++;
             for (int j = 0; j < ReportData.length; j++) { length += ReportData[j].getLength(); }
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
@@ -228,7 +231,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 header.AcksToBytes(ackBytes, acksLength);
             }
 
-            fixedLength += RequestData.length;
+            fixedLength += RequestData.getLength();
             byte[] fixedBytes = new byte[fixedLength];
             header.ToBytes(fixedBytes, i);
             RequestData.ToBytes(fixedBytes, i);

@@ -1,7 +1,11 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
-
-    public final class GroupMembersReplyPacket extends Packet
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+	public final class GroupMembersReplyPacket extends Packet
     {
         /// <exclude/>
         public final class AgentDataBlock extends PacketBlock
@@ -59,7 +63,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public GroupDataBlock() { }
-            public GroupDataBlock(byte[] bytes, int[] i)
+            public GroupDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -111,7 +115,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public MemberDataBlock() { }
-            public MemberDataBlock(byte[] bytes, int[] i)
+            public MemberDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -160,7 +164,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                         {
                 int length = 11;
                 length += AgentData.getLength();
-                length += GroupData.length;
+                length += GroupData.getLength();
                 for (int j = 0; j < MemberData.length; j++)
                     length += MemberData[j].getLength();
                 return length;
@@ -240,7 +244,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             int length = 10;
             length += AgentData.getLength();
-            length += GroupData.length;
+            length += GroupData.getLength();
             length++;
             for (int j = 0; j < MemberData.length; j++) { length += MemberData[j].getLength(); }
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
@@ -271,7 +275,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             fixedLength += AgentData.getLength();
-            fixedLength += GroupData.length;
+            fixedLength += GroupData.getLength();
             byte[] fixedBytes = new byte[fixedLength];
             header.ToBytes(fixedBytes, i);
             AgentData.ToBytes(fixedBytes, i);

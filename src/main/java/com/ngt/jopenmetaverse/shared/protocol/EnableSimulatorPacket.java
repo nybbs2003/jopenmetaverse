@@ -1,5 +1,9 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
+import java.math.BigInteger;
+
+import com.ngt.jopenmetaverse.shared.util.Utils;
+
 
     public final class EnableSimulatorPacket extends Packet
     {
@@ -8,7 +12,11 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             public BigInteger Handle;
             public long IP;
-            public ushort Port;
+            /**
+             * Unsigned short
+             * Only two of its least significant bytes should be used
+             */
+            public int Port;
 
             @Override
 			public int getLength()
@@ -19,7 +27,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public SimulatorInfoBlock() { }
-            public SimulatorInfoBlock(byte[] bytes, int[] i)
+            public SimulatorInfoBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -55,7 +63,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
                         {
                 int length = 10;
-                length += SimulatorInfo.length;
+                length += SimulatorInfo.getLength();
                 return length;
             }
         }
@@ -109,7 +117,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public byte[] ToBytes()
         {
             int length = 10;
-            length += SimulatorInfo.length;
+            length += SimulatorInfo.getLength();
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
             int[] i = new int[]{0};

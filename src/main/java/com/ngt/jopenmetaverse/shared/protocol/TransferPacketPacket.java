@@ -1,7 +1,10 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
-
-    public final class TransferPacketPacket extends Packet
+import java.util.ArrayList;
+import java.util.List;
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+	public final class TransferPacketPacket extends Packet
     {
         /// <exclude/>
         public final class TransferDataBlock extends PacketBlock
@@ -17,13 +20,13 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                                 {
                     int length = 30;
-                    if (Data != null) { length += Data.length; }
+                    if (Data != null) { length += Data.getLength(); }
                     return length;
                 }
             }
 
             public TransferDataBlock() { }
-            public TransferDataBlock(byte[] bytes, int[] i)
+            public TransferDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }

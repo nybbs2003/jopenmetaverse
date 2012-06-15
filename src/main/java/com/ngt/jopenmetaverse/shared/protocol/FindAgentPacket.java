@@ -1,5 +1,7 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.util.Utils;
 
     public final class FindAgentPacket extends Packet
     {
@@ -19,7 +21,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public AgentBlockBlock() { }
-            public AgentBlockBlock(byte[] bytes, int[] i)
+            public AgentBlockBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -64,7 +66,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public LocationBlockBlock() { }
-            public LocationBlockBlock(byte[] bytes, int[] i)
+            public LocationBlockBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }

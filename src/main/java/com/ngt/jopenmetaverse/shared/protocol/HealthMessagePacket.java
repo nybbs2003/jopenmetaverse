@@ -1,7 +1,10 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
-
-    public final class HealthMessagePacket extends Packet
+import java.util.ArrayList;
+import java.util.List;
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+	public final class HealthMessagePacket extends Packet
     {
         /// <exclude/>
         public final class HealthDataBlock extends PacketBlock
@@ -17,7 +20,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public HealthDataBlock() { }
-            public HealthDataBlock(byte[] bytes, int[] i)
+            public HealthDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -48,7 +51,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
                         {
                 int length = 10;
-                length += HealthData.length;
+                length += HealthData.getLength();
                 return length;
             }
         }
@@ -103,7 +106,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public byte[] ToBytes()
         {
             int length = 10;
-            length += HealthData.length;
+            length += HealthData.getLength();
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
             int[] i = new int[]{0};

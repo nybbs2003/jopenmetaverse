@@ -1,7 +1,10 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
-
-    public final class MapBlockReplyPacket extends Packet
+import java.util.ArrayList;
+import java.util.List;
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+	public final class MapBlockReplyPacket extends Packet
     {
         /// <exclude/>
         public final class AgentDataBlock extends PacketBlock
@@ -49,8 +52,14 @@ package com.ngt.jopenmetaverse.shared.protocol;
         /// <exclude/>
         public final class DataBlock extends PacketBlock
         {
-            public ushort X;
-            public ushort Y;
+        	/**
+        	 * Unsigned Short
+        	 */
+            public int X;
+            /**
+             * Unsigned Short
+             */
+            public int Y;
             public byte[] Name;
             public byte Access;
             public long RegionFlags;

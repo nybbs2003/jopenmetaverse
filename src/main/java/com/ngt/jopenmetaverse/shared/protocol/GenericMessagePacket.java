@@ -1,5 +1,11 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+
 
     public final class GenericMessagePacket extends Packet
     {
@@ -66,7 +72,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public MethodDataBlock() { }
-            public MethodDataBlock(byte[] bytes, int[] i)
+            public MethodDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -114,7 +120,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public ParamListBlock() { }
-            public ParamListBlock(byte[] bytes, int[] i)
+            public ParamListBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -150,7 +156,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                         {
                 int length = 11;
                 length += AgentData.getLength();
-                length += MethodData.length;
+                length += MethodData.getLength();
                 for (int j = 0; j < ParamList.length; j++)
                     length += ParamList[j].getLength();
                 return length;
@@ -230,7 +236,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             int length = 10;
             length += AgentData.getLength();
-            length += MethodData.length;
+            length += MethodData.getLength();
             length++;
             for (int j = 0; j < ParamList.length; j++) { length += ParamList[j].getLength(); }
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }

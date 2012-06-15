@@ -1,7 +1,11 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
-
-    public final class TeleportFinishPacket extends Packet
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+	public final class TeleportFinishPacket extends Packet
     {
         /// <exclude/>
         public final class InfoBlock extends PacketBlock
@@ -9,7 +13,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             public UUID AgentID;
             public long LocationID;
             public long SimIP;
-            public ushort SimPort;
+            /** Unsigned Short **/
+            public int SimPort;
             public BigInteger RegionHandle;
             public byte[] SeedCapability;
             public byte SimAccess;
@@ -26,7 +31,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public InfoBlock() { }
-            public InfoBlock(byte[] bytes, int[] i)
+            public InfoBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }

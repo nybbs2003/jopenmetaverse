@@ -1,5 +1,7 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
+import com.ngt.jopenmetaverse.shared.types.UUID;
+
 
     public final class EjectGroupMemberReplyPacket extends Packet
     {
@@ -57,7 +59,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public GroupDataBlock() { }
-            public GroupDataBlock(byte[] bytes, int[] i)
+            public GroupDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -97,7 +99,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public EjectDataBlock() { }
-            public EjectDataBlock(byte[] bytes, int[] i)
+            public EjectDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -129,8 +131,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
                         {
                 int length = 10;
                 length += AgentData.getLength();
-                length += GroupData.length;
-                length += EjectData.length;
+                length += GroupData.getLength();
+                length += EjectData.getLength();
                 return length;
             }
         }
@@ -193,8 +195,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             int length = 10;
             length += AgentData.getLength();
-            length += GroupData.length;
-            length += EjectData.length;
+            length += GroupData.getLength();
+            length += EjectData.getLength();
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
             int[] i = new int[]{0};

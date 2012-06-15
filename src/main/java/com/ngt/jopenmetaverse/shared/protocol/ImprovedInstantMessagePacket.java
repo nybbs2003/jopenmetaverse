@@ -1,7 +1,11 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
-
-    public final class ImprovedInstantMessagePacket extends Packet
+import java.util.ArrayList;
+import java.util.List;
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.types.Vector3;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+	public final class ImprovedInstantMessagePacket extends Packet
     {
         /// <exclude/>
         public final class AgentDataBlock extends PacketBlock
@@ -75,7 +79,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public MessageBlockBlock() { }
-            public MessageBlockBlock(byte[] bytes, int[] i)
+            public MessageBlockBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -90,7 +94,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     ToAgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     ParentEstateID = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                     RegionID.FromBytes(bytes, i[0]); i[0] += 16;
-                    Position.FromBytes(bytes, i[0]); i[0] += 12;
+                    Position.fromBytes(bytes, i[0]); i[0] += 12;
                     Offline = (byte)bytes[i[0]++];
                     Dialog = (byte)bytes[i[0]++];
                     ID.FromBytes(bytes, i[0]); i[0] += 16;
@@ -118,7 +122,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 ToAgentID.ToBytes(bytes, i[0]); i[0] += 16;
                 Utils.uintToBytes(ParentEstateID, bytes, i[0]); i[0] += 4;
                 RegionID.ToBytes(bytes, i[0]); i[0] += 16;
-                Position.ToBytes(bytes, i[0]); i[0] += 12;
+                Position.toBytes(bytes, i[0]); i[0] += 12;
                 bytes[i[0]++] = Offline;
                 bytes[i[0]++] = Dialog;
                 ID.ToBytes(bytes, i[0]); i[0] += 16;
@@ -141,7 +145,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                         {
                 int length = 10;
                 length += AgentData.getLength();
-                length += MessageBlock.length;
+                length += MessageBlock.getLength();
                 return length;
             }
         }
@@ -201,7 +205,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             int length = 10;
             length += AgentData.getLength();
-            length += MessageBlock.length;
+            length += MessageBlock.getLength();
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
             int[] i = new int[]{0};

@@ -1,13 +1,20 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
-
-    public final class KickUserPacket extends Packet
+import java.util.ArrayList;
+import java.util.List;
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+	public final class KickUserPacket extends Packet
     {
         /// <exclude/>
         public final class TargetBlockBlock extends PacketBlock
         {
             public long TargetIP;
-            public ushort TargetPort;
+            /**
+             * Unsigned Short
+             * 
+             */
+            public int TargetPort;
 
             @Override
 			public int getLength()
@@ -18,7 +25,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public TargetBlockBlock() { }
-            public TargetBlockBlock(byte[] bytes, int[] i)
+            public TargetBlockBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -65,7 +72,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public UserInfoBlock() { }
-            public UserInfoBlock(byte[] bytes, int[] i)
+            public UserInfoBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -105,8 +112,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
                         {
                 int length = 10;
-                length += TargetBlock.length;
-                length += UserInfo.length;
+                length += TargetBlock.getLength();
+                length += UserInfo.getLength();
                 return length;
             }
         }
@@ -164,8 +171,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public byte[] ToBytes()
         {
             int length = 10;
-            length += TargetBlock.length;
-            length += UserInfo.length;
+            length += TargetBlock.getLength();
+            length += UserInfo.getLength();
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
             int[] i = new int[]{0};

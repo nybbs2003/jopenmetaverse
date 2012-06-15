@@ -1,5 +1,7 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.util.Utils;
 
     public final class GodUpdateRegionInfoPacket extends Packet
     {
@@ -69,7 +71,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public RegionInfoBlock() { }
-            public RegionInfoBlock(byte[] bytes, int[] i)
+            public RegionInfoBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }

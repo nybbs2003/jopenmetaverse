@@ -1,5 +1,9 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.ngt.jopenmetaverse.shared.types.UUID;
 import com.ngt.jopenmetaverse.shared.util.Utils;
 
 
@@ -23,7 +27,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             }
 
             public MeanCollisionBlock() { }
-            public MeanCollisionBlock(byte[] bytes, int[] i)
+            public MeanCollisionBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }

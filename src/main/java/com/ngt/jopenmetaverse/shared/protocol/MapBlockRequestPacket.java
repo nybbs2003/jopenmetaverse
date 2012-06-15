@@ -1,7 +1,10 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
-
-    public final class MapBlockRequestPacket extends Packet
+import java.util.ArrayList;
+import java.util.List;
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+	public final class MapBlockRequestPacket extends Packet
     {
         /// <exclude/>
         public final class AgentDataBlock extends PacketBlock
@@ -58,10 +61,26 @@ package com.ngt.jopenmetaverse.shared.protocol;
         /// <exclude/>
         public final class PositionDataBlock extends PacketBlock
         {
-            public ushort MinX;
-            public ushort MaxX;
-            public ushort MinY;
-            public ushort MaxY;
+        	/**
+        	 * Unsigned Short
+        	 * 
+        	 */
+            public int MinX;
+        	/**
+        	 * Unsigned Short
+        	 * 
+        	 */            
+            public int MaxX;
+        	/**
+        	 * Unsigned Short
+        	 * 
+        	 */
+            public int MinY;
+        	/**
+        	 * Unsigned Short
+        	 * 
+        	 */
+            public int MaxY;
 
             @Override
 			public int getLength()
@@ -72,7 +91,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public PositionDataBlock() { }
-            public PositionDataBlock(byte[] bytes, int[] i)
+            public PositionDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -114,7 +133,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                         {
                 int length = 10;
                 length += AgentData.getLength();
-                length += PositionData.length;
+                length += PositionData.getLength();
                 return length;
             }
         }
@@ -173,7 +192,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             int length = 10;
             length += AgentData.getLength();
-            length += PositionData.length;
+            length += PositionData.getLength();
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
             int[] i = new int[]{0};

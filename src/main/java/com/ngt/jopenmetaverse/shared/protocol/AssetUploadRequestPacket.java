@@ -26,7 +26,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             }
 
             public AssetBlockBlock() { }
-            public AssetBlockBlock(byte[] bytes, int[] i)
+            public AssetBlockBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }

@@ -14,7 +14,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 			public int getLength()
             {
             		int length = 6;
-                    if (Data != null) { length += Data.length; }
+                    if (Data != null) { length += Data.getLength(); }
                     return length;
             }
 

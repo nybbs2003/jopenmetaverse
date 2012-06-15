@@ -1,5 +1,7 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.util.Utils;
 
     public final class FetchInventoryPacket extends Packet
     {
@@ -61,7 +63,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public InventoryDataBlock() { }
-            public InventoryDataBlock(byte[] bytes, int[] i)
+            public InventoryDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }

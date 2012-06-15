@@ -1,5 +1,9 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.types.Vector3d;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+
 
     public final class ClassifiedInfoUpdatePacket extends Packet
     {
@@ -94,7 +98,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     ParcelID.FromBytes(bytes, i[0]); i[0] += 16;
                     ParentEstate = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                     SnapshotID.FromBytes(bytes, i[0]); i[0] += 16;
-                    PosGlobal.FromBytes(bytes, i[0]); i[0] += 24;
+                    PosGlobal.fromBytes(bytes, i[0]); i[0] += 24;
                     ClassifiedFlags = (byte)bytes[i[0]++];
                     PriceForListing = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
                 }
@@ -117,7 +121,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 ParcelID.ToBytes(bytes, i[0]); i[0] += 16;
                 Utils.uintToBytes(ParentEstate, bytes, i[0]); i[0] += 4;
                 SnapshotID.ToBytes(bytes, i[0]); i[0] += 16;
-                PosGlobal.ToBytes(bytes, i[0]); i[0] += 24;
+                PosGlobal.toBytes(bytes, i[0]); i[0] += 24;
                 bytes[i[0]++] = ClassifiedFlags;
                 Utils.intToBytes(PriceForListing, bytes, i[0]); i[0] += 4;
             }
@@ -130,7 +134,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                         {
                 int length = 10;
                 length += AgentData.getLength();
-                length += Data.length;
+                length += Data.getLength();
                 return length;
             }
         }
@@ -189,7 +193,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             int length = 10;
             length += AgentData.getLength();
-            length += Data.length;
+            length += Data.getLength();
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
             int[] i = new int[]{0};

@@ -1,5 +1,6 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
+import com.ngt.jopenmetaverse.shared.types.UUID;
 import com.ngt.jopenmetaverse.shared.util.Utils;
 
 
@@ -27,7 +28,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             }
 
             public MoneyDataBlock() { }
-            public MoneyDataBlock(byte[] bytes, int[] i)
+            public MoneyDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -91,7 +92,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             }
 
             public TransactionInfoBlock() { }
-            public TransactionInfoBlock(byte[] bytes, int[] i)
+            public TransactionInfoBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -138,8 +139,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         {
                         {
                 int length = 10;
-                length += MoneyData.length;
-                length += TransactionInfo.length;
+                length += MoneyData.getLength();
+                length += TransactionInfo.getLength();
                 return length;
             }
         }
@@ -198,8 +199,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 			public byte[] ToBytes()
         {
             int length = 10;
-            length += MoneyData.length;
-            length += TransactionInfo.length;
+            length += MoneyData.getLength();
+            length += TransactionInfo.getLength();
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
             int[] i = new int[]{0};

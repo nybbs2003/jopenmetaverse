@@ -1,7 +1,10 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
-
-    public final class GroupVoteHistoryRequestPacket extends Packet
+import java.util.ArrayList;
+import java.util.List;
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+	public final class GroupVoteHistoryRequestPacket extends Packet
     {
         /// <exclude/>
         public final class AgentDataBlock extends PacketBlock
@@ -60,7 +63,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public GroupDataBlock() { }
-            public GroupDataBlock(byte[] bytes, int[] i)
+            public GroupDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -100,7 +103,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public TransactionDataBlock() { }
-            public TransactionDataBlock(byte[] bytes, int[] i)
+            public TransactionDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -132,8 +135,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
                         {
                 int length = 10;
                 length += AgentData.getLength();
-                length += GroupData.length;
-                length += TransactionData.length;
+                length += GroupData.getLength();
+                length += TransactionData.getLength();
                 return length;
             }
         }
@@ -196,8 +199,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             int length = 10;
             length += AgentData.getLength();
-            length += GroupData.length;
-            length += TransactionData.length;
+            length += GroupData.getLength();
+            length += TransactionData.getLength();
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
             int[] i = new int[]{0};

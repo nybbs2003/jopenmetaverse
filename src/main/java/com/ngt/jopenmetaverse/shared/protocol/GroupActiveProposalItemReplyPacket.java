@@ -1,7 +1,10 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
-
-    public final class GroupActiveProposalItemReplyPacket extends Packet
+import java.util.ArrayList;
+import java.util.List;
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+	public final class GroupActiveProposalItemReplyPacket extends Packet
     {
         /// <exclude/>
         public final class AgentDataBlock extends PacketBlock
@@ -61,7 +64,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public TransactionDataBlock() { }
-            public TransactionDataBlock(byte[] bytes, int[] i)
+            public TransactionDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -118,7 +121,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public ProposalDataBlock() { }
-            public ProposalDataBlock(byte[] bytes, int[] i)
+            public ProposalDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -184,7 +187,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                         {
                 int length = 11;
                 length += AgentData.getLength();
-                length += TransactionData.length;
+                length += TransactionData.getLength();
                 for (int j = 0; j < ProposalData.length; j++)
                     length += ProposalData[j].getLength();
                 return length;
@@ -264,7 +267,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             int length = 10;
             length += AgentData.getLength();
-            length += TransactionData.length;
+            length += TransactionData.getLength();
             length++;
             for (int j = 0; j < ProposalData.length; j++) { length += ProposalData[j].getLength(); }
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
@@ -295,7 +298,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             fixedLength += AgentData.getLength();
-            fixedLength += TransactionData.length;
+            fixedLength += TransactionData.getLength();
             byte[] fixedBytes = new byte[fixedLength];
             header.ToBytes(fixedBytes, i);
             AgentData.ToBytes(fixedBytes, i);

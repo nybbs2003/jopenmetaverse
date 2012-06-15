@@ -1,7 +1,10 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
-
-    public final class GroupRoleMembersReplyPacket extends Packet
+import java.util.ArrayList;
+import java.util.List;
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+	public final class GroupRoleMembersReplyPacket extends Packet
     {
         /// <exclude/>
         public final class AgentDataBlock extends PacketBlock
@@ -67,7 +70,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public MemberDataBlock() { }
-            public MemberDataBlock(byte[] bytes, int[] i)
+            public MemberDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }

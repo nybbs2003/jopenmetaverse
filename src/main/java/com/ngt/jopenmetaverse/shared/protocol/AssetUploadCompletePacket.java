@@ -20,7 +20,7 @@ import com.ngt.jopenmetaverse.shared.types.UUID;
             }
 
             public AssetBlockBlock() { }
-            public AssetBlockBlock(byte[] bytes, int[] i)
+            public AssetBlockBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }

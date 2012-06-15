@@ -1,7 +1,10 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
-
-    public final class ScriptSensorReplyPacket extends Packet
+import java.util.ArrayList;
+import java.util.List;
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+	public final class ScriptSensorReplyPacket extends Packet
     {
         /// <exclude/>
         public final class RequesterBlock extends PacketBlock
@@ -17,7 +20,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public RequesterBlock() { }
-            public RequesterBlock(byte[] bytes, int[] i)
+            public RequesterBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -67,7 +70,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public SensedDataBlock() { }
-            public SensedDataBlock(byte[] bytes, int[] i)
+            public SensedDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }

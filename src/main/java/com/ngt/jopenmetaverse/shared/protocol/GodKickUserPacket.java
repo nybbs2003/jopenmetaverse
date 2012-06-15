@@ -1,5 +1,7 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.util.Utils;
 
     public final class GodKickUserPacket extends Packet
     {
@@ -23,7 +25,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public UserInfoBlock() { }
-            public UserInfoBlock(byte[] bytes, int[] i)
+            public UserInfoBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -67,7 +69,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
                         {
                 int length = 10;
-                length += UserInfo.length;
+                length += UserInfo.getLength();
                 return length;
             }
         }
@@ -121,7 +123,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public byte[] ToBytes()
         {
             int length = 10;
-            length += UserInfo.length;
+            length += UserInfo.getLength();
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
             int[] i = new int[]{0};

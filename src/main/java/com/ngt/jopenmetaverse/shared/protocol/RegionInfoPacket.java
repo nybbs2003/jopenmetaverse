@@ -1,7 +1,10 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
-
-    public final class RegionInfoPacket extends Packet
+import java.util.ArrayList;
+import java.util.List;
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+	public final class RegionInfoPacket extends Packet
     {
         /// <exclude/>
         public final class AgentDataBlock extends PacketBlock
@@ -77,7 +80,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public RegionInfoBlock() { }
-            public RegionInfoBlock(byte[] bytes, int[] i)
+            public RegionInfoBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -158,7 +161,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public RegionInfo2Block() { }
-            public RegionInfo2Block(byte[] bytes, int[] i)
+            public RegionInfo2Block(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }

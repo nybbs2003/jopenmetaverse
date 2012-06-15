@@ -1,5 +1,7 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.util.Utils;
 
     public final class GetScriptRunningPacket extends Packet
     {
@@ -18,7 +20,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public ScriptBlock() { }
-            public ScriptBlock(byte[] bytes, int[] i)
+            public ScriptBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -51,7 +53,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
                         {
                 int length = 10;
-                length += Script.length;
+                length += Script.getLength();
                 return length;
             }
         }
@@ -105,7 +107,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public byte[] ToBytes()
         {
             int length = 10;
-            length += Script.length;
+            length += Script.getLength();
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
             int[] i = new int[]{0};

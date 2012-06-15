@@ -1,13 +1,17 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
-
-    public final class RoutedMoneyBalanceReplyPacket extends Packet
+import java.util.ArrayList;
+import java.util.List;
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+	public final class RoutedMoneyBalanceReplyPacket extends Packet
     {
         /// <exclude/>
         public final class TargetBlockBlock extends PacketBlock
         {
             public long TargetIP;
-            public ushort TargetPort;
+            /** Unsigned Short **/
+            public int TargetPort;
 
             @Override
 			public int getLength()
@@ -18,7 +22,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public TargetBlockBlock() { }
-            public TargetBlockBlock(byte[] bytes, int[] i)
+            public TargetBlockBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -69,7 +73,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public MoneyDataBlock() { }
-            public MoneyDataBlock(byte[] bytes, int[] i)
+            public MoneyDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -133,7 +137,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public TransactionInfoBlock() { }
-            public TransactionInfoBlock(byte[] bytes, int[] i)
+            public TransactionInfoBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
