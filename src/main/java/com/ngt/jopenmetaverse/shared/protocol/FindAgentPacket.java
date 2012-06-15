@@ -135,7 +135,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 bytes = zeroBuffer;
             }
             AgentBlock.FromBytes(bytes, i);
-            int count = (int)bytes[i[0]++];
+            int count = Utils.ubyteToInt(bytes[i[0]++]);
             if(LocationBlock == null || LocationBlock.length != -1) {
                 LocationBlock = new LocationBlockBlock[count];
                 for(int j = 0; j < count; j++)
@@ -157,7 +157,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             this.header =  header;
             AgentBlock.FromBytes(bytes, i);
-            int count = (int)bytes[i[0]++];
+            int count = Utils.ubyteToInt(bytes[i[0]++]);
             if(LocationBlock == null || LocationBlock.length != count) {
                 LocationBlock = new LocationBlockBlock[count];
                 for(int j = 0; j < count; j++)

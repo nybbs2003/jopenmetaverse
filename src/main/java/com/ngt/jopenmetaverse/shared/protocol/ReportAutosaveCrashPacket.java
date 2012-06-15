@@ -28,8 +28,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    PID = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    Status = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    PID = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    Status = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
                 }
                 catch (Exception e)
                 {

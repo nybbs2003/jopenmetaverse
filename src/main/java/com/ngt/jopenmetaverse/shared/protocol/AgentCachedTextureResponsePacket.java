@@ -37,7 +37,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 {
                     AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
-                    SerialNum = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    SerialNum = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
                 }
                 catch (Exception e)
                 {
@@ -86,7 +86,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 {
                     TextureID.FromBytes(bytes, i[0]); i[0] += 16;
                     TextureIndex = (byte)bytes[i[0]++];
-                    length = bytes[i[0]++];
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     HostName = new byte[length];
                     Utils.arraycopy(bytes, i[0], HostName, 0, length); i[0] +=  length;
                 }
@@ -150,7 +150,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 bytes = zeroBuffer;
             }
             AgentData.FromBytes(bytes, i);
-            int count = (int)bytes[i[0]++];
+            int count = Utils.ubyteToInt(bytes[i[0]++]);
             if(WearableData == null || WearableData.length != -1) {
                 WearableData = new WearableDataBlock[count];
                 for(int j = 0; j < count; j++)
@@ -172,7 +172,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         {
             this.header =  header;
             AgentData.FromBytes(bytes, i);
-            int count = (int)bytes[i[0]++];
+            int count = Utils.ubyteToInt(bytes[i[0]++]);
             if(WearableData == null || WearableData.length != count) {
                 WearableData = new WearableDataBlock[count];
                 for(int j = 0; j < count; j++)

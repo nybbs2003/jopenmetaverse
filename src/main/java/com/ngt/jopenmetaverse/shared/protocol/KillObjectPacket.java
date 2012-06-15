@@ -82,7 +82,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 packetEnd[0] = Helpers.ZeroDecode(bytes, packetEnd[0] + 1, zeroBuffer) - 1;
                 bytes = zeroBuffer;
             }
-            int count = (int)bytes[i[0]++];
+            int count = Utils.ubyteToInt(bytes[i[0]++]);
             if(ObjectData == null || ObjectData.length != -1) {
                 ObjectData = new ObjectDataBlock[count];
                 for(int j = 0; j < count; j++)
@@ -103,7 +103,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 		public void FromBytes(Header header, byte[] bytes, int[] i, int[] packetEnd)
         {
             this.header =  header;
-            int count = (int)bytes[i[0]++];
+            int count = Utils.ubyteToInt(bytes[i[0]++]);
             if(ObjectData == null || ObjectData.length != count) {
                 ObjectData = new ObjectDataBlock[count];
                 for(int j = 0; j < count; j++)

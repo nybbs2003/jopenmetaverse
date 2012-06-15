@@ -55,7 +55,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 {
                     RegionFlags = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                     SimAccess = (byte)bytes[i[0]++];
-                    length = bytes[i[0]++];
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     SimName = new byte[length];
                     Utils.arraycopy(bytes, i[0], SimName, 0, length); i[0] +=  length;
                     SimOwner.FromBytes(bytes, i[0]); i[0] += 16;
@@ -191,15 +191,15 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    CPUClassID = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    CPURatio = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    length = bytes[i[0]++];
+                    CPUClassID = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    CPURatio = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     ColoName = new byte[length];
                     Utils.arraycopy(bytes, i[0], ColoName, 0, length); i[0] +=  length;
-                    length = bytes[i[0]++];
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     ProductSKU = new byte[length];
                     Utils.arraycopy(bytes, i[0], ProductSKU, 0, length); i[0] +=  length;
-                    length = bytes[i[0]++];
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     ProductName = new byte[length];
                     Utils.arraycopy(bytes, i[0], ProductName, 0, length); i[0] +=  length;
                 }

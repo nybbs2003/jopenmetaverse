@@ -76,7 +76,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 try
                 {
                     Modal = (bytes[i[0]++] != 0) ? true : false;
-                    length = bytes[i[0]++];
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     Message = new byte[length];
                     Utils.arraycopy(bytes, i[0], Message, 0, length); i[0] += length;
                 }

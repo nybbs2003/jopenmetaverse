@@ -86,8 +86,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                     GroupPowers = Utils.bytesToULong(bytes, i[0]); i[0] += 8;
                     AcceptNotices = (bytes[i[0]++] != 0) ? true : false;
                     GroupInsigniaID.FromBytes(bytes, i[0]); i[0] += 16;
-                    Contribution = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    length = bytes[i[0]++];
+                    Contribution = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     GroupName = new byte[length];
                     Utils.arraycopy(bytes, i[0], GroupName, 0, length); i[0] +=  length;
                 }
@@ -155,7 +155,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 bytes = zeroBuffer;
             }
             AgentData.FromBytes(bytes, i);
-            int count = (int)bytes[i[0]++];
+            int count = Utils.ubyteToInt(bytes[i[0]++]);
             if(GroupData == null || GroupData.length != -1) {
                 GroupData = new GroupDataBlock[count];
                 for(int j = 0; j < count; j++)
@@ -177,7 +177,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         {
             this.header =  header;
             AgentData.FromBytes(bytes, i);
-            int count = (int)bytes[i[0]++];
+            int count = Utils.ubyteToInt(bytes[i[0]++]);
             if(GroupData == null || GroupData.length != count) {
                 GroupData = new GroupDataBlock[count];
                 for(int j = 0; j < count; j++)

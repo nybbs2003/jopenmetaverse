@@ -71,7 +71,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 {
                     GroupID.FromBytes(bytes, i[0]); i[0] += 16;
                     RequestID.FromBytes(bytes, i[0]); i[0] += 16;
-                    MemberCount = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    MemberCount = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
                 }
                 catch (Exception e)
                 {
@@ -123,12 +123,12 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     AgentID.FromBytes(bytes, i[0]); i[0] += 16;
-                    Contribution = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    length = bytes[i[0]++];
+                    Contribution = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     OnlineStatus = new byte[length];
                     Utils.arraycopy(bytes, i[0], OnlineStatus, 0, length); i[0] +=  length;
                     AgentPowers = Utils.bytesToULong(bytes, i[0]); i[0] += 8;
-                    length = bytes[i[0]++];
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     Title = new byte[length];
                     Utils.arraycopy(bytes, i[0], Title, 0, length); i[0] +=  length;
                     IsOwner = (bytes[i[0]++] != 0) ? true : false;
@@ -202,7 +202,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
             AgentData.FromBytes(bytes, i);
             GroupData.FromBytes(bytes, i);
-            int count = (int)bytes[i[0]++];
+            int count = Utils.ubyteToInt(bytes[i[0]++]);
             if(MemberData == null || MemberData.length != -1) {
                 MemberData = new MemberDataBlock[count];
                 for(int j = 0; j < count; j++)
@@ -225,7 +225,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             this.header =  header;
             AgentData.FromBytes(bytes, i);
             GroupData.FromBytes(bytes, i);
-            int count = (int)bytes[i[0]++];
+            int count = Utils.ubyteToInt(bytes[i[0]++]);
             if(MemberData == null || MemberData.length != count) {
                 MemberData = new MemberDataBlock[count];
                 for(int j = 0; j < count; j++)

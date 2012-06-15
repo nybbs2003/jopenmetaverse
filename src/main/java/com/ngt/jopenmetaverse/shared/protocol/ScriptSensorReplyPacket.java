@@ -84,10 +84,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     Position.FromBytes(bytes, i[0]); i[0] += 12;
                     Velocity.FromBytes(bytes, i[0]); i[0] += 12;
                     Rotation.FromBytes(bytes, i, true); i += 12;
-                    length = bytes[i[0]++];
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     Name = new byte[length];
                     Utils.arraycopy(bytes, i[0], Name, 0, length); i[0] +=  length;
-                    Type = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    Type = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
                     Range = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
@@ -157,7 +157,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 bytes = zeroBuffer;
             }
             Requester.FromBytes(bytes, i);
-            int count = (int)bytes[i[0]++];
+            int count = Utils.ubyteToInt(bytes[i[0]++]);
             if(SensedData == null || SensedData.length != -1) {
                 SensedData = new SensedDataBlock[count];
                 for(int j = 0; j < count; j++)
@@ -179,7 +179,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             this.header =  header;
             Requester.FromBytes(bytes, i);
-            int count = (int)bytes[i[0]++];
+            int count = Utils.ubyteToInt(bytes[i[0]++]);
             if(SensedData == null || SensedData.length != count) {
                 SensedData = new SensedDataBlock[count];
                 for(int j = 0; j < count; j++)

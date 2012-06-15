@@ -92,7 +92,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     CreationDate = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                     ExpirationDate = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                     Category = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    length = bytes[i[0]++];
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     Name = new byte[length];
                     Utils.arraycopy(bytes, i[0], Name, 0, length); i[0] +=  length;
                     length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
@@ -101,15 +101,15 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     ParcelID.FromBytes(bytes, i[0]); i[0] += 16;
                     ParentEstate = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                     SnapshotID.FromBytes(bytes, i[0]); i[0] += 16;
-                    length = bytes[i[0]++];
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     SimName = new byte[length];
                     Utils.arraycopy(bytes, i[0], SimName, 0, length); i[0] +=  length;
                     PosGlobal.FromBytes(bytes, i[0]); i[0] += 24;
-                    length = bytes[i[0]++];
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     ParcelName = new byte[length];
                     Utils.arraycopy(bytes, i[0], ParcelName, 0, length); i[0] +=  length;
                     ClassifiedFlags = (byte)bytes[i[0]++];
-                    PriceForListing = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    PriceForListing = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
                 }
                 catch (Exception e)
                 {

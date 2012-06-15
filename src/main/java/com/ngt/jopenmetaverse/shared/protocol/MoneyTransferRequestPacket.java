@@ -83,11 +83,11 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     SourceID.FromBytes(bytes, i[0]); i[0] += 16;
                     DestID.FromBytes(bytes, i[0]); i[0] += 16;
                     Flags = (byte)bytes[i[0]++];
-                    Amount = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    Amount = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
                     AggregatePermNextOwner = (byte)bytes[i[0]++];
                     AggregatePermInventory = (byte)bytes[i[0]++];
-                    TransactionType = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    length = bytes[i[0]++];
+                    TransactionType = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     Description = new byte[length];
                     Utils.arraycopy(bytes, i[0], Description, 0, length); i[0] +=  length;
                 }

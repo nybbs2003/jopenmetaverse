@@ -35,7 +35,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 try
                 {
                     ObjectID.FromBytes(bytes, i[0]); i[0] += 16;
-                    DefaultPayPrice = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    DefaultPayPrice = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
                 }
                 catch (Exception e)
                 {
@@ -76,7 +76,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 try
                 {
-                    PayButton = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    PayButton = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
                 }
                 catch (Exception e)
                 {
@@ -135,7 +135,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 bytes = zeroBuffer;
             }
             ObjectData.FromBytes(bytes, i);
-            int count = (int)bytes[i[0]++];
+            int count = Utils.ubyteToInt(bytes[i[0]++]);
             if(ButtonData == null || ButtonData.length != -1) {
                 ButtonData = new ButtonDataBlock[count];
                 for(int j = 0; j < count; j++)
@@ -157,7 +157,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         {
             this.header =  header;
             ObjectData.FromBytes(bytes, i);
-            int count = (int)bytes[i[0]++];
+            int count = Utils.ubyteToInt(bytes[i[0]++]);
             if(ButtonData == null || ButtonData.length != count) {
                 ButtonData = new ButtonDataBlock[count];
                 for(int j = 0; j < count; j++)

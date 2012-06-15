@@ -76,7 +76,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 {
                     FolderID.FromBytes(bytes, i[0]); i[0] += 16;
                     OwnerID.FromBytes(bytes, i[0]); i[0] += 16;
-                    SortOrder = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    SortOrder = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
                     FetchFolders = (bytes[i[0]++] != 0) ? true : false;
                     FetchItems = (bytes[i[0]++] != 0) ? true : false;
                 }

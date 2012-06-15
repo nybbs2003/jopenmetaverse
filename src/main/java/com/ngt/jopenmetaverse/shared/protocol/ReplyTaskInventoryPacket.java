@@ -34,7 +34,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 {
                     TaskID.FromBytes(bytes, i[0]); i[0] += 16;
                     Serial = (short)(bytes[i[0]++] + (bytes[i[0]++] << 8));
-                    length = bytes[i[0]++];
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     Filename = new byte[length];
                     Utils.arraycopy(bytes, i[0], Filename, 0, length); i[0] +=  length;
                 }

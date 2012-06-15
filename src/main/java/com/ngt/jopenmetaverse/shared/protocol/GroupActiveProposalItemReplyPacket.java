@@ -131,22 +131,22 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 {
                     VoteID.FromBytes(bytes, i[0]); i[0] += 16;
                     VoteInitiator.FromBytes(bytes, i[0]); i[0] += 16;
-                    length = bytes[i[0]++];
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     TerseDateID = new byte[length];
                     Utils.arraycopy(bytes, i[0], TerseDateID, 0, length); i[0] +=  length;
-                    length = bytes[i[0]++];
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     StartDateTime = new byte[length];
                     Utils.arraycopy(bytes, i[0], StartDateTime, 0, length); i[0] +=  length;
-                    length = bytes[i[0]++];
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     EndDateTime = new byte[length];
                     Utils.arraycopy(bytes, i[0], EndDateTime, 0, length); i[0] +=  length;
                     AlreadyVoted = (bytes[i[0]++] != 0) ? true : false;
-                    length = bytes[i[0]++];
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     VoteCast = new byte[length];
                     Utils.arraycopy(bytes, i[0], VoteCast, 0, length); i[0] +=  length;
                     Majority = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
-                    Quorum = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    length = bytes[i[0]++];
+                    Quorum = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     ProposalText = new byte[length];
                     Utils.arraycopy(bytes, i[0], ProposalText, 0, length); i[0] +=  length;
                 }
@@ -226,7 +226,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
             AgentData.FromBytes(bytes, i);
             TransactionData.FromBytes(bytes, i);
-            int count = (int)bytes[i[0]++];
+            int count = Utils.ubyteToInt(bytes[i[0]++]);
             if(ProposalData == null || ProposalData.length != -1) {
                 ProposalData = new ProposalDataBlock[count];
                 for(int j = 0; j < count; j++)
@@ -249,7 +249,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             this.header =  header;
             AgentData.FromBytes(bytes, i);
             TransactionData.FromBytes(bytes, i);
-            int count = (int)bytes[i[0]++];
+            int count = Utils.ubyteToInt(bytes[i[0]++]);
             if(ProposalData == null || ProposalData.length != count) {
                 ProposalData = new ProposalDataBlock[count];
                 for(int j = 0; j < count; j++)

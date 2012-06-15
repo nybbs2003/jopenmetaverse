@@ -81,7 +81,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    length = bytes[i[0]++];
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     Name = new byte[length];
                     Utils.arraycopy(bytes, i[0], Name, 0, length); i[0] +=  length;
                     length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
@@ -89,7 +89,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     Utils.arraycopy(bytes, i[0], Charter, 0, length); i[0] +=  length;
                     ShowInList = (bytes[i[0]++] != 0) ? true : false;
                     InsigniaID.FromBytes(bytes, i[0]); i[0] += 16;
-                    MembershipFee = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    MembershipFee = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
                     OpenEnrollment = (bytes[i[0]++] != 0) ? true : false;
                     AllowPublish = (bytes[i[0]++] != 0) ? true : false;
                     MaturePublish = (bytes[i[0]++] != 0) ? true : false;

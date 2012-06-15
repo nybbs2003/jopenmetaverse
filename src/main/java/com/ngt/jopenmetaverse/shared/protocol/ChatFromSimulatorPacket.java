@@ -38,7 +38,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    length = bytes[i[0]++];
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     FromName = new byte[length];
                     Utils.arraycopy(bytes, i[0], FromName, 0, length); i[0] +=  length;
                     SourceID.FromBytes(bytes, i[0]); i[0] += 16;

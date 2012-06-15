@@ -37,16 +37,16 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    length = bytes[i[0]++];
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     ObjectName = new byte[length];
                     Utils.arraycopy(bytes, i[0], ObjectName, 0, length); i[0] +=  length;
                     ObjectID.FromBytes(bytes, i[0]); i[0] += 16;
                     OwnerID.FromBytes(bytes, i[0]); i[0] += 16;
                     OwnerIsGroup = (bytes[i[0]++] != 0) ? true : false;
-                    length = bytes[i[0]++];
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     Message = new byte[length];
                     Utils.arraycopy(bytes, i[0], Message, 0, length); i[0] +=  length;
-                    length = bytes[i[0]++];
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     URL = new byte[length];
                     Utils.arraycopy(bytes, i[0], URL, 0, length); i[0] +=  length;
                 }

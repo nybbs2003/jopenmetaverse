@@ -84,7 +84,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     Duration = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
                     Color = new byte[4];
                     Utils.arraycopy(bytes, i[0], Color, 0, 4); i += 4;
-                    length = bytes[i[0]++];
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     TypeData = new byte[length];
                     Utils.arraycopy(bytes, i[0], TypeData, 0, length); i[0] +=  length;
                 }
@@ -152,7 +152,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 bytes = zeroBuffer;
             }
             AgentData.FromBytes(bytes, i);
-            int count = (int)bytes[i[0]++];
+            int count = Utils.ubyteToInt(bytes[i[0]++]);
             if(Effect == null || Effect.length != -1) {
                 Effect = new EffectBlock[count];
                 for(int j = 0; j < count; j++)
@@ -174,7 +174,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             this.header =  header;
             AgentData.FromBytes(bytes, i);
-            int count = (int)bytes[i[0]++];
+            int count = Utils.ubyteToInt(bytes[i[0]++]);
             if(Effect == null || Effect.length != count) {
                 Effect = new EffectBlock[count];
                 for(int j = 0; j < count; j++)

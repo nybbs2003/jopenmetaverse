@@ -86,12 +86,12 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
                     AboutText = new byte[length];
                     Utils.arraycopy(bytes, i[0], AboutText, 0, length); i[0] +=  length;
-                    length = bytes[i[0]++];
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     FLAboutText = new byte[length];
                     Utils.arraycopy(bytes, i[0], FLAboutText, 0, length); i[0] +=  length;
                     AllowPublish = (bytes[i[0]++] != 0) ? true : false;
                     MaturePublish = (bytes[i[0]++] != 0) ? true : false;
-                    length = bytes[i[0]++];
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     ProfileURL = new byte[length];
                     Utils.arraycopy(bytes, i[0], ProfileURL, 0, length); i[0] +=  length;
                 }

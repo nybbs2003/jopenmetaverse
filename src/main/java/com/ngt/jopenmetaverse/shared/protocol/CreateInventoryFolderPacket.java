@@ -79,7 +79,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     FolderID.FromBytes(bytes, i[0]); i[0] += 16;
                     ParentID.FromBytes(bytes, i[0]); i[0] += 16;
                     Type = (sbyte)bytes[i[0]++];
-                    length = bytes[i[0]++];
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     Name = new byte[length];
                     Utils.arraycopy(bytes, i[0], Name, 0, length); i[0] +=  length;
                 }

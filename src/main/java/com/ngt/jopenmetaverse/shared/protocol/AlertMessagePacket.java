@@ -34,7 +34,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 int length;
                 try
                 {
-                    length = bytes[i[0]++];
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     Message = new byte[length];
                     Utils.arraycopy(bytes, i[0], Message, 0, length); i[0] +=  length;
                 }
@@ -82,10 +82,10 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 int length;
                 try
                 {
-                    length = bytes[i[0]++];
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     Message = new byte[length];
                     Utils.arraycopy(bytes, i[0], Message, 0, length); i[0] +=  length;
-                    length = bytes[i[0]++];
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     ExtraParams = new byte[length];
                     Utils.arraycopy(bytes, i[0], ExtraParams, 0, length); i[0] +=  length;
                 }
@@ -149,7 +149,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 bytes = zeroBuffer;
             }
             AlertData.FromBytes(bytes, i);
-            int count = (int)bytes[i[0]++];
+            int count = Utils.ubyteToInt(bytes[i[0]++]);
             if(AlertInfo == null || AlertInfo.length != -1) {
                 AlertInfo = new AlertInfoBlock[count];
                 for(int j = 0; j < count; j++)
@@ -171,7 +171,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         {
             this.header =  header;
             AlertData.FromBytes(bytes, i);
-            int count = (int)bytes[i[0]++];
+            int count = Utils.ubyteToInt(bytes[i[0]++]);
             if(AlertInfo == null || AlertInfo.length != count) {
                 AlertInfo = new AlertInfoBlock[count];
                 for(int j = 0; j < count; j++)

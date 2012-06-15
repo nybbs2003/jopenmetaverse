@@ -80,7 +80,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 int length;
                 try
                 {
-                    length = bytes[i[0]++];
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     Method = new byte[length];
                     Utils.arraycopy(bytes, i[0], Method, 0, length); i[0] +=  length;
                     Invoice.FromBytes(bytes, i[0]); i[0] += 16;
@@ -128,7 +128,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 int length;
                 try
                 {
-                    length = bytes[i[0]++];
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     Parameter = new byte[length];
                     Utils.arraycopy(bytes, i[0], Parameter, 0, length); i[0] +=  length;
                 }
@@ -195,7 +195,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             }
             AgentData.FromBytes(bytes, i);
             MethodData.FromBytes(bytes, i);
-            int count = (int)bytes[i[0]++];
+            int count = Utils.ubyteToInt(bytes[i[0]++]);
             if(ParamList == null || ParamList.length != -1) {
                 ParamList = new ParamListBlock[count];
                 for(int j = 0; j < count; j++)
@@ -218,7 +218,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             this.header =  header;
             AgentData.FromBytes(bytes, i);
             MethodData.FromBytes(bytes, i);
-            int count = (int)bytes[i[0]++];
+            int count = Utils.ubyteToInt(bytes[i[0]++]);
             if(ParamList == null || ParamList.length != count) {
                 ParamList = new ParamListBlock[count];
                 for(int j = 0; j < count; j++)

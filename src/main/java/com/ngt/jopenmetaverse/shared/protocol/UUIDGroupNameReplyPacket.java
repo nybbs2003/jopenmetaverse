@@ -32,7 +32,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     ID.FromBytes(bytes, i[0]); i[0] += 16;
-                    length = bytes[i[0]++];
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     GroupName = new byte[length];
                     Utils.arraycopy(bytes, i[0], GroupName, 0, length); i[0] +=  length;
                 }
@@ -91,7 +91,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 packetEnd[0] = Helpers.ZeroDecode(bytes, packetEnd[0] + 1, zeroBuffer) - 1;
                 bytes = zeroBuffer;
             }
-            int count = (int)bytes[i[0]++];
+            int count = Utils.ubyteToInt(bytes[i[0]++]);
             if(UUIDNameBlock == null || UUIDNameBlock.length != -1) {
                 UUIDNameBlock = new UUIDNameBlockBlock[count];
                 for(int j = 0; j < count; j++)
@@ -112,7 +112,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 		public void FromBytes(Header header, byte[] bytes, int[] i, int[] packetEnd)
         {
             this.header =  header;
-            int count = (int)bytes[i[0]++];
+            int count = Utils.ubyteToInt(bytes[i[0]++]);
             if(UUIDNameBlock == null || UUIDNameBlock.length != count) {
                 UUIDNameBlock = new UUIDNameBlockBlock[count];
                 for(int j = 0; j < count; j++)

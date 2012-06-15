@@ -77,9 +77,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     ObjectID.FromBytes(bytes, i[0]); i[0] += 16;
-                    ChatChannel = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    ButtonIndex = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    length = bytes[i[0]++];
+                    ChatChannel = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    ButtonIndex = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     ButtonLabel = new byte[length];
                     Utils.arraycopy(bytes, i[0], ButtonLabel, 0, length); i[0] +=  length;
                 }

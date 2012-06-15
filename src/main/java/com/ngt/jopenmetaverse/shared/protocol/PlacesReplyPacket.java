@@ -134,24 +134,24 @@ public void FromBytes(byte[] bytes, int[] i) throws MalformedDataException
                 try
                 {
                     OwnerID.FromBytes(bytes, i[0]); i[0] += 16;
-                    length = bytes[i[0]++];
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     Name = new byte[length];
                     Utils.arraycopy(bytes, i[0], Name, 0, length); i[0] +=  length;
-                    length = bytes[i[0]++];
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     Desc = new byte[length];
                     Utils.arraycopy(bytes, i[0], Desc, 0, length); i[0] +=  length;
-                    ActualArea = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    BillableArea = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    ActualArea = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    BillableArea = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
                     Flags = (byte)bytes[i[0]++];
                     GlobalX = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
                     GlobalY = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
                     GlobalZ = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
-                    length = bytes[i[0]++];
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     SimName = new byte[length];
                     Utils.arraycopy(bytes, i[0], SimName, 0, length); i[0] +=  length;
                     SnapshotID.FromBytes(bytes, i[0]); i[0] += 16;
                     Dwell = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
-                    Price = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    Price = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
                 }
                 catch (Exception e)
                 {
@@ -230,7 +230,7 @@ public void FromBytes(byte[] bytes, int[] i) throws MalformedDataException
             }
             AgentData.FromBytes(bytes, i);
             TransactionData.FromBytes(bytes, i);
-            int count = (int)bytes[i[0]++];
+            int count = Utils.ubyteToInt(bytes[i[0]++]);
             if(QueryData == null || QueryData.length != -1) {
                 QueryData = new QueryDataBlock[count];
                 for(int j = 0; j < count; j++)
@@ -253,7 +253,7 @@ public void FromBytes(byte[] bytes, int[] i) throws MalformedDataException
             this.header =  header;
             AgentData.FromBytes(bytes, i);
             TransactionData.FromBytes(bytes, i);
-            int count = (int)bytes[i[0]++];
+            int count = Utils.ubyteToInt(bytes[i[0]++]);
             if(QueryData == null || QueryData.length != count) {
                 QueryData = new QueryDataBlock[count];
                 for(int j = 0; j < count; j++)

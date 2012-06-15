@@ -138,7 +138,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 bytes = zeroBuffer;
             }
             AgentData.FromBytes(bytes, i);
-            int count = (int)bytes[i[0]++];
+            int count = Utils.ubyteToInt(bytes[i[0]++]);
             if(RoleChange == null || RoleChange.length != -1) {
                 RoleChange = new RoleChangeBlock[count];
                 for(int j = 0; j < count; j++)
@@ -160,7 +160,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             this.header =  header;
             AgentData.FromBytes(bytes, i);
-            int count = (int)bytes[i[0]++];
+            int count = Utils.ubyteToInt(bytes[i[0]++]);
             if(RoleChange == null || RoleChange.length != count) {
                 RoleChange = new RoleChangeBlock[count];
                 for(int j = 0; j < count; j++)

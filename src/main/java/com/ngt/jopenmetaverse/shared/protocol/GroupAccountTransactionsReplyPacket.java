@@ -77,9 +77,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     RequestID.FromBytes(bytes, i[0]); i[0] += 16;
-                    IntervalDays = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    CurrentInterval = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    length = bytes[i[0]++];
+                    IntervalDays = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    CurrentInterval = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     StartDate = new byte[length];
                     Utils.arraycopy(bytes, i[0], StartDate, 0, length); i[0] +=  length;
                 }
@@ -134,17 +134,17 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    length = bytes[i[0]++];
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     Time = new byte[length];
                     Utils.arraycopy(bytes, i[0], Time, 0, length); i[0] +=  length;
-                    length = bytes[i[0]++];
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     User = new byte[length];
                     Utils.arraycopy(bytes, i[0], User, 0, length); i[0] +=  length;
-                    Type = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    length = bytes[i[0]++];
+                    Type = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     Item = new byte[length];
                     Utils.arraycopy(bytes, i[0], Item, 0, length); i[0] +=  length;
-                    Amount = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    Amount = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
                 }
                 catch (Exception e)
                 {
@@ -215,7 +215,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
             AgentData.FromBytes(bytes, i);
             MoneyData.FromBytes(bytes, i);
-            int count = (int)bytes[i[0]++];
+            int count = Utils.ubyteToInt(bytes[i[0]++]);
             if(HistoryData == null || HistoryData.length != -1) {
                 HistoryData = new HistoryDataBlock[count];
                 for(int j = 0; j < count; j++)
@@ -238,7 +238,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             this.header =  header;
             AgentData.FromBytes(bytes, i);
             MoneyData.FromBytes(bytes, i);
-            int count = (int)bytes[i[0]++];
+            int count = Utils.ubyteToInt(bytes[i[0]++]);
             if(HistoryData == null || HistoryData.length != count) {
                 HistoryData = new HistoryDataBlock[count];
                 for(int j = 0; j < count; j++)

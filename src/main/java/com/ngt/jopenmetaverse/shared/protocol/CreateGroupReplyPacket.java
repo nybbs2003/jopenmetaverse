@@ -74,7 +74,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 {
                     GroupID.FromBytes(bytes, i[0]); i[0] += 16;
                     Success = (bytes[i[0]++] != 0) ? true : false;
-                    length = bytes[i[0]++];
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     Message = new byte[length];
                     Utils.arraycopy(bytes, i[0], Message, 0, length); i[0] +=  length;
                 }

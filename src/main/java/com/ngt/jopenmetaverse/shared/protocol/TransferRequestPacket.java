@@ -35,8 +35,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     TransferID.FromBytes(bytes, i[0]); i[0] += 16;
-                    ChannelType = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    SourceType = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    ChannelType = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    SourceType = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
                     Priority = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
                     length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
                     Params = new byte[length];

@@ -76,8 +76,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     RequestID.FromBytes(bytes, i[0]); i[0] += 16;
-                    IntervalDays = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    CurrentInterval = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    IntervalDays = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    CurrentInterval = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
                 }
                 catch (Exception e)
                 {

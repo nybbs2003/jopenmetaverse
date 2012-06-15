@@ -116,13 +116,13 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     ClassifiedID.FromBytes(bytes, i[0]); i[0] += 16;
-                    length = bytes[i[0]++];
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     Name = new byte[length];
                     Utils.arraycopy(bytes, i[0], Name, 0, length); i[0] +=  length;
                     ClassifiedFlags = (byte)bytes[i[0]++];
                     CreationDate = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                     ExpirationDate = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    PriceForListing = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    PriceForListing = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
                 }
                 catch (Exception e)
                 {
@@ -236,7 +236,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
             AgentData.FromBytes(bytes, i);
             QueryData.FromBytes(bytes, i);
-            int count = (int)bytes[i[0]++];
+            int count = Utils.ubyteToInt(bytes[i[0]++]);
             if(QueryReplies == null || QueryReplies.length != -1) {
                 QueryReplies = new QueryRepliesBlock[count];
                 for(int j = 0; j < count; j++)
@@ -244,7 +244,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
             for (int j = 0; j < count; j++)
             { QueryReplies[j].FromBytes(bytes, i); }
-            count = (int)bytes[i[0]++];
+            count = Utils.ubyteToInt(bytes[i[0]++]);
             if(StatusData == null || StatusData.length != -1) {
                 StatusData = new StatusDataBlock[count];
                 for(int j = 0; j < count; j++)
@@ -267,7 +267,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             this.header =  header;
             AgentData.FromBytes(bytes, i);
             QueryData.FromBytes(bytes, i);
-            int count = (int)bytes[i[0]++];
+            int count = Utils.ubyteToInt(bytes[i[0]++]);
             if(QueryReplies == null || QueryReplies.length != count) {
                 QueryReplies = new QueryRepliesBlock[count];
                 for(int j = 0; j < count; j++)
@@ -275,7 +275,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
             for (int j = 0; j < count; j++)
             { QueryReplies[j].FromBytes(bytes, i); }
-            count = (int)bytes[i[0]++];
+            count = Utils.ubyteToInt(bytes[i[0]++]);
             if(StatusData == null || StatusData.length != count) {
                 StatusData = new StatusDataBlock[count];
                 for(int j = 0; j < count; j++)

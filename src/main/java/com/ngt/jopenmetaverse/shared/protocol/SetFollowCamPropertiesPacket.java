@@ -68,7 +68,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    Type = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    Type = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
                     Value = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
@@ -129,7 +129,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 bytes = zeroBuffer;
             }
             ObjectData.FromBytes(bytes, i);
-            int count = (int)bytes[i[0]++];
+            int count = Utils.ubyteToInt(bytes[i[0]++]);
             if(CameraProperty == null || CameraProperty.length != -1) {
                 CameraProperty = new CameraPropertyBlock[count];
                 for(int j = 0; j < count; j++)
@@ -151,7 +151,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             this.header =  header;
             ObjectData.FromBytes(bytes, i);
-            int count = (int)bytes[i[0]++];
+            int count = Utils.ubyteToInt(bytes[i[0]++]);
             if(CameraProperty == null || CameraProperty.length != count) {
                 CameraProperty = new CameraPropertyBlock[count];
                 for(int j = 0; j < count; j++)

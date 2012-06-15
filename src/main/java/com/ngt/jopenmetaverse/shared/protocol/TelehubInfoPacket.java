@@ -41,7 +41,7 @@ import com.ngt.jopenmetaverse.shared.types.Vector3;
                 try
                 {
                     ObjectID.FromBytes(bytes, i[0]); i[0] += 16;
-                    length = bytes[i[0]++];
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     ObjectName = new byte[length];
                     System.arraycopy(bytes, i[0], ObjectName, 0, length); i[0] += length;
                     TelehubPos.fromBytes(bytes, i[0]); i[0] += 12;
@@ -145,7 +145,7 @@ import com.ngt.jopenmetaverse.shared.types.Vector3;
                 bytes = zeroBuffer;
             }
             TelehubBlock.FromBytes(bytes, i);
-            int count = (int)bytes[i[0]++];
+            int count = Utils.ubyteToInt(bytes[i[0]++]);
             if(SpawnPointBlock == null || SpawnPointBlock.length != -1) {
                 SpawnPointBlock = new SpawnPointBlockBlock[count];
                 for(int j = 0; j < count; j++)
@@ -167,7 +167,7 @@ import com.ngt.jopenmetaverse.shared.types.Vector3;
         {
             this.header = header;
             TelehubBlock.FromBytes(bytes, i);
-            int count = (int)bytes[i[0]++];
+            int count = Utils.ubyteToInt(bytes[i[0]++]);
             if(SpawnPointBlock == null || SpawnPointBlock.length != count) {
                 SpawnPointBlock = new SpawnPointBlockBlock[count];
                 for(int j = 0; j < count; j++)

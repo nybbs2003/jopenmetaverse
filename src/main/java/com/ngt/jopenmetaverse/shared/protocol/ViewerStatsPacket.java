@@ -61,16 +61,16 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                     AgentsInView = (byte)bytes[i[0]++];
                     Ping = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
                     MetersTraveled = Utils.bytesToDouble(bytes, i[0]); i[0] += 8;
-                    RegionsVisited = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    RegionsVisited = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
                     SysRAM = (long)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    length = bytes[i[0]++];
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     SysOS = new byte[length];
                    
                     Utils.arraycopy(bytes, i[0], SysOS, 0, length); i[0] += length;
-                    length = bytes[i[0]++];
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     SysCPU = new byte[length];
                     Utils.arraycopy(bytes, i[0], SysCPU, 0, length); i[0] += length;
-                    length = bytes[i[0]++];
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     SysGPU = new byte[length];
                     Utils.arraycopy(bytes, i[0], SysGPU, 0, length); i[0] += length;
                 }
@@ -351,7 +351,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             for (int j = 0; j < 2; j++)
             { NetStats[j].FromBytes(bytes, i); }
             FailStats.FromBytes(bytes, i);
-            int count = (int)bytes[i[0]++];
+            int count = Utils.ubyteToInt(bytes[i[0]++]);
             if(MiscStats == null || MiscStats.length != -1) {
                 MiscStats = new MiscStatsBlock[count];
                 for(int j = 0; j < count; j++)
@@ -382,7 +382,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             for (int j = 0; j < 2; j++)
             { NetStats[j].FromBytes(bytes, i); }
             FailStats.FromBytes(bytes, i);
-            int count = (int)bytes[i[0]++];
+            int count = Utils.ubyteToInt(bytes[i[0]++]);
             if(MiscStats == null || MiscStats.length != count) {
                 MiscStats = new MiscStatsBlock[count];
                 for(int j = 0; j < count; j++)

@@ -123,7 +123,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    LocalID = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    LocalID = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
                     West = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
                     South = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
                     East = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
@@ -239,7 +239,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
             AgentData.FromBytes(bytes, i);
             ModifyBlock.FromBytes(bytes, i);
-            int count = (int)bytes[i[0]++];
+            int count = Utils.ubyteToInt(bytes[i[0]++]);
             if(ParcelData == null || ParcelData.length != -1) {
                 ParcelData = new ParcelDataBlock[count];
                 for(int j = 0; j < count; j++)
@@ -247,7 +247,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
             for (int j = 0; j < count; j++)
             { ParcelData[j].FromBytes(bytes, i); }
-            count = (int)bytes[i[0]++];
+            count = Utils.ubyteToInt(bytes[i[0]++]);
             if(ModifyBlockExtended == null || ModifyBlockExtended.length != -1) {
                 ModifyBlockExtended = new ModifyBlockExtendedBlock[count];
                 for(int j = 0; j < count; j++)
@@ -270,7 +270,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             this.header =  header;
             AgentData.FromBytes(bytes, i);
             ModifyBlock.FromBytes(bytes, i);
-            int count = (int)bytes[i[0]++];
+            int count = Utils.ubyteToInt(bytes[i[0]++]);
             if(ParcelData == null || ParcelData.length != count) {
                 ParcelData = new ParcelDataBlock[count];
                 for(int j = 0; j < count; j++)
@@ -278,7 +278,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
             for (int j = 0; j < count; j++)
             { ParcelData[j].FromBytes(bytes, i); }
-            count = (int)bytes[i[0]++];
+            count = Utils.ubyteToInt(bytes[i[0]++]);
             if(ModifyBlockExtended == null || ModifyBlockExtended.length != count) {
                 ModifyBlockExtended = new ModifyBlockExtendedBlock[count];
                 for(int j = 0; j < count; j++)

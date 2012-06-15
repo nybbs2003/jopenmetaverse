@@ -35,7 +35,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 {
                     OwnerID.FromBytes(bytes, i[0]); i[0] += 16;
                     IsGroupOwned = (bytes[i[0]++] != 0) ? (Boolean)true : (Boolean)false;
-                    Count = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    Count = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
                     OnlineStatus = (bytes[i[0]++] != 0) ? (Boolean)true : (Boolean)false;
                 }
                 catch (Exception e)
@@ -95,7 +95,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 packetEnd[0] = Helpers.ZeroDecode(bytes, packetEnd[0] + 1, zeroBuffer) - 1;
                 bytes = zeroBuffer;
             }
-            int count = (int)bytes[i[0]++];
+            int count = Utils.ubyteToInt(bytes[i[0]++]);
             if(Data == null || Data.length != -1) {
                 Data = new DataBlock[count];
                 for(int j = 0; j < count; j++)
@@ -116,7 +116,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 		public void FromBytes(Header header, byte[] bytes, int[] i, int[] packetEnd) throws MalformedDataException
         {
             this.header =  header;
-            int count = (int)bytes[i[0]++];
+            int count = Utils.ubyteToInt(bytes[i[0]++]);
             if(Data == null || Data.length != count) {
                 Data = new DataBlock[count];
                 for(int j = 0; j < count; j++)

@@ -90,10 +90,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     LocationY = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
                     LocationZ = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
                     Score = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
-                    length = bytes[i[0]++];
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     TaskName = new byte[length];
                     Utils.arraycopy(bytes, i[0], TaskName, 0, length); i[0] +=  length;
-                    length = bytes[i[0]++];
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     OwnerName = new byte[length];
                     Utils.arraycopy(bytes, i[0], OwnerName, 0, length); i[0] +=  length;
                 }
@@ -163,7 +163,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 bytes = zeroBuffer;
             }
             RequestData.FromBytes(bytes, i);
-            int count = (int)bytes[i[0]++];
+            int count = Utils.ubyteToInt(bytes[i[0]++]);
             if(ReportData == null || ReportData.length != -1) {
                 ReportData = new ReportDataBlock[count];
                 for(int j = 0; j < count; j++)
@@ -185,7 +185,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             this.header =  header;
             RequestData.FromBytes(bytes, i);
-            int count = (int)bytes[i[0]++];
+            int count = Utils.ubyteToInt(bytes[i[0]++]);
             if(ReportData == null || ReportData.length != count) {
                 ReportData = new ReportDataBlock[count];
                 for(int j = 0; j < count; j++)

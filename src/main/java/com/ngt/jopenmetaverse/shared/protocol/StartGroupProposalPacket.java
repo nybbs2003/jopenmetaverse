@@ -78,10 +78,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     GroupID.FromBytes(bytes, i[0]); i[0] += 16;
-                    Quorum = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    Quorum = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
                     Majority = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
-                    Duration = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    length = bytes[i[0]++];
+                    Duration = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     ProposalText = new byte[length];
                     Utils.arraycopy(bytes, i[0], ProposalText, 0, length); i[0] +=  length;
                 }

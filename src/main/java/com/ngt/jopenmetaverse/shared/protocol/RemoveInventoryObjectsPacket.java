@@ -173,7 +173,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 bytes = zeroBuffer;
             }
             AgentData.FromBytes(bytes, i);
-            int count = (int)bytes[i[0]++];
+            int count = Utils.ubyteToInt(bytes[i[0]++]);
             if(FolderData == null || FolderData.length != -1) {
                 FolderData = new FolderDataBlock[count];
                 for(int j = 0; j < count; j++)
@@ -181,7 +181,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
             for (int j = 0; j < count; j++)
             { FolderData[j].FromBytes(bytes, i); }
-            count = (int)bytes[i[0]++];
+            count = Utils.ubyteToInt(bytes[i[0]++]);
             if(ItemData == null || ItemData.length != -1) {
                 ItemData = new ItemDataBlock[count];
                 for(int j = 0; j < count; j++)
@@ -203,7 +203,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             this.header =  header;
             AgentData.FromBytes(bytes, i);
-            int count = (int)bytes[i[0]++];
+            int count = Utils.ubyteToInt(bytes[i[0]++]);
             if(FolderData == null || FolderData.length != count) {
                 FolderData = new FolderDataBlock[count];
                 for(int j = 0; j < count; j++)
@@ -211,7 +211,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
             for (int j = 0; j < count; j++)
             { FolderData[j].FromBytes(bytes, i); }
-            count = (int)bytes[i[0]++];
+            count = Utils.ubyteToInt(bytes[i[0]++]);
             if(ItemData == null || ItemData.length != count) {
                 ItemData = new ItemDataBlock[count];
                 for(int j = 0; j < count; j++)

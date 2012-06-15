@@ -32,7 +32,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 int length;
                 try
                 {
-                    length = bytes[i[0]++];
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     MediaURL = new byte[length];
                     Utils.arraycopy(bytes, i[0], MediaURL, 0, length); i[0] += length;
                     MediaID.FromBytes(bytes, i[0]); i[0] += 16;
@@ -87,14 +87,14 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 int length;
                 try
                 {
-                    length = bytes[i[0]++];
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     MediaType = new byte[length];
                     Utils.arraycopy(bytes, i[0], MediaType, 0, length); i[0] += length;
-                    length = bytes[i[0]++];
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     MediaDesc = new byte[length];
                     Utils.arraycopy(bytes, i[0], MediaDesc, 0, length); i[0] += length;
-                    MediaWidth = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    MediaHeight = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    MediaWidth = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    MediaHeight = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
                     MediaLoop = (byte)bytes[i[0]++];
                 }
                 catch (Exception e)

@@ -75,7 +75,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     MuteID.FromBytes(bytes, i[0]); i[0] += 16;
-                    length = bytes[i[0]++];
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     MuteName = new byte[length];
                     Utils.arraycopy(bytes, i[0], MuteName, 0, length); i[0] +=  length;
                 }

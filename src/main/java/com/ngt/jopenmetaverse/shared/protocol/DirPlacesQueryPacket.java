@@ -80,15 +80,15 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     QueryID.FromBytes(bytes, i[0]); i[0] += 16;
-                    length = bytes[i[0]++];
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     QueryText = new byte[length];
                     Utils.arraycopy(bytes, i[0], QueryText, 0, length); i[0] +=  length;
                     QueryFlags = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                     Category = (sbyte)bytes[i[0]++];
-                    length = bytes[i[0]++];
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     SimName = new byte[length];
                     Utils.arraycopy(bytes, i[0], SimName, 0, length); i[0] +=  length;
-                    QueryStart = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    QueryStart = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
                 }
                 catch (Exception e)
                 {

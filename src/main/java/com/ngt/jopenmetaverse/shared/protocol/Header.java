@@ -153,7 +153,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         {
             if (header.AppendedAcks)
             {
-                int count = bytes[packetEnd[0]--];
+                int count = Utils.ubyteToInt(bytes[packetEnd[0]--]);
                 header.AckList = new long[count];
                 
                 for (int i = 0; i < count; i++)

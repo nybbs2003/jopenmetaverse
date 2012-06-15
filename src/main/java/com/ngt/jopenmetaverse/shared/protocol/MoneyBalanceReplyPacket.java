@@ -1,5 +1,7 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
+import com.ngt.jopenmetaverse.shared.util.Utils;
+
 
     public final class MoneyBalanceReplyPacket extends Packet
     {
@@ -39,10 +41,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     TransactionID.FromBytes(bytes, i[0]); i[0] += 16;
                     TransactionSuccess = (bytes[i[0]++] != 0) ? true : false;
-                    MoneyBalance = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    SquareMetersCredit = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    SquareMetersCommitted = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    length = bytes[i[0]++];
+                    MoneyBalance = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    SquareMetersCredit = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    SquareMetersCommitted = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     Description = new byte[length];
                     Utils.arraycopy(bytes, i[0], Description, 0, length); i[0] +=  length;
                 }
@@ -100,13 +102,13 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    TransactionType = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    TransactionType = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
                     SourceID.FromBytes(bytes, i[0]); i[0] += 16;
                     IsSourceGroup = (bytes[i[0]++] != 0) ? true : false;
                     DestID.FromBytes(bytes, i[0]); i[0] += 16;
                     IsDestGroup = (bytes[i[0]++] != 0) ? true : false;
-                    Amount = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    length = bytes[i[0]++];
+                    Amount = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     ItemDescription = new byte[length];
                     Utils.arraycopy(bytes, i[0], ItemDescription, 0, length); i[0] +=  length;
                 }

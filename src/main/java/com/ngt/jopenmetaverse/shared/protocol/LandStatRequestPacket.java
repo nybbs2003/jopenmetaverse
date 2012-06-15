@@ -78,10 +78,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 {
                     ReportType = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                     RequestFlags = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    length = bytes[i[0]++];
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     Filter = new byte[length];
                     Utils.arraycopy(bytes, i[0], Filter, 0, length); i[0] +=  length;
-                    ParcelLocalID = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    ParcelLocalID = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
                 }
                 catch (Exception e)
                 {

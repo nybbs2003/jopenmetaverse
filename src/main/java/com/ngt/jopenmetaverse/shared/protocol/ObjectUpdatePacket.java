@@ -135,7 +135,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     Material = (byte)bytes[i[0]++];
                     ClickAction = (byte)bytes[i[0]++];
                     Scale.FromBytes(bytes, i[0]); i[0] += 12;
-                    length = bytes[i[0]++];
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     ObjectData = new byte[length];
                     Utils.arraycopy(bytes, i[0], ObjectData, 0, length); i[0] +=  length;
                     ParentID = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
@@ -161,7 +161,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
                     TextureEntry = new byte[length];
                     Utils.arraycopy(bytes, i[0], TextureEntry, 0, length); i[0] +=  length;
-                    length = bytes[i[0]++];
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     TextureAnim = new byte[length];
                     Utils.arraycopy(bytes, i[0], TextureAnim, 0, length); i[0] +=  length;
                     length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
@@ -170,18 +170,18 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
                     Data = new byte[length];
                     Utils.arraycopy(bytes, i[0], Data, 0, length); i[0] +=  length;
-                    length = bytes[i[0]++];
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     Text = new byte[length];
                     Utils.arraycopy(bytes, i[0], Text, 0, length); i[0] +=  length;
                     TextColor = new byte[4];
                     Utils.arraycopy(bytes, i[0], TextColor, 0, 4); i += 4;
-                    length = bytes[i[0]++];
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     MediaURL = new byte[length];
                     Utils.arraycopy(bytes, i[0], MediaURL, 0, length); i[0] +=  length;
-                    length = bytes[i[0]++];
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     PSBlock = new byte[length];
                     Utils.arraycopy(bytes, i[0], PSBlock, 0, length); i[0] +=  length;
-                    length = bytes[i[0]++];
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     ExtraParams = new byte[length];
                     Utils.arraycopy(bytes, i[0], ExtraParams, 0, length); i[0] +=  length;
                     Sound.FromBytes(bytes, i[0]); i[0] += 16;
@@ -313,7 +313,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 bytes = zeroBuffer;
             }
             RegionData.FromBytes(bytes, i);
-            int count = (int)bytes[i[0]++];
+            int count = Utils.ubyteToInt(bytes[i[0]++]);
             if(ObjectData == null || ObjectData.length != -1) {
                 ObjectData = new ObjectDataBlock[count];
                 for(int j = 0; j < count; j++)
@@ -335,7 +335,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             this.header =  header;
             RegionData.FromBytes(bytes, i);
-            int count = (int)bytes[i[0]++];
+            int count = Utils.ubyteToInt(bytes[i[0]++]);
             if(ObjectData == null || ObjectData.length != count) {
                 ObjectData = new ObjectDataBlock[count];
                 for(int j = 0; j < count; j++)

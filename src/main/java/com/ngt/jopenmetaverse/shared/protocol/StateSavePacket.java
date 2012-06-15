@@ -73,7 +73,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    length = bytes[i[0]++];
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     Filename = new byte[length];
                     Utils.arraycopy(bytes, i[0], Filename, 0, length); i[0] +=  length;
                 }

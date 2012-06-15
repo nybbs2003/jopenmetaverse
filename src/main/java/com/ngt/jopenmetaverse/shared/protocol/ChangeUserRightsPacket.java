@@ -69,7 +69,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     AgentRelated.FromBytes(bytes, i[0]); i[0] += 16;
-                    RelatedRights = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    RelatedRights = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
                 }
                 catch (Exception e)
                 {
@@ -129,7 +129,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 bytes = zeroBuffer;
             }
             AgentData.FromBytes(bytes, i);
-            int count = (int)bytes[i[0]++];
+            int count = Utils.ubyteToInt(bytes[i[0]++]);
             if(Rights == null || Rights.length != -1) {
                 Rights = new RightsBlock[count];
                 for(int j = 0; j < count; j++)
@@ -151,7 +151,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             this.header =  header;
             AgentData.FromBytes(bytes, i);
-            int count = (int)bytes[i[0]++];
+            int count = Utils.ubyteToInt(bytes[i[0]++]);
             if(Rights == null || Rights.length != count) {
                 Rights = new RightsBlock[count];
                 for(int j = 0; j < count; j++)

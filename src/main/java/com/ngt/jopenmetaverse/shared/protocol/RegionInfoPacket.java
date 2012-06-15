@@ -88,7 +88,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    length = bytes[i[0]++];
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     SimName = new byte[length];
                     Utils.arraycopy(bytes, i[0], SimName, 0, length); i[0] +=  length;
                     EstateID = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
@@ -101,9 +101,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     WaterHeight = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
                     TerrainRaiseLimit = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
                     TerrainLowerLimit = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
-                    PricePerMeter = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    RedirectGridX = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    RedirectGridY = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    PricePerMeter = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    RedirectGridX = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    RedirectGridY = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
                     UseEstateSun = (bytes[i[0]++] != 0) ? true : false;
                     SunHour = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
                 }
@@ -169,10 +169,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    length = bytes[i[0]++];
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     ProductSKU = new byte[length];
                     Utils.arraycopy(bytes, i[0], ProductSKU, 0, length); i[0] +=  length;
-                    length = bytes[i[0]++];
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     ProductName = new byte[length];
                     Utils.arraycopy(bytes, i[0], ProductName, 0, length); i[0] +=  length;
                     MaxAgents32 = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;

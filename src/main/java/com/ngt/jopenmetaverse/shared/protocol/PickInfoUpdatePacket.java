@@ -91,7 +91,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                     CreatorID.FromBytes(bytes, i[0]); i[0] += 16;
                     TopPick = (bytes[i[0]++] != 0) ? true : false;
                     ParcelID.FromBytes(bytes, i[0]); i[0] += 16;
-                    length = bytes[i[0]++];
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     Name = new byte[length];
                     Utils.arraycopy(bytes, i[0], Name, 0, length); i[0] +=  length;
                     length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
@@ -99,7 +99,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                     Utils.arraycopy(bytes, i[0], Desc, 0, length); i[0] +=  length;
                     SnapshotID.FromBytes(bytes, i[0]); i[0] += 16;
                     PosGlobal.fromBytes(bytes, i[0]); i[0] += 24;
-                    SortOrder = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    SortOrder = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
                     Enabled = (bytes[i[0]++] != 0) ? true : false;
                 }
                 catch (Exception e)

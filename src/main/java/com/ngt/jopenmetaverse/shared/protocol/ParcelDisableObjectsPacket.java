@@ -59,7 +59,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             @Override
 			public void FromBytes(byte[] bytes, int[] i) throws MalformedDataException
             {
-                    LocalID = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    LocalID = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
                     ReturnType = (long)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
             }
 
@@ -184,7 +184,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             }
             AgentData.FromBytes(bytes, i);
             ParcelData.FromBytes(bytes, i);
-            int count = (int)bytes[i[0]++];
+            int count = Utils.ubyteToInt(bytes[i[0]++]);
             if(TaskIDs == null || TaskIDs.length != -1) {
                 TaskIDs = new TaskIDsBlock[count];
                 for(int j = 0; j < count; j++)
@@ -192,7 +192,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             }
             for (int j = 0; j < count; j++)
             { TaskIDs[j].FromBytes(bytes, i); }
-            count = (int)bytes[i[0]++];
+            count = Utils.ubyteToInt(bytes[i[0]++]);
             if(OwnerIDs == null || OwnerIDs.length != -1) {
                 OwnerIDs = new OwnerIDsBlock[count];
                 for(int j = 0; j < count; j++)
@@ -215,7 +215,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             this.header =  header;
             AgentData.FromBytes(bytes, i);
             ParcelData.FromBytes(bytes, i);
-            int count = (int)bytes[i[0]++];
+            int count = Utils.ubyteToInt(bytes[i[0]++]);
             if(TaskIDs == null || TaskIDs.length != count) {
                 TaskIDs = new TaskIDsBlock[count];
                 for(int j = 0; j < count; j++)
@@ -223,7 +223,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             }
             for (int j = 0; j < count; j++)
             { TaskIDs[j].FromBytes(bytes, i); }
-            count = (int)bytes[i[0]++];
+            count = Utils.ubyteToInt(bytes[i[0]++]);
             if(OwnerIDs == null || OwnerIDs.length != count) {
                 OwnerIDs = new OwnerIDsBlock[count];
                 for(int j = 0; j < count; j++)

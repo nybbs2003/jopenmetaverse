@@ -75,7 +75,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     IMViaEMail = (bytes[i[0]++] != 0) ? true : false;
-                    length = bytes[i[0]++];
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     DirectoryVisibility = new byte[length];
                     Utils.arraycopy(bytes, i[0], DirectoryVisibility, 0, length); i[0] +=  length;
                 }

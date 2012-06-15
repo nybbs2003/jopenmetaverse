@@ -77,7 +77,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     GroupID.FromBytes(bytes, i[0]); i[0] += 16;
                     IsGroupOwned = (bytes[i[0]++] != 0) ? true : false;
                     RemoveContribution = (bytes[i[0]++] != 0) ? true : false;
-                    LocalID = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    LocalID = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
                     Final = (bytes[i[0]++] != 0) ? true : false;
                 }
                 catch (Exception e)
@@ -123,8 +123,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    Price = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    Area = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    Price = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    Area = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
                 }
                 catch (Exception e)
                 {

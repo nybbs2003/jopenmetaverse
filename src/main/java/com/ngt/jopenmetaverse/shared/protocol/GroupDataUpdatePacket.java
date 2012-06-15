@@ -36,7 +36,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     GroupID.FromBytes(bytes, i[0]); i[0] += 16;
                     AgentPowers = Utils.bytesToULong(bytes, i[0]); i[0] += 8;
-                    length = bytes[i[0]++];
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     GroupTitle = new byte[length];
                     Utils.arraycopy(bytes, i[0], GroupTitle, 0, length); i[0] +=  length;
                 }
@@ -98,7 +98,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 packetEnd[0] = Helpers.ZeroDecode(bytes, packetEnd[0] + 1, zeroBuffer) - 1;
                 bytes = zeroBuffer;
             }
-            int count = (int)bytes[i[0]++];
+            int count = Utils.ubyteToInt(bytes[i[0]++]);
             if(AgentGroupData == null || AgentGroupData.length != -1) {
                 AgentGroupData = new AgentGroupDataBlock[count];
                 for(int j = 0; j < count; j++)
@@ -119,7 +119,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 		public void FromBytes(Header header, byte[] bytes, int[] i, int[] packetEnd)
         {
             this.header =  header;
-            int count = (int)bytes[i[0]++];
+            int count = Utils.ubyteToInt(bytes[i[0]++]);
             if(AgentGroupData == null || AgentGroupData.length != count) {
                 AgentGroupData = new AgentGroupDataBlock[count];
                 for(int j = 0; j < count; j++)

@@ -118,17 +118,17 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     AgentID.FromBytes(bytes, i[0]); i[0] += 16;
-                    length = bytes[i[0]++];
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     FirstName = new byte[length];
                     Utils.arraycopy(bytes, i[0], FirstName, 0, length); i[0] +=  length;
-                    length = bytes[i[0]++];
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     LastName = new byte[length];
                     Utils.arraycopy(bytes, i[0], LastName, 0, length); i[0] +=  length;
-                    length = bytes[i[0]++];
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     Group = new byte[length];
                     Utils.arraycopy(bytes, i[0], Group, 0, length); i[0] +=  length;
                     Online = (bytes[i[0]++] != 0) ? true : false;
-                    Reputation = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    Reputation = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
                 }
                 catch (Exception e)
                 {
@@ -200,7 +200,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
             AgentData.FromBytes(bytes, i);
             QueryData.FromBytes(bytes, i);
-            int count = (int)bytes[i[0]++];
+            int count = Utils.ubyteToInt(bytes[i[0]++]);
             if(QueryReplies == null || QueryReplies.length != -1) {
                 QueryReplies = new QueryRepliesBlock[count];
                 for(int j = 0; j < count; j++)
@@ -223,7 +223,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             this.header =  header;
             AgentData.FromBytes(bytes, i);
             QueryData.FromBytes(bytes, i);
-            int count = (int)bytes[i[0]++];
+            int count = Utils.ubyteToInt(bytes[i[0]++]);
             if(QueryReplies == null || QueryReplies.length != count) {
                 QueryReplies = new QueryRepliesBlock[count];
                 for(int j = 0; j < count; j++)

@@ -120,7 +120,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 {
                     UVCoord.FromBytes(bytes, i[0]); i[0] += 12;
                     STCoord.FromBytes(bytes, i[0]); i[0] += 12;
-                    FaceIndex = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    FaceIndex = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
                     Position.FromBytes(bytes, i[0]); i[0] += 12;
                     Normal.FromBytes(bytes, i[0]); i[0] += 12;
                     Binormal.FromBytes(bytes, i[0]); i[0] += 12;
@@ -192,7 +192,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
             AgentData.FromBytes(bytes, i);
             ObjectData.FromBytes(bytes, i);
-            int count = (int)bytes[i[0]++];
+            int count = Utils.ubyteToInt(bytes[i[0]++]);
             if(SurfaceInfo == null || SurfaceInfo.length != -1) {
                 SurfaceInfo = new SurfaceInfoBlock[count];
                 for(int j = 0; j < count; j++)
@@ -215,7 +215,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             this.header =  header;
             AgentData.FromBytes(bytes, i);
             ObjectData.FromBytes(bytes, i);
-            int count = (int)bytes[i[0]++];
+            int count = Utils.ubyteToInt(bytes[i[0]++]);
             if(SurfaceInfo == null || SurfaceInfo.length != count) {
                 SurfaceInfo = new SurfaceInfoBlock[count];
                 for(int j = 0; j < count; j++)

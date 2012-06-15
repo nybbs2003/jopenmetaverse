@@ -37,13 +37,13 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 {
                     TaskID.FromBytes(bytes, i[0]); i[0] += 16;
                     ItemID.FromBytes(bytes, i[0]); i[0] += 16;
-                    length = bytes[i[0]++];
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     ObjectName = new byte[length];
                     Utils.arraycopy(bytes, i[0], ObjectName, 0, length); i[0] +=  length;
-                    length = bytes[i[0]++];
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     ObjectOwner = new byte[length];
                     Utils.arraycopy(bytes, i[0], ObjectOwner, 0, length); i[0] +=  length;
-                    Questions = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    Questions = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
                 }
                 catch (Exception e)
                 {

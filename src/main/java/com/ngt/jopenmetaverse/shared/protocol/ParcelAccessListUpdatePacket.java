@@ -75,10 +75,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     Flags = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    LocalID = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    LocalID = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
                     TransactionID.FromBytes(bytes, i[0]); i[0] += 16;
-                    SequenceID = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    Sections = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    SequenceID = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    Sections = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
                 }
                 catch (Exception e)
                 {
@@ -125,7 +125,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     ID.FromBytes(bytes, i[0]); i[0] += 16;
-                    Time = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    Time = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
                     Flags = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
@@ -192,7 +192,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
             AgentData.FromBytes(bytes, i);
             Data.FromBytes(bytes, i);
-            int count = (int)bytes[i[0]++];
+            int count = Utils.ubyteToInt(bytes[i[0]++]);
             if(List == null || List.length != -1) {
                 List = new ListBlock[count];
                 for(int j = 0; j < count; j++)
@@ -215,7 +215,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             this.header =  header;
             AgentData.FromBytes(bytes, i);
             Data.FromBytes(bytes, i);
-            int count = (int)bytes[i[0]++];
+            int count = Utils.ubyteToInt(bytes[i[0]++]);
             if(List == null || List.length != count) {
                 List = new ListBlock[count];
                 for(int j = 0; j < count; j++)

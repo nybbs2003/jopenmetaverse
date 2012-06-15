@@ -77,7 +77,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 try
                 {
-                    LocalID = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    LocalID = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
                     ReturnType = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
@@ -183,7 +183,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             }
             AgentData.FromBytes(bytes, i);
             ParcelData.FromBytes(bytes, i);
-            int count = (int)bytes[i[0]++];
+            int count = Utils.ubyteToInt(bytes[i[0]++]);
             if(ReturnIDs == null || ReturnIDs.length != -1) {
                 ReturnIDs = new ReturnIDsBlock[count];
                 for(int j = 0; j < count; j++)
@@ -206,7 +206,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             this.header =  header;
             AgentData.FromBytes(bytes, i);
             ParcelData.FromBytes(bytes, i);
-            int count = (int)bytes[i[0]++];
+            int count = Utils.ubyteToInt(bytes[i[0]++]);
             if(ReturnIDs == null || ReturnIDs.length != count) {
                 ReturnIDs = new ReturnIDsBlock[count];
                 for(int j = 0; j < count; j++)

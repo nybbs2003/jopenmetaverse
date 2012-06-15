@@ -78,9 +78,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     QueryID.FromBytes(bytes, i[0]); i[0] += 16;
                     QueryFlags = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                     SearchType = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    Price = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    Area = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    QueryStart = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    Price = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    Area = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    QueryStart = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
                 }
                 catch (Exception e)
                 {

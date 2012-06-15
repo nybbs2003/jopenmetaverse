@@ -80,7 +80,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 {
                     ItemID.FromBytes(bytes, i[0]); i[0] += 16;
                     FolderID.FromBytes(bytes, i[0]); i[0] += 16;
-                    length = bytes[i[0]++];
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     NewName = new byte[length];
                     Utils.arraycopy(bytes, i[0], NewName, 0, length); i[0] +=  length;
                 }
@@ -145,7 +145,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 bytes = zeroBuffer;
             }
             AgentData.FromBytes(bytes, i);
-            int count = (int)bytes[i[0]++];
+            int count = Utils.ubyteToInt(bytes[i[0]++]);
             if(InventoryData == null || InventoryData.length != -1) {
                 InventoryData = new InventoryDataBlock[count];
                 for(int j = 0; j < count; j++)
@@ -167,7 +167,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             this.header =  header;
             AgentData.FromBytes(bytes, i);
-            int count = (int)bytes[i[0]++];
+            int count = Utils.ubyteToInt(bytes[i[0]++]);
             if(InventoryData == null || InventoryData.length != count) {
                 InventoryData = new InventoryDataBlock[count];
                 for(int j = 0; j < count; j++)

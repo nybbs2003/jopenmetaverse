@@ -173,7 +173,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
             AgentData.FromBytes(bytes, i);
             GroupData.FromBytes(bytes, i);
-            int count = (int)bytes[i[0]++];
+            int count = Utils.ubyteToInt(bytes[i[0]++]);
             if(EjectData == null || EjectData.length != -1) {
                 EjectData = new EjectDataBlock[count];
                 for(int j = 0; j < count; j++)
@@ -196,7 +196,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             this.header =  header;
             AgentData.FromBytes(bytes, i);
             GroupData.FromBytes(bytes, i);
-            int count = (int)bytes[i[0]++];
+            int count = Utils.ubyteToInt(bytes[i[0]++]);
             if(EjectData == null || EjectData.length != count) {
                 EjectData = new EjectDataBlock[count];
                 for(int j = 0; j < count; j++)

@@ -121,7 +121,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 int length;
                 try
                 {
-                    length = bytes[i[0]++];
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     TypeData = new byte[length];
                     Utils.arraycopy(bytes, i[0], TypeData, 0, length); i[0] += length;
                 }
@@ -187,7 +187,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 bytes = zeroBuffer;
             }
             AgentData.FromBytes(bytes, i);
-            int count = (int)bytes[i[0]++];
+            int count = Utils.ubyteToInt(bytes[i[0]++]);
             if(AnimationList == null || AnimationList.length != -1) {
                 AnimationList = new AnimationListBlock[count];
                 for(int j = 0; j < count; j++)
@@ -195,7 +195,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             }
             for (int j = 0; j < count; j++)
             { AnimationList[j].FromBytes(bytes, i); }
-            count = (int)bytes[i[0]++];
+            count = Utils.ubyteToInt(bytes[i[0]++]);
             if(PhysicalAvatarEventList == null || PhysicalAvatarEventList.length != -1) {
                 PhysicalAvatarEventList = new PhysicalAvatarEventListBlock[count];
                 for(int j = 0; j < count; j++)
@@ -217,7 +217,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         {
             this.header =  header;
             AgentData.FromBytes(bytes, i);
-            int count = (int)bytes[i[0]++];
+            int count = Utils.ubyteToInt(bytes[i[0]++]);
             if(AnimationList == null || AnimationList.length != count) {
                 AnimationList = new AnimationListBlock[count];
                 for(int j = 0; j < count; j++)
@@ -225,7 +225,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             }
             for (int j = 0; j < count; j++)
             { AnimationList[j].FromBytes(bytes, i); }
-            count = (int)bytes[i[0]++];
+            count = Utils.ubyteToInt(bytes[i[0]++]);
             if(PhysicalAvatarEventList == null || PhysicalAvatarEventList.length != count) {
                 PhysicalAvatarEventList = new PhysicalAvatarEventListBlock[count];
                 for(int j = 0; j < count; j++)

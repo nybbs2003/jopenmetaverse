@@ -119,7 +119,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    PID = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    PID = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
                 }
                 catch (Exception e)
                 {
@@ -181,7 +181,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 bytes = zeroBuffer;
             }
             Region.FromBytes(bytes, i);
-            int count = (int)bytes[i[0]++];
+            int count = Utils.ubyteToInt(bytes[i[0]++]);
             if(Stat == null || Stat.length != -1) {
                 Stat = new StatBlock[count];
                 for(int j = 0; j < count; j++)
@@ -204,7 +204,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             this.header =  header;
             Region.FromBytes(bytes, i);
-            int count = (int)bytes[i[0]++];
+            int count = Utils.ubyteToInt(bytes[i[0]++]);
             if(Stat == null || Stat.length != count) {
                 Stat = new StatBlock[count];
                 for(int j = 0; j < count; j++)

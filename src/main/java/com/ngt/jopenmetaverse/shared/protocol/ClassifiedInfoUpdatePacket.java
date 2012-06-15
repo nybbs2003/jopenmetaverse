@@ -85,7 +85,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 {
                     ClassifiedID.FromBytes(bytes, i[0]); i[0] += 16;
                     Category = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    length = bytes[i[0]++];
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     Name = new byte[length];
                     Utils.arraycopy(bytes, i[0], Name, 0, length); i[0] +=  length;
                     length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
@@ -96,7 +96,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     SnapshotID.FromBytes(bytes, i[0]); i[0] += 16;
                     PosGlobal.FromBytes(bytes, i[0]); i[0] += 24;
                     ClassifiedFlags = (byte)bytes[i[0]++];
-                    PriceForListing = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    PriceForListing = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
                 }
                 catch (Exception e)
                 {

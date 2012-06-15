@@ -95,7 +95,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     Dialog = (byte)bytes[i[0]++];
                     ID.FromBytes(bytes, i[0]); i[0] += 16;
                     Timestamp = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    length = bytes[i[0]++];
+                    length = Utils.ubyteToInt(bytes[i[0]++]);
                     FromAgentName = new byte[length];
                     Utils.arraycopy(bytes, i[0], FromAgentName, 0, length); i[0] +=  length;
                     length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
