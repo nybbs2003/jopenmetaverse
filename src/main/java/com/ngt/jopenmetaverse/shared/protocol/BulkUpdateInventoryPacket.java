@@ -1,5 +1,11 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+
 
     public final class BulkUpdateInventoryPacket extends Packet
     {
@@ -245,7 +251,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             ItemData = null;
         }
 
-        public BulkUpdateInventoryPacket(byte[] bytes, int[] i) 
+        public BulkUpdateInventoryPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -280,7 +286,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             { ItemData[j].FromBytes(bytes, i); }
         }
 
-        public BulkUpdateInventoryPacket(Header head, byte[] bytes, int[] i)
+        public BulkUpdateInventoryPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

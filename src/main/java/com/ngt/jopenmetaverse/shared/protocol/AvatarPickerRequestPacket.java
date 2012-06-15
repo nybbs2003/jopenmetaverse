@@ -1,6 +1,7 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
 import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.util.Utils;
 
  /// <exclude/>
     public final class AvatarPickerRequestPacket extends Packet
@@ -67,7 +68,7 @@ import com.ngt.jopenmetaverse.shared.types.UUID;
             }
 
             public DataBlock() { }
-            public DataBlock(byte[] bytes, int[] i)
+            public DataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -103,7 +104,7 @@ import com.ngt.jopenmetaverse.shared.types.UUID;
                         {
                 int length = 10;
                 length += AgentData.getLength();
-                length += Data.length;
+                length += Data.getLength();
                 return length;
             }
         }
@@ -122,7 +123,7 @@ import com.ngt.jopenmetaverse.shared.types.UUID;
             Data = new DataBlock();
         }
 
-        public AvatarPickerRequestPacket(byte[] bytes, int[] i) 
+        public AvatarPickerRequestPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[]{bytes.length - 1};
@@ -142,7 +143,7 @@ import com.ngt.jopenmetaverse.shared.types.UUID;
             Data.FromBytes(bytes, i);
         }
 
-        public AvatarPickerRequestPacket(Header head, byte[] bytes, int[] i)
+        public AvatarPickerRequestPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[]{bytes.length - 1};
@@ -162,7 +163,7 @@ import com.ngt.jopenmetaverse.shared.types.UUID;
         {
             int length = 10;
             length += AgentData.getLength();
-            length += Data.length;
+            length += Data.getLength();
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
             int[] i = new int[]{0};

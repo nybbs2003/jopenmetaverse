@@ -1,5 +1,7 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
+import com.ngt.jopenmetaverse.shared.types.Vector4;
+
 
     public final class CameraConstraintPacket extends Packet
     {
@@ -17,7 +19,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public CameraCollidePlaneBlock() { }
-            public CameraCollidePlaneBlock(byte[] bytes, int[] i)
+            public CameraCollidePlaneBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -27,7 +29,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    Plane.FromBytes(bytes, i[0]); i[0] += 16;
+                    Plane.fromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)
                 {
@@ -38,7 +40,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Plane.ToBytes(bytes, i[0]); i[0] += 16;
+                Plane.toBytes(bytes, i[0]); i[0] += 16;
             }
 
         }
@@ -48,7 +50,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
                         {
                 int length = 7;
-                length += CameraCollidePlane.length;
+                length += CameraCollidePlane.getLength();
                 return length;
             }
         }
@@ -66,7 +68,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             CameraCollidePlane = new CameraCollidePlaneBlock();
         }
 
-        public CameraConstraintPacket(byte[] bytes, int[] i) 
+        public CameraConstraintPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -85,7 +87,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             CameraCollidePlane.FromBytes(bytes, i);
         }
 
-        public CameraConstraintPacket(Header head, byte[] bytes, int[] i)
+        public CameraConstraintPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -103,7 +105,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public byte[] ToBytes()
         {
             int length = 7;
-            length += CameraCollidePlane.length;
+            length += CameraCollidePlane.getLength();
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
             int[] i = new int[]{0};

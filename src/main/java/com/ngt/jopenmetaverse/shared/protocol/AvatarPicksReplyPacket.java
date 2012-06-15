@@ -1,5 +1,11 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+
 
     public final class AvatarPicksReplyPacket extends Packet
     {
@@ -63,7 +69,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public DataBlock() { }
-            public DataBlock(byte[] bytes, int[] i)
+            public DataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -121,7 +127,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             Data = null;
         }
 
-        public AvatarPicksReplyPacket(byte[] bytes, int[] i) 
+        public AvatarPicksReplyPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -148,7 +154,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             { Data[j].FromBytes(bytes, i); }
         }
 
-        public AvatarPicksReplyPacket(Header head, byte[] bytes, int[] i)
+        public AvatarPicksReplyPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};

@@ -1,5 +1,8 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+
 
     public final class AvatarInterestsReplyPacket extends Packet
     {
@@ -68,7 +71,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public PropertiesDataBlock() { }
-            public PropertiesDataBlock(byte[] bytes, int[] i)
+            public PropertiesDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -118,7 +121,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                         {
                 int length = 10;
                 length += AgentData.getLength();
-                length += PropertiesData.length;
+                length += PropertiesData.getLength();
                 return length;
             }
         }
@@ -138,7 +141,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             PropertiesData = new PropertiesDataBlock();
         }
 
-        public AvatarInterestsReplyPacket(byte[] bytes, int[] i) 
+        public AvatarInterestsReplyPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -158,7 +161,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             PropertiesData.FromBytes(bytes, i);
         }
 
-        public AvatarInterestsReplyPacket(Header head, byte[] bytes, int[] i)
+        public AvatarInterestsReplyPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -178,7 +181,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             int length = 10;
             length += AgentData.getLength();
-            length += PropertiesData.length;
+            length += PropertiesData.getLength();
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
             int[] i = new int[]{0};

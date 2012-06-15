@@ -1,5 +1,9 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
+import com.ngt.jopenmetaverse.shared.types.Quaternion;
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.types.Vector3;
+
 
     public final class AvatarSitResponsePacket extends Packet
     {
@@ -17,7 +21,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public SitObjectBlock() { }
-            public SitObjectBlock(byte[] bytes, int[] i)
+            public SitObjectBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -62,7 +66,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public SitTransformBlock() { }
-            public SitTransformBlock(byte[] bytes, int[] i)
+            public SitTransformBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -73,10 +77,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     AutoPilot = (bytes[i[0]++] != 0) ? true : false;
-                    SitPosition.FromBytes(bytes, i[0]); i[0] += 12;
-                    SitRotation.FromBytes(bytes, i[0], true); i[0] += 12;
-                    CameraEyeOffset.FromBytes(bytes, i[0]); i[0] += 12;
-                    CameraAtOffset.FromBytes(bytes, i[0]); i[0] += 12;
+                    SitPosition.fromBytes(bytes, i[0]); i[0] += 12;
+                    SitRotation.fromBytes(bytes, i[0], true); i[0] += 12;
+                    CameraEyeOffset.fromBytes(bytes, i[0]); i[0] += 12;
+                    CameraAtOffset.fromBytes(bytes, i[0]); i[0] += 12;
                     ForceMouselook = (bytes[i[0]++] != 0) ? true : false;
                 }
                 catch (Exception e)
@@ -89,10 +93,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 bytes[i[0]++] = (byte)((AutoPilot) ? 1 : 0);
-                SitPosition.ToBytes(bytes, i[0]); i[0] += 12;
-                SitRotation.ToBytes(bytes, i[0]); i[0] += 12;
-                CameraEyeOffset.ToBytes(bytes, i[0]); i[0] += 12;
-                CameraAtOffset.ToBytes(bytes, i[0]); i[0] += 12;
+                SitPosition.toBytes(bytes, i[0]); i[0] += 12;
+                SitRotation.toBytes(bytes, i[0]); i[0] += 12;
+                CameraEyeOffset.toBytes(bytes, i[0]); i[0] += 12;
+                CameraAtOffset.toBytes(bytes, i[0]); i[0] += 12;
                 bytes[i[0]++] = (byte)((ForceMouselook) ? 1 : 0);
             }
 
@@ -103,8 +107,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
                         {
                 int length = 7;
-                length += SitObject.length;
-                length += SitTransform.length;
+                length += SitObject.getLength();
+                length += SitTransform.getLength();
                 return length;
             }
         }
@@ -124,7 +128,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             SitTransform = new SitTransformBlock();
         }
 
-        public AvatarSitResponsePacket(byte[] bytes, int[] i) 
+        public AvatarSitResponsePacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -144,7 +148,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             SitTransform.FromBytes(bytes, i);
         }
 
-        public AvatarSitResponsePacket(Header head, byte[] bytes, int[] i)
+        public AvatarSitResponsePacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -163,8 +167,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public byte[] ToBytes()
         {
             int length = 7;
-            length += SitObject.length;
-            length += SitTransform.length;
+            length += SitObject.getLength();
+            length += SitTransform.getLength();
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
             int[] i = new int[]{0};
