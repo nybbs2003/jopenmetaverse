@@ -9,7 +9,6 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 
     public final class PlacesReplyPacket extends Packet
     {
-        /// <exclude/>
         public final class AgentDataBlock extends PacketBlock
         {
             public UUID AgentID;
@@ -18,9 +17,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             @Override
 			public int getLength()
             {
-                                {
-                    return 32;
-                }
+                   return 32;
             }
 
             public AgentDataBlock() { }
@@ -60,9 +57,7 @@ public void FromBytes(byte[] bytes, int[] i) throws MalformedDataException
             @Override
 		public int getLength()
             {
-                                {
                     return 16;
-                }
             }
 
             public TransactionDataBlock() { }
