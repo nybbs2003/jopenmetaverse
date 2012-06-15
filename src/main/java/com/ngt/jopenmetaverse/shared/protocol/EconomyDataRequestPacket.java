@@ -46,7 +46,7 @@ public final class EconomyDataRequestPacket extends Packet
 	}
 
 	@Override
-	public void FromBytes(Header header, byte[] bytes, int[] i, int[] packetEnd)
+	public void FromBytes(Header header, byte[] bytes, int[] i, int[] packetEnd) throws MalformedDataException
 	{
 		this.header = header;
 	}

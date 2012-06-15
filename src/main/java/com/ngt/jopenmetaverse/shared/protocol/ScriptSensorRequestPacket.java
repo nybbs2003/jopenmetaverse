@@ -44,7 +44,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     RequestID.FromBytes(bytes, i[0]); i[0] += 16;
                     SearchID.FromBytes(bytes, i[0]); i[0] += 16;
                     SearchPos.FromBytes(bytes, i[0]); i[0] += 12;
-                    SearchDir.FromBytes(bytes, i, true); i += 12;
+                    SearchDir.FromBytes(bytes, i[0], true); i[0] += 12;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     SearchName = new byte[length];
                     Utils.arraycopy(bytes, i[0], SearchName, 0, length); i[0] +=  length;
@@ -110,7 +110,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         }
 
         @Override
-		public void FromBytes(byte[] bytes, int[] i, int[] packetEnd, byte[] zeroBuffer)
+		public void FromBytes(byte[] bytes, int[] i, int[] packetEnd, byte[] zeroBuffer) throws MalformedDataException
         {
             header.FromBytes(bytes, i, packetEnd);
             if (header.Zerocoded && zeroBuffer != null)
@@ -129,7 +129,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         }
 
         @Override
-		public void FromBytes(Header header, byte[] bytes, int[] i, int[] packetEnd)
+		public void FromBytes(Header header, byte[] bytes, int[] i, int[] packetEnd) throws MalformedDataException
         {
             this.header =  header;
             Requester.FromBytes(bytes, i);

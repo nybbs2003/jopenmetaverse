@@ -1,5 +1,11 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+
 
     public final class AvatarAppearancePacket extends Packet
     {
@@ -18,7 +24,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public SenderBlock() { }
-            public SenderBlock(byte[] bytes, int[] i)
+            public SenderBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -62,7 +68,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public ObjectDataBlock() { }
-            public ObjectDataBlock(byte[] bytes, int[] i)
+            public ObjectDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -107,7 +113,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public VisualParamBlock() { }
-            public VisualParamBlock(byte[] bytes, int[] i)
+            public VisualParamBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -138,8 +144,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
                         {
                 int length = 11;
-                length += Sender.length;
-                length += ObjectData.length;
+                length += Sender.getLength();
+                length += ObjectData.getLength();
                 for (int j = 0; j < VisualParam.length; j++)
                     length += VisualParam[j].getLength();
                 return length;
@@ -163,7 +169,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             VisualParam = null;
         }
 
-        public AvatarAppearancePacket(byte[] bytes, int[] i) 
+        public AvatarAppearancePacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -171,7 +177,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         }
 
         @Override
-		public void FromBytes(byte[] bytes, int[] i, int[] packetEnd, byte[] zeroBuffer)
+		public void FromBytes(byte[] bytes, int[] i, int[] packetEnd, byte[] zeroBuffer) throws MalformedDataException
         {
             header.FromBytes(bytes, i, packetEnd);
             if (header.Zerocoded && zeroBuffer != null)
@@ -191,7 +197,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             { VisualParam[j].FromBytes(bytes, i); }
         }
 
-        public AvatarAppearancePacket(Header head, byte[] bytes, int[] i)
+        public AvatarAppearancePacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -199,7 +205,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         }
 
         @Override
-		public void FromBytes(Header header, byte[] bytes, int[] i, int[] packetEnd)
+		public void FromBytes(Header header, byte[] bytes, int[] i, int[] packetEnd) throws MalformedDataException
         {
             this.header =  header;
             Sender.FromBytes(bytes, i);
@@ -218,8 +224,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public byte[] ToBytes()
         {
             int length = 10;
-            length += Sender.length;
-            length += ObjectData.length;
+            length += Sender.getLength();
+            length += ObjectData.getLength();
             length++;
             for (int j = 0; j < VisualParam.length; j++) { length += VisualParam[j].getLength(); }
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
@@ -249,8 +255,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 header.AcksToBytes(ackBytes, acksLength);
             }
 
-            fixedLength += Sender.length;
-            fixedLength += ObjectData.length;
+            fixedLength += Sender.getLength();
+            fixedLength += ObjectData.getLength();
             byte[] fixedBytes = new byte[fixedLength];
             header.ToBytes(fixedBytes, i);
             Sender.ToBytes(fixedBytes, i);

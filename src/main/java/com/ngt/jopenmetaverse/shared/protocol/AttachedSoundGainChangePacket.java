@@ -1,5 +1,8 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+
 
     public final class AttachedSoundGainChangePacket extends Packet
     {
@@ -18,7 +21,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public DataBlockBlock() { }
-            public DataBlockBlock(byte[] bytes, int[] i)
+            public DataBlockBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -51,7 +54,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
                         {
                 int length = 8;
-                length += DataBlock.length;
+                length += DataBlock.getLength();
                 return length;
             }
         }
@@ -68,7 +71,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             DataBlock = new DataBlockBlock();
         }
 
-        public AttachedSoundGainChangePacket(byte[] bytes, int[] i) 
+        public AttachedSoundGainChangePacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -76,7 +79,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         }
 
         @Override
-		public void FromBytes(byte[] bytes, int[] i, int[] packetEnd, byte[] zeroBuffer)
+		public void FromBytes(byte[] bytes, int[] i, int[] packetEnd, byte[] zeroBuffer) throws MalformedDataException
         {
             header.FromBytes(bytes, i, packetEnd);
             if (header.Zerocoded && zeroBuffer != null)
@@ -87,7 +90,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             DataBlock.FromBytes(bytes, i);
         }
 
-        public AttachedSoundGainChangePacket(Header head, byte[] bytes, int[] i)
+        public AttachedSoundGainChangePacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -95,7 +98,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         }
 
         @Override
-		public void FromBytes(Header header, byte[] bytes, int[] i, int[] packetEnd)
+		public void FromBytes(Header header, byte[] bytes, int[] i, int[] packetEnd) throws MalformedDataException
         {
             this.header =  header;
             DataBlock.FromBytes(bytes, i);
@@ -105,7 +108,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public byte[] ToBytes()
         {
             int length = 8;
-            length += DataBlock.length;
+            length += DataBlock.getLength();
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
             int[] i = new int[]{0};

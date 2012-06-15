@@ -1,5 +1,11 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+
 
     public final class AvatarAnimationPacket extends Packet
     {
@@ -17,7 +23,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public SenderBlock() { }
-            public SenderBlock(byte[] bytes, int[] i)
+            public SenderBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -58,7 +64,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public AnimationListBlock() { }
-            public AnimationListBlock(byte[] bytes, int[] i)
+            public AnimationListBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -100,7 +106,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public AnimationSourceListBlock() { }
-            public AnimationSourceListBlock(byte[] bytes, int[] i)
+            public AnimationSourceListBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -142,7 +148,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public PhysicalAvatarEventListBlock() { }
-            public PhysicalAvatarEventListBlock(byte[] bytes, int[] i)
+            public PhysicalAvatarEventListBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -177,7 +183,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
                         {
                 int length = 10;
-                length += Sender.length;
+                length += Sender.getLength();
                 for (int j = 0; j < AnimationList.length; j++)
                     length += AnimationList[j].getLength();
                 for (int j = 0; j < AnimationSourceList.length; j++)
@@ -206,7 +212,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             PhysicalAvatarEventList = null;
         }
 
-        public AvatarAnimationPacket(byte[] bytes, int[] i) 
+        public AvatarAnimationPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -214,7 +220,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         }
 
         @Override
-		public void FromBytes(byte[] bytes, int[] i, int[] packetEnd, byte[] zeroBuffer)
+		public void FromBytes(byte[] bytes, int[] i, int[] packetEnd, byte[] zeroBuffer) throws MalformedDataException
         {
             header.FromBytes(bytes, i, packetEnd);
             if (header.Zerocoded && zeroBuffer != null)
@@ -249,7 +255,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             { PhysicalAvatarEventList[j].FromBytes(bytes, i); }
         }
 
-        public AvatarAnimationPacket(Header head, byte[] bytes, int[] i)
+        public AvatarAnimationPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -257,7 +263,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         }
 
         @Override
-		public void FromBytes(Header header, byte[] bytes, int[] i, int[] packetEnd)
+		public void FromBytes(Header header, byte[] bytes, int[] i, int[] packetEnd) throws MalformedDataException
         {
             this.header =  header;
             Sender.FromBytes(bytes, i);
@@ -291,7 +297,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public byte[] ToBytes()
         {
             int length = 7;
-            length += Sender.length;
+            length += Sender.getLength();
             length++;
             for (int j = 0; j < AnimationList.length; j++) { length += AnimationList[j].getLength(); }
             length++;
@@ -328,7 +334,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 header.AcksToBytes(ackBytes, acksLength);
             }
 
-            fixedLength += Sender.length;
+            fixedLength += Sender.getLength();
             byte[] fixedBytes = new byte[fixedLength];
             header.ToBytes(fixedBytes, i);
             Sender.ToBytes(fixedBytes, i);

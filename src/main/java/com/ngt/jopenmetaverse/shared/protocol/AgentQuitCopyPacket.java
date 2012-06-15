@@ -1,5 +1,8 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+
 
     public final class AgentQuitCopyPacket extends Packet
     {
@@ -12,13 +15,13 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public int getLength()
             {
-                                {
+                {
                     return 32;
                 }
             }
 
             public AgentDataBlock() { }
-            public AgentDataBlock(byte[] bytes, int[] i)
+            public AgentDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -60,7 +63,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public FuseBlockBlock() { }
-            public FuseBlockBlock(byte[] bytes, int[] i)
+            public FuseBlockBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -92,7 +95,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                         {
                 int length = 10;
                 length += AgentData.getLength();
-                length += FuseBlock.length;
+                length += FuseBlock.getLength();
                 return length;
             }
         }
@@ -111,7 +114,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             FuseBlock = new FuseBlockBlock();
         }
 
-        public AgentQuitCopyPacket(byte[] bytes, int[] i) 
+        public AgentQuitCopyPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -119,7 +122,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         }
 
         @Override
-		public void FromBytes(byte[] bytes, int[] i, int[] packetEnd, byte[] zeroBuffer)
+		public void FromBytes(byte[] bytes, int[] i, int[] packetEnd, byte[] zeroBuffer) throws MalformedDataException
         {
             header.FromBytes(bytes, i, packetEnd);
             if (header.Zerocoded && zeroBuffer != null)
@@ -131,7 +134,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             FuseBlock.FromBytes(bytes, i);
         }
 
-        public AgentQuitCopyPacket(Header head, byte[] bytes, int[] i)
+        public AgentQuitCopyPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -139,7 +142,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         }
 
         @Override
-		public void FromBytes(Header header, byte[] bytes, int[] i, int[] packetEnd)
+		public void FromBytes(Header header, byte[] bytes, int[] i, int[] packetEnd) throws MalformedDataException
         {
             this.header =  header;
             AgentData.FromBytes(bytes, i);
@@ -151,7 +154,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             int length = 10;
             length += AgentData.getLength();
-            length += FuseBlock.length;
+            length += FuseBlock.getLength();
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
             int[] i = new int[]{0};

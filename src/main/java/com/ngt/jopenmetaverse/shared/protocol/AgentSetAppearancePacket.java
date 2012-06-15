@@ -1,5 +1,9 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.types.Vector3;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+
 
     public final class AgentSetAppearancePacket extends Packet
     {
@@ -20,7 +24,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public AgentDataBlock() { }
-            public AgentDataBlock(byte[] bytes, int[] i)
+            public AgentDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -33,7 +37,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
                     SerialNum = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    Size.FromBytes(bytes, i[0]); i[0] += 12;
+                    Size.toBytes(bytes, i[0]); i[0] += 12;
                 }
                 catch (Exception e)
                 {
@@ -47,7 +51,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
                 SessionID.ToBytes(bytes, i[0]); i[0] += 16;
                 Utils.uintToBytes(SerialNum, bytes, i[0]); i[0] += 4;
-                Size.ToBytes(bytes, i[0]); i[0] += 12;
+                Size.toBytes(bytes, i[0]); i[0] += 12;
             }
 
         }
@@ -67,7 +71,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public WearableDataBlock() { }
-            public WearableDataBlock(byte[] bytes, int[] i)
+            public WearableDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -111,7 +115,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public ObjectDataBlock() { }
-            public ObjectDataBlock(byte[] bytes, int[] i)
+            public ObjectDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -156,7 +160,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public VisualParamBlock() { }
-            public VisualParamBlock(byte[] bytes, int[] i)
+            public VisualParamBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -190,7 +194,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 length += AgentData.getLength();
                 for (int j = 0; j < WearableData.length; j++)
                     length += WearableData[j].getLength();
-                length += ObjectData.length;
+                length += ObjectData.getLength();
                 for (int j = 0; j < VisualParam.length; j++)
                     length += VisualParam[j].getLength();
                 return length;
@@ -216,7 +220,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             VisualParam = null;
         }
 
-        public AgentSetAppearancePacket(byte[] bytes, int[] i) 
+        public AgentSetAppearancePacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -224,7 +228,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         }
 
         @Override
-		public void FromBytes(byte[] bytes, int[] i, int[] packetEnd, byte[] zeroBuffer)
+		public void FromBytes(byte[] bytes, int[] i, int[] packetEnd, byte[] zeroBuffer) throws MalformedDataException
         {
             header.FromBytes(bytes, i, packetEnd);
             if (header.Zerocoded && zeroBuffer != null)
@@ -252,7 +256,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             { VisualParam[j].FromBytes(bytes, i); }
         }
 
-        public AgentSetAppearancePacket(Header head, byte[] bytes, int[] i)
+        public AgentSetAppearancePacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -260,7 +264,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         }
 
         @Override
-		public void FromBytes(Header header, byte[] bytes, int[] i, int[] packetEnd)
+		public void FromBytes(Header header, byte[] bytes, int[] i, int[] packetEnd) throws MalformedDataException
         {
             this.header =  header;
             AgentData.FromBytes(bytes, i);
@@ -288,7 +292,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             int length = 10;
             length += AgentData.getLength();
-            length += ObjectData.length;
+            length += ObjectData.getLength();
             length++;
             for (int j = 0; j < WearableData.length; j++) { length += WearableData[j].getLength(); }
             length++;

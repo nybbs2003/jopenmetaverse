@@ -1,5 +1,10 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
+import java.math.BigInteger;
+
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+
 
     public final class AvatarGroupsReplyPacket extends Packet
     {
@@ -18,7 +23,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public AgentDataBlock() { }
-            public AgentDataBlock(byte[] bytes, int[] i)
+            public AgentDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -68,7 +73,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public GroupDataBlock() { }
-            public GroupDataBlock(byte[] bytes, int[] i)
+            public GroupDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -125,7 +130,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public NewGroupDataBlock() { }
-            public NewGroupDataBlock(byte[] bytes, int[] i)
+            public NewGroupDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -159,7 +164,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 length += AgentData.getLength();
                 for (int j = 0; j < GroupData.length; j++)
                     length += GroupData[j].getLength();
-                length += NewGroupData.length;
+                length += NewGroupData.getLength();
                 return length;
             }
         }
@@ -181,7 +186,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             NewGroupData = new NewGroupDataBlock();
         }
 
-        public AvatarGroupsReplyPacket(byte[] bytes, int[] i) 
+        public AvatarGroupsReplyPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -189,7 +194,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         }
 
         @Override
-		public void FromBytes(byte[] bytes, int[] i, int[] packetEnd, byte[] zeroBuffer)
+		public void FromBytes(byte[] bytes, int[] i, int[] packetEnd, byte[] zeroBuffer) throws MalformedDataException
         {
             header.FromBytes(bytes, i, packetEnd);
             if (header.Zerocoded && zeroBuffer != null)
@@ -209,7 +214,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             NewGroupData.FromBytes(bytes, i);
         }
 
-        public AvatarGroupsReplyPacket(Header head, byte[] bytes, int[] i)
+        public AvatarGroupsReplyPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -217,7 +222,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         }
 
         @Override
-		public void FromBytes(Header header, byte[] bytes, int[] i, int[] packetEnd)
+		public void FromBytes(Header header, byte[] bytes, int[] i, int[] packetEnd) throws MalformedDataException
         {
             this.header =  header;
             AgentData.FromBytes(bytes, i);
@@ -237,7 +242,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             int length = 10;
             length += AgentData.getLength();
-            length += NewGroupData.length;
+            length += NewGroupData.getLength();
             length++;
             for (int j = 0; j < GroupData.length; j++) { length += GroupData[j].getLength(); }
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
