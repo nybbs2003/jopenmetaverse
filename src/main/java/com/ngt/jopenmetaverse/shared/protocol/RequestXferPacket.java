@@ -44,7 +44,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     DeleteOnCompletion = (bytes[i[0]++] != 0) ? true : false;
                     UseBigPackets = (bytes[i[0]++] != 0) ? true : false;
                     VFileID.FromBytes(bytes, i[0]); i[0] += 16;
-                    VFileType = (short)(bytes[i[0]++] + (bytes[i[0]++] << 8));
+                    VFileType = (short)Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
                 }
                 catch (Exception e)
                 {

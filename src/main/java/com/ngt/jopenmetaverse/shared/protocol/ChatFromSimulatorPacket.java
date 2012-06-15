@@ -47,7 +47,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     ChatType = (byte)bytes[i[0]++];
                     Audible = (byte)bytes[i[0]++];
                     Position.FromBytes(bytes, i[0]); i[0] += 12;
-                    length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
+                    length = Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
                     Message = new byte[length];
                     Utils.arraycopy(bytes, i[0], Message, 0, length); i[0] +=  length;
                 }

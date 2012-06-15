@@ -98,10 +98,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     FromAgentName = new byte[length];
                     Utils.arraycopy(bytes, i[0], FromAgentName, 0, length); i[0] +=  length;
-                    length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
+                    length = Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
                     Message = new byte[length];
                     Utils.arraycopy(bytes, i[0], Message, 0, length); i[0] +=  length;
-                    length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
+                    length = Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
                     BinaryBucket = new byte[length];
                     Utils.arraycopy(bytes, i[0], BinaryBucket, 0, length); i[0] +=  length;
                 }

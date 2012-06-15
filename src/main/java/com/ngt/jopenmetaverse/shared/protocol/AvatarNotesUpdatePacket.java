@@ -75,7 +75,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     TargetID.FromBytes(bytes, i[0]); i[0] += 16;
-                    length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
+                    length = Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
                     Notes = new byte[length];
                     Utils.arraycopy(bytes, i[0], Notes, 0, length); i[0] +=  length;
                 }

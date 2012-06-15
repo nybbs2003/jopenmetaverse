@@ -60,7 +60,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 			public void FromBytes(byte[] bytes, int[] i) throws MalformedDataException
             {
                     LocalID = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
-                    ReturnType = (long)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    ReturnType = (long)Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
             }
 
             @Override

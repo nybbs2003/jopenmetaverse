@@ -31,7 +31,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 {
                     AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     RequestID.FromBytes(bytes, i[0]); i[0] += 16;
-                    VolumeDetail = (short)(bytes[i[0]++] + (bytes[i[0]++] << 8));
+                    VolumeDetail = (short)Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
                 }
                 catch (Exception e)
                 {

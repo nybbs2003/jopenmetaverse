@@ -42,7 +42,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     SimIP = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                     SimPort = (ushort)((bytes[i[0]++] << 8) + bytes[i[0]++]);
                     RegionHandle = Utils.bytesToULong(bytes, i[0]); i[0] += 8;
-                    length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
+                    length = Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
                     SeedCapability = new byte[length];
                     Utils.arraycopy(bytes, i[0], SeedCapability, 0, length); i[0] +=  length;
                     SimAccess = (byte)bytes[i[0]++];

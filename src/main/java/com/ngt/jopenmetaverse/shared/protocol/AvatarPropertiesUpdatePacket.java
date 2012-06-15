@@ -83,7 +83,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 {
                     ImageID.FromBytes(bytes, i[0]); i[0] += 16;
                     FLImageID.FromBytes(bytes, i[0]); i[0] += 16;
-                    length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
+                    length = Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
                     AboutText = new byte[length];
                     Utils.arraycopy(bytes, i[0], AboutText, 0, length); i[0] +=  length;
                     length = Utils.ubyteToInt(bytes[i[0]++]);

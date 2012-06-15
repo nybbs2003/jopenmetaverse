@@ -86,10 +86,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     System = new byte[length];
                     Utils.arraycopy(bytes, i[0], System, 0, length); i[0] +=  length;
-                    length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
+                    length = Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
                     Message = new byte[length];
                     Utils.arraycopy(bytes, i[0], Message, 0, length); i[0] +=  length;
-                    length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
+                    length = Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
                     Data = new byte[length];
                     Utils.arraycopy(bytes, i[0], Data, 0, length); i[0] +=  length;
                 }

@@ -13,7 +13,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public int getLength()
             {
-                                {
+                {
                     return 3;
                 }
             }
@@ -74,8 +74,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    You = (short)(bytes[i[0]++] + (bytes[i[0]++] << 8));
-                    Prey = (short)(bytes[i[0]++] + (bytes[i[0]++] << 8));
+                    You = (short) Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
+                    Prey = (short)Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
                 }
                 catch (Exception e)
                 {

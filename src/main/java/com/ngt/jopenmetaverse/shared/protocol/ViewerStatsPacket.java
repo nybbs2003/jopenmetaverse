@@ -53,8 +53,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 {
                     AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
-                    IP = (long)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    StartTime = (long)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    IP = (long)Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    StartTime = (long)Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                     RunTime = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
                     SimFPS = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
                     FPS = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
@@ -62,7 +62,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                     Ping = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
                     MetersTraveled = Utils.bytesToDouble(bytes, i[0]); i[0] += 8;
                     RegionsVisited = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
-                    SysRAM = (long)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    SysRAM = (long)Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     SysOS = new byte[length];
                    
@@ -129,9 +129,9 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 try
                 {
-                    World = (long)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    Objects = (long)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    Textures = (long)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    World = (long)Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    Objects = (long)Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    Textures = (long)Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -174,10 +174,10 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 try
                 {
-                    Bytes = (long)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    Packets = (long)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    Compressed = (long)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    Savings = (long)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    Bytes = (long)Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    Packets = (long)Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    Compressed = (long)Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    Savings = (long)Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -223,12 +223,12 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 try
                 {
-                    SendPacket = (long)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    Dropped = (long)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    Resent = (long)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    FailedResends = (long)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    OffCircuit = (long)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    Invalid = (long)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    SendPacket = (long)Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    Dropped = (long)Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    Resent = (long)Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    FailedResends = (long)Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    OffCircuit = (long)Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    Invalid = (long)Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -272,7 +272,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 try
                 {
-                    Type = (long)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    Type = (long)Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                     Value = Utils.bytesToDouble(bytes, i[0]); i[0] += 8;
                 }
                 catch (Exception e)

@@ -91,8 +91,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     ObjectLocalID = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                     PathCurve = (byte)bytes[i[0]++];
                     ProfileCurve = (byte)bytes[i[0]++];
-                    PathBegin = (ushort)(bytes[i[0]++] + (bytes[i[0]++] << 8));
-                    PathEnd = (ushort)(bytes[i[0]++] + (bytes[i[0]++] << 8));
+                    PathBegin = (ushort)Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
+                    PathEnd = (ushort)Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
                     PathScaleX = (byte)bytes[i[0]++];
                     PathScaleY = (byte)bytes[i[0]++];
                     PathShearX = (byte)bytes[i[0]++];
@@ -104,9 +104,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     PathTaperY = (sbyte)bytes[i[0]++];
                     PathRevolutions = (byte)bytes[i[0]++];
                     PathSkew = (sbyte)bytes[i[0]++];
-                    ProfileBegin = (ushort)(bytes[i[0]++] + (bytes[i[0]++] << 8));
-                    ProfileEnd = (ushort)(bytes[i[0]++] + (bytes[i[0]++] << 8));
-                    ProfileHollow = (ushort)(bytes[i[0]++] + (bytes[i[0]++] << 8));
+                    ProfileBegin = (ushort)Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
+                    ProfileEnd = (ushort)Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
+                    ProfileHollow = (ushort)Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
                 }
                 catch (Exception e)
                 {

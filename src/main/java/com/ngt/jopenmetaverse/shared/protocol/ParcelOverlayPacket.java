@@ -31,7 +31,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 try
                 {
                     SequenceID = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
-                    length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
+                    length = Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
                     Data = new byte[length];
                     Utils.arraycopy(bytes, i[0], Data, 0, length); i[0] +=  length;
                 }

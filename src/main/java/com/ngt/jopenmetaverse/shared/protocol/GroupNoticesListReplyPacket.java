@@ -81,10 +81,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 {
                     NoticeID.FromBytes(bytes, i[0]); i[0] += 16;
                     Timestamp = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
+                    length = Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
                     FromName = new byte[length];
                     Utils.arraycopy(bytes, i[0], FromName, 0, length); i[0] +=  length;
-                    length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
+                    length = Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
                     Subject = new byte[length];
                     Utils.arraycopy(bytes, i[0], Subject, 0, length); i[0] +=  length;
                     HasAttachment = (bytes[i[0]++] != 0) ? true : false;

@@ -77,7 +77,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     AggregatePermTextures = (byte)bytes[i[0]++];
                     AggregatePermTexturesOwner = (byte)bytes[i[0]++];
                     Category = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    InventorySerial = (short)(bytes[i[0]++] + (bytes[i[0]++] << 8));
+                    InventorySerial = (short)Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
                     ItemID.FromBytes(bytes, i[0]); i[0] += 16;
                     FolderID.FromBytes(bytes, i[0]); i[0] += 16;
                     FromTaskID.FromBytes(bytes, i[0]); i[0] += 16;

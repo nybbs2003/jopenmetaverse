@@ -78,7 +78,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     ObjectLocalID = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    ParamType = (ushort)(bytes[i[0]++] + (bytes[i[0]++] << 8));
+                    ParamType = (ushort)Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
                     ParamInUse = (bytes[i[0]++] != 0) ? true : false;
                     ParamSize = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                     length = Utils.ubyteToInt(bytes[i[0]++]);

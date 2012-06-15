@@ -80,8 +80,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    X = (ushort)(bytes[i[0]++] + (bytes[i[0]++] << 8));
-                    Y = (ushort)(bytes[i[0]++] + (bytes[i[0]++] << 8));
+                    X = (ushort)Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
+                    Y = (ushort)Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     Name = new byte[length];
                     Utils.arraycopy(bytes, i[0], Name, 0, length); i[0] +=  length;

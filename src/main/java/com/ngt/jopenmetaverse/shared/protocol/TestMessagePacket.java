@@ -27,7 +27,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 try
                 {
-                    test1 = (long)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    test1 = (long)Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -67,9 +67,9 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 try
                 {
-                    test0 = (long)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    test1 = (long)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
-                    test2 = (long)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    test0 = (long)Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    test1 = (long)Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    test2 = (long)Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {

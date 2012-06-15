@@ -100,7 +100,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                     RentPrice = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
                     AABBMin.fromBytes(bytes, i[0]); i[0] += 12;
                     AABBMax.fromBytes(bytes, i[0]); i[0] += 12;
-                    length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
+                    length = Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
                     Bitmap = new byte[length];
                     Utils.arraycopy(bytes, i[0], Bitmap, 0, length); i[0] +=  length;
                     Area = Utils.bytesToInt(bytes, i[0]); i[0]+=4;

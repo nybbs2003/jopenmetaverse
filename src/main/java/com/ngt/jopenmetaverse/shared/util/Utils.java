@@ -568,33 +568,33 @@ public class Utils
 
 	//region BytesTo
 
-	/// <summary>
-	/// Convert the first two bytes starting in the byte array in
-	/// little endian ordering to a signed short integer
-	/// </summary>
-	/// <param name="bytes">An array two bytes or longer</param>
-	/// <returns>A signed short integer, will be zero if a short can't be
-	/// read at the given position</returns>
-	public static short bytesToInt16Lit(byte[] bytes)
-	{
-		return bytesToInt16Lit(bytes, 0);
-	}
-
-	/// <summary>
-	/// Convert the first two bytes starting at the given position in
-	/// little endian ordering to a signed short integer
-	/// </summary>
-	/// <param name="bytes">An array two bytes or longer</param>
-	/// <param name="pos">Position in the array to start reading</param>
-	/// <returns>A signed short integer, will be zero if a short can't be
-	/// read at the given position</returns>
-	public static short bytesToInt16Lit(byte[] bytes, int pos)
-	{
-		//        if (bytes.length <= pos + 1) return 0;
-		//        return (short)(bytes[pos] + (bytes[pos + 1] << 8));
-
-		return ByteBuffer.wrap(bytes).order(ByteOrder.LITTLE_ENDIAN).getShort(pos);        
-	}
+//	/// <summary>
+//	/// Convert the first two bytes starting in the byte array in
+//	/// little endian ordering to a signed short integer
+//	/// </summary>
+//	/// <param name="bytes">An array two bytes or longer</param>
+//	/// <returns>A signed short integer, will be zero if a short can't be
+//	/// read at the given position</returns>
+//	public static short bytesToInt16Lit(byte[] bytes)
+//	{
+//		return bytesToInt16Lit(bytes, 0);
+//	}
+//
+//	/// <summary>
+//	/// Convert the first two bytes starting at the given position in
+//	/// little endian ordering to a signed short integer
+//	/// </summary>
+//	/// <param name="bytes">An array two bytes or longer</param>
+//	/// <param name="pos">Position in the array to start reading</param>
+//	/// <returns>A signed short integer, will be zero if a short can't be
+//	/// read at the given position</returns>
+//	public static short bytesToInt16Lit(byte[] bytes, int pos)
+//	{
+//		//        if (bytes.length <= pos + 1) return 0;
+//		//        return (short)(bytes[pos] + (bytes[pos + 1] << 8));
+//
+//		return ByteBuffer.wrap(bytes).order(ByteOrder.LITTLE_ENDIAN).getShort(pos);        
+//	}
 
 	/// <summary>
 	/// Convert the first two bytes starting in the byte array in
@@ -788,7 +788,9 @@ public class Utils
 	    public static long bytesToUInt(byte[] bytes, int pos)
 	    {
 	        if (bytes.length < pos + 4) return 0;
-	        return ((long)bytes[pos + 0] + ((long)bytes[pos + 1] << 8) + ((long)bytes[pos + 2] << 16) + ((long)bytes[pos + 3] << 24));
+	        return ( ((long)(bytes[pos + 0] & 0xFF)) + (((long)(bytes[pos + 1] & 0xFF)) << 8) 
+	        		+ (((long)(bytes[pos + 2] & 0xFF)) << 16) + (((long)(bytes[pos + 3] & 0xFF)) << 24)
+	        		);
 	    }
 	
 	    /// <summary>
@@ -822,6 +824,33 @@ public class Utils
 	    {
 	        return bytesToULong(bytes, 0);
 	    }
+	    
+		//    /// <summary>
+		//    /// Convert the first four bytes starting at the given position in
+		//    /// little endian ordering to an unsigned integer
+		//    /// </summary>
+		//    /// <param name="bytes">Byte array containing the uint</param>
+		//    /// <param name="pos">Position to start reading the uint from</param>
+		//    /// <returns>An unsigned integer, will be zero if a uint can't be read
+		//    /// at the given position</returns>
+		    public static int bytesToUInt16(byte[] bytes, int pos)
+		    {
+		        if (bytes.length < pos + 2) return 0;
+		        return (bytes[pos + 0] & 0xFF) + ((bytes[pos + 1] & 0xFF) << 8) ;
+		    }
+		
+		    /// <summary>
+		    /// Convert the first four bytes of the given array in little endian
+		    /// ordering to an unsigned integer
+		    /// </summary>
+		    /// <param name="bytes">An array four bytes or longer</param>
+		    /// <returns>An unsigned integer, will be zero if the array contains
+		    /// less than four bytes</returns>
+		    public static int bytesToUInt16(byte[] bytes)
+		    {
+		        return bytesToUInt16(bytes, 0);
+		    }
+	    
 	    
 	//
 	//    /// <summary>

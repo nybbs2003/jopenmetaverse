@@ -49,7 +49,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     ObjectName = new byte[length];
                     Utils.arraycopy(bytes, i[0], ObjectName, 0, length); i[0] +=  length;
-                    length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
+                    length = Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
                     Message = new byte[length];
                     Utils.arraycopy(bytes, i[0], Message, 0, length); i[0] +=  length;
                     ChatChannel = Utils.bytesToInt(bytes, i[0]); i[0]+=4;

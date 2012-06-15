@@ -76,8 +76,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     GenCounter = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    Height = (ushort)(bytes[i[0]++] + (bytes[i[0]++] << 8));
-                    Width = (ushort)(bytes[i[0]++] + (bytes[i[0]++] << 8));
+                    Height = (ushort)Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
+                    Width = (ushort)Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
                 }
                 catch (Exception e)
                 {

@@ -101,7 +101,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     Summary = new byte[length];
                     Utils.arraycopy(bytes, i[0], Summary, 0, length); i[0] +=  length;
-                    length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
+                    length = Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
                     Details = new byte[length];
                     Utils.arraycopy(bytes, i[0], Details, 0, length); i[0] +=  length;
                     length = Utils.ubyteToInt(bytes[i[0]++]);

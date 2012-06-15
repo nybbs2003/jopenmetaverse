@@ -29,7 +29,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     RegionHandle = Utils.bytesToULong(bytes, i[0]); i[0] += 8;
-                    TimeDilation = (ushort)(bytes[i[0]++] + (bytes[i[0]++] << 8));
+                    TimeDilation = (ushort)Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
                 }
                 catch (Exception e)
                 {
@@ -142,8 +142,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     UpdateFlags = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                     PathCurve = (byte)bytes[i[0]++];
                     ProfileCurve = (byte)bytes[i[0]++];
-                    PathBegin = (ushort)(bytes[i[0]++] + (bytes[i[0]++] << 8));
-                    PathEnd = (ushort)(bytes[i[0]++] + (bytes[i[0]++] << 8));
+                    PathBegin = (ushort)Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
+                    PathEnd = (ushort)Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
                     PathScaleX = (byte)bytes[i[0]++];
                     PathScaleY = (byte)bytes[i[0]++];
                     PathShearX = (byte)bytes[i[0]++];
@@ -155,19 +155,19 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     PathTaperY = (sbyte)bytes[i[0]++];
                     PathRevolutions = (byte)bytes[i[0]++];
                     PathSkew = (sbyte)bytes[i[0]++];
-                    ProfileBegin = (ushort)(bytes[i[0]++] + (bytes[i[0]++] << 8));
-                    ProfileEnd = (ushort)(bytes[i[0]++] + (bytes[i[0]++] << 8));
-                    ProfileHollow = (ushort)(bytes[i[0]++] + (bytes[i[0]++] << 8));
-                    length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
+                    ProfileBegin = (ushort)Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
+                    ProfileEnd = (ushort)Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
+                    ProfileHollow = (ushort)Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
+                    length = Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
                     TextureEntry = new byte[length];
                     Utils.arraycopy(bytes, i[0], TextureEntry, 0, length); i[0] +=  length;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     TextureAnim = new byte[length];
                     Utils.arraycopy(bytes, i[0], TextureAnim, 0, length); i[0] +=  length;
-                    length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
+                    length = Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
                     NameValue = new byte[length];
                     Utils.arraycopy(bytes, i[0], NameValue, 0, length); i[0] +=  length;
-                    length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
+                    length = Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
                     Data = new byte[length];
                     Utils.arraycopy(bytes, i[0], Data, 0, length); i[0] +=  length;
                     length = Utils.ubyteToInt(bytes[i[0]++]);

@@ -40,7 +40,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     TargetType = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
                     Status = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
                     Size = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
-                    length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
+                    length = Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
                     Params = new byte[length];
                     Utils.arraycopy(bytes, i[0], Params, 0, length); i[0] +=  length;
                 }

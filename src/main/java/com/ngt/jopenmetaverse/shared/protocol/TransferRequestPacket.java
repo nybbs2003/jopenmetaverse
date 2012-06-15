@@ -38,7 +38,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     ChannelType = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
                     SourceType = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
                     Priority = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
-                    length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
+                    length = Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
                     Params = new byte[length];
                     Utils.arraycopy(bytes, i[0], Params, 0, length); i[0] +=  length;
                 }

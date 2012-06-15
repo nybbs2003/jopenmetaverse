@@ -35,7 +35,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 {
                     AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
-                    Flags = ((long)bytes[i[0]++] + ((long)bytes[i[0]++] << 8) + ((long)bytes[i[0]++] << 16) + ((long)bytes[i[0]++] << 24));
+                    Flags = (long)Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -81,7 +81,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 {
                     ItemID.FromBytes(bytes, i[0]); i[0] += 16;
                     AssetID.FromBytes(bytes, i[0]); i[0] += 16;
-                    GestureFlags = ((long)bytes[i[0]++] + ((long)bytes[i[0]++] << 8) + ((long)bytes[i[0]++] << 16) + ((long)bytes[i[0]++] << 24));
+                    GestureFlags = (long)Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {

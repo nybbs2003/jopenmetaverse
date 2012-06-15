@@ -81,7 +81,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     GroupID.FromBytes(bytes, i[0]); i[0] += 16;
-                    length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
+                    length = Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
                     Charter = new byte[length];
                     Utils.arraycopy(bytes, i[0], Charter, 0, length); i[0] +=  length;
                     ShowInList = (bytes[i[0]++] != 0) ? true : false;

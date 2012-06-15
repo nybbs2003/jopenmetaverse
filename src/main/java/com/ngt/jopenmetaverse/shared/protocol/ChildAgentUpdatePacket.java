@@ -82,7 +82,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     AlwaysRun = (bytes[i[0]++] != 0) ? true : false;
                     PreyAgent.FromBytes(bytes, i[0]); i[0] += 16;
                     AgentAccess = (byte)bytes[i[0]++];
-                    length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
+                    length = Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
                     AgentTextures = new byte[length];
                     Utils.arraycopy(bytes, i[0], AgentTextures, 0, length); i[0] +=  length;
                     ActiveGroupID.FromBytes(bytes, i[0]); i[0] += 16;
@@ -285,7 +285,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 int length;
                 try
                 {
-                    length = (bytes[i[0]++] + (bytes[i[0]++] << 8));
+                    length = Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
                     NVPairs = new byte[length];
                     Utils.arraycopy(bytes, i[0], NVPairs, 0, length); i[0] +=  length;
                 }
