@@ -14,6 +14,9 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         {
             public UUID AgentID;
             public UUID SessionID;
+            /**
+             * S
+             */
             public long SerialNum;
 
             @Override

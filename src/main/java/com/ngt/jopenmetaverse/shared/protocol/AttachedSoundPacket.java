@@ -1,5 +1,8 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+
 
     public final class AttachedSoundPacket extends Packet
     {
@@ -21,7 +24,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public DataBlockBlock() { }
-            public DataBlockBlock(byte[] bytes, int[] i)
+            public DataBlockBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -60,7 +63,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
                         {
                 int length = 8;
-                length += DataBlock.length;
+                length += DataBlock.getLength();
                 return length;
             }
         }
@@ -77,7 +80,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             DataBlock = new DataBlockBlock();
         }
 
-        public AttachedSoundPacket(byte[] bytes, int[] i) 
+        public AttachedSoundPacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -96,7 +99,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             DataBlock.FromBytes(bytes, i);
         }
 
-        public AttachedSoundPacket(Header head, byte[] bytes, int[] i)
+        public AttachedSoundPacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -114,7 +117,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 			public byte[] ToBytes()
         {
             int length = 8;
-            length += DataBlock.length;
+            length += DataBlock.getLength();
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
             int[] i = new int[]{0};
