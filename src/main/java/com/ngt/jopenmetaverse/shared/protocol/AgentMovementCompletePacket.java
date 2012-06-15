@@ -1,5 +1,11 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
+import java.math.BigInteger;
+
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.types.Vector3;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+
 
     public final class AgentMovementCompletePacket extends Packet
     {
@@ -18,7 +24,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public AgentDataBlock() { }
-            public AgentDataBlock(byte[] bytes, int[] i)
+            public AgentDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -51,6 +57,9 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             public Vector3 Position;
             public Vector3 LookAt;
+            /**
+             * Unsigned Long, only 8 bytes should be used and stored
+             */
             public BigInteger RegionHandle;
             public long Timestamp;
 
@@ -63,7 +72,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public DataBlock() { }
-            public DataBlock(byte[] bytes, int[] i)
+            public DataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -73,8 +82,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    Position.FromBytes(bytes, i[0]); i[0] += 12;
-                    LookAt.FromBytes(bytes, i[0]); i[0] += 12;
+                    Position.fromBytes(bytes, i[0]); i[0] += 12;
+                    LookAt.fromBytes(bytes, i[0]); i[0] += 12;
                     RegionHandle = Utils.bytesToULong(bytes, i[0]); i[0] += 8;
                     Timestamp = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                 }
@@ -87,8 +96,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Position.ToBytes(bytes, i[0]); i[0] += 12;
-                LookAt.ToBytes(bytes, i[0]); i[0] += 12;
+                Position.fromBytes(bytes, i[0]); i[0] += 12;
+                LookAt.fromBytes(bytes, i[0]); i[0] += 12;
                 Utils.ulongToBytes(RegionHandle, bytes, i[0]); i[0] += 8;
                 Utils.uintToBytes(Timestamp, bytes, i[0]); i[0] += 4;
             }
@@ -111,7 +120,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             }
 
             public SimDataBlock() { }
-            public SimDataBlock(byte[] bytes, int[] i)
+            public SimDataBlock(byte[] bytes, int[] i) throws MalformedDataException
             {
                 FromBytes(bytes, i);
             }
@@ -148,8 +157,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
                         {
                 int length = 10;
                 length += AgentData.getLength();
-                length += Data.length;
-                length += SimData.length;
+                length += Data.getLength();
+                length += SimData.getLength();
                 return length;
             }
         }
@@ -170,7 +179,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             SimData = new SimDataBlock();
         }
 
-        public AgentMovementCompletePacket(byte[] bytes, int[] i) 
+        public AgentMovementCompletePacket(byte[] bytes, int[] i) throws MalformedDataException 
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -178,7 +187,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         }
 
         @Override
-		public void FromBytes(byte[] bytes, int[] i, int[] packetEnd, byte[] zeroBuffer)
+		public void FromBytes(byte[] bytes, int[] i, int[] packetEnd, byte[] zeroBuffer) throws MalformedDataException
         {
             header.FromBytes(bytes, i, packetEnd);
             if (header.Zerocoded && zeroBuffer != null)
@@ -191,7 +200,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
             SimData.FromBytes(bytes, i);
         }
 
-        public AgentMovementCompletePacket(Header head, byte[] bytes, int[] i)
+        public AgentMovementCompletePacket(Header head, byte[] bytes, int[] i) throws MalformedDataException
 		{
 		this();
             int[] packetEnd = new int[] {bytes.length - 1};
@@ -199,7 +208,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
         }
 
         @Override
-		public void FromBytes(Header header, byte[] bytes, int[] i, int[] packetEnd)
+		public void FromBytes(Header header, byte[] bytes, int[] i, int[] packetEnd) throws MalformedDataException
         {
             this.header =  header;
             AgentData.FromBytes(bytes, i);
@@ -212,8 +221,8 @@ package com.ngt.jopenmetaverse.shared.protocol;
         {
             int length = 10;
             length += AgentData.getLength();
-            length += Data.length;
-            length += SimData.length;
+            length += Data.getLength();
+            length += SimData.getLength();
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
             int[] i = new int[]{0};

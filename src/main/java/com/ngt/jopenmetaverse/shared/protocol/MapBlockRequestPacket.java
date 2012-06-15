@@ -82,10 +82,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
             {
                 try
                 {
-                    MinX = (ushort)Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
-                    MaxX = (ushort)Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
-                    MinY = (ushort)Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
-                    MaxY = (ushort)Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
+                    MinX = (int)Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
+                    MaxX = (int)Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
+                    MinY = (int)Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
+                    MaxY = (int)Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
                 }
                 catch (Exception e)
                 {

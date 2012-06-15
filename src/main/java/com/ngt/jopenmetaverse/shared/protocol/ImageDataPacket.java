@@ -33,7 +33,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     ID.FromBytes(bytes, i[0]); i[0] += 16;
                     Codec = (byte)bytes[i[0]++];
                     Size = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    Packets = (ushort)Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
+                    Packets = (int)Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
                 }
                 catch (Exception e)
                 {

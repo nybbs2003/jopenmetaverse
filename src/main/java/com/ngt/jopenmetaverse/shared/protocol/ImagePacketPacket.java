@@ -29,7 +29,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                 try
                 {
                     ID.FromBytes(bytes, i[0]); i[0] += 16;
-                    Packet = (ushort)Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
+                    Packet = (int)Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
                 }
                 catch (Exception e)
                 {

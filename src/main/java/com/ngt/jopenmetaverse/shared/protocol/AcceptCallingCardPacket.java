@@ -225,7 +225,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         @Override
-			public byte[][] ToBytesMultiple()
+        public byte[][] ToBytesMultiple()
         {
             List<byte[]> packets = new LinkedList<byte[]>();
             int[] i = new int[]{0};

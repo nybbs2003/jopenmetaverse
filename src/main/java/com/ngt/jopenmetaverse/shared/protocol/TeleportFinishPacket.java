@@ -40,7 +40,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
                     AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     LocationID = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                     SimIP = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    SimPort = (ushort)((bytes[i[0]++] << 8) + bytes[i[0]++]);
+                    SimPort = (int)Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
                     RegionHandle = Utils.bytesToULong(bytes, i[0]); i[0] += 8;
                     length = Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
                     SeedCapability = new byte[length];
