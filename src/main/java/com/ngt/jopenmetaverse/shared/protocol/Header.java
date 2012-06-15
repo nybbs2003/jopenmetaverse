@@ -14,10 +14,10 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         public boolean Resent;
         public boolean Zerocoded;
         public boolean AppendedAcks;
-        public long Sequence;
-        public int ID;
+        public long Sequence; //Actually a uint, need only 4 unsigned bytes
+        public int ID; //Unsigned Short
         public PacketFrequency Frequency;
-        public long[] AckList;
+        public long[] AckList; //array of uint
 
         public void ToBytes(byte[] bytes, int[] i)
         {
@@ -31,7 +31,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             bytes[i[0]++] = flags;
             
             // Sequence number
-            //TODO need to take only 4 bytes out of 8 bytes of long
+            
+            //need to take only 4 bytes out of 8 bytes of long
             Utils.intToBytes((int)Sequence, bytes, i[0]);
             i[0] += 4;
 
@@ -54,7 +55,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                     // 4 byte ID
                     bytes[i[0]++] = (byte)0xFF;
                     bytes[i[0]++] = (byte)0xFF;
-                    Utils.intToBytes(ID, bytes, i[0]);
+                    Utils.int16ToBytes((short)ID, bytes, i[0]);
                     i[0] += 2;
                     break;
             }
@@ -78,7 +79,6 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         /// array, will be updated with the ending position of the ACK list</param>
         public void AcksToBytes(byte[] bytes, int i[])
         {
-        	
             for(int j=0; j < AckList.length; j++ )
             {
                 Utils.intToBytes((int)AckList[j], bytes, i[0]);
@@ -104,25 +104,27 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             header.Reliable = (flags & Helpers.MSG_RELIABLE) != 0;
             header.Resent = (flags & Helpers.MSG_RESENT) != 0;
             header.Zerocoded = (flags & Helpers.MSG_ZEROCODED) != 0;
-            header.Sequence = (long)((bytes[pos[0] + 1] << 24) + (bytes[pos[0] + 2] << 16) + (bytes[pos[0] + 3] << 8) + bytes[pos[0] + 4]);
-
+//            header.Sequence = (long)((bytes[pos[0] + 1] << 24) + (bytes[pos[0] + 2] << 16) + (bytes[pos[0] + 3] << 8) + bytes[pos[0] + 4]);
+            header.Sequence = (long)Utils.bytesToInt(bytes, pos[0]+1);
+            
             // Set the frequency and packet ID number
-            if (bytes[pos[0] + 6] == 0xFF)
+            if (bytes[pos[0] + 6] == (byte)0xFF)
             {
-                if (bytes[pos[0] + 7] == 0xFF)
+                if (bytes[pos[0] + 7] == (byte)0xFF)
                 {
                     header.Frequency = PacketFrequency.Low;
                     if (header.Zerocoded && bytes[pos[0] + 8] == 0)
-                        header.ID = bytes[pos[0] + 10];
+                        header.ID = Utils.ubyteToInt(bytes[pos[0] + 10]);
                     else
-                        header.ID = (int)((bytes[pos[0] + 8] << 8) + bytes[pos[0] + 9]);
+//                        header.ID = (int)((bytes[pos[0] + 8] << 8) + bytes[pos[0] + 9]);
+                    	header.ID = (int) Utils.bytesToInt16(bytes, pos[0] + 8);
                     
                     pos[0] += 10;
                 }
                 else
                 {
                     header.Frequency = PacketFrequency.Medium;
-                    header.ID = bytes[pos[0] + 7];
+                    header.ID = Utils.ubyteToInt(bytes[pos[0] + 7]);
 
                     pos[0] += 8;
                 }
@@ -130,7 +132,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             else
             {
                 header.Frequency = PacketFrequency.High;
-                header.ID = bytes[pos[0] + 6];
+                header.ID = Utils.ubyteToInt(bytes[pos[0] + 6]);
 
                 pos[0] += 7;
             }
@@ -156,11 +158,12 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 
                 for (int i = 0; i < count; i++)
                 {
-                    header.AckList[i] = (long)(
-                        (bytes[(packetEnd[0] - i * 4) - 3] << 24) |
-                        (bytes[(packetEnd[0] - i * 4) - 2] << 16) |
-                        (bytes[(packetEnd[0] - i * 4) - 1] <<  8) |
-                        (bytes[(packetEnd[0] - i * 4)    ]));
+//                    header.AckList[i] = (long)(
+//                        (bytes[(packetEnd[0] - i * 4) - 3] << 24) |
+//                        (bytes[(packetEnd[0] - i * 4) - 2] << 16) |
+//                        (bytes[(packetEnd[0] - i * 4) - 1] <<  8) |
+//                        (bytes[(packetEnd[0] - i * 4)    ]));
+                    header.AckList[i] = Utils.bytesToUInt(bytes, packetEnd[0] - i * 4 -3);
                 }
 
                 packetEnd[0] -= (count * 4);

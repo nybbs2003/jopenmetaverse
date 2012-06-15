@@ -32,7 +32,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 {
 //                    ID = (ulong)((ulong)bytes[i[0]++] + ((ulong)bytes[i[0]++] << 8) + ((ulong)bytes[i[0]++] << 16) + ((ulong)bytes[i[0]++] << 24) + ((ulong)bytes[i[0]++] << 32) + ((ulong)bytes[i[0]++] << 40) + ((ulong)bytes[i[0]++] << 48) + ((ulong)bytes[i[0]++] << 56));
                     ID = Utils.bytesToULong(bytes, i[0]); i[0] += 8;
-                    Result = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+//                    Result = (int)(bytes[i[0]++] + (bytes[i[0]++] << 8) + (bytes[i[0]++] << 16) + (bytes[i[0]++] << 24));
+                    Result = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
                 }
                 catch (Exception e)
                 {

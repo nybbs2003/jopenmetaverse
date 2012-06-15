@@ -605,7 +605,7 @@ public class Utils
 	/// read at the given position</returns>
 	public static short bytesToInt16(byte[] bytes)
 	{
-		return bytesToInt16Lit(bytes, 0);
+		return bytesToInt16(bytes, 0);
 	}
 
 	/// <summary>
@@ -820,7 +820,7 @@ public class Utils
 	    /// less than four bytes</returns>
 	    public static BigInteger bytesToULong(byte[] bytes)
 	    {
-	        return bytesToUInt(bytes, 0);
+	        return bytesToULong(bytes, 0);
 	    }
 	    
 	//
@@ -911,6 +911,24 @@ public class Utils
 		System.arraycopy(bytes, 0, dest, pos, 2);
 	}
 
+	public static byte[] int16ToBytes(short value)
+	{
+		//        byte[] bytes = new byte[2];
+		//        bytes[0] = (byte)(value % 256);
+		//        bytes[1] = (byte)((value >> 8) % 256);
+		//        return bytes;
+		return ByteBuffer.allocate(2).order(ByteOrder.BIG_ENDIAN).putShort(value).array();
+	}
+
+	public static void int16ToBytes(short value, byte[] dest, int pos)
+	{
+		//        dest[pos] = (byte)(value % 256);
+		//        dest[pos + 1] = (byte)((value >> 8) % 256);
+		byte[] bytes= int16ToBytes(value);
+		System.arraycopy(bytes, 0, dest, pos, 2);
+	}
+	
+	
 	//    public static byte[] UInt16ToBytes(ushort value)
 	//    {
 	//        byte[] bytes = new byte[2];
@@ -1427,6 +1445,11 @@ public class Utils
 		return fval;
 	}
 
+	public static int ubyteToInt(byte val)
+	{
+		return val & 0xff;
+	}
+	
 	//    public static float UInt16ToFloat(byte[] bytes, int pos, float lower, float upper)
 	//    {
 	//        ushort val = BytesToUInt16(bytes, pos);
