@@ -3,6 +3,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 import java.util.ArrayList;
 import java.util.List;
 import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.types.Vector3;
 import com.ngt.jopenmetaverse.shared.util.Utils;
 	public final class RezObjectFromNotecardPacket extends Packet
     {
@@ -89,8 +90,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 {
                     FromTaskID.FromBytes(bytes, i[0]); i[0] += 16;
                     BypassRaycast = (byte)bytes[i[0]++];
-                    RayStart.FromBytes(bytes, i[0]); i[0] += 12;
-                    RayEnd.FromBytes(bytes, i[0]); i[0] += 12;
+                    RayStart.fromBytes(bytes, i[0]); i[0] += 12;
+                    RayEnd.fromBytes(bytes, i[0]); i[0] += 12;
                     RayTargetID.FromBytes(bytes, i[0]); i[0] += 16;
                     RayEndIsIntersection = (bytes[i[0]++] != 0) ? true : false;
                     RezSelected = (bytes[i[0]++] != 0) ? true : false;
@@ -111,8 +112,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 FromTaskID.ToBytes(bytes, i[0]); i[0] += 16;
                 bytes[i[0]++] = BypassRaycast;
-                RayStart.ToBytes(bytes, i[0]); i[0] += 12;
-                RayEnd.ToBytes(bytes, i[0]); i[0] += 12;
+                RayStart.toBytes(bytes, i[0]); i[0] += 12;
+                RayEnd.toBytes(bytes, i[0]); i[0] += 12;
                 RayTargetID.ToBytes(bytes, i[0]); i[0] += 16;
                 bytes[i[0]++] = (byte)((RayEndIsIntersection) ? 1 : 0);
                 bytes[i[0]++] = (byte)((RezSelected) ? 1 : 0);
@@ -214,8 +215,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                         {
                 int length = 11;
                 length += AgentData.getLength();
-                length += RezData.length;
-                length += NotecardData.length;
+                length += RezData.getLength();
+                length += NotecardData.getLength();
                 for (int j = 0; j < InventoryData.length; j++)
                     length += InventoryData[j].getLength();
                 return length;
@@ -299,8 +300,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         {
             int length = 10;
             length += AgentData.getLength();
-            length += RezData.length;
-            length += NotecardData.length;
+            length += RezData.getLength();
+            length += NotecardData.getLength();
             length++;
             for (int j = 0; j < InventoryData.length; j++) { length += InventoryData[j].getLength(); }
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
@@ -332,8 +333,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             }
 
             fixedLength += AgentData.getLength();
-            fixedLength += RezData.length;
-            fixedLength += NotecardData.length;
+            fixedLength += RezData.getLength();
+            fixedLength += NotecardData.getLength();
             byte[] fixedBytes = new byte[fixedLength];
             header.ToBytes(fixedBytes, i);
             AgentData.ToBytes(fixedBytes, i);

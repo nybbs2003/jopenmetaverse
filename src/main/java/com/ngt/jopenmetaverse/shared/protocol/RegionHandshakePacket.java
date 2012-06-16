@@ -232,9 +232,9 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         {
                         {
                 int length = 10;
-                length += RegionInfo.length;
-                length += RegionInfo2.length;
-                length += RegionInfo3.length;
+                length += RegionInfo.getLength();
+                length += RegionInfo2.getLength();
+                length += RegionInfo3.getLength();
                 return length;
             }
         }
@@ -297,9 +297,9 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 			public byte[] ToBytes()
         {
             int length = 10;
-            length += RegionInfo.length;
-            length += RegionInfo2.length;
-            length += RegionInfo3.length;
+            length += RegionInfo.getLength();
+            length += RegionInfo2.getLength();
+            length += RegionInfo3.getLength();
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
             int[] i = new int[]{0};

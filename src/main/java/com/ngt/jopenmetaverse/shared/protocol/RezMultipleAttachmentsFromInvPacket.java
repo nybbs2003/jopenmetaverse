@@ -175,7 +175,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                         {
                 int length = 11;
                 length += AgentData.getLength();
-                length += HeaderData.length;
+                length += HeaderData.getLength();
                 for (int j = 0; j < ObjectData.length; j++)
                     length += ObjectData[j].getLength();
                 return length;
@@ -255,7 +255,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         {
             int length = 10;
             length += AgentData.getLength();
-            length += HeaderData.length;
+            length += HeaderData.getLength();
             length++;
             for (int j = 0; j < ObjectData.length; j++) { length += ObjectData[j].getLength(); }
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
@@ -286,7 +286,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             }
 
             fixedLength += AgentData.getLength();
-            fixedLength += HeaderData.length;
+            fixedLength += HeaderData.getLength();
             byte[] fixedBytes = new byte[fixedLength];
             header.ToBytes(fixedBytes, i);
             AgentData.ToBytes(fixedBytes, i);
