@@ -3,6 +3,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 import java.util.ArrayList;
 import java.util.List;
 import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.types.Vector3;
 import com.ngt.jopenmetaverse.shared.util.Utils;
 	public final class UserReportPacket extends Packet
     {
@@ -92,7 +93,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 {
                     ReportType = (byte)bytes[i[0]++];
                     Category = (byte)bytes[i[0]++];
-                    Position.FromBytes(bytes, i[0]); i[0] += 12;
+                    Position.fromBytes(bytes, i[0]); i[0] += 12;
                     CheckFlags = (byte)bytes[i[0]++];
                     ScreenshotID.FromBytes(bytes, i[0]); i[0] += 16;
                     ObjectID.FromBytes(bytes, i[0]); i[0] += 16;
@@ -122,7 +123,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 bytes[i[0]++] = ReportType;
                 bytes[i[0]++] = Category;
-                Position.ToBytes(bytes, i[0]); i[0] += 12;
+                Position.toBytes(bytes, i[0]); i[0] += 12;
                 bytes[i[0]++] = CheckFlags;
                 ScreenshotID.ToBytes(bytes, i[0]); i[0] += 16;
                 ObjectID.ToBytes(bytes, i[0]); i[0] += 16;
@@ -147,7 +148,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                         {
                 int length = 10;
                 length += AgentData.getLength();
-                length += ReportData.length;
+                length += ReportData.getLength();
                 return length;
             }
         }
@@ -207,7 +208,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         {
             int length = 10;
             length += AgentData.getLength();
-            length += ReportData.length;
+            length += ReportData.getLength();
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
             int[] i = new int[]{0};

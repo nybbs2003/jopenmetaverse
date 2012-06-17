@@ -54,7 +54,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         {
                         {
                 int length = 10;
-                length += Info.length;
+                length += Info.getLength();
                 return length;
             }
         }
@@ -108,7 +108,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 			public byte[] ToBytes()
         {
             int length = 10;
-            length += Info.length;
+            length += Info.getLength();
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
             int[] i = new int[]{0};

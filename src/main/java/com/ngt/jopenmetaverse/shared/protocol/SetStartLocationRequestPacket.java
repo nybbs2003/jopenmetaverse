@@ -3,6 +3,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 import java.util.ArrayList;
 import java.util.List;
 import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.types.Vector3;
 import com.ngt.jopenmetaverse.shared.util.Utils;
 	public final class SetStartLocationRequestPacket extends Packet
     {
@@ -83,8 +84,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                     SimName = new byte[length];
                     Utils.arraycopy(bytes, i[0], SimName, 0, length); i[0] +=  length;
                     LocationID = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    LocationPos.FromBytes(bytes, i[0]); i[0] += 12;
-                    LocationLookAt.FromBytes(bytes, i[0]); i[0] += 12;
+                    LocationPos.fromBytes(bytes, i[0]); i[0] += 12;
+                    LocationLookAt.fromBytes(bytes, i[0]); i[0] += 12;
                 }
                 catch (Exception e)
                 {
@@ -98,8 +99,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 bytes[i[0]++] = (byte)SimName.length;
                 Utils.arraycopy(SimName, 0, bytes, i[0], SimName.length); i[0] +=  SimName.length;
                 Utils.uintToBytes(LocationID, bytes, i[0]); i[0] += 4;
-                LocationPos.ToBytes(bytes, i[0]); i[0] += 12;
-                LocationLookAt.ToBytes(bytes, i[0]); i[0] += 12;
+                LocationPos.toBytes(bytes, i[0]); i[0] += 12;
+                LocationLookAt.toBytes(bytes, i[0]); i[0] += 12;
             }
 
         }
@@ -110,7 +111,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                         {
                 int length = 10;
                 length += AgentData.getLength();
-                length += StartLocationData.length;
+                length += StartLocationData.getLength();
                 return length;
             }
         }
@@ -170,7 +171,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         {
             int length = 10;
             length += AgentData.getLength();
-            length += StartLocationData.length;
+            length += StartLocationData.getLength();
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
             int[] i = new int[]{0};

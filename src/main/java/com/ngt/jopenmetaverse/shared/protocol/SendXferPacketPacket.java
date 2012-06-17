@@ -1,5 +1,6 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import com.ngt.jopenmetaverse.shared.types.UUID;
@@ -59,7 +60,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                                 {
                     int length = 2;
-                    if (Data != null) { length += Data.getLength(); }
+                    if (Data != null) { length += Data.length; }
                     return length;
                 }
             }
@@ -101,8 +102,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         {
                         {
                 int length = 7;
-                length += XferID.length;
-                length += DataPacket.length;
+                length += XferID.getLength();
+                length += DataPacket.getLength();
                 return length;
             }
         }
@@ -160,8 +161,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 			public byte[] ToBytes()
         {
             int length = 7;
-            length += XferID.length;
-            length += DataPacket.length;
+            length += XferID.getLength();
+            length += DataPacket.getLength();
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
             int[] i = new int[]{0};

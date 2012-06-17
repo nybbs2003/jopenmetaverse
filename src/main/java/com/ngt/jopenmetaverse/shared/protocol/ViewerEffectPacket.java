@@ -86,7 +86,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                     Type = (byte)bytes[i[0]++];
                     Duration = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
                     Color = new byte[4];
-                    Utils.arraycopy(bytes, i[0], Color, 0, 4); i += 4;
+                    Utils.arraycopy(bytes, i[0], Color, 0, 4); i[0] += 4;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     TypeData = new byte[length];
                     Utils.arraycopy(bytes, i[0], TypeData, 0, length); i[0] +=  length;
@@ -104,7 +104,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
                 bytes[i[0]++] = Type;
                 Utils.floatToBytes(Duration, bytes, i[0]); i[0] += 4;
-                Utils.arraycopy(Color, 0, bytes, i[0], 4);i += 4;
+                Utils.arraycopy(Color, 0, bytes, i[0], 4); i[0] += 4;
                 bytes[i[0]++] = (byte)TypeData.length;
                 Utils.arraycopy(TypeData, 0, bytes, i[0], TypeData.length); i[0] +=  TypeData.length;
             }

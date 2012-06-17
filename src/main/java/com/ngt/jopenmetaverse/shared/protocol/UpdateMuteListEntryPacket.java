@@ -110,7 +110,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                         {
                 int length = 10;
                 length += AgentData.getLength();
-                length += MuteData.length;
+                length += MuteData.getLength();
                 return length;
             }
         }
@@ -169,7 +169,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         {
             int length = 10;
             length += AgentData.getLength();
-            length += MuteData.length;
+            length += MuteData.getLength();
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
             int[] i = new int[]{0};

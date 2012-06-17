@@ -6,6 +6,7 @@ import java.util.List;
 import com.ngt.jopenmetaverse.shared.types.Quaternion;
 import com.ngt.jopenmetaverse.shared.types.UUID;
 import com.ngt.jopenmetaverse.shared.types.Vector3;
+import com.ngt.jopenmetaverse.shared.util.Utils;
 
 
 

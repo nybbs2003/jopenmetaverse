@@ -3,6 +3,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 import java.util.ArrayList;
 import java.util.List;
 import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.types.Vector3d;
 import com.ngt.jopenmetaverse.shared.util.Utils;
 	public final class SendPostcardPacket extends Packet
     {
@@ -50,7 +51,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                     AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
                     AssetID.FromBytes(bytes, i[0]); i[0] += 16;
-                    PosGlobal.FromBytes(bytes, i[0]); i[0] += 24;
+                    PosGlobal.fromBytes(bytes, i[0]); i[0] += 24;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     To = new byte[length];
                     Utils.arraycopy(bytes, i[0], To, 0, length); i[0] +=  length;
@@ -81,7 +82,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
                 SessionID.ToBytes(bytes, i[0]); i[0] += 16;
                 AssetID.ToBytes(bytes, i[0]); i[0] += 16;
-                PosGlobal.ToBytes(bytes, i[0]); i[0] += 24;
+                PosGlobal.toBytes(bytes, i[0]); i[0] += 24;
                 bytes[i[0]++] = (byte)To.length;
                 Utils.arraycopy(To, 0, bytes, i[0], To.length); i[0] +=  To.length;
                 bytes[i[0]++] = (byte)From.length;

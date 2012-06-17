@@ -54,7 +54,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         {
                         {
                 int length = 7;
-                length += PingID.length;
+                length += PingID.getLength();
                 return length;
             }
         }
@@ -108,7 +108,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 			public byte[] ToBytes()
         {
             int length = 7;
-            length += PingID.length;
+            length += PingID.getLength();
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
             int[] i = new int[]{0};

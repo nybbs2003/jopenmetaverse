@@ -2,7 +2,10 @@ package com.ngt.jopenmetaverse.shared.protocol;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.ngt.jopenmetaverse.shared.types.Quaternion;
 import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.types.Vector3;
 import com.ngt.jopenmetaverse.shared.util.Utils;
 	public final class ScriptSensorReplyPacket extends Packet
     {
@@ -84,9 +87,9 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                     ObjectID.FromBytes(bytes, i[0]); i[0] += 16;
                     OwnerID.FromBytes(bytes, i[0]); i[0] += 16;
                     GroupID.FromBytes(bytes, i[0]); i[0] += 16;
-                    Position.FromBytes(bytes, i[0]); i[0] += 12;
-                    Velocity.FromBytes(bytes, i[0]); i[0] += 12;
-                    Rotation.FromBytes(bytes, i[0], true); i[0] += 12;
+                    Position.fromBytes(bytes, i[0]); i[0] += 12;
+                    Velocity.fromBytes(bytes, i[0]); i[0] += 12;
+                    Rotation.fromBytes(bytes, i[0], true); i[0] += 12;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     Name = new byte[length];
                     Utils.arraycopy(bytes, i[0], Name, 0, length); i[0] +=  length;
@@ -105,9 +108,9 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 ObjectID.ToBytes(bytes, i[0]); i[0] += 16;
                 OwnerID.ToBytes(bytes, i[0]); i[0] += 16;
                 GroupID.ToBytes(bytes, i[0]); i[0] += 16;
-                Position.ToBytes(bytes, i[0]); i[0] += 12;
-                Velocity.ToBytes(bytes, i[0]); i[0] += 12;
-                Rotation.ToBytes(bytes, i[0]); i[0] += 12;
+                Position.toBytes(bytes, i[0]); i[0] += 12;
+                Velocity.toBytes(bytes, i[0]); i[0] += 12;
+                Rotation.toBytes(bytes, i[0]); i[0] += 12;
                 bytes[i[0]++] = (byte)Name.length;
                 Utils.arraycopy(Name, 0, bytes, i[0], Name.length); i[0] +=  Name.length;
                 Utils.intToBytes(Type, bytes, i[0]); i[0] += 4;
@@ -121,7 +124,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         {
                         {
                 int length = 11;
-                length += Requester.length;
+                length += Requester.getLength();
                 for (int j = 0; j < SensedData.length; j++)
                     length += SensedData[j].getLength();
                 return length;
@@ -196,7 +199,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 			public byte[] ToBytes()
         {
             int length = 10;
-            length += Requester.length;
+            length += Requester.getLength();
             length++;
             for (int j = 0; j < SensedData.length; j++) { length += SensedData[j].getLength(); }
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
@@ -225,7 +228,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 header.AcksToBytes(ackBytes, acksLength);
             }
 
-            fixedLength += Requester.length;
+            fixedLength += Requester.getLength();
             byte[] fixedBytes = new byte[fixedLength];
             header.ToBytes(fixedBytes, i);
             Requester.ToBytes(fixedBytes, i);

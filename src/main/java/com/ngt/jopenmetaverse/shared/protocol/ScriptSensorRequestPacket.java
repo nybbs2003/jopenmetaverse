@@ -1,8 +1,12 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.ngt.jopenmetaverse.shared.types.Quaternion;
 import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.types.Vector3;
 import com.ngt.jopenmetaverse.shared.util.Utils;
 	public final class ScriptSensorRequestPacket extends Packet
     {
@@ -46,8 +50,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                     SourceID.FromBytes(bytes, i[0]); i[0] += 16;
                     RequestID.FromBytes(bytes, i[0]); i[0] += 16;
                     SearchID.FromBytes(bytes, i[0]); i[0] += 16;
-                    SearchPos.FromBytes(bytes, i[0]); i[0] += 12;
-                    SearchDir.FromBytes(bytes, i[0], true); i[0] += 12;
+                    SearchPos.fromBytes(bytes, i[0]); i[0] += 12;
+                    SearchDir.fromBytes(bytes, i[0], true); i[0] += 12;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     SearchName = new byte[length];
                     Utils.arraycopy(bytes, i[0], SearchName, 0, length); i[0] +=  length;
@@ -69,8 +73,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 SourceID.ToBytes(bytes, i[0]); i[0] += 16;
                 RequestID.ToBytes(bytes, i[0]); i[0] += 16;
                 SearchID.ToBytes(bytes, i[0]); i[0] += 16;
-                SearchPos.ToBytes(bytes, i[0]); i[0] += 12;
-                SearchDir.ToBytes(bytes, i[0]); i[0] += 12;
+                SearchPos.toBytes(bytes, i[0]); i[0] += 12;
+                SearchDir.toBytes(bytes, i[0]); i[0] += 12;
                 bytes[i[0]++] = (byte)SearchName.length;
                 Utils.arraycopy(SearchName, 0, bytes, i[0], SearchName.length); i[0] +=  SearchName.length;
                 Utils.intToBytes(Type, bytes, i[0]); i[0] += 4;
@@ -87,7 +91,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         {
                         {
                 int length = 10;
-                length += Requester.length;
+                length += Requester.getLength();
                 return length;
             }
         }
@@ -142,7 +146,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 			public byte[] ToBytes()
         {
             int length = 10;
-            length += Requester.length;
+            length += Requester.getLength();
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
             int[] i = new int[]{0};

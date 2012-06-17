@@ -302,7 +302,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 header.AcksToBytes(ackBytes, acksLength);
             }
 
-            fixedlength += Data.getLength();
+            fixedLength += Data.getLength();
             byte[] fixedBytes = new byte[fixedLength];
             header.ToBytes(fixedBytes, i);
             Data.ToBytes(fixedBytes, i);

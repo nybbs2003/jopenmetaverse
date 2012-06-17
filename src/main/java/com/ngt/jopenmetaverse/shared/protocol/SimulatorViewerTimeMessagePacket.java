@@ -1,8 +1,10 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.types.Vector3;
 import com.ngt.jopenmetaverse.shared.util.Utils;
 	public final class SimulatorViewerTimeMessagePacket extends Packet
     {
@@ -38,9 +40,9 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                     UsecSinceStart = Utils.bytesToULong(bytes, i[0]); i[0] += 8;
                     SecPerDay = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                     SecPerYear = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    SunDirection.FromBytes(bytes, i[0]); i[0] += 12;
+                    SunDirection.fromBytes(bytes, i[0]); i[0] += 12;
                     SunPhase = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
-                    SunAngVelocity.FromBytes(bytes, i[0]); i[0] += 12;
+                    SunAngVelocity.fromBytes(bytes, i[0]); i[0] += 12;
                 }
                 catch (Exception e)
                 {
@@ -54,9 +56,9 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 Utils.ulongToBytes(UsecSinceStart, bytes, i[0]); i[0] += 8;
                 Utils.uintToBytes(SecPerDay, bytes, i[0]); i[0] += 4;
                 Utils.uintToBytes(SecPerYear, bytes, i[0]); i[0] += 4;
-                SunDirection.ToBytes(bytes, i[0]); i[0] += 12;
+                SunDirection.toBytes(bytes, i[0]); i[0] += 12;
                 Utils.floatToBytes(SunPhase, bytes, i[0]); i[0] += 4;
-                SunAngVelocity.ToBytes(bytes, i[0]); i[0] += 12;
+                SunAngVelocity.toBytes(bytes, i[0]); i[0] += 12;
             }
 
         }
@@ -66,7 +68,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         {
                         {
                 int length = 10;
-                length += TimeInfo.length;
+                length += TimeInfo.getLength();
                 return length;
             }
         }
@@ -120,7 +122,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 			public byte[] ToBytes()
         {
             int length = 10;
-            length += TimeInfo.length;
+            length += TimeInfo.getLength();
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
             int[] i = new int[]{0};

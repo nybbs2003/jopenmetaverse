@@ -143,10 +143,10 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         {
                         {
                 int length = 11;
-                length += Region.length;
+                length += Region.getLength();
                 for (int j = 0; j < Stat.length; j++)
                     length += Stat[j].getLength();
-                length += PidStat.length;
+                length += PidStat.getLength();
                 return length;
             }
         }
@@ -222,8 +222,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 			public byte[] ToBytes()
         {
             int length = 10;
-            length += Region.length;
-            length += PidStat.length;
+            length += Region.getLength();
+            length += PidStat.getLength();
             length++;
             for (int j = 0; j < Stat.length; j++) { length += Stat[j].getLength(); }
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }

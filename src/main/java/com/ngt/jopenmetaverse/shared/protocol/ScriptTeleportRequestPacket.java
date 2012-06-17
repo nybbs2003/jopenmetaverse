@@ -3,6 +3,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 import java.util.ArrayList;
 import java.util.List;
 import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.types.Vector3;
 import com.ngt.jopenmetaverse.shared.util.Utils;
 	public final class ScriptTeleportRequestPacket extends Packet
     {
@@ -43,8 +44,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     SimName = new byte[length];
                     Utils.arraycopy(bytes, i[0], SimName, 0, length); i[0] +=  length;
-                    SimPosition.FromBytes(bytes, i[0]); i[0] += 12;
-                    LookAt.FromBytes(bytes, i[0]); i[0] += 12;
+                    SimPosition.fromBytes(bytes, i[0]); i[0] += 12;
+                    LookAt.fromBytes(bytes, i[0]); i[0] += 12;
                 }
                 catch (Exception e)
                 {
@@ -59,8 +60,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 Utils.arraycopy(ObjectName, 0, bytes, i[0], ObjectName.length); i[0] +=  ObjectName.length;
                 bytes[i[0]++] = (byte)SimName.length;
                 Utils.arraycopy(SimName, 0, bytes, i[0], SimName.length); i[0] +=  SimName.length;
-                SimPosition.ToBytes(bytes, i[0]); i[0] += 12;
-                LookAt.ToBytes(bytes, i[0]); i[0] += 12;
+                SimPosition.toBytes(bytes, i[0]); i[0] += 12;
+                LookAt.toBytes(bytes, i[0]); i[0] += 12;
             }
 
         }

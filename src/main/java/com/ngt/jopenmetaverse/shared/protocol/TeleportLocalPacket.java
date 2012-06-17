@@ -3,6 +3,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 import java.util.ArrayList;
 import java.util.List;
 import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.types.Vector3;
 import com.ngt.jopenmetaverse.shared.util.Utils;
 	public final class TeleportLocalPacket extends Packet
     {
@@ -36,8 +37,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 {
                     AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     LocationID = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    Position.FromBytes(bytes, i[0]); i[0] += 12;
-                    LookAt.FromBytes(bytes, i[0]); i[0] += 12;
+                    Position.fromBytes(bytes, i[0]); i[0] += 12;
+                    LookAt.fromBytes(bytes, i[0]); i[0] += 12;
                     TeleportFlags = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
@@ -51,8 +52,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
                 Utils.uintToBytes(LocationID, bytes, i[0]); i[0] += 4;
-                Position.ToBytes(bytes, i[0]); i[0] += 12;
-                LookAt.ToBytes(bytes, i[0]); i[0] += 12;
+                Position.toBytes(bytes, i[0]); i[0] += 12;
+                LookAt.toBytes(bytes, i[0]); i[0] += 12;
                 Utils.uintToBytes(TeleportFlags, bytes, i[0]); i[0] += 4;
             }
 
@@ -63,7 +64,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         {
                         {
                 int length = 10;
-                length += Info.length;
+                length += Info.getLength();
                 return length;
             }
         }
@@ -117,7 +118,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 			public byte[] ToBytes()
         {
             int length = 10;
-            length += Info.length;
+            length += Info.getLength();
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
             int[] i = new int[]{0};

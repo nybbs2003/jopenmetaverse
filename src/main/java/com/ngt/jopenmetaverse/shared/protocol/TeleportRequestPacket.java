@@ -3,6 +3,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 import java.util.ArrayList;
 import java.util.List;
 import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.types.Vector3;
 import com.ngt.jopenmetaverse.shared.util.Utils;
 	public final class TeleportRequestPacket extends Packet
     {
@@ -76,8 +77,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 try
                 {
                     RegionID.FromBytes(bytes, i[0]); i[0] += 16;
-                    Position.FromBytes(bytes, i[0]); i[0] += 12;
-                    LookAt.FromBytes(bytes, i[0]); i[0] += 12;
+                    Position.fromBytes(bytes, i[0]); i[0] += 12;
+                    LookAt.fromBytes(bytes, i[0]); i[0] += 12;
                 }
                 catch (Exception e)
                 {
@@ -89,8 +90,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 RegionID.ToBytes(bytes, i[0]); i[0] += 16;
-                Position.ToBytes(bytes, i[0]); i[0] += 12;
-                LookAt.ToBytes(bytes, i[0]); i[0] += 12;
+                Position.toBytes(bytes, i[0]); i[0] += 12;
+                LookAt.toBytes(bytes, i[0]); i[0] += 12;
             }
 
         }
@@ -101,7 +102,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                         {
                 int length = 10;
                 length += AgentData.getLength();
-                length += Info.length;
+                length += Info.getLength();
                 return length;
             }
         }
@@ -160,7 +161,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         {
             int length = 10;
             length += AgentData.getLength();
-            length += Info.length;
+            length += Info.getLength();
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
             int[] i = new int[]{0};

@@ -20,7 +20,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                                 {
                     int length = 30;
-                    if (Data != null) { length += Data.getLength(); }
+                    if (Data != null) { length += Data.length; }
                     return length;
                 }
             }
@@ -70,7 +70,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         {
                         {
                 int length = 7;
-                length += TransferData.length;
+                length += TransferData.getLength();
                 return length;
             }
         }
@@ -124,7 +124,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 			public byte[] ToBytes()
         {
             int length = 7;
-            length += TransferData.length;
+            length += TransferData.getLength();
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
             int[] i = new int[]{0};
