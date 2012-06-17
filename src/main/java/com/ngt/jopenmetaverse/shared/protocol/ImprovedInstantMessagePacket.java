@@ -58,13 +58,18 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             public long ParentEstateID;
             public UUID RegionID;
             public Vector3 Position;
-            public byte Offline;
-            public byte Dialog;
+		/** Unsigned Byte */ 
+		public byte Offline;
+		/** Unsigned Byte */ 
+		public byte Dialog;
             public UUID ID;
             public long Timestamp;
-            public byte[] FromAgentName;
-            public byte[] Message;
-            public byte[] BinaryBucket;
+		/** Unsigned Byte */ 
+		public byte[] FromAgentName;
+		/** Unsigned Byte */ 
+		public byte[] Message;
+		/** Unsigned Byte */ 
+		public byte[] BinaryBucket;
 
             @Override
 			public int getLength()

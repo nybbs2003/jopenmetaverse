@@ -10,7 +10,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         {
             public byte[] MediaURL;
             public UUID MediaID;
-            public byte MediaAutoScale;
+		/** Unsigned Byte */ 
+		public byte MediaAutoScale;
 
             @Override
 			public int getLength()
@@ -59,10 +60,12 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         public final class DataBlockExtendedBlock extends PacketBlock
         {
             public byte[] MediaType;
-            public byte[] MediaDesc;
+		/** Unsigned Byte */ 
+		public byte[] MediaDesc;
             public int MediaWidth;
             public int MediaHeight;
-            public byte MediaLoop;
+		/** Unsigned Byte */ 
+		public byte MediaLoop;
 
             @Override
 			public int getLength()

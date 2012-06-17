@@ -53,10 +53,12 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         public final class RequestImageBlock extends PacketBlock
         {
             public UUID Image;
-            public sbyte DiscardLevel;
+		/** Signed Byte */ 
+		public byte DiscardLevel;
             public float DownloadPriority;
             public long Packet;
-            public byte Type;
+		/** Unsigned Byte */ 
+		public byte Type;
 
             @Override
 			public int getLength()
@@ -78,7 +80,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 try
                 {
                     Image.FromBytes(bytes, i[0]); i[0] += 16;
-                    DiscardLevel = (sbyte)bytes[i[0]++];
+                    DiscardLevel = (byte)bytes[i[0]++];
                     DownloadPriority = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
                     Packet = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                     Type = (byte)bytes[i[0]++];

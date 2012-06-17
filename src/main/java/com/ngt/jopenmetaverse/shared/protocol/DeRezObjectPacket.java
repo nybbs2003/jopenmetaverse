@@ -56,11 +56,14 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         public final class AgentBlockBlock extends PacketBlock
         {
             public UUID GroupID;
-            public byte Destination;
+		/** Unsigned Byte */ 
+		public byte Destination;
             public UUID DestinationID;
             public UUID TransactionID;
-            public byte PacketCount;
-            public byte PacketNumber;
+		/** Unsigned Byte */ 
+		public byte PacketCount;
+		/** Unsigned Byte */ 
+		public byte PacketNumber;
 
             @Override
 			public int getLength()

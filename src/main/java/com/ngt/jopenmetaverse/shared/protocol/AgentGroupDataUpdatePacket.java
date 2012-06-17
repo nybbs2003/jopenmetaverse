@@ -58,7 +58,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             public boolean AcceptNotices;
             public UUID GroupInsigniaID;
             public int Contribution;
-            public byte[] GroupName;
+		/** Unsigned Byte */ 
+		public byte[] GroupName;
 
             @Override
 			public int getLength()

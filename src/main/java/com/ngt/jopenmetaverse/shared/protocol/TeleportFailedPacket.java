@@ -10,7 +10,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         public final class InfoBlock extends PacketBlock
         {
             public UUID AgentID;
-            public byte[] Reason;
+		/** Unsigned Byte */ 
+		public byte[] Reason;
 
             @Override
 			public int getLength()
@@ -59,7 +60,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         public final class AlertInfoBlock extends PacketBlock
         {
             public byte[] Message;
-            public byte[] ExtraParams;
+		/** Unsigned Byte */ 
+		public byte[] ExtraParams;
 
             @Override
 			public int getLength()

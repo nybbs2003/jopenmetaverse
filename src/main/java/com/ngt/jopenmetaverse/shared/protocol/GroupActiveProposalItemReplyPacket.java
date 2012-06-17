@@ -97,14 +97,19 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         {
             public UUID VoteID;
             public UUID VoteInitiator;
-            public byte[] TerseDateID;
-            public byte[] StartDateTime;
-            public byte[] EndDateTime;
+		/** Unsigned Byte */ 
+		public byte[] TerseDateID;
+		/** Unsigned Byte */ 
+		public byte[] StartDateTime;
+		/** Unsigned Byte */ 
+		public byte[] EndDateTime;
             public boolean AlreadyVoted;
-            public byte[] VoteCast;
+		/** Unsigned Byte */ 
+		public byte[] VoteCast;
             public float Majority;
             public int Quorum;
-            public byte[] ProposalText;
+		/** Unsigned Byte */ 
+		public byte[] ProposalText;
 
             @Override
 			public int getLength()

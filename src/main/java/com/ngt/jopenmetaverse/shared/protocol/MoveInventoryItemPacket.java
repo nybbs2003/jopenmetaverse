@@ -57,7 +57,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         {
             public UUID ItemID;
             public UUID FolderID;
-            public byte[] NewName;
+		/** Unsigned Byte */ 
+		public byte[] NewName;
 
             @Override
 			public int getLength()

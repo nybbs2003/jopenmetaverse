@@ -56,7 +56,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         public final class WearableDataBlock extends PacketBlock
         {
             public UUID ItemID;
-            public byte WearableType;
+		/** Unsigned Byte */ 
+		public byte WearableType;
 
             @Override
 			public int getLength()

@@ -56,8 +56,10 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             public long EstateID;
             public long ParentEstateID;
             public long RegionFlags;
-            public byte SimAccess;
-            public byte MaxAgents;
+		/** Unsigned Byte */ 
+		public byte SimAccess;
+		/** Unsigned Byte */ 
+		public byte MaxAgents;
             public float BillableFactor;
             public float ObjectBonusFactor;
             public float WaterHeight;
@@ -144,7 +146,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         public final class RegionInfo2Block extends PacketBlock
         {
             public byte[] ProductSKU;
-            public byte[] ProductName;
+		/** Unsigned Byte */ 
+		public byte[] ProductName;
             public long MaxAgents32;
             public long HardMaxAgents;
             public long HardMaxObjects;

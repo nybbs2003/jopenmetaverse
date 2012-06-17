@@ -11,8 +11,10 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         {
             public UUID TaskID;
             public UUID ItemID;
-            public byte[] ObjectName;
-            public byte[] ObjectOwner;
+		/** Unsigned Byte */ 
+		public byte[] ObjectName;
+		/** Unsigned Byte */ 
+		public byte[] ObjectOwner;
             public int Questions;
 
             @Override

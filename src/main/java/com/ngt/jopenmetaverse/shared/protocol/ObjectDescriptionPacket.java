@@ -53,7 +53,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         public final class ObjectDataBlock extends PacketBlock
         {
             public long LocalID;
-            public byte[] Description;
+		/** Unsigned Byte */ 
+		public byte[] Description;
 
             @Override
 			public int getLength()

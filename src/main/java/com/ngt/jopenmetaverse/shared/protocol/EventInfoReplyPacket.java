@@ -51,16 +51,22 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         public final class EventDataBlock extends PacketBlock
         {
             public long EventID;
-            public byte[] Creator;
-            public byte[] Name;
-            public byte[] Category;
-            public byte[] Desc;
-            public byte[] Date;
+		/** Unsigned Byte */ 
+		public byte[] Creator;
+		/** Unsigned Byte */ 
+		public byte[] Name;
+		/** Unsigned Byte */ 
+		public byte[] Category;
+		/** Unsigned Byte */ 
+		public byte[] Desc;
+		/** Unsigned Byte */ 
+		public byte[] Date;
             public long DateUTC;
             public long Duration;
             public long Cover;
             public long Amount;
-            public byte[] SimName;
+		/** Unsigned Byte */ 
+		public byte[] SimName;
             public Vector3d GlobalPos;
             public long EventFlags;
 

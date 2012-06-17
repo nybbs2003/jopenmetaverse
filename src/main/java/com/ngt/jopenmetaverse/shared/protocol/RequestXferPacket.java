@@ -11,8 +11,10 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         public final class XferIDBlock extends PacketBlock
         {
             public BigInteger ID;
-            public byte[] Filename;
-            public byte FilePath;
+		/** Unsigned Byte */ 
+		public byte[] Filename;
+		/** Unsigned Byte */ 
+		public byte FilePath;
             public boolean DeleteOnCompletion;
             public boolean UseBigPackets;
             public UUID VFileID;

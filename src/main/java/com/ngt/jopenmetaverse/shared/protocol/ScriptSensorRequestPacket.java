@@ -18,12 +18,14 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             public UUID SearchID;
             public Vector3 SearchPos;
             public Quaternion SearchDir;
-            public byte[] SearchName;
+		/** Unsigned Byte */ 
+		public byte[] SearchName;
             public int Type;
             public float Range;
             public float Arc;
             public BigInteger RegionHandle;
-            public byte SearchRegions;
+		/** Unsigned Byte */ 
+		public byte SearchRegions;
 
             @Override
 			public int getLength()

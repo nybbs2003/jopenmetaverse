@@ -53,10 +53,13 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         public final class PropertiesDataBlock extends PacketBlock
         {
             public long WantToMask;
-            public byte[] WantToText;
+		/** Unsigned Byte */ 
+		public byte[] WantToText;
             public long SkillsMask;
-            public byte[] SkillsText;
-            public byte[] LanguagesText;
+		/** Unsigned Byte */ 
+		public byte[] SkillsText;
+		/** Unsigned Byte */ 
+		public byte[] LanguagesText;
 
             @Override
 			public int getLength()

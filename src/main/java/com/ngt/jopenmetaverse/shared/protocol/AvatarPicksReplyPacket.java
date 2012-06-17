@@ -56,7 +56,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         public final class DataBlock extends PacketBlock
         {
             public UUID PickID;
-            public byte[] PickName;
+		/** Unsigned Byte */ 
+		public byte[] PickName;
 
             @Override
 			public int getLength()

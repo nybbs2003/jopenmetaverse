@@ -96,15 +96,19 @@ public void FromBytes(byte[] bytes, int[] i) throws MalformedDataException
         public final class QueryDataBlock extends PacketBlock
         {
             public UUID OwnerID;
-            public byte[] Name;
-            public byte[] Desc;
+		/** Unsigned Byte */ 
+		public byte[] Name;
+		/** Unsigned Byte */ 
+		public byte[] Desc;
             public int ActualArea;
             public int BillableArea;
-            public byte Flags;
+		/** Unsigned Byte */ 
+		public byte Flags;
             public float GlobalX;
             public float GlobalY;
             public float GlobalZ;
-            public byte[] SimName;
+		/** Unsigned Byte */ 
+		public byte[] SimName;
             public UUID SnapshotID;
             public float Dwell;
             public int Price;

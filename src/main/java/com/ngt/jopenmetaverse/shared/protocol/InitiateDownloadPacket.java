@@ -50,7 +50,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         public final class FileDataBlock extends PacketBlock
         {
             public byte[] SimFilename;
-            public byte[] ViewerFilename;
+		/** Unsigned Byte */ 
+		public byte[] ViewerFilename;
 
             @Override
 			public int getLength()

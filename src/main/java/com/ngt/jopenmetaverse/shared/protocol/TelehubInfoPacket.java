@@ -17,7 +17,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         public final class TelehubBlockBlock extends PacketBlock
         {
             public UUID ObjectID;
-            public byte[] ObjectName;
+		/** Unsigned Byte */ 
+		public byte[] ObjectName;
             public Vector3 TelehubPos;
             public Quaternion TelehubRot;
 

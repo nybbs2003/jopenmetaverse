@@ -97,7 +97,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             public UUID ID;
             public int Extra;
             public int Extra2;
-            public byte[] Name;
+		/** Unsigned Byte */ 
+		public byte[] Name;
 
             @Override
 			public int getLength()

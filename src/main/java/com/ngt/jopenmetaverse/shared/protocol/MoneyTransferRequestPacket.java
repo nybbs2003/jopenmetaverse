@@ -54,12 +54,16 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         {
             public UUID SourceID;
             public UUID DestID;
-            public byte Flags;
+		/** Unsigned Byte */ 
+		public byte Flags;
             public int Amount;
-            public byte AggregatePermNextOwner;
-            public byte AggregatePermInventory;
+		/** Unsigned Byte */ 
+		public byte AggregatePermNextOwner;
+		/** Unsigned Byte */ 
+		public byte AggregatePermInventory;
             public int TransactionType;
-            public byte[] Description;
+		/** Unsigned Byte */ 
+		public byte[] Description;
 
             @Override
 			public int getLength()

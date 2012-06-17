@@ -11,7 +11,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         {
             public UUID CovenantID;
             public long CovenantTimestamp;
-            public byte[] EstateName;
+		/** Unsigned Byte */ 
+		public byte[] EstateName;
             public UUID EstateOwnerID;
 
             @Override

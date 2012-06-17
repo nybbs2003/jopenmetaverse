@@ -58,7 +58,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             public Vector3 Position;
             public Vector3 Velocity;
             public Quaternion Rotation;
-            public byte[] Name;
+		/** Unsigned Byte */ 
+		public byte[] Name;
             public int Type;
             public float Range;
 

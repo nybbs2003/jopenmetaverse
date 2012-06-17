@@ -12,7 +12,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             public UUID GodSessionID;
             public UUID AgentID;
             public long KickFlags;
-            public byte[] Reason;
+		/** Unsigned Byte */ 
+		public byte[] Reason;
 
             @Override
 			public int getLength()

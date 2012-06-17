@@ -15,7 +15,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             public int MoneyBalance;
             public int SquareMetersCredit;
             public int SquareMetersCommitted;
-            public byte[] Description;
+		/** Unsigned Byte */ 
+		public byte[] Description;
 
             @Override
 			public int getLength()
@@ -79,7 +80,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             public UUID DestID;
             public boolean IsDestGroup;
             public int Amount;
-            public byte[] ItemDescription;
+		/** Unsigned Byte */ 
+		public byte[] ItemDescription;
 
             @Override
 			public int getLength()

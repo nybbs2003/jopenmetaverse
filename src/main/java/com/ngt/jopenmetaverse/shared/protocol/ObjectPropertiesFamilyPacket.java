@@ -19,12 +19,15 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             public long EveryoneMask;
             public long NextOwnerMask;
             public int OwnershipCost;
-            public byte SaleType;
+		/** Unsigned Byte */ 
+		public byte SaleType;
             public int SalePrice;
             public long Category;
             public UUID LastOwnerID;
-            public byte[] Name;
-            public byte[] Description;
+		/** Unsigned Byte */ 
+		public byte[] Name;
+		/** Unsigned Byte */ 
+		public byte[] Description;
 
             @Override
 			public int getLength()

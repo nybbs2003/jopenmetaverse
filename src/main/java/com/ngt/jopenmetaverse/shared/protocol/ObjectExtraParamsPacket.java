@@ -57,7 +57,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             public int ParamType;
             public boolean ParamInUse;
             public long ParamSize;
-            public byte[] ParamData;
+		/** Unsigned Byte */ 
+		public byte[] ParamData;
 
             @Override
 			public int getLength()

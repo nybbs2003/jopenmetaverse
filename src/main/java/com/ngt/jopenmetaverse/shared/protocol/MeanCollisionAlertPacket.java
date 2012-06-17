@@ -16,7 +16,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             public UUID Perp;
             public long Time;
             public float Mag;
-            public byte Type;
+		/** Unsigned Byte */ 
+		public byte Type;
 
             @Override
 			public int getLength()

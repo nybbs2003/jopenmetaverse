@@ -10,8 +10,10 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         public final class RegionInfoBlock extends PacketBlock
         {
             public long RegionFlags;
-            public byte SimAccess;
-            public byte[] SimName;
+		/** Unsigned Byte */ 
+		public byte SimAccess;
+		/** Unsigned Byte */ 
+		public byte[] SimName;
             public UUID SimOwner;
             public boolean IsEstateManager;
             public float WaterHeight;
@@ -166,9 +168,12 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         {
             public int CPUClassID;
             public int CPURatio;
-            public byte[] ColoName;
-            public byte[] ProductSKU;
-            public byte[] ProductName;
+		/** Unsigned Byte */ 
+		public byte[] ColoName;
+		/** Unsigned Byte */ 
+		public byte[] ProductSKU;
+		/** Unsigned Byte */ 
+		public byte[] ProductName;
 
             @Override
 			public int getLength()

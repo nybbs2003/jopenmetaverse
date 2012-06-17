@@ -57,54 +57,83 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         public final class ObjectDataBlock extends PacketBlock
         {
             public long ID;
-            public byte State;
+		/** Unsigned Byte */ 
+		public byte State;
             public UUID FullID;
             public long CRC;
-            public byte PCode;
-            public byte Material;
-            public byte ClickAction;
+		/** Unsigned Byte */ 
+		public byte PCode;
+		/** Unsigned Byte */ 
+		public byte Material;
+		/** Unsigned Byte */ 
+		public byte ClickAction;
             public Vector3 Scale;
-            public byte[] ObjectData;
+		/** Unsigned Byte */ 
+		public byte[] ObjectData;
             public long ParentID;
             public long UpdateFlags;
-            public byte PathCurve;
-            public byte ProfileCurve;
+		/** Unsigned Byte */ 
+		public byte PathCurve;
+		/** Unsigned Byte */ 
+		public byte ProfileCurve;
             /** Unsigned Short **/
             public int PathBegin;
             /** Unsigned Short **/
             public int PathEnd;
-            public byte PathScaleX;
-            public byte PathScaleY;
-            public byte PathShearX;
-            public byte PathShearY;
-            public sbyte PathTwist;
-            public sbyte PathTwistBegin;
-            public sbyte PathRadiusOffset;
-            public sbyte PathTaperX;
-            public sbyte PathTaperY;
-            public byte PathRevolutions;
-            public sbyte PathSkew;
+		/** Unsigned Byte */ 
+		public byte PathScaleX;
+		/** Unsigned Byte */ 
+		public byte PathScaleY;
+		/** Unsigned Byte */ 
+		public byte PathShearX;
+		/** Unsigned Byte */ 
+		public byte PathShearY;
+		/** Signed Byte */ 
+		public byte PathTwist;
+		/** Signed Byte */ 
+		public byte PathTwistBegin;
+		/** Signed Byte */ 
+		public byte PathRadiusOffset;
+		/** Signed Byte */ 
+		public byte PathTaperX;
+		/** Signed Byte */ 
+		public byte PathTaperY;
+		/** Unsigned Byte */ 
+		public byte PathRevolutions;
+		/** Signed Byte */ 
+		public byte PathSkew;
             /** Unsigned Short **/
             public int ProfileBegin;
             /** Unsigned Short **/
             public int ProfileEnd;
             /** Unsigned Short **/
             public int ProfileHollow;
-            public byte[] TextureEntry;
-            public byte[] TextureAnim;
-            public byte[] NameValue;
-            public byte[] Data;
-            public byte[] Text;
-            public byte[] TextColor;
-            public byte[] MediaURL;
-            public byte[] PSBlock;
-            public byte[] ExtraParams;
+		/** Unsigned Byte */ 
+		public byte[] TextureEntry;
+		/** Unsigned Byte */ 
+		public byte[] TextureAnim;
+		/** Unsigned Byte */ 
+		public byte[] NameValue;
+		/** Unsigned Byte */ 
+		public byte[] Data;
+		/** Unsigned Byte */ 
+		public byte[] Text;
+		/** Unsigned Byte */ 
+		public byte[] TextColor;
+		/** Unsigned Byte */ 
+		public byte[] MediaURL;
+		/** Unsigned Byte */ 
+		public byte[] PSBlock;
+		/** Unsigned Byte */ 
+		public byte[] ExtraParams;
             public UUID Sound;
             public UUID OwnerID;
             public float Gain;
-            public byte Flags;
+		/** Unsigned Byte */ 
+		public byte Flags;
             public float Radius;
-            public byte JointType;
+		/** Unsigned Byte */ 
+		public byte JointType;
             public Vector3 JointPivot;
             public Vector3 JointAxisOrAnchor;
 
@@ -159,13 +188,13 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                     PathScaleY = (byte)bytes[i[0]++];
                     PathShearX = (byte)bytes[i[0]++];
                     PathShearY = (byte)bytes[i[0]++];
-                    PathTwist = (sbyte)bytes[i[0]++];
-                    PathTwistBegin = (sbyte)bytes[i[0]++];
-                    PathRadiusOffset = (sbyte)bytes[i[0]++];
-                    PathTaperX = (sbyte)bytes[i[0]++];
-                    PathTaperY = (sbyte)bytes[i[0]++];
+                    PathTwist = (byte)bytes[i[0]++];
+                    PathTwistBegin = (byte)bytes[i[0]++];
+                    PathRadiusOffset = (byte)bytes[i[0]++];
+                    PathTaperX = (byte)bytes[i[0]++];
+                    PathTaperY = (byte)bytes[i[0]++];
                     PathRevolutions = (byte)bytes[i[0]++];
-                    PathSkew = (sbyte)bytes[i[0]++];
+                    PathSkew = (byte)bytes[i[0]++];
                     ProfileBegin = (int)Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
                     ProfileEnd = (int)Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
                     ProfileHollow = (int)Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;

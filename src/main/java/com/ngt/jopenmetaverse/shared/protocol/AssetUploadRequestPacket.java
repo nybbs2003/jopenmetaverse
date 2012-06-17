@@ -10,10 +10,12 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         public final class AssetBlockBlock extends PacketBlock
         {
             public UUID TransactionID;
-            public sbyte Type;
+		/** Signed Byte */ 
+		public byte Type;
             public boolean Tempfile;
             public boolean StoreLocal;
-            public byte[] AssetData;
+		/** Unsigned Byte */ 
+		public byte[] AssetData;
 
             @Override
 			public int getLength()
@@ -38,7 +40,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 try
                 {
                     TransactionID.FromBytes(bytes, i[0]); i[0] += 16;
-                    Type = (sbyte)bytes[i[0]++];
+                    Type = (byte)bytes[i[0]++];
                     Tempfile = (bytes[i[0]++] != 0) ? true : false;
                     StoreLocal = (bytes[i[0]++] != 0) ? true : false;
                     length = Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;

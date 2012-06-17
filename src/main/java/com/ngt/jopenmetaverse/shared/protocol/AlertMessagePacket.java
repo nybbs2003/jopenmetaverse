@@ -57,7 +57,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         public final class AlertInfoBlock extends PacketBlock
         {
             public byte[] Message;
-            public byte[] ExtraParams;
+		/** Unsigned Byte */ 
+		public byte[] ExtraParams;
 
             @Override
 			public int getLength()

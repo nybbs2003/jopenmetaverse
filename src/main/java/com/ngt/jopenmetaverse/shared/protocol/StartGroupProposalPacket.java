@@ -56,7 +56,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             public int Quorum;
             public float Majority;
             public int Duration;
-            public byte[] ProposalText;
+		/** Unsigned Byte */ 
+		public byte[] ProposalText;
 
             @Override
 			public int getLength()

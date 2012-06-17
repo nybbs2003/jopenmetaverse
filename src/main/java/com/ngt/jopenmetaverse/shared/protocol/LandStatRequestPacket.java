@@ -54,7 +54,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         {
             public long ReportType;
             public long RequestFlags;
-            public byte[] Filter;
+		/** Unsigned Byte */ 
+		public byte[] Filter;
             public int ParcelLocalID;
 
             @Override

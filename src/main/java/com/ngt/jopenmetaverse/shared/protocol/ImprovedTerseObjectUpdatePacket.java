@@ -59,7 +59,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         public final class ObjectDataBlock extends PacketBlock
         {
             public byte[] Data;
-            public byte[] TextureEntry;
+		/** Unsigned Byte */ 
+		public byte[] TextureEntry;
 
             @Override
 			public int getLength()

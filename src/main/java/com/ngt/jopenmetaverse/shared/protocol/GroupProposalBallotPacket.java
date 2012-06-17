@@ -54,7 +54,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         {
             public UUID ProposalID;
             public UUID GroupID;
-            public byte[] VoteCast;
+		/** Unsigned Byte */ 
+		public byte[] VoteCast;
 
             @Override
 			public int getLength()

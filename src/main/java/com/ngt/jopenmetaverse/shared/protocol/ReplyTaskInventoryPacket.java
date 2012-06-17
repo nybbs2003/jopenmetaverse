@@ -11,7 +11,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         {
             public UUID TaskID;
             public short Serial;
-            public byte[] Filename;
+		/** Unsigned Byte */ 
+		public byte[] Filename;
 
             @Override
 			public int getLength()

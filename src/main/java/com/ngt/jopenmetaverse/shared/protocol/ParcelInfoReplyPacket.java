@@ -49,15 +49,19 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         {
             public UUID ParcelID;
             public UUID OwnerID;
-            public byte[] Name;
-            public byte[] Desc;
+		/** Unsigned Byte */ 
+		public byte[] Name;
+		/** Unsigned Byte */ 
+		public byte[] Desc;
             public int ActualArea;
             public int BillableArea;
-            public byte Flags;
+		/** Unsigned Byte */ 
+		public byte Flags;
             public float GlobalX;
             public float GlobalY;
             public float GlobalZ;
-            public byte[] SimName;
+		/** Unsigned Byte */ 
+		public byte[] SimName;
             public UUID SnapshotID;
             public float Dwell;
             public int SalePrice;

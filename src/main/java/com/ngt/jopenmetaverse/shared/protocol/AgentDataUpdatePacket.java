@@ -12,12 +12,16 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         public final class AgentDataBlock extends PacketBlock
         {
             public UUID AgentID;
-            public byte[] FirstName;
-            public byte[] LastName;
-            public byte[] GroupTitle;
+		/** Unsigned Byte */ 
+		public byte[] FirstName;
+		/** Unsigned Byte */ 
+		public byte[] LastName;
+		/** Unsigned Byte */ 
+		public byte[] GroupTitle;
             public UUID ActiveGroupID;
             public BigInteger GroupPowers;
-            public byte[] GroupName;
+		/** Unsigned Byte */ 
+		public byte[] GroupName;
 
             @Override
 			public int getLength()

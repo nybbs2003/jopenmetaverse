@@ -110,13 +110,18 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             public long NextOwnerMask;
             public boolean GroupOwned;
             public UUID TransactionID;
-            public sbyte Type;
-            public sbyte InvType;
+		/** Signed Byte */ 
+		public byte Type;
+		/** Signed Byte */ 
+		public byte InvType;
             public long Flags;
-            public byte SaleType;
+		/** Unsigned Byte */ 
+		public byte SaleType;
             public int SalePrice;
-            public byte[] Name;
-            public byte[] Description;
+		/** Unsigned Byte */ 
+		public byte[] Name;
+		/** Unsigned Byte */ 
+		public byte[] Description;
             public int CreationDate;
             public long CRC;
 
@@ -155,8 +160,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                     NextOwnerMask = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                     GroupOwned = (bytes[i[0]++] != 0) ? true : false;
                     TransactionID.FromBytes(bytes, i[0]); i[0] += 16;
-                    Type = (sbyte)bytes[i[0]++];
-                    InvType = (sbyte)bytes[i[0]++];
+                    Type = (byte)bytes[i[0]++];
+                    InvType = (byte)bytes[i[0]++];
                     Flags = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
                     SaleType = (byte)bytes[i[0]++];
                     SalePrice = Utils.bytesToInt(bytes, i[0]); i[0]+=4;

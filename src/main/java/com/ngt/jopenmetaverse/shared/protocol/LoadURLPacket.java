@@ -13,8 +13,10 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             public UUID ObjectID;
             public UUID OwnerID;
             public boolean OwnerIsGroup;
-            public byte[] Message;
-            public byte[] URL;
+		/** Unsigned Byte */ 
+		public byte[] Message;
+		/** Unsigned Byte */ 
+		public byte[] URL;
 
             @Override
 			public int getLength()

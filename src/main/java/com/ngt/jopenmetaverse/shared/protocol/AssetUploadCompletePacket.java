@@ -8,7 +8,8 @@ import com.ngt.jopenmetaverse.shared.types.UUID;
         public final class AssetBlockBlock extends PacketBlock
         {
             public UUID UUID;
-            public sbyte Type;
+            /** Signed Byte **/
+            public byte Type;
             public boolean Success;
 
             @Override
@@ -31,7 +32,7 @@ import com.ngt.jopenmetaverse.shared.types.UUID;
                 try
                 {
                     UUID.FromBytes(bytes, i[0]); i[0] += 16;
-                    Type = (sbyte)bytes[i[0]++];
+                    Type = (byte)bytes[i[0]++];
                     Success = (bytes[i[0]++] != 0) ? true : false;
                 }
                 catch (Exception e)

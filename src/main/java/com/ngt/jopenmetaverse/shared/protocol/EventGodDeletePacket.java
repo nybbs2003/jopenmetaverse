@@ -93,7 +93,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         public final class QueryDataBlock extends PacketBlock
         {
             public UUID QueryID;
-            public byte[] QueryText;
+		/** Unsigned Byte */ 
+		public byte[] QueryText;
             public long QueryFlags;
             public int QueryStart;
 

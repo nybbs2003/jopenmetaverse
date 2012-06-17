@@ -10,10 +10,14 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         public final class DataBlock extends PacketBlock
         {
             public UUID ObjectID;
-            public byte[] FirstName;
-            public byte[] LastName;
-            public byte[] ObjectName;
-            public byte[] Message;
+		/** Unsigned Byte */ 
+		public byte[] FirstName;
+		/** Unsigned Byte */ 
+		public byte[] LastName;
+		/** Unsigned Byte */ 
+		public byte[] ObjectName;
+		/** Unsigned Byte */ 
+		public byte[] Message;
             public int ChatChannel;
             public UUID ImageID;
 

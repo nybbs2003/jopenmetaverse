@@ -55,7 +55,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             public UUID RequestID;
             public int IntervalDays;
             public int CurrentInterval;
-            public byte[] StartDate;
+		/** Unsigned Byte */ 
+		public byte[] StartDate;
 
             @Override
 			public int getLength()
@@ -108,9 +109,11 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         public final class HistoryDataBlock extends PacketBlock
         {
             public byte[] Time;
-            public byte[] User;
+		/** Unsigned Byte */ 
+		public byte[] User;
             public int Type;
-            public byte[] Item;
+		/** Unsigned Byte */ 
+		public byte[] Item;
             public int Amount;
 
             @Override

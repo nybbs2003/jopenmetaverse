@@ -29,17 +29,21 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             public boolean ChangedGrid;
             public float Far;
             public float Aspect;
-            public byte[] Throttles;
+		/** Unsigned Byte */ 
+		public byte[] Throttles;
             public long LocomotionState;
             public Quaternion HeadRotation;
             public Quaternion BodyRotation;
             public long ControlFlags;
             public float EnergyLevel;
-            public byte GodLevel;
+		/** Unsigned Byte */ 
+		public byte GodLevel;
             public boolean AlwaysRun;
             public UUID PreyAgent;
-            public byte AgentAccess;
-            public byte[] AgentTextures;
+		/** Unsigned Byte */ 
+		public byte AgentAccess;
+		/** Unsigned Byte */ 
+		public byte[] AgentTextures;
             public UUID ActiveGroupID;
 
             @Override
@@ -358,7 +362,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         public final class AgentAccessBlock extends PacketBlock
         {
             public byte AgentLegacyAccess;
-            public byte AgentMaxAccess;
+		/** Unsigned Byte */ 
+		public byte AgentMaxAccess;
 
             @Override
 			public int getLength()

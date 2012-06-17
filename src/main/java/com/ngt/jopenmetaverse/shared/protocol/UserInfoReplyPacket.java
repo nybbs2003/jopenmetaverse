@@ -50,8 +50,10 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         public final class UserDataBlock extends PacketBlock
         {
             public boolean IMViaEMail;
-            public byte[] DirectoryVisibility;
-            public byte[] EMail;
+		/** Unsigned Byte */ 
+		public byte[] DirectoryVisibility;
+		/** Unsigned Byte */ 
+		public byte[] EMail;
 
             @Override
 			public int getLength()

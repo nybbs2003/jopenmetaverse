@@ -54,11 +54,14 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         {
             public UUID ImageID;
             public UUID FLImageID;
-            public byte[] AboutText;
-            public byte[] FLAboutText;
+		/** Unsigned Byte */ 
+		public byte[] AboutText;
+		/** Unsigned Byte */ 
+		public byte[] FLAboutText;
             public boolean AllowPublish;
             public boolean MaturePublish;
-            public byte[] ProfileURL;
+		/** Unsigned Byte */ 
+		public byte[] ProfileURL;
 
             @Override
 			public int getLength()

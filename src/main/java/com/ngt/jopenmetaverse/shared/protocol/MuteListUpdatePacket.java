@@ -10,7 +10,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         public final class MuteDataBlock extends PacketBlock
         {
             public UUID AgentID;
-            public byte[] Filename;
+		/** Unsigned Byte */ 
+		public byte[] Filename;
 
             @Override
 			public int getLength()

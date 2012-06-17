@@ -93,8 +93,10 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         public final class QueryRepliesBlock extends PacketBlock
         {
             public UUID ClassifiedID;
-            public byte[] Name;
-            public byte ClassifiedFlags;
+		/** Unsigned Byte */ 
+		public byte[] Name;
+		/** Unsigned Byte */ 
+		public byte ClassifiedFlags;
             public long CreationDate;
             public long ExpirationDate;
             public int PriceForListing;

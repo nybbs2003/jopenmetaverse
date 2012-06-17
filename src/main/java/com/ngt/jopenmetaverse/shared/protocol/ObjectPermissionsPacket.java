@@ -93,8 +93,10 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         public final class ObjectDataBlock extends PacketBlock
         {
             public long ObjectLocalID;
-            public byte Field;
-            public byte Set;
+		/** Unsigned Byte */ 
+		public byte Field;
+		/** Unsigned Byte */ 
+		public byte Set;
             public long Mask;
 
             @Override

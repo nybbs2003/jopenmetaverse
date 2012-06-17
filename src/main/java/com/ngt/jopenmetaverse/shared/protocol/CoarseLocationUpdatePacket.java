@@ -10,8 +10,10 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         public final class LocationBlock extends PacketBlock
         {
             public byte X;
-            public byte Y;
-            public byte Z;
+		/** Unsigned Byte */ 
+		public byte Y;
+		/** Unsigned Byte */ 
+		public byte Z;
 
             @Override
 			public int getLength()

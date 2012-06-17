@@ -13,7 +13,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             public UUID AgentID;
             public UUID GroupID;
             public BigInteger AgentPowers;
-            public byte[] GroupTitle;
+		/** Unsigned Byte */ 
+		public byte[] GroupTitle;
 
             @Override
 			public int getLength()

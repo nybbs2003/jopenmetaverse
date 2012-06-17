@@ -53,7 +53,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         public final class ObjectDataBlock extends PacketBlock
         {
             public long LocalID;
-            public byte SaleType;
+		/** Unsigned Byte */ 
+		public byte SaleType;
             public int SalePrice;
 
             @Override

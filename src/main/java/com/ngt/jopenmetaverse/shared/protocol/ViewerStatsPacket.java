@@ -19,14 +19,18 @@ public final class ViewerStatsPacket extends Packet
             public float RunTime;
             public float SimFPS;
             public float FPS;
-            public byte AgentsInView;
+		/** Unsigned Byte */ 
+		public byte AgentsInView;
             public float Ping;
             public double MetersTraveled;
             public int RegionsVisited;
             public long SysRAM;
-            public byte[] SysOS;
-            public byte[] SysCPU;
-            public byte[] SysGPU;
+		/** Unsigned Byte */ 
+		public byte[] SysOS;
+		/** Unsigned Byte */ 
+		public byte[] SysCPU;
+		/** Unsigned Byte */ 
+		public byte[] SysGPU;
 
             @Override
 			public int getLength()

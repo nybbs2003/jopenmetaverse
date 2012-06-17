@@ -56,8 +56,10 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         public final class DataBlock extends PacketBlock
         {
             public UUID AvatarID;
-            public byte[] FirstName;
-            public byte[] LastName;
+		/** Unsigned Byte */ 
+		public byte[] FirstName;
+		/** Unsigned Byte */ 
+		public byte[] LastName;
 
             @Override
 			public int getLength()

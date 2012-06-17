@@ -53,7 +53,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         public final class MuteDataBlock extends PacketBlock
         {
             public UUID MuteID;
-            public byte[] MuteName;
+		/** Unsigned Byte */ 
+		public byte[] MuteName;
             public int MuteType;
             public long MuteFlags;
 

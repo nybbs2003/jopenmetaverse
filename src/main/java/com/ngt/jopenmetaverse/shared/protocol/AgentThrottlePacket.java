@@ -56,7 +56,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         public final class ThrottleBlock extends PacketBlock
         {
             public long GenCounter;
-            public byte[] Throttles;
+		/** Unsigned Byte */ 
+		public byte[] Throttles;
 
             @Override
 			public int getLength()

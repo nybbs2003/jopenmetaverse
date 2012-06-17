@@ -62,7 +62,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
              */
             public int SimPort;
             public BigInteger RegionHandle;
-            public byte[] SeedCapability;
+		/** Unsigned Byte */ 
+		public byte[] SeedCapability;
 
             @Override
 			public int getLength()

@@ -55,11 +55,16 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             public UUID ImageID;
             public UUID FLImageID;
             public UUID PartnerID;
-            public byte[] AboutText;
-            public byte[] FLAboutText;
-            public byte[] BornOn;
-            public byte[] ProfileURL;
-            public byte[] CharterMember;
+		/** Unsigned Byte */ 
+		public byte[] AboutText;
+		/** Unsigned Byte */ 
+		public byte[] FLAboutText;
+		/** Unsigned Byte */ 
+		public byte[] BornOn;
+		/** Unsigned Byte */ 
+		public byte[] ProfileURL;
+		/** Unsigned Byte */ 
+		public byte[] CharterMember;
             public long Flags;
 
             @Override

@@ -16,8 +16,10 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             /** Unsigned Short **/
             public int SimPort;
             public BigInteger RegionHandle;
-            public byte[] SeedCapability;
-            public byte SimAccess;
+		/** Unsigned Byte */ 
+		public byte[] SeedCapability;
+		/** Unsigned Byte */ 
+		public byte SimAccess;
             public long TeleportFlags;
 
             @Override

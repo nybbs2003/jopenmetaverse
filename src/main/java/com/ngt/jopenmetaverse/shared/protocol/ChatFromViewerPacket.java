@@ -53,7 +53,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         public final class ChatDataBlock extends PacketBlock
         {
             public byte[] Message;
-            public byte Type;
+		/** Unsigned Byte */ 
+		public byte Type;
             public int Channel;
 
             @Override

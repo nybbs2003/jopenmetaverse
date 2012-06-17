@@ -13,7 +13,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             public int ChannelType;
             public int Packet;
             public int Status;
-            public byte[] Data;
+		/** Unsigned Byte */ 
+		public byte[] Data;
 
             @Override
 			public int getLength()

@@ -11,7 +11,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         public final class DataBlock extends PacketBlock
         {
             public byte[] ObjectName;
-            public byte[] SimName;
+		/** Unsigned Byte */ 
+		public byte[] SimName;
             public Vector3 SimPosition;
             public Vector3 LookAt;
 

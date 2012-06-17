@@ -55,7 +55,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             public UUID ObjectID;
             public int ChatChannel;
             public int ButtonIndex;
-            public byte[] ButtonLabel;
+		/** Unsigned Byte */ 
+		public byte[] ButtonLabel;
 
             @Override
 			public int getLength()

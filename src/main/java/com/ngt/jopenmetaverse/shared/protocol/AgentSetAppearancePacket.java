@@ -60,7 +60,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         public final class WearableDataBlock extends PacketBlock
         {
             public UUID CacheID;
-            public byte TextureIndex;
+		/** Unsigned Byte */ 
+		public byte TextureIndex;
 
             @Override
 			public int getLength()

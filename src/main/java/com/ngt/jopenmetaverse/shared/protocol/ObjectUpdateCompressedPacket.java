@@ -56,7 +56,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         public final class ObjectDataBlock extends PacketBlock
         {
             public long UpdateFlags;
-            public byte[] Data;
+		/** Unsigned Byte */ 
+		public byte[] Data;
 
             @Override
 			public int getLength()

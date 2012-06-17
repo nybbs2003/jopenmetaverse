@@ -10,8 +10,10 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         public final class UUIDNameBlockBlock extends PacketBlock
         {
             public UUID ID;
-            public byte[] FirstName;
-            public byte[] LastName;
+		/** Unsigned Byte */ 
+		public byte[] FirstName;
+		/** Unsigned Byte */ 
+		public byte[] LastName;
 
             @Override
 			public int getLength()

@@ -53,7 +53,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         public final class HeaderDataBlock extends PacketBlock
         {
             public UUID CompoundMsgID;
-            public byte TotalObjects;
+		/** Unsigned Byte */ 
+		public byte TotalObjects;
             public boolean FirstDetachAll;
 
             @Override
@@ -100,13 +101,16 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         {
             public UUID ItemID;
             public UUID OwnerID;
-            public byte AttachmentPt;
+		/** Unsigned Byte */ 
+		public byte AttachmentPt;
             public long ItemFlags;
             public long GroupMask;
             public long EveryoneMask;
             public long NextOwnerMask;
-            public byte[] Name;
-            public byte[] Description;
+		/** Unsigned Byte */ 
+		public byte[] Name;
+		/** Unsigned Byte */ 
+		public byte[] Description;
 
             @Override
 			public int getLength()

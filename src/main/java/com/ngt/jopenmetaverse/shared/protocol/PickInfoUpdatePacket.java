@@ -57,8 +57,10 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             public UUID CreatorID;
             public boolean TopPick;
             public UUID ParcelID;
-            public byte[] Name;
-            public byte[] Desc;
+		/** Unsigned Byte */ 
+		public byte[] Name;
+		/** Unsigned Byte */ 
+		public byte[] Desc;
             public UUID SnapshotID;
             public Vector3d PosGlobal;
             public int SortOrder;

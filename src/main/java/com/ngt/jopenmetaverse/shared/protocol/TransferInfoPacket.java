@@ -14,7 +14,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             public int TargetType;
             public int Status;
             public int Size;
-            public byte[] Params;
+		/** Unsigned Byte */ 
+		public byte[] Params;
 
             @Override
 			public int getLength()

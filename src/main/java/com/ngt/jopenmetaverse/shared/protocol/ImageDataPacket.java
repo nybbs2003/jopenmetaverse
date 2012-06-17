@@ -10,7 +10,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         public final class ImageIDBlock extends PacketBlock
         {
             public UUID ID;
-            public byte Codec;
+		/** Unsigned Byte */ 
+		public byte Codec;
             public long Size;
             /**
              * Unsigned Short

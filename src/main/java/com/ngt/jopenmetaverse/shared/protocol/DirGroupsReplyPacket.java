@@ -93,7 +93,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         public final class QueryRepliesBlock extends PacketBlock
         {
             public UUID GroupID;
-            public byte[] GroupName;
+		/** Unsigned Byte */ 
+		public byte[] GroupName;
             public int Members;
             public float SearchOrder;
 

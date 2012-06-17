@@ -53,10 +53,13 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         public final class QueryDataBlock extends PacketBlock
         {
             public UUID QueryID;
-            public byte[] QueryText;
+		/** Unsigned Byte */ 
+		public byte[] QueryText;
             public long QueryFlags;
-            public sbyte Category;
-            public byte[] SimName;
+		/** Signed Byte */ 
+		public byte Category;
+		/** Unsigned Byte */ 
+		public byte[] SimName;
             public int QueryStart;
 
             @Override
@@ -87,7 +90,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                     QueryText = new byte[length];
                     Utils.arraycopy(bytes, i[0], QueryText, 0, length); i[0] +=  length;
                     QueryFlags = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    Category = (sbyte)bytes[i[0]++];
+                    Category = (byte)bytes[i[0]++];
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     SimName = new byte[length];
                     Utils.arraycopy(bytes, i[0], SimName, 0, length); i[0] +=  length;

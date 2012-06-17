@@ -54,10 +54,13 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         {
             public UUID ID;
             public UUID AgentID;
-            public byte Type;
+		/** Unsigned Byte */ 
+		public byte Type;
             public float Duration;
-            public byte[] Color;
-            public byte[] TypeData;
+		/** Unsigned Byte */ 
+		public byte[] Color;
+		/** Unsigned Byte */ 
+		public byte[] TypeData;
 
             @Override
 			public int getLength()

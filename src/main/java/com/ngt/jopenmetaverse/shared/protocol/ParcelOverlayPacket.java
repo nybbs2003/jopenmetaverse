@@ -8,7 +8,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         public final class ParcelDataBlock extends PacketBlock
         {
             public int SequenceID;
-            public byte[] Data;
+		/** Unsigned Byte */ 
+		public byte[] Data;
 
             @Override
 			public int getLength()

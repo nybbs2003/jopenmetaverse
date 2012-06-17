@@ -57,7 +57,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         public final class RezDataBlock extends PacketBlock
         {
             public UUID FromTaskID;
-            public byte BypassRaycast;
+		/** Unsigned Byte */ 
+		public byte BypassRaycast;
             public Vector3 RayStart;
             public Vector3 RayEnd;
             public UUID RayTargetID;

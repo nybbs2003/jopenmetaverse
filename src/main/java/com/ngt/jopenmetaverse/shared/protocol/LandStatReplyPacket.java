@@ -61,8 +61,10 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             public float LocationY;
             public float LocationZ;
             public float Score;
-            public byte[] TaskName;
-            public byte[] OwnerName;
+		/** Unsigned Byte */ 
+		public byte[] TaskName;
+		/** Unsigned Byte */ 
+		public byte[] OwnerName;
 
             @Override
 			public int getLength()

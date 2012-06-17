@@ -15,14 +15,16 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             public UUID SessionID;
             public Quaternion BodyRotation;
             public Quaternion HeadRotation;
-            public byte State;
+		/** Unsigned Byte */ 
+		public byte State;
             public Vector3 CameraCenter;
             public Vector3 CameraAtAxis;
             public Vector3 CameraLeftAxis;
             public Vector3 CameraUpAxis;
             public float Far;
             public long ControlFlags;
-            public byte Flags;
+		/** Unsigned Byte */ 
+		public byte Flags;
 
             @Override
 			public int getLength()

@@ -93,9 +93,12 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         public final class QueryRepliesBlock extends PacketBlock
         {
             public UUID AgentID;
-            public byte[] FirstName;
-            public byte[] LastName;
-            public byte[] Group;
+		/** Unsigned Byte */ 
+		public byte[] FirstName;
+		/** Unsigned Byte */ 
+		public byte[] LastName;
+		/** Unsigned Byte */ 
+		public byte[] Group;
             public boolean Online;
             public int Reputation;
 

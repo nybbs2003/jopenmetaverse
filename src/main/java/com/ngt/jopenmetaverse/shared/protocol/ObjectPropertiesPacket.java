@@ -21,22 +21,31 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             public long EveryoneMask;
             public long NextOwnerMask;
             public int OwnershipCost;
-            public byte SaleType;
+		/** Unsigned Byte */ 
+		public byte SaleType;
             public int SalePrice;
-            public byte AggregatePerms;
-            public byte AggregatePermTextures;
-            public byte AggregatePermTexturesOwner;
+		/** Unsigned Byte */ 
+		public byte AggregatePerms;
+		/** Unsigned Byte */ 
+		public byte AggregatePermTextures;
+		/** Unsigned Byte */ 
+		public byte AggregatePermTexturesOwner;
             public long Category;
             public short InventorySerial;
             public UUID ItemID;
             public UUID FolderID;
             public UUID FromTaskID;
             public UUID LastOwnerID;
-            public byte[] Name;
-            public byte[] Description;
-            public byte[] TouchName;
-            public byte[] SitName;
-            public byte[] TextureID;
+		/** Unsigned Byte */ 
+		public byte[] Name;
+		/** Unsigned Byte */ 
+		public byte[] Description;
+		/** Unsigned Byte */ 
+		public byte[] TouchName;
+		/** Unsigned Byte */ 
+		public byte[] SitName;
+		/** Unsigned Byte */ 
+		public byte[] TextureID;
 
             @Override
 			public int getLength()

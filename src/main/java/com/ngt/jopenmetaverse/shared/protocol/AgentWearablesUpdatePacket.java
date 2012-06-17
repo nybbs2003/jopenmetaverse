@@ -63,7 +63,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         {
             public UUID ItemID;
             public UUID AssetID;
-            public byte WearableType;
+		/** Unsigned Byte */ 
+		public byte WearableType;
 
             @Override
 			public int getLength()

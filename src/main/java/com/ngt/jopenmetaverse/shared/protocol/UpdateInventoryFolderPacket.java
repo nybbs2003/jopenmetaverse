@@ -54,8 +54,10 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         {
             public UUID FolderID;
             public UUID ParentID;
-            public sbyte Type;
-            public byte[] Name;
+		/** Signed Byte */ 
+		public byte Type;
+		/** Unsigned Byte */ 
+		public byte[] Name;
 
             @Override
 			public int getLength()
@@ -81,7 +83,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 {
                     FolderID.FromBytes(bytes, i[0]); i[0] += 16;
                     ParentID.FromBytes(bytes, i[0]); i[0] += 16;
-                    Type = (sbyte)bytes[i[0]++];
+                    Type = (byte)bytes[i[0]++];
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     Name = new byte[length];
                     Utils.arraycopy(bytes, i[0], Name, 0, length); i[0] +=  length;

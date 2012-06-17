@@ -96,15 +96,21 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         public final class HistoryItemDataBlock extends PacketBlock
         {
             public UUID VoteID;
-            public byte[] TerseDateID;
-            public byte[] StartDateTime;
-            public byte[] EndDateTime;
+		/** Unsigned Byte */ 
+		public byte[] TerseDateID;
+		/** Unsigned Byte */ 
+		public byte[] StartDateTime;
+		/** Unsigned Byte */ 
+		public byte[] EndDateTime;
             public UUID VoteInitiator;
-            public byte[] VoteType;
-            public byte[] VoteResult;
+		/** Unsigned Byte */ 
+		public byte[] VoteType;
+		/** Unsigned Byte */ 
+		public byte[] VoteResult;
             public float Majority;
             public int Quorum;
-            public byte[] ProposalText;
+		/** Unsigned Byte */ 
+		public byte[] ProposalText;
 
             @Override
 			public int getLength()
@@ -190,7 +196,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         public final class VoteItemBlock extends PacketBlock
         {
             public UUID CandidateID;
-            public byte[] VoteCast;
+		/** Unsigned Byte */ 
+		public byte[] VoteCast;
             public int NumVotes;
 
             @Override

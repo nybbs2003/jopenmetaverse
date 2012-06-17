@@ -14,11 +14,16 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             public UUID SessionID;
             public UUID AssetID;
             public Vector3d PosGlobal;
-            public byte[] To;
-            public byte[] From;
-            public byte[] Name;
-            public byte[] Subject;
-            public byte[] Msg;
+		/** Unsigned Byte */ 
+		public byte[] To;
+		/** Unsigned Byte */ 
+		public byte[] From;
+		/** Unsigned Byte */ 
+		public byte[] Name;
+		/** Unsigned Byte */ 
+		public byte[] Subject;
+		/** Unsigned Byte */ 
+		public byte[] Msg;
             public boolean AllowPublish;
             public boolean MaturePublish;
 

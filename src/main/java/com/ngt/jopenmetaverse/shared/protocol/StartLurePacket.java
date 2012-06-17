@@ -53,7 +53,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         public final class InfoBlock extends PacketBlock
         {
             public byte LureType;
-            public byte[] Message;
+		/** Unsigned Byte */ 
+		public byte[] Message;
 
             @Override
 			public int getLength()

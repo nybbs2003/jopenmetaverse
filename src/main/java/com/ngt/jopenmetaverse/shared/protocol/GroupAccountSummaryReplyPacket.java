@@ -55,7 +55,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             public UUID RequestID;
             public int IntervalDays;
             public int CurrentInterval;
-            public byte[] StartDate;
+		/** Unsigned Byte */ 
+		public byte[] StartDate;
             public int Balance;
             public int TotalCredits;
             public int TotalDebits;
@@ -70,8 +71,10 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             public int GroupTaxEstimate;
             public int ParcelDirFeeEstimate;
             public int NonExemptMembers;
-            public byte[] LastTaxDate;
-            public byte[] TaxDate;
+		/** Unsigned Byte */ 
+		public byte[] LastTaxDate;
+		/** Unsigned Byte */ 
+		public byte[] TaxDate;
 
             @Override
 			public int getLength()

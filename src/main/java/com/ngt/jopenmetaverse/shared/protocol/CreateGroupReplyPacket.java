@@ -51,7 +51,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         {
             public UUID GroupID;
             public boolean Success;
-            public byte[] Message;
+		/** Unsigned Byte */ 
+		public byte[] Message;
 
             @Override
 			public int getLength()

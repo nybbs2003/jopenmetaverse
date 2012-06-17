@@ -98,9 +98,11 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         {
             public UUID AgentID;
             public int Contribution;
-            public byte[] OnlineStatus;
+		/** Unsigned Byte */ 
+		public byte[] OnlineStatus;
             public BigInteger AgentPowers;
-            public byte[] Title;
+		/** Unsigned Byte */ 
+		public byte[] Title;
             public boolean IsOwner;
 
             @Override

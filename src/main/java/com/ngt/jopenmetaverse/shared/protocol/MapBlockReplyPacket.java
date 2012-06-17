@@ -60,11 +60,15 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
              * Unsigned Short
              */
             public int Y;
-            public byte[] Name;
-            public byte Access;
+		/** Unsigned Byte */ 
+		public byte[] Name;
+		/** Unsigned Byte */ 
+		public byte Access;
             public long RegionFlags;
-            public byte WaterHeight;
-            public byte Agents;
+		/** Unsigned Byte */ 
+		public byte WaterHeight;
+		/** Unsigned Byte */ 
+		public byte Agents;
             public UUID MapImageID;
 
             @Override

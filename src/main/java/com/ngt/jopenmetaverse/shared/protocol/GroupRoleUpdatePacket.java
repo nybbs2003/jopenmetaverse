@@ -57,11 +57,15 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         public final class RoleDataBlock extends PacketBlock
         {
             public UUID RoleID;
-            public byte[] Name;
-            public byte[] Description;
-            public byte[] Title;
+		/** Unsigned Byte */ 
+		public byte[] Name;
+		/** Unsigned Byte */ 
+		public byte[] Description;
+		/** Unsigned Byte */ 
+		public byte[] Title;
             public BigInteger Powers;
-            public byte UpdateType;
+		/** Unsigned Byte */ 
+		public byte UpdateType;
 
             @Override
 			public int getLength()

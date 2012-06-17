@@ -97,9 +97,12 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         public final class RoleDataBlock extends PacketBlock
         {
             public UUID RoleID;
-            public byte[] Name;
-            public byte[] Title;
-            public byte[] Description;
+		/** Unsigned Byte */ 
+		public byte[] Name;
+		/** Unsigned Byte */ 
+		public byte[] Title;
+		/** Unsigned Byte */ 
+		public byte[] Description;
             public BigInteger Powers;
             public long Members;
 

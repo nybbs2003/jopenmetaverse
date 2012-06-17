@@ -59,7 +59,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         {
             public UUID AgentID;
             public UUID SessionID;
-            public byte[] Reason;
+		/** Unsigned Byte */ 
+		public byte[] Reason;
 
             @Override
 			public int getLength()

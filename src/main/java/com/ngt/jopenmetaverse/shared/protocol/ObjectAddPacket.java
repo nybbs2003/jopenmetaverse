@@ -59,27 +59,40 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         public final class ObjectDataBlock extends PacketBlock
         {
             public byte PCode;
-            public byte Material;
+		/** Unsigned Byte */ 
+		public byte Material;
             public long AddFlags;
-            public byte PathCurve;
-            public byte ProfileCurve;
+		/** Unsigned Byte */ 
+		public byte PathCurve;
+		/** Unsigned Byte */ 
+		public byte ProfileCurve;
             
             /**Unsigned Short **/
             public int PathBegin;
             /**Unsigned Short **/
             public int PathEnd;
-
-            public byte PathScaleX;
-            public byte PathScaleY;
-            public byte PathShearX;
-            public byte PathShearY;
-            public sbyte PathTwist;
-            public sbyte PathTwistBegin;
-            public sbyte PathRadiusOffset;
-            public sbyte PathTaperX;
-            public sbyte PathTaperY;
-            public byte PathRevolutions;
-            public sbyte PathSkew;
+		/** Unsigned Byte */ 
+		public byte PathScaleX;
+		/** Unsigned Byte */ 
+		public byte PathScaleY;
+		/** Unsigned Byte */ 
+		public byte PathShearX;
+		/** Unsigned Byte */ 
+		public byte PathShearY;
+		/** Signed Byte */ 
+		public byte PathTwist;
+		/** Signed Byte */ 
+		public byte PathTwistBegin;
+		/** Signed Byte */ 
+		public byte PathRadiusOffset;
+		/** Signed Byte */ 
+		public byte PathTaperX;
+		/** Signed Byte */ 
+		public byte PathTaperY;
+		/** Unsigned Byte */ 
+		public byte PathRevolutions;
+		/** Signed Byte */ 
+		public byte PathSkew;
             
             /**Unsigned Short **/
             public int ProfileBegin;
@@ -87,15 +100,17 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             public int ProfileEnd;
             /**Unsigned Short **/
             public int ProfileHollow;
-            
-            public byte BypassRaycast;
+		/** Unsigned Byte */ 
+		public byte BypassRaycast;
             public Vector3 RayStart;
             public Vector3 RayEnd;
             public UUID RayTargetID;
-            public byte RayEndIsIntersection;
+		/** Unsigned Byte */ 
+		public byte RayEndIsIntersection;
             public Vector3 Scale;
             public Quaternion Rotation;
-            public byte State;
+		/** Unsigned Byte */ 
+		public byte State;
 
             @Override
 			public int getLength()
@@ -127,13 +142,13 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                     PathScaleY = (byte)bytes[i[0]++];
                     PathShearX = (byte)bytes[i[0]++];
                     PathShearY = (byte)bytes[i[0]++];
-                    PathTwist = (sbyte)bytes[i[0]++];
-                    PathTwistBegin = (sbyte)bytes[i[0]++];
-                    PathRadiusOffset = (sbyte)bytes[i[0]++];
-                    PathTaperX = (sbyte)bytes[i[0]++];
-                    PathTaperY = (sbyte)bytes[i[0]++];
+                    PathTwist = (byte)bytes[i[0]++];
+                    PathTwistBegin = (byte)bytes[i[0]++];
+                    PathRadiusOffset = (byte)bytes[i[0]++];
+                    PathTaperX = (byte)bytes[i[0]++];
+                    PathTaperY = (byte)bytes[i[0]++];
                     PathRevolutions = (byte)bytes[i[0]++];
-                    PathSkew = (sbyte)bytes[i[0]++];
+                    PathSkew = (byte)bytes[i[0]++];
                     ProfileBegin = (int)Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
                     ProfileEnd = (int)Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
                     ProfileHollow = (int)Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;

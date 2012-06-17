@@ -11,7 +11,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         {
             public UUID RequestID;
             public UUID GroupID;
-            public byte[] Selection;
+		/** Unsigned Byte */ 
+		public byte[] Selection;
 
             @Override
 			public int getLength()

@@ -13,7 +13,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         {
             public UUID AgentID;
             public UUID SessionID;
-            public byte AttachmentPoint;
+		/** Unsigned Byte */ 
+		public byte AttachmentPoint;
 
             @Override
 			public int getLength()

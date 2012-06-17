@@ -13,7 +13,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             public UUID ObjectID;
             public UUID OwnerID;
             public float Gain;
-            public byte Flags;
+		/** Unsigned Byte */ 
+		public byte Flags;
 
             @Override
 			public int getLength()

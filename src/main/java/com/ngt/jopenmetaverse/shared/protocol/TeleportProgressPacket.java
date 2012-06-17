@@ -50,7 +50,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         public final class InfoBlock extends PacketBlock
         {
             public long TeleportFlags;
-            public byte[] Message;
+		/** Unsigned Byte */ 
+		public byte[] Message;
 
             @Override
 			public int getLength()

@@ -13,11 +13,15 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             public byte[] FromName;
             public UUID SourceID;
             public UUID OwnerID;
-            public byte SourceType;
-            public byte ChatType;
-            public byte Audible;
+		/** Unsigned Byte */ 
+		public byte SourceType;
+		/** Unsigned Byte */ 
+		public byte ChatType;
+		/** Unsigned Byte */ 
+		public byte Audible;
             public Vector3 Position;
-            public byte[] Message;
+		/** Unsigned Byte */ 
+		public byte[] Message;
 
             @Override
 			public int getLength()

@@ -53,7 +53,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         public final class ModifyBlockBlock extends PacketBlock
         {
             public byte Action;
-            public byte BrushSize;
+		/** Unsigned Byte */ 
+		public byte BrushSize;
             public float Seconds;
             public float Height;
 

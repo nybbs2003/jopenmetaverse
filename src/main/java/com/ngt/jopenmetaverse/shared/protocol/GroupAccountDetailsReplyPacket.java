@@ -57,7 +57,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             public UUID RequestID;
             public int IntervalDays;
             public int CurrentInterval;
-            public byte[] StartDate;
+		/** Unsigned Byte */ 
+		public byte[] StartDate;
 
             @Override
 			public int getLength()

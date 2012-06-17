@@ -13,7 +13,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             public int ChannelType;
             public int SourceType;
             public float Priority;
-            public byte[] Params;
+		/** Unsigned Byte */ 
+		public byte[] Params;
 
             @Override
 			public int getLength()

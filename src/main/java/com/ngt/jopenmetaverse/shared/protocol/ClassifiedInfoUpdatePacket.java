@@ -55,13 +55,16 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         {
             public UUID ClassifiedID;
             public long Category;
-            public byte[] Name;
-            public byte[] Desc;
+		/** Unsigned Byte */ 
+		public byte[] Name;
+		/** Unsigned Byte */ 
+		public byte[] Desc;
             public UUID ParcelID;
             public long ParentEstate;
             public UUID SnapshotID;
             public Vector3d PosGlobal;
-            public byte ClassifiedFlags;
+		/** Unsigned Byte */ 
+		public byte ClassifiedFlags;
             public int PriceForListing;
 
             @Override

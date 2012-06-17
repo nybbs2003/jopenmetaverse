@@ -54,17 +54,23 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         public final class ReportDataBlock extends PacketBlock
         {
             public byte ReportType;
-            public byte Category;
+		/** Unsigned Byte */ 
+		public byte Category;
             public Vector3 Position;
-            public byte CheckFlags;
+		/** Unsigned Byte */ 
+		public byte CheckFlags;
             public UUID ScreenshotID;
             public UUID ObjectID;
             public UUID AbuserID;
-            public byte[] AbuseRegionName;
+		/** Unsigned Byte */ 
+		public byte[] AbuseRegionName;
             public UUID AbuseRegionID;
-            public byte[] Summary;
-            public byte[] Details;
-            public byte[] VersionString;
+		/** Unsigned Byte */ 
+		public byte[] Summary;
+		/** Unsigned Byte */ 
+		public byte[] Details;
+		/** Unsigned Byte */ 
+		public byte[] VersionString;
 
             @Override
 			public int getLength()

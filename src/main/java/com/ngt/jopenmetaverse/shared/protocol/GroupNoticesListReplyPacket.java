@@ -54,10 +54,13 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         {
             public UUID NoticeID;
             public long Timestamp;
-            public byte[] FromName;
-            public byte[] Subject;
+		/** Unsigned Byte */ 
+		public byte[] FromName;
+		/** Unsigned Byte */ 
+		public byte[] Subject;
             public boolean HasAttachment;
-            public byte AssetType;
+		/** Unsigned Byte */ 
+		public byte AssetType;
 
             @Override
 			public int getLength()

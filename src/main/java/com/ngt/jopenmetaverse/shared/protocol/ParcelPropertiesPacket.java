@@ -24,9 +24,11 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             public int RentPrice;
             public Vector3 AABBMin;
             public Vector3 AABBMax;
-            public byte[] Bitmap;
+		/** Unsigned Byte */ 
+		public byte[] Bitmap;
             public int Area;
-            public byte Status;
+		/** Unsigned Byte */ 
+		public byte Status;
             public int SimWideMaxPrims;
             public int SimWideTotalPrims;
             public int MaxPrims;
@@ -39,21 +41,28 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             public int OtherCleanTime;
             public long ParcelFlags;
             public int SalePrice;
-            public byte[] Name;
-            public byte[] Desc;
-            public byte[] MusicURL;
-            public byte[] MediaURL;
+		/** Unsigned Byte */ 
+		public byte[] Name;
+		/** Unsigned Byte */ 
+		public byte[] Desc;
+		/** Unsigned Byte */ 
+		public byte[] MusicURL;
+		/** Unsigned Byte */ 
+		public byte[] MediaURL;
             public UUID MediaID;
-            public byte MediaAutoScale;
+		/** Unsigned Byte */ 
+		public byte MediaAutoScale;
             public UUID GroupID;
             public int PassPrice;
             public float PassHours;
-            public byte Category;
+		/** Unsigned Byte */ 
+		public byte Category;
             public UUID AuthBuyerID;
             public UUID SnapshotID;
             public Vector3 UserLocation;
             public Vector3 UserLookAt;
-            public byte LandingType;
+		/** Unsigned Byte */ 
+		public byte LandingType;
             public boolean RegionPushOverride;
             public boolean RegionDenyAnonymous;
             public boolean RegionDenyIdentified;

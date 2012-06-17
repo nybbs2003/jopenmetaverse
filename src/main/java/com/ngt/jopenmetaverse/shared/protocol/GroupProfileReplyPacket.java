@@ -51,10 +51,13 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         public final class GroupDataBlock extends PacketBlock
         {
             public UUID GroupID;
-            public byte[] Name;
-            public byte[] Charter;
+		/** Unsigned Byte */ 
+		public byte[] Name;
+		/** Unsigned Byte */ 
+		public byte[] Charter;
             public boolean ShowInList;
-            public byte[] MemberTitle;
+		/** Unsigned Byte */ 
+		public byte[] MemberTitle;
             public BigInteger PowersMask;
             public UUID InsigniaID;
             public UUID FounderID;

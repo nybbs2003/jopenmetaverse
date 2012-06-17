@@ -56,9 +56,11 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         {
             public BigInteger GroupPowers;
             public boolean AcceptNotices;
-            public byte[] GroupTitle;
+		/** Unsigned Byte */ 
+		public byte[] GroupTitle;
             public UUID GroupID;
-            public byte[] GroupName;
+		/** Unsigned Byte */ 
+		public byte[] GroupName;
             public UUID GroupInsigniaID;
 
             @Override
