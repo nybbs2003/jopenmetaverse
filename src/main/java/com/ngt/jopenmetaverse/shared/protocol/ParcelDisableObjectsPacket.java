@@ -1,5 +1,8 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.ngt.jopenmetaverse.shared.types.UUID;
 import com.ngt.jopenmetaverse.shared.util.Utils;
 
@@ -261,7 +264,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         @Override
 		public byte[][] ToBytesMultiple()
         {
-            System.Collections.Generic.List<byte[]> packets = new System.Collections.Generic.List<byte[]>();
+            List<byte[]> packets = new ArrayList<byte[]>();
             int[] i = new int[1];
             i[0] = 0;
             int fixedLength = 10;
@@ -316,8 +319,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 byte[] packet = new byte[fixedLength + variableLength + acksLength[0]];
                 int[] length = new int[1];
                 length[0] = fixedBytes.length;
-                Buffer.BlockCopy(fixedBytes, 0, packet, 0, length[0]);
-                if (packets.Count > 0) { packet[0] = (byte)(packet[0] & ~0x10); }
+                Utils.arraycopy(fixedBytes, 0, packet, 0, length[0]);
+                if (packets.size() > 0) { packet[0] = (byte)(packet[0] & ~0x10); }
 
                 packet[length[0]++] = (byte)TaskIDsCount;
                 for (i[0] = TaskIDsStart; i[0] < TaskIDsStart + TaskIDsCount; i[0]++) { TaskIDs[i[0]].ToBytes(packet, length); }
@@ -328,15 +331,15 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 OwnerIDsStart += OwnerIDsCount;
 
                 if (acksLength[0] > 0) {
-                    Buffer.BlockCopy(ackBytes, 0, packet, length, acksLength);
+                	Utils.arraycopy(ackBytes, 0, packet, length[0], acksLength[0]);
                     acksLength[0] = 0;
                 }
 
-                packets.Add(packet);
+                packets.add(packet);
             } while (
                 TaskIDsStart < TaskIDs.length ||
                 OwnerIDsStart < OwnerIDs.length);
 
-            return packets.ToArray();
+            return packets.toArray(new byte[0][0]);
         }
     }

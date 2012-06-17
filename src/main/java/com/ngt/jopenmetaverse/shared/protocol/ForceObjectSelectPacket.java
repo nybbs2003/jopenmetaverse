@@ -1,5 +1,8 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.ngt.jopenmetaverse.shared.types.UUID;
 import com.ngt.jopenmetaverse.shared.util.Utils;
 
@@ -90,13 +93,13 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         {
                         {
                 int length = 11;
-                length += _header.length;
+                length += _header.getLength();
                 for (int j = 0; j < Data.length; j++)
                     length += Data[j].getLength();
                 return length;
             }
         }
-        public HeaderBlock _Header;
+        public HeaderBlock _header;
         public DataBlock[] Data;
 
         public ForceObjectSelectPacket()
@@ -107,7 +110,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             header.Frequency = PacketFrequency.Low;
             header.ID = 205;
             header.Reliable = true;
-            _this.header =  new HeaderBlock();
+            _header =  new HeaderBlock();
             Data = null;
         }
 
@@ -164,7 +167,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 			public byte[] ToBytes()
         {
             int length = 10;
-            length += _header.length;
+            length += _header.getLength();
             length++;
             for (int j = 0; j < Data.length; j++) { length += Data[j].getLength(); }
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
@@ -193,7 +196,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 header.AcksToBytes(ackBytes, acksLength);
             }
 
-            fixedLength += _header.length;
+            fixedLength += _header.getLength();
             byte[] fixedBytes = new byte[fixedLength];
             header.ToBytes(fixedBytes, i);
             _header.ToBytes(fixedBytes, i);

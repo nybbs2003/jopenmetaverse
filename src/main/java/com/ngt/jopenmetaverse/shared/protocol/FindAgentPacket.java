@@ -1,5 +1,8 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.ngt.jopenmetaverse.shared.types.UUID;
 import com.ngt.jopenmetaverse.shared.util.Utils;
 
@@ -76,8 +79,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 try
                 {
-                    GlobalX = Utils.BytesToDouble(bytes, i[0]); i[0] += 8;
-                    GlobalY = Utils.BytesToDouble(bytes, i[0]); i[0] += 8;
+                    GlobalX = Utils.bytesToDouble(bytes, i[0]); i[0] += 8;
+                    GlobalY = Utils.bytesToDouble(bytes, i[0]); i[0] += 8;
                 }
                 catch (Exception e)
                 {
@@ -88,8 +91,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.DoubleToBytes(GlobalX, bytes, i[0]); i[0] += 8;
-                Utils.DoubleToBytes(GlobalY, bytes, i[0]); i[0] += 8;
+                Utils.doubleToBytes(GlobalX, bytes, i[0]); i[0] += 8;
+                Utils.doubleToBytes(GlobalY, bytes, i[0]); i[0] += 8;
             }
 
         }
@@ -99,7 +102,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         {
                         {
                 int length = 11;
-                length += AgentBlock.length;
+                length += AgentBlock.getLength();
                 for (int j = 0; j < LocationBlock.length; j++)
                     length += LocationBlock[j].getLength();
                 return length;
@@ -173,7 +176,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 			public byte[] ToBytes()
         {
             int length = 10;
-            length += AgentBlock.length;
+            length += AgentBlock.getLength();
             length++;
             for (int j = 0; j < LocationBlock.length; j++) { length += LocationBlock[j].getLength(); }
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
@@ -202,7 +205,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 header.AcksToBytes(ackBytes, acksLength);
             }
 
-            fixedLength += AgentBlock.length;
+            fixedLength += AgentBlock.getLength();
             byte[] fixedBytes = new byte[fixedLength];
             header.ToBytes(fixedBytes, i);
             AgentBlock.ToBytes(fixedBytes, i);

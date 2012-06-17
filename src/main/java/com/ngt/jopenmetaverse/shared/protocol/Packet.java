@@ -1,9 +1,11 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import com.ngt.jopenmetaverse.shared.types.UUID;
 import com.ngt.jopenmetaverse.shared.util.Utils;
+
 	public abstract class Packet
     {
         public final static int MTU = 1200;
@@ -815,11 +817,11 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 
         }
 
-        public static Packet BuildPacket(byte[] packetBuffer, int packetEnd[], byte[] zeroBuffer)
+        public static Packet BuildPacket(byte[] packetBuffer, int packetEnd[], byte[] zeroBuffer) throws MalformedDataException
         {
             byte[] bytes;
             int[] i = new int[]{0};
-            Header header = header.BuildHeader(packetBuffer, i, packetEnd);
+            Header header = Header.BuildHeader(packetBuffer, i, packetEnd);
             if (header.Zerocoded)
             {
                 packetEnd[0] = Helpers.ZeroDecode(packetBuffer, packetEnd[0] + 1, zeroBuffer) - 1;
@@ -829,11 +831,11 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 bytes = packetBuffer;
             }
-            Array.Clear(bytes, packetEnd + 1, bytes.Length - packetEnd - 1);
+            Arrays.fill(bytes, packetEnd[0] + 1, bytes.length - 1, (byte)0x00);
 
             switch (header.Frequency)
             {
-                case PacketFrequency.Low:
+                case Low:
                     switch (header.ID)
                     {
                         case 1: return new TestMessagePacket(header, bytes, i);
@@ -1182,7 +1184,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 
                     }
                     break;
-                case PacketFrequency.Medium:
+                case Medium:
                     switch (header.ID)
                     {
                         case 1: return new ObjectAddPacket(header, bytes, i);
@@ -1203,7 +1205,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 
                     }
                     break;
-                case PacketFrequency.High:
+                case High:
                     switch (header.ID)
                     {
                         case 1: return new StartPingCheckPacket(header, bytes, i);

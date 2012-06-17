@@ -267,7 +267,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             }
 
             fixedLength += AgentData.getLength();
-            fixedLength += MethodData.length;
+            fixedLength += MethodData.getLength();
             byte[] fixedBytes = new byte[fixedLength];
             header.ToBytes(fixedBytes, i);
             AgentData.ToBytes(fixedBytes, i);

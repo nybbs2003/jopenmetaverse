@@ -1116,7 +1116,7 @@ public class Utils
 	public static byte[] ulongToBytes(BigInteger value)
 	{
 		byte[] bytes = value.toByteArray();
-		ArrayUtils.subarray(bytes, bytes.length-8, bytes.length-1);
+		return ArrayUtils.subarray(bytes, bytes.length-8, bytes.length-1);
 	}
 
 	public static void ulongToBytes(BigInteger value, byte[] dest, int pos)

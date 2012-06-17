@@ -174,7 +174,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                     PCode = (byte)bytes[i[0]++];
                     Material = (byte)bytes[i[0]++];
                     ClickAction = (byte)bytes[i[0]++];
-                    Scale.FromBytes(bytes, i[0]); i[0] += 12;
+                    Scale.fromBytes(bytes, i[0]); i[0] += 12;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     ObjectData = new byte[length];
                     Utils.arraycopy(bytes, i[0], ObjectData, 0, length); i[0] +=  length;
@@ -214,7 +214,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                     Text = new byte[length];
                     Utils.arraycopy(bytes, i[0], Text, 0, length); i[0] +=  length;
                     TextColor = new byte[4];
-                    Utils.arraycopy(bytes, i[0], TextColor, 0, 4); i += 4;
+                    Utils.arraycopy(bytes, i[0], TextColor, 0, 4); i[0] += 4;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     MediaURL = new byte[length];
                     Utils.arraycopy(bytes, i[0], MediaURL, 0, length); i[0] +=  length;
@@ -230,8 +230,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                     Flags = (byte)bytes[i[0]++];
                     Radius = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
                     JointType = (byte)bytes[i[0]++];
-                    JointPivot.FromBytes(bytes, i[0]); i[0] += 12;
-                    JointAxisOrAnchor.FromBytes(bytes, i[0]); i[0] += 12;
+                    JointPivot.fromBytes(bytes, i[0]); i[0] += 12;
+                    JointAxisOrAnchor.fromBytes(bytes, i[0]); i[0] += 12;
                 }
                 catch (Exception e)
                 {
@@ -290,7 +290,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 Utils.arraycopy(Data, 0, bytes, i[0], Data.length); i[0] +=  Data.length;
                 bytes[i[0]++] = (byte)Text.length;
                 Utils.arraycopy(Text, 0, bytes, i[0], Text.length); i[0] +=  Text.length;
-                Utils.arraycopy(TextColor, 0, bytes, i[0], 4);i += 4;
+                Utils.arraycopy(TextColor, 0, bytes, i[0], 4);i[0] += 4;
                 bytes[i[0]++] = (byte)MediaURL.length;
                 Utils.arraycopy(MediaURL, 0, bytes, i[0], MediaURL.length); i[0] +=  MediaURL.length;
                 bytes[i[0]++] = (byte)PSBlock.length;

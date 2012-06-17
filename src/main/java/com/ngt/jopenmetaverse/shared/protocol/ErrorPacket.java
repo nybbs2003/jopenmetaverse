@@ -68,7 +68,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                     if (Token != null) { length += Token.length; }
                     if (System != null) { length += System.length; }
                     if (Message != null) { length += Message.length; }
-                    if (Data != null) { length += Data.getLength(); }
+                    if (Data != null) { length += Data.length; }
                     return length;
                 }
             }

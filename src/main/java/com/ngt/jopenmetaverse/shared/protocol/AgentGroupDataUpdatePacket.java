@@ -118,7 +118,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                         {
                 int length = 11;
                 length += AgentData.getLength();
-                for (int j = 0; j < GroupData.getLength(); j++)
+                for (int j = 0; j < GroupData.length; j++)
                     length += GroupData[j].getLength();
                 return length;
             }
@@ -157,7 +157,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             }
             AgentData.FromBytes(bytes, i);
             int count = Utils.ubyteToInt(bytes[i[0]++]);
-            if(GroupData == null || GroupData.getLength() != -1) {
+            if(GroupData == null || GroupData.length != -1) {
                 GroupData = new GroupDataBlock[count];
                 for(int j = 0; j < count; j++)
                 { GroupData[j] = new GroupDataBlock(); }
@@ -179,7 +179,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             this.header =  header;
             AgentData.FromBytes(bytes, i);
             int count = Utils.ubyteToInt(bytes[i[0]++]);
-            if(GroupData == null || GroupData.getLength() != count) {
+            if(GroupData == null || GroupData.length != count) {
                 GroupData = new GroupDataBlock[count];
                 for(int j = 0; j < count; j++)
                 { GroupData[j] = new GroupDataBlock(); }
@@ -194,14 +194,14 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             int length = 10;
             length += AgentData.getLength();
             length++;
-            for (int j = 0; j < GroupData.getLength(); j++) { length += GroupData[j].getLength(); }
+            for (int j = 0; j < GroupData.length; j++) { length += GroupData[j].getLength(); }
             if (header.AckList != null && header.AckList.length > 0) { length += header.AckList.length * 4 + 1; }
             byte[] bytes = new byte[length];
             int[] i = new int[]{0};
             header.ToBytes(bytes, i);
             AgentData.ToBytes(bytes, i);
-            bytes[i[0]++] = (byte)GroupData.getLength();
-            for (int j = 0; j < GroupData.getLength(); j++) { GroupData[j].ToBytes(bytes, i); }
+            bytes[i[0]++] = (byte)GroupData.length;
+            for (int j = 0; j < GroupData.length; j++) { GroupData[j].ToBytes(bytes, i); }
             if (header.AckList != null && header.AckList.length > 0) { header.AcksToBytes(bytes, i); }
             return bytes;
         }
@@ -234,7 +234,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 int GroupDataCount = 0;
 
               i[0] =GroupDataStart;
-                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i[0] < GroupData.getLength()) {
+                while (fixedLength + variableLength + acksLength[0] < Packet.MTU && i[0] < GroupData.length) {
                     int blockLength = GroupData[i[0]].getLength();
                     if (fixedLength + variableLength + blockLength + acksLength[0] <= MTU) {
                         variableLength += blockLength;
@@ -260,7 +260,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 
                 packets.add(packet);
             } while (
-                GroupDataStart < GroupData.getLength());
+                GroupDataStart < GroupData.length);
 
             return packets.toArray(new byte[0][0]);
         }
