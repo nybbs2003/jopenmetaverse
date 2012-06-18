@@ -8,7 +8,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 	public final class ScriptTeleportRequestPacket extends Packet
     {
         /// <exclude/>
-        public final class DataBlock extends PacketBlock
+        public static final class DataBlock extends PacketBlock
         {
             public byte[] ObjectName;
 		/** Unsigned Byte */ 

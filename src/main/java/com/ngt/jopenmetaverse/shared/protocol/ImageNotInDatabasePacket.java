@@ -7,7 +7,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 	public final class ImageNotInDatabasePacket extends Packet
     {
         /// <exclude/>
-        public final class ImageIDBlock extends PacketBlock
+        public static final class ImageIDBlock extends PacketBlock
         {
             public UUID ID;
 

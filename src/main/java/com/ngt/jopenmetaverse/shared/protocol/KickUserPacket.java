@@ -7,7 +7,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 	public final class KickUserPacket extends Packet
     {
         /// <exclude/>
-        public final class TargetBlockBlock extends PacketBlock
+        public static final class TargetBlockBlock extends PacketBlock
         {
             public long TargetIP;
             /**
@@ -55,7 +55,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <exclude/>
-        public final class UserInfoBlock extends PacketBlock
+        public static final class UserInfoBlock extends PacketBlock
         {
             public UUID AgentID;
             public UUID SessionID;

@@ -10,7 +10,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
     public final class AvatarAnimationPacket extends Packet
     {
         /// <exclude/>
-        public final class SenderBlock extends PacketBlock
+        public static final class SenderBlock extends PacketBlock
         {
             public UUID ID;
 
@@ -50,7 +50,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <exclude/>
-        public final class AnimationListBlock extends PacketBlock
+        public static final class AnimationListBlock extends PacketBlock
         {
             public UUID AnimID;
             public int AnimSequenceID;
@@ -93,7 +93,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <exclude/>
-        public final class AnimationSourceListBlock extends PacketBlock
+        public static final class AnimationSourceListBlock extends PacketBlock
         {
             public UUID ObjectID;
 
@@ -133,7 +133,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <exclude/>
-        public final class PhysicalAvatarEventListBlock extends PacketBlock
+        public static final class PhysicalAvatarEventListBlock extends PacketBlock
         {
             public byte[] TypeData;
 

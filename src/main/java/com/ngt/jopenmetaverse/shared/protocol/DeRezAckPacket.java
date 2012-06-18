@@ -6,7 +6,7 @@ import com.ngt.jopenmetaverse.shared.types.UUID;
     public final class DeRezAckPacket extends Packet
     {
         /// <exclude/>
-        public final class TransactionDataBlock extends PacketBlock
+        public static final class TransactionDataBlock extends PacketBlock
         {
             public UUID TransactionID;
             public boolean Success;

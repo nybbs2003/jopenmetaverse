@@ -7,7 +7,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 	public final class ImageDataPacket extends Packet
     {
         /// <exclude/>
-        public final class ImageIDBlock extends PacketBlock
+        public static final class ImageIDBlock extends PacketBlock
         {
             public UUID ID;
 		/** Unsigned Byte */ 
@@ -62,7 +62,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <exclude/>
-        public final class ImageDataBlock extends PacketBlock
+        public static final class ImageDataBlock extends PacketBlock
         {
             public byte[] Data;
 

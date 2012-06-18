@@ -7,7 +7,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 	public final class RegionHandshakePacket extends Packet
     {
         /// <exclude/>
-        public final class RegionInfoBlock extends PacketBlock
+        public static final class RegionInfoBlock extends PacketBlock
         {
             public long RegionFlags;
 		/** Unsigned Byte */ 
@@ -124,7 +124,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <exclude/>
-        public final class RegionInfo2Block extends PacketBlock
+        public static final class RegionInfo2Block extends PacketBlock
         {
             public UUID RegionID;
 
@@ -164,7 +164,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <exclude/>
-        public final class RegionInfo3Block extends PacketBlock
+        public static final class RegionInfo3Block extends PacketBlock
         {
             public int CPUClassID;
             public int CPURatio;

@@ -8,7 +8,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 	public final class ObjectGrabUpdatePacket extends Packet
     {
         /// <exclude/>
-        public final class AgentDataBlock extends PacketBlock
+        public static final class AgentDataBlock extends PacketBlock
         {
             public UUID AgentID;
             public UUID SessionID;
@@ -51,7 +51,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <exclude/>
-        public final class ObjectDataBlock extends PacketBlock
+        public static final class ObjectDataBlock extends PacketBlock
         {
             public UUID ObjectID;
             public Vector3 GrabOffsetInitial;
@@ -100,7 +100,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <exclude/>
-        public final class SurfaceInfoBlock extends PacketBlock
+        public static final class SurfaceInfoBlock extends PacketBlock
         {
             public Vector3 UVCoord;
             public Vector3 STCoord;

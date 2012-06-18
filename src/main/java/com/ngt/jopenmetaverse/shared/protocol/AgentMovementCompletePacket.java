@@ -10,7 +10,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
     public final class AgentMovementCompletePacket extends Packet
     {
         /// <exclude/>
-        public final class AgentDataBlock extends PacketBlock
+        public static final class AgentDataBlock extends PacketBlock
         {
             public UUID AgentID;
             public UUID SessionID;
@@ -53,7 +53,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <exclude/>
-        public final class DataBlock extends PacketBlock
+        public static final class DataBlock extends PacketBlock
         {
             public Vector3 Position;
             public Vector3 LookAt;
@@ -105,7 +105,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <exclude/>
-        public final class SimDataBlock extends PacketBlock
+        public static final class SimDataBlock extends PacketBlock
         {
             public byte[] ChannelVersion;
 

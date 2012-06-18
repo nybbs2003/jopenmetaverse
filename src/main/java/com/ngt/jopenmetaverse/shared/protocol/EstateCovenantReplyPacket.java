@@ -7,7 +7,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
     public final class EstateCovenantReplyPacket extends Packet
     {
         /// <exclude/>
-        public final class DataBlock extends PacketBlock
+        public static final class DataBlock extends PacketBlock
         {
             public UUID CovenantID;
             public long CovenantTimestamp;

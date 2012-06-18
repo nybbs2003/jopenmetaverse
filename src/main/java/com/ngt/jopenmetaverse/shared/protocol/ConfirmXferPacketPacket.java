@@ -8,7 +8,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
     public final class ConfirmXferPacketPacket extends Packet
     {
         /// <exclude/>
-        public final class XferIDBlock extends PacketBlock
+        public static final class XferIDBlock extends PacketBlock
         {
             public BigInteger ID;
             public long Packet;

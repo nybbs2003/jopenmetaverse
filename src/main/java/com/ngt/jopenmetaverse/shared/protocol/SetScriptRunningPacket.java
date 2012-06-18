@@ -7,7 +7,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 	public final class SetScriptRunningPacket extends Packet
     {
         /// <exclude/>
-        public final class AgentDataBlock extends PacketBlock
+        public static final class AgentDataBlock extends PacketBlock
         {
             public UUID AgentID;
             public UUID SessionID;
@@ -50,7 +50,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <exclude/>
-        public final class ScriptBlock extends PacketBlock
+        public static final class ScriptBlock extends PacketBlock
         {
             public UUID ObjectID;
             public UUID ItemID;

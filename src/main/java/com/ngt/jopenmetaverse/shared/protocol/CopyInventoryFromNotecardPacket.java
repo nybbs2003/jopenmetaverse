@@ -10,7 +10,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
     public final class CopyInventoryFromNotecardPacket extends Packet
     {
         /// <exclude/>
-        public final class AgentDataBlock extends PacketBlock
+        public static final class AgentDataBlock extends PacketBlock
         {
             public UUID AgentID;
             public UUID SessionID;
@@ -53,7 +53,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <exclude/>
-        public final class NotecardDataBlock extends PacketBlock
+        public static final class NotecardDataBlock extends PacketBlock
         {
             public UUID NotecardItemID;
             public UUID ObjectID;
@@ -96,7 +96,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <exclude/>
-        public final class InventoryDataBlock extends PacketBlock
+        public static final class InventoryDataBlock extends PacketBlock
         {
             public UUID ItemID;
             public UUID FolderID;

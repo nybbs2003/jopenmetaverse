@@ -7,7 +7,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 	public final class RebakeAvatarTexturesPacket extends Packet
     {
         /// <exclude/>
-        public final class TextureDataBlock extends PacketBlock
+        public static final class TextureDataBlock extends PacketBlock
         {
             public UUID TextureID;
 

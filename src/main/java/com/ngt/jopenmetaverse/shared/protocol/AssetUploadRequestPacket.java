@@ -7,7 +7,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
     public final class AssetUploadRequestPacket extends Packet
     {
         /// <exclude/>
-        public final class AssetBlockBlock extends PacketBlock
+        public static final class AssetBlockBlock extends PacketBlock
         {
             public UUID TransactionID;
 		/** Signed Byte */ 

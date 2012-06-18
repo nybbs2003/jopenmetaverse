@@ -7,7 +7,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 	public final class HealthMessagePacket extends Packet
     {
         /// <exclude/>
-        public final class HealthDataBlock extends PacketBlock
+        public static final class HealthDataBlock extends PacketBlock
         {
             public float Health;
 

@@ -7,7 +7,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 	public final class ObjectOwnerPacket extends Packet
     {
         /// <exclude/>
-        public final class AgentDataBlock extends PacketBlock
+        public static final class AgentDataBlock extends PacketBlock
         {
             public UUID AgentID;
             public UUID SessionID;
@@ -50,7 +50,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <exclude/>
-        public final class HeaderDataBlock extends PacketBlock
+        public static final class HeaderDataBlock extends PacketBlock
         {
             public boolean Override;
             public UUID OwnerID;
@@ -96,7 +96,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <exclude/>
-        public final class ObjectDataBlock extends PacketBlock
+        public static final class ObjectDataBlock extends PacketBlock
         {
             public long ObjectLocalID;
 

@@ -6,7 +6,7 @@ import com.ngt.jopenmetaverse.shared.types.UUID;
     public final class DerezContainerPacket extends Packet
     {
         /// <exclude/>
-        public final class DataBlock extends PacketBlock
+        public static final class DataBlock extends PacketBlock
         {
             public UUID ObjectID;
             public boolean Delete;

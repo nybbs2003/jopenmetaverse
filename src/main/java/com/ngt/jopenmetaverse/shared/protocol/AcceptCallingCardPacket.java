@@ -10,7 +10,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
     public final class AcceptCallingCardPacket extends Packet
     {
         /// <exclude/>
-        public final class AgentDataBlock extends PacketBlock
+        public static final class AgentDataBlock extends PacketBlock
         {
             public UUID AgentID;
             public UUID SessionID;
@@ -51,7 +51,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <exclude/>
-        public final class TransactionBlockBlock extends PacketBlock
+        public static final class TransactionBlockBlock extends PacketBlock
         {
             public UUID TransactionID;
 
@@ -89,7 +89,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <exclude/>
-        public final class FolderDataBlock extends PacketBlock
+        public static final class FolderDataBlock extends PacketBlock
         {
             public UUID FolderID;
 

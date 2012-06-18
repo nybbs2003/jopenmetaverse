@@ -8,7 +8,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 	public final class TeleportFinishPacket extends Packet
     {
         /// <exclude/>
-        public final class InfoBlock extends PacketBlock
+        public static final class InfoBlock extends PacketBlock
         {
             public UUID AgentID;
             public long LocationID;

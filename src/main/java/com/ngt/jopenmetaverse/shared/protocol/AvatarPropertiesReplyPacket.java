@@ -7,7 +7,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
     public final class AvatarPropertiesReplyPacket extends Packet
     {
         /// <exclude/>
-        public final class AgentDataBlock extends PacketBlock
+        public static final class AgentDataBlock extends PacketBlock
         {
             public UUID AgentID;
             public UUID AvatarID;
@@ -50,7 +50,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <exclude/>
-        public final class PropertiesDataBlock extends PacketBlock
+        public static final class PropertiesDataBlock extends PacketBlock
         {
             public UUID ImageID;
             public UUID FLImageID;

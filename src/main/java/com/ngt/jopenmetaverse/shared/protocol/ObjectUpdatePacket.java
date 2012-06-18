@@ -9,7 +9,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 	public final class ObjectUpdatePacket extends Packet
     {
         /// <exclude/>
-        public final class RegionDataBlock extends PacketBlock
+        public static final class RegionDataBlock extends PacketBlock
         {
             public BigInteger RegionHandle;
             /** Unsigned Short **/
@@ -54,7 +54,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <exclude/>
-        public final class ObjectDataBlock extends PacketBlock
+        public static final class ObjectDataBlock extends PacketBlock
         {
             public long ID;
 		/** Unsigned Byte */ 

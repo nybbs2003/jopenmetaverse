@@ -7,7 +7,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 	public final class GroupTitlesReplyPacket extends Packet
     {
         /// <exclude/>
-        public final class AgentDataBlock extends PacketBlock
+        public static final class AgentDataBlock extends PacketBlock
         {
             public UUID AgentID;
             public UUID GroupID;
@@ -53,7 +53,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <exclude/>
-        public final class GroupDataBlock extends PacketBlock
+        public static final class GroupDataBlock extends PacketBlock
         {
             public byte[] Title;
             public UUID RoleID;

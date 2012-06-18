@@ -7,7 +7,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 	public final class RezScriptPacket extends Packet
     {
         /// <exclude/>
-        public final class AgentDataBlock extends PacketBlock
+        public static final class AgentDataBlock extends PacketBlock
         {
             public UUID AgentID;
             public UUID SessionID;
@@ -53,7 +53,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <exclude/>
-        public final class UpdateBlockBlock extends PacketBlock
+        public static final class UpdateBlockBlock extends PacketBlock
         {
             public long ObjectLocalID;
             public boolean Enabled;
@@ -96,7 +96,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <exclude/>
-        public final class InventoryBlockBlock extends PacketBlock
+        public static final class InventoryBlockBlock extends PacketBlock
         {
             public UUID ItemID;
             public UUID FolderID;

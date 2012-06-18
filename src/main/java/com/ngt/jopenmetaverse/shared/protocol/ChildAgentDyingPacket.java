@@ -6,7 +6,7 @@ import com.ngt.jopenmetaverse.shared.types.UUID;
     public final class ChildAgentDyingPacket extends Packet
     {
         /// <exclude/>
-        public final class AgentDataBlock extends PacketBlock
+        public static final class AgentDataBlock extends PacketBlock
         {
             public UUID AgentID;
             public UUID SessionID;

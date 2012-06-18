@@ -7,7 +7,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
     public final class MoneyBalanceReplyPacket extends Packet
     {
         /// <exclude/>
-        public final class MoneyDataBlock extends PacketBlock
+        public static final class MoneyDataBlock extends PacketBlock
         {
             public UUID AgentID;
             public UUID TransactionID;
@@ -72,7 +72,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <exclude/>
-        public final class TransactionInfoBlock extends PacketBlock
+        public static final class TransactionInfoBlock extends PacketBlock
         {
             public int TransactionType;
             public UUID SourceID;

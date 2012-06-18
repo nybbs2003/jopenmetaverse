@@ -10,7 +10,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
     public final class AvatarAppearancePacket extends Packet
     {
         /// <exclude/>
-        public final class SenderBlock extends PacketBlock
+        public static final class SenderBlock extends PacketBlock
         {
             public UUID ID;
             public boolean IsTrial;
@@ -53,7 +53,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <exclude/>
-        public final class ObjectDataBlock extends PacketBlock
+        public static final class ObjectDataBlock extends PacketBlock
         {
             public byte[] TextureEntry;
 
@@ -100,7 +100,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <exclude/>
-        public final class VisualParamBlock extends PacketBlock
+        public static final class VisualParamBlock extends PacketBlock
         {
             public byte ParamValue;
 

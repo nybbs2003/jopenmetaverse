@@ -10,7 +10,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
     public final class DirPlacesReplyPacket extends Packet
     {
         /// <exclude/>
-        public final class AgentDataBlock extends PacketBlock
+        public static final class AgentDataBlock extends PacketBlock
         {
             public UUID AgentID;
 
@@ -50,7 +50,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <exclude/>
-        public final class QueryDataBlock extends PacketBlock
+        public static final class QueryDataBlock extends PacketBlock
         {
             public UUID QueryID;
 
@@ -90,7 +90,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <exclude/>
-        public final class QueryRepliesBlock extends PacketBlock
+        public static final class QueryRepliesBlock extends PacketBlock
         {
             public UUID ParcelID;
 		/** Unsigned Byte */ 
@@ -149,7 +149,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <exclude/>
-        public final class StatusDataBlock extends PacketBlock
+        public static final class StatusDataBlock extends PacketBlock
         {
             public long Status;
 

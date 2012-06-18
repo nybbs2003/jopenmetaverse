@@ -7,7 +7,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
     public final class CoarseLocationUpdatePacket extends Packet
     {
         /// <exclude/>
-        public final class LocationBlock extends PacketBlock
+        public static final class LocationBlock extends PacketBlock
         {
             public byte X;
 		/** Unsigned Byte */ 
@@ -55,7 +55,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <exclude/>
-        public final class IndexBlock extends PacketBlock
+        public static final class IndexBlock extends PacketBlock
         {
             public short You;
             public short Prey;
@@ -100,7 +100,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <exclude/>
-        public final class AgentDataBlock extends PacketBlock
+        public static final class AgentDataBlock extends PacketBlock
         {
             public UUID AgentID;
 

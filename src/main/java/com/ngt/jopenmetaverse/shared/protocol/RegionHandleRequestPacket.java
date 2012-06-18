@@ -7,7 +7,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 	public final class RegionHandleRequestPacket extends Packet
     {
         /// <exclude/>
-        public final class RequestBlockBlock extends PacketBlock
+        public static final class RequestBlockBlock extends PacketBlock
         {
             public UUID RegionID;
 

@@ -7,7 +7,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 	public final class TeleportFailedPacket extends Packet
     {
         /// <exclude/>
-        public final class InfoBlock extends PacketBlock
+        public static final class InfoBlock extends PacketBlock
         {
             public UUID AgentID;
 		/** Unsigned Byte */ 
@@ -57,7 +57,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <exclude/>
-        public final class AlertInfoBlock extends PacketBlock
+        public static final class AlertInfoBlock extends PacketBlock
         {
             public byte[] Message;
 		/** Unsigned Byte */ 

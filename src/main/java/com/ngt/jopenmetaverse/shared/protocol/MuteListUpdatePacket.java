@@ -7,7 +7,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 	public final class MuteListUpdatePacket extends Packet
     {
         /// <exclude/>
-        public final class MuteDataBlock extends PacketBlock
+        public static final class MuteDataBlock extends PacketBlock
         {
             public UUID AgentID;
 		/** Unsigned Byte */ 

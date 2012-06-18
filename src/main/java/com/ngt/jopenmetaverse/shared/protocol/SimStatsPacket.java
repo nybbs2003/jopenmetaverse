@@ -7,7 +7,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 	public final class SimStatsPacket extends Packet
     {
         /// <exclude/>
-        public final class RegionBlock extends PacketBlock
+        public static final class RegionBlock extends PacketBlock
         {
             public long RegionX;
             public long RegionY;
@@ -56,7 +56,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <exclude/>
-        public final class StatBlock extends PacketBlock
+        public static final class StatBlock extends PacketBlock
         {
             public long StatID;
             public float StatValue;
@@ -99,7 +99,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <exclude/>
-        public final class PidStatBlock extends PacketBlock
+        public static final class PidStatBlock extends PacketBlock
         {
             public int PID;
 

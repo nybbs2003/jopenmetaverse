@@ -7,7 +7,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 	public final class ViewerFrozenMessagePacket extends Packet
     {
         /// <exclude/>
-        public final class FrozenDataBlock extends PacketBlock
+        public static final class FrozenDataBlock extends PacketBlock
         {
             public boolean Data;
 

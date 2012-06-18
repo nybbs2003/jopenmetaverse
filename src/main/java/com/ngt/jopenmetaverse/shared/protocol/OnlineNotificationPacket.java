@@ -7,7 +7,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 	public final class OnlineNotificationPacket extends Packet
     {
         /// <exclude/>
-        public final class AgentBlockBlock extends PacketBlock
+        public static final class AgentBlockBlock extends PacketBlock
         {
             public UUID AgentID;
 

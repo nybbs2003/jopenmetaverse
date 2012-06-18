@@ -6,7 +6,7 @@ import com.ngt.jopenmetaverse.shared.types.Vector4;
     public final class CameraConstraintPacket extends Packet
     {
         /// <exclude/>
-        public final class CameraCollidePlaneBlock extends PacketBlock
+        public static final class CameraCollidePlaneBlock extends PacketBlock
         {
             public Vector4 Plane;
 

@@ -7,7 +7,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
     public final class AttachedSoundPacket extends Packet
     {
         /// <exclude/>
-        public final class DataBlockBlock extends PacketBlock
+        public static final class DataBlockBlock extends PacketBlock
         {
             public UUID SoundID;
             public UUID ObjectID;

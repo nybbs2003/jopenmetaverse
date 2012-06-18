@@ -10,7 +10,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
     public final class CreateNewOutfitAttachmentsPacket extends Packet
     {
         /// <exclude/>
-        public final class AgentDataBlock extends PacketBlock
+        public static final class AgentDataBlock extends PacketBlock
         {
             public UUID AgentID;
             public UUID SessionID;
@@ -53,7 +53,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <exclude/>
-        public final class HeaderDataBlock extends PacketBlock
+        public static final class HeaderDataBlock extends PacketBlock
         {
             public UUID NewFolderID;
 
@@ -93,7 +93,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <exclude/>
-        public final class ObjectDataBlock extends PacketBlock
+        public static final class ObjectDataBlock extends PacketBlock
         {
             public UUID OldItemID;
             public UUID OldFolderID;

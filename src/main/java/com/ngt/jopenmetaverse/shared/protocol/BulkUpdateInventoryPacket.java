@@ -10,7 +10,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
     public final class BulkUpdateInventoryPacket extends Packet
     {
         /// <exclude/>
-        public final class AgentDataBlock extends PacketBlock
+        public static final class AgentDataBlock extends PacketBlock
         {
             public UUID AgentID;
             public UUID TransactionID;
@@ -53,7 +53,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <exclude/>
-        public final class FolderDataBlock extends PacketBlock
+        public static final class FolderDataBlock extends PacketBlock
         {
             public UUID FolderID;
             public UUID ParentID;
@@ -110,7 +110,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <exclude/>
-        public final class ItemDataBlock extends PacketBlock
+        public static final class ItemDataBlock extends PacketBlock
         {
             public UUID ItemID;
             public long CallbackID;

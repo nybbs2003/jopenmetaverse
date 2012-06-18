@@ -7,7 +7,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 	public final class TeleportLureRequestPacket extends Packet
     {
         /// <exclude/>
-        public final class InfoBlock extends PacketBlock
+        public static final class InfoBlock extends PacketBlock
         {
             public UUID AgentID;
             public UUID SessionID;

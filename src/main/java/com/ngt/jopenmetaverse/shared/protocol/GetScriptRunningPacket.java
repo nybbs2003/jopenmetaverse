@@ -6,7 +6,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
     public final class GetScriptRunningPacket extends Packet
     {
         /// <exclude/>
-        public final class ScriptBlock extends PacketBlock
+        public static final class ScriptBlock extends PacketBlock
         {
             public UUID ObjectID;
             public UUID ItemID;

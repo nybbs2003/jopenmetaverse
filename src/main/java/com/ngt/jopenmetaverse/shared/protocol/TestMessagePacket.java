@@ -6,7 +6,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
     public final class TestMessagePacket extends Packet
     {
         /// <exclude/>
-        public final class TestBlock1Block extends PacketBlock
+        public static final class TestBlock1Block extends PacketBlock
         {
             public long test1;
 
@@ -44,7 +44,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
         
         /// <exclude/>
-        public final class NeighborBlockBlock extends PacketBlock
+        public static final class NeighborBlockBlock extends PacketBlock
         {
             public long test0;
             public long test1;

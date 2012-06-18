@@ -7,7 +7,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 	public final class PacketAckPacket extends Packet
     {
         /// <exclude/>
-        public final class PacketsBlock extends PacketBlock
+        public static final class PacketsBlock extends PacketBlock
         {
             public long ID;
 

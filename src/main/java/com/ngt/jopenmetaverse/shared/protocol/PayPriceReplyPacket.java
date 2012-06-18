@@ -10,7 +10,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
     public final class PayPriceReplyPacket extends Packet
     {
         /// <exclude/>
-        public final class ObjectDataBlock extends PacketBlock
+        public static final class ObjectDataBlock extends PacketBlock
         {
             public UUID ObjectID;
             public int DefaultPayPrice;
@@ -53,7 +53,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <exclude/>
-        public final class ButtonDataBlock extends PacketBlock
+        public static final class ButtonDataBlock extends PacketBlock
         {
             public int PayButton;
 

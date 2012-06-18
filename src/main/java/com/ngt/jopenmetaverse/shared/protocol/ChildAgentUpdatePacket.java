@@ -13,7 +13,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
     public final class ChildAgentUpdatePacket extends Packet
     {
         /// <exclude/>
-        public final class AgentDataBlock extends PacketBlock
+        public static final class AgentDataBlock extends PacketBlock
         {
             public BigInteger RegionHandle;
             public long ViewerCircuitCode;
@@ -143,7 +143,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <exclude/>
-        public final class GroupDataBlock extends PacketBlock
+        public static final class GroupDataBlock extends PacketBlock
         {
             public UUID GroupID;
             public BigInteger GroupPowers;
@@ -189,7 +189,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <exclude/>
-        public final class AnimationDataBlock extends PacketBlock
+        public static final class AnimationDataBlock extends PacketBlock
         {
             public UUID Animation;
             public UUID ObjectID;
@@ -232,7 +232,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <exclude/>
-        public final class GranterBlockBlock extends PacketBlock
+        public static final class GranterBlockBlock extends PacketBlock
         {
             public UUID GranterID;
 
@@ -272,7 +272,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <exclude/>
-        public final class NVPairDataBlock extends PacketBlock
+        public static final class NVPairDataBlock extends PacketBlock
         {
             public byte[] NVPairs;
 
@@ -319,7 +319,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <exclude/>
-        public final class VisualParamBlock extends PacketBlock
+        public static final class VisualParamBlock extends PacketBlock
         {
             public byte ParamValue;
 
@@ -359,7 +359,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <exclude/>
-        public final class AgentAccessBlock extends PacketBlock
+        public static final class AgentAccessBlock extends PacketBlock
         {
             public byte AgentLegacyAccess;
 		/** Unsigned Byte */ 
@@ -403,7 +403,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <exclude/>
-        public final class AgentInfoBlock extends PacketBlock
+        public static final class AgentInfoBlock extends PacketBlock
         {
             public long Flags;
 

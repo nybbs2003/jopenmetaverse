@@ -7,7 +7,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 	public final class ModifyLandPacket extends Packet
     {
         /// <exclude/>
-        public final class AgentDataBlock extends PacketBlock
+        public static final class AgentDataBlock extends PacketBlock
         {
             public UUID AgentID;
             public UUID SessionID;
@@ -50,7 +50,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <exclude/>
-        public final class ModifyBlockBlock extends PacketBlock
+        public static final class ModifyBlockBlock extends PacketBlock
         {
             public byte Action;
 		/** Unsigned Byte */ 
@@ -100,7 +100,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <exclude/>
-        public final class ParcelDataBlock extends PacketBlock
+        public static final class ParcelDataBlock extends PacketBlock
         {
             public int LocalID;
             public float West;
@@ -152,7 +152,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <exclude/>
-        public final class ModifyBlockExtendedBlock extends PacketBlock
+        public static final class ModifyBlockExtendedBlock extends PacketBlock
         {
             public float BrushSize;
 

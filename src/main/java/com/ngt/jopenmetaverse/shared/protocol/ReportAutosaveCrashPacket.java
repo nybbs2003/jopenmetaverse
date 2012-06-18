@@ -7,7 +7,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 	public final class ReportAutosaveCrashPacket extends Packet
     {
         /// <exclude/>
-        public final class AutosaveDataBlock extends PacketBlock
+        public static final class AutosaveDataBlock extends PacketBlock
         {
             public int PID;
             public int Status;

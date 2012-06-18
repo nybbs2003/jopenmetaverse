@@ -8,7 +8,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
     public final class AlertMessagePacket extends Packet
     {
         /// <exclude/>
-        public final class AlertDataBlock extends PacketBlock
+        public static final class AlertDataBlock extends PacketBlock
         {
             public byte[] Message;
 
@@ -54,7 +54,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <exclude/>
-        public final class AlertInfoBlock extends PacketBlock
+        public static final class AlertInfoBlock extends PacketBlock
         {
             public byte[] Message;
 		/** Unsigned Byte */ 

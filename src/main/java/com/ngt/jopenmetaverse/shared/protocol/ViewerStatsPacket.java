@@ -10,7 +10,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 public final class ViewerStatsPacket extends Packet
     {
         /// <exclude/>
-        public final class AgentDataBlock extends PacketBlock
+        public static final class AgentDataBlock extends PacketBlock
         {
             public UUID AgentID;
             public UUID SessionID;
@@ -109,7 +109,7 @@ public final class ViewerStatsPacket extends Packet
         }
 
         /// <exclude/>
-        public final class DownloadTotalsBlock extends PacketBlock
+        public static final class DownloadTotalsBlock extends PacketBlock
         {
             public long World;
             public long Objects;
@@ -153,7 +153,7 @@ public final class ViewerStatsPacket extends Packet
         }
 
         /// <exclude/>
-        public final class NetStatsBlock extends PacketBlock
+        public static final class NetStatsBlock extends PacketBlock
         {
             public long Bytes;
             public long Packets;
@@ -200,7 +200,7 @@ public final class ViewerStatsPacket extends Packet
         }
 
         /// <exclude/>
-        public final class FailStatsBlock extends PacketBlock
+        public static final class FailStatsBlock extends PacketBlock
         {
             public long SendPacket;
             public long Dropped;
@@ -253,7 +253,7 @@ public final class ViewerStatsPacket extends Packet
         }
 
         /// <exclude/>
-        public final class MiscStatsBlock extends PacketBlock
+        public static final class MiscStatsBlock extends PacketBlock
         {
             public long Type;
             public double Value;

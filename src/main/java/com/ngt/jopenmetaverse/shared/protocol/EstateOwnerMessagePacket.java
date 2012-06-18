@@ -10,7 +10,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
     public final class EstateOwnerMessagePacket extends Packet
     {
         /// <exclude/>
-        public final class AgentDataBlock extends PacketBlock
+        public static final class AgentDataBlock extends PacketBlock
         {
             public UUID AgentID;
             public UUID SessionID;
@@ -56,7 +56,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <exclude/>
-        public final class MethodDataBlock extends PacketBlock
+        public static final class MethodDataBlock extends PacketBlock
         {
             public byte[] Method;
             public UUID Invoice;
@@ -105,7 +105,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <exclude/>
-        public final class ParamListBlock extends PacketBlock
+        public static final class ParamListBlock extends PacketBlock
         {
             public byte[] Parameter;
 

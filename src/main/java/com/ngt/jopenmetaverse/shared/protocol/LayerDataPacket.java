@@ -7,7 +7,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 	public final class LayerDataPacket extends Packet
     {
         /// <exclude/>
-        public final class LayerIDBlock extends PacketBlock
+        public static final class LayerIDBlock extends PacketBlock
         {
             public byte Type;
 
@@ -47,7 +47,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <exclude/>
-        public final class LayerDataBlock extends PacketBlock
+        public static final class LayerDataBlock extends PacketBlock
         {
             public byte[] Data;
 

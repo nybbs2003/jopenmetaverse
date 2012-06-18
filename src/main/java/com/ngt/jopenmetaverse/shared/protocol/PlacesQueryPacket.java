@@ -7,7 +7,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
     public final class PlacesQueryPacket extends Packet
     {
         /// <exclude/>
-        public final class AgentDataBlock extends PacketBlock
+        public static final class AgentDataBlock extends PacketBlock
         {
             public UUID AgentID;
             public UUID SessionID;
@@ -53,7 +53,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <exclude/>
-        public final class TransactionDataBlock extends PacketBlock
+        public static final class TransactionDataBlock extends PacketBlock
         {
             public UUID TransactionID;
 
@@ -93,7 +93,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <exclude/>
-        public final class QueryDataBlock extends PacketBlock
+        public static final class QueryDataBlock extends PacketBlock
         {
             public byte[] QueryText;
             public long QueryFlags;

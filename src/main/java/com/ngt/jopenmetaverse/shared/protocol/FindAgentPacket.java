@@ -9,7 +9,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
     public final class FindAgentPacket extends Packet
     {
         /// <exclude/>
-        public final class AgentBlockBlock extends PacketBlock
+        public static final class AgentBlockBlock extends PacketBlock
         {
             public UUID Hunter;
             public UUID Prey;
@@ -55,7 +55,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <exclude/>
-        public final class LocationBlockBlock extends PacketBlock
+        public static final class LocationBlockBlock extends PacketBlock
         {
             public double GlobalX;
             public double GlobalY;

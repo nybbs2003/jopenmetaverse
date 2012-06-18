@@ -11,7 +11,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 	public final class ScriptSensorRequestPacket extends Packet
     {
         /// <exclude/>
-        public final class RequesterBlock extends PacketBlock
+        public static final class RequesterBlock extends PacketBlock
         {
             public UUID SourceID;
             public UUID RequestID;

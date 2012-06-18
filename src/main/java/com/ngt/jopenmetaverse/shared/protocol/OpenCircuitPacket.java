@@ -7,7 +7,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 	public final class OpenCircuitPacket extends Packet
     {
         /// <exclude/>
-        public final class CircuitInfoBlock extends PacketBlock
+        public static final class CircuitInfoBlock extends PacketBlock
         {
             public long IP;
             /** Unsigned Short **/

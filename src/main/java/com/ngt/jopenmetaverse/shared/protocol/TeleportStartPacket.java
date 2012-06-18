@@ -7,7 +7,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 	public final class TeleportStartPacket extends Packet
     {
         /// <exclude/>
-        public final class InfoBlock extends PacketBlock
+        public static final class InfoBlock extends PacketBlock
         {
             public long TeleportFlags;
 

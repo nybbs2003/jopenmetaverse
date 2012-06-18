@@ -10,7 +10,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
     public final class PlacesReplyPacket extends Packet
     {
         /// <exclude/>
-        public final class AgentDataBlock extends PacketBlock
+        public static final class AgentDataBlock extends PacketBlock
         {
             public UUID AgentID;
             public UUID QueryID;
@@ -53,7 +53,7 @@ public void FromBytes(byte[] bytes, int[] i) throws MalformedDataException
         }
 
         /// <exclude/>
-        public final class TransactionDataBlock extends PacketBlock
+        public static final class TransactionDataBlock extends PacketBlock
         {
             public UUID TransactionID;
 
@@ -93,7 +93,7 @@ public void FromBytes(byte[] bytes, int[] i) throws MalformedDataException
         }
 
         /// <exclude/>
-        public final class QueryDataBlock extends PacketBlock
+        public static final class QueryDataBlock extends PacketBlock
         {
             public UUID OwnerID;
 		/** Unsigned Byte */ 

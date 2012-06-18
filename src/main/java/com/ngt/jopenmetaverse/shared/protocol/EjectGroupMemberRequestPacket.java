@@ -10,7 +10,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
     public final class EjectGroupMemberRequestPacket extends Packet
     {
         /// <exclude/>
-        public final class AgentDataBlock extends PacketBlock
+        public static final class AgentDataBlock extends PacketBlock
         {
             public UUID AgentID;
             public UUID SessionID;
@@ -53,7 +53,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <exclude/>
-        public final class GroupDataBlock extends PacketBlock
+        public static final class GroupDataBlock extends PacketBlock
         {
             public UUID GroupID;
 
@@ -93,7 +93,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <exclude/>
-        public final class EjectDataBlock extends PacketBlock
+        public static final class EjectDataBlock extends PacketBlock
         {
             public UUID EjecteeID;
 

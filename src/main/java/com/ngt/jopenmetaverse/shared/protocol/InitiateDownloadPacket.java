@@ -7,7 +7,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 	public final class InitiateDownloadPacket extends Packet
     {
         /// <exclude/>
-        public final class AgentDataBlock extends PacketBlock
+        public static final class AgentDataBlock extends PacketBlock
         {
             public UUID AgentID;
 
@@ -47,7 +47,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <exclude/>
-        public final class FileDataBlock extends PacketBlock
+        public static final class FileDataBlock extends PacketBlock
         {
             public byte[] SimFilename;
 		/** Unsigned Byte */ 

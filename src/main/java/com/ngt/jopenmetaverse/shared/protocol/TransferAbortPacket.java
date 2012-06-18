@@ -7,7 +7,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 	public final class TransferAbortPacket extends Packet
     {
         /// <exclude/>
-        public final class TransferInfoBlock extends PacketBlock
+        public static final class TransferInfoBlock extends PacketBlock
         {
             public UUID TransferID;
             public int ChannelType;

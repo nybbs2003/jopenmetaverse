@@ -7,7 +7,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 	public final class GroupAccountTransactionsReplyPacket extends Packet
     {
         /// <exclude/>
-        public final class AgentDataBlock extends PacketBlock
+        public static final class AgentDataBlock extends PacketBlock
         {
             public UUID AgentID;
             public UUID GroupID;
@@ -50,7 +50,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <exclude/>
-        public final class MoneyDataBlock extends PacketBlock
+        public static final class MoneyDataBlock extends PacketBlock
         {
             public UUID RequestID;
             public int IntervalDays;
@@ -106,7 +106,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <exclude/>
-        public final class HistoryDataBlock extends PacketBlock
+        public static final class HistoryDataBlock extends PacketBlock
         {
             public byte[] Time;
 		/** Unsigned Byte */ 

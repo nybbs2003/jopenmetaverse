@@ -7,7 +7,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
     public final class EventGodDeletePacket extends Packet
     {
         /// <exclude/>
-        public final class AgentDataBlock extends PacketBlock
+        public static final class AgentDataBlock extends PacketBlock
         {
             public UUID AgentID;
             public UUID SessionID;
@@ -50,7 +50,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <exclude/>
-        public final class EventDataBlock extends PacketBlock
+        public static final class EventDataBlock extends PacketBlock
         {
             public long EventID;
 
@@ -90,7 +90,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <exclude/>
-        public final class QueryDataBlock extends PacketBlock
+        public static final class QueryDataBlock extends PacketBlock
         {
             public UUID QueryID;
 		/** Unsigned Byte */ 

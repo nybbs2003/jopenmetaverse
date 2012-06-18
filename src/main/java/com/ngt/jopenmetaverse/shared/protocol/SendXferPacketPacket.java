@@ -8,7 +8,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 	public final class SendXferPacketPacket extends Packet
     {
         /// <exclude/>
-        public final class XferIDBlock extends PacketBlock
+        public static final class XferIDBlock extends PacketBlock
         {
             public BigInteger ID;
             public long Packet;
@@ -51,7 +51,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <exclude/>
-        public final class DataPacketBlock extends PacketBlock
+        public static final class DataPacketBlock extends PacketBlock
         {
             public byte[] Data;
 

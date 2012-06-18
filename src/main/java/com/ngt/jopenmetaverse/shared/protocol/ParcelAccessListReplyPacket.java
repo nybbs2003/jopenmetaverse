@@ -7,7 +7,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 	public final class ParcelAccessListReplyPacket extends Packet
     {
         /// <exclude/>
-        public final class DataBlock extends PacketBlock
+        public static final class DataBlock extends PacketBlock
         {
             public UUID AgentID;
             public int SequenceID;
@@ -56,7 +56,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <exclude/>
-        public final class ListBlock extends PacketBlock
+        public static final class ListBlock extends PacketBlock
         {
             public UUID ID;
             public int Time;

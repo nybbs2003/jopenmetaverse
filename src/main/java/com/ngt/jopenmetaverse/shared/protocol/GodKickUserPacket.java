@@ -6,7 +6,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
     public final class GodKickUserPacket extends Packet
     {
         /// <exclude/>
-        public final class UserInfoBlock extends PacketBlock
+        public static final class UserInfoBlock extends PacketBlock
         {
             public UUID GodID;
             public UUID GodSessionID;

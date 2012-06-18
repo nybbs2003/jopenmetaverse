@@ -14,7 +14,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
     public final class TelehubInfoPacket extends Packet
     {
         /// <exclude/>
-        public final class TelehubBlockBlock extends PacketBlock
+        public static final class TelehubBlockBlock extends PacketBlock
         {
             public UUID ObjectID;
 		/** Unsigned Byte */ 
@@ -68,7 +68,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <exclude/>
-        public final class SpawnPointBlockBlock extends PacketBlock
+        public static final class SpawnPointBlockBlock extends PacketBlock
         {
             public Vector3 SpawnPointPos;
 

@@ -8,7 +8,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
     public final class EnableSimulatorPacket extends Packet
     {
         /// <exclude/>
-        public final class SimulatorInfoBlock extends PacketBlock
+        public static final class SimulatorInfoBlock extends PacketBlock
         {
             public BigInteger Handle;
             public long IP;

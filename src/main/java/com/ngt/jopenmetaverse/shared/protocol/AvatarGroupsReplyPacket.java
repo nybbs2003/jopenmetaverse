@@ -9,7 +9,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
     public final class AvatarGroupsReplyPacket extends Packet
     {
         /// <exclude/>
-        public final class AgentDataBlock extends PacketBlock
+        public static final class AgentDataBlock extends PacketBlock
         {
             public UUID AgentID;
             public UUID AvatarID;
@@ -52,7 +52,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <exclude/>
-        public final class GroupDataBlock extends PacketBlock
+        public static final class GroupDataBlock extends PacketBlock
         {
             public BigInteger GroupPowers;
             public boolean AcceptNotices;
@@ -119,7 +119,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <exclude/>
-        public final class NewGroupDataBlock extends PacketBlock
+        public static final class NewGroupDataBlock extends PacketBlock
         {
             public boolean ListInProfile;
 

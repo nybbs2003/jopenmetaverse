@@ -107,7 +107,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <exclude/>
-        public final class OwnerIDsBlock extends PacketBlock
+        public static final class OwnerIDsBlock extends PacketBlock
         {
             public UUID OwnerID;
 

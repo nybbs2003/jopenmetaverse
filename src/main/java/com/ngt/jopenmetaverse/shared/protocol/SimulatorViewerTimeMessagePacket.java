@@ -9,7 +9,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 	public final class SimulatorViewerTimeMessagePacket extends Packet
     {
         /// <exclude/>
-        public final class TimeInfoBlock extends PacketBlock
+        public static final class TimeInfoBlock extends PacketBlock
         {
             public BigInteger UsecSinceStart;
             public long SecPerDay;

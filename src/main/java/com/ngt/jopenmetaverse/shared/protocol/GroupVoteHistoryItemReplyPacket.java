@@ -7,7 +7,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 	public final class GroupVoteHistoryItemReplyPacket extends Packet
     {
         /// <exclude/>
-        public final class AgentDataBlock extends PacketBlock
+        public static final class AgentDataBlock extends PacketBlock
         {
             public UUID AgentID;
             public UUID GroupID;
@@ -50,7 +50,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <exclude/>
-        public final class TransactionDataBlock extends PacketBlock
+        public static final class TransactionDataBlock extends PacketBlock
         {
             public UUID TransactionID;
             public long TotalNumItems;
@@ -93,7 +93,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <exclude/>
-        public final class HistoryItemDataBlock extends PacketBlock
+        public static final class HistoryItemDataBlock extends PacketBlock
         {
             public UUID VoteID;
 		/** Unsigned Byte */ 
@@ -193,7 +193,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <exclude/>
-        public final class VoteItemBlock extends PacketBlock
+        public static final class VoteItemBlock extends PacketBlock
         {
             public UUID CandidateID;
 		/** Unsigned Byte */ 

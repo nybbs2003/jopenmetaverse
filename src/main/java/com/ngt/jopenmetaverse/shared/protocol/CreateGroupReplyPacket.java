@@ -7,7 +7,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
     public final class CreateGroupReplyPacket extends Packet
     {
         /// <exclude/>
-        public final class AgentDataBlock extends PacketBlock
+        public static final class AgentDataBlock extends PacketBlock
         {
             public UUID AgentID;
 
@@ -47,7 +47,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <exclude/>
-        public final class ReplyDataBlock extends PacketBlock
+        public static final class ReplyDataBlock extends PacketBlock
         {
             public UUID GroupID;
             public boolean Success;

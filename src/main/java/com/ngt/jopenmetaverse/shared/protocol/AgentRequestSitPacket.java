@@ -7,7 +7,7 @@ import com.ngt.jopenmetaverse.shared.types.Vector3;
     public final class AgentRequestSitPacket extends Packet
     {
         /// <exclude/>
-        public final class AgentDataBlock extends PacketBlock
+        public static final class AgentDataBlock extends PacketBlock
         {
             public UUID AgentID;
             public UUID SessionID;
@@ -50,7 +50,7 @@ import com.ngt.jopenmetaverse.shared.types.Vector3;
         }
 
         /// <exclude/>
-        public final class TargetObjectBlock extends PacketBlock
+        public static final class TargetObjectBlock extends PacketBlock
         {
             public UUID TargetID;
             public Vector3 Offset;

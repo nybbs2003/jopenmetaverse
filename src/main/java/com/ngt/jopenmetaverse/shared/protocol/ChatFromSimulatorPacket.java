@@ -8,7 +8,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
     public final class ChatFromSimulatorPacket extends Packet
     {
         /// <exclude/>
-        public final class ChatDataBlock extends PacketBlock
+        public static final class ChatDataBlock extends PacketBlock
         {
             public byte[] FromName;
             public UUID SourceID;

@@ -7,7 +7,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 	public final class ScriptDialogPacket extends Packet
     {
         /// <exclude/>
-        public final class DataBlock extends PacketBlock
+        public static final class DataBlock extends PacketBlock
         {
             public UUID ObjectID;
 		/** Unsigned Byte */ 
@@ -88,7 +88,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <exclude/>
-        public final class ButtonsBlock extends PacketBlock
+        public static final class ButtonsBlock extends PacketBlock
         {
             public byte[] ButtonLabel;
 
@@ -134,7 +134,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <exclude/>
-        public final class OwnerDataBlock extends PacketBlock
+        public static final class OwnerDataBlock extends PacketBlock
         {
             public UUID OwnerID;
 

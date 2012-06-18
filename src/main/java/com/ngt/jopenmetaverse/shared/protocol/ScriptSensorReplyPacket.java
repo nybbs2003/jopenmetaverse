@@ -10,7 +10,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 	public final class ScriptSensorReplyPacket extends Packet
     {
         /// <exclude/>
-        public final class RequesterBlock extends PacketBlock
+        public static final class RequesterBlock extends PacketBlock
         {
             public UUID SourceID;
 
@@ -50,7 +50,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <exclude/>
-        public final class SensedDataBlock extends PacketBlock
+        public static final class SensedDataBlock extends PacketBlock
         {
             public UUID ObjectID;
             public UUID OwnerID;

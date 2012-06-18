@@ -7,7 +7,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 	public final class ReplyTaskInventoryPacket extends Packet
     {
         /// <exclude/>
-        public final class InventoryDataBlock extends PacketBlock
+        public static final class InventoryDataBlock extends PacketBlock
         {
             public UUID TaskID;
             public short Serial;

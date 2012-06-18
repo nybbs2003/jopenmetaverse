@@ -7,7 +7,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 	public final class StartPingCheckPacket extends Packet
     {
         /// <exclude/>
-        public final class PingIDBlock extends PacketBlock
+        public static final class PingIDBlock extends PacketBlock
         {
             public byte PingID;
             public long OldestUnacked;

@@ -7,7 +7,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 	public final class UUIDNameRequestPacket extends Packet
     {
         /// <exclude/>
-        public final class UUIDNameBlockBlock extends PacketBlock
+        public static final class UUIDNameBlockBlock extends PacketBlock
         {
             public UUID ID;
 

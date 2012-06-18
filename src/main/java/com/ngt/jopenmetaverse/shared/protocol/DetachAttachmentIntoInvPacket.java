@@ -6,7 +6,7 @@ import com.ngt.jopenmetaverse.shared.types.UUID;
     public final class DetachAttachmentIntoInvPacket extends Packet
     {
         /// <exclude/>
-        public final class ObjectDataBlock extends PacketBlock
+        public static final class ObjectDataBlock extends PacketBlock
         {
             public UUID AgentID;
             public UUID ItemID;

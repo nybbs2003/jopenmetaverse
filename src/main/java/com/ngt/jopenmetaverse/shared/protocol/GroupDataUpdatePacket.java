@@ -8,7 +8,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 	public final class GroupDataUpdatePacket extends Packet
     {
         /// <exclude/>
-        public final class AgentGroupDataBlock extends PacketBlock
+        public static final class AgentGroupDataBlock extends PacketBlock
         {
             public UUID AgentID;
             public UUID GroupID;

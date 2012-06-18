@@ -7,7 +7,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 	public final class SetFollowCamPropertiesPacket extends Packet
     {
         /// <exclude/>
-        public final class ObjectDataBlock extends PacketBlock
+        public static final class ObjectDataBlock extends PacketBlock
         {
             public UUID ObjectID;
 
@@ -47,7 +47,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <exclude/>
-        public final class CameraPropertyBlock extends PacketBlock
+        public static final class CameraPropertyBlock extends PacketBlock
         {
             public int Type;
             public float Value;

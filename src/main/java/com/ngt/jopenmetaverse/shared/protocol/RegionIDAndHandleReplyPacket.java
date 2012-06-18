@@ -8,7 +8,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 	public final class RegionIDAndHandleReplyPacket extends Packet
     {
         /// <exclude/>
-        public final class ReplyBlockBlock extends PacketBlock
+        public static final class ReplyBlockBlock extends PacketBlock
         {
             public UUID RegionID;
             public BigInteger RegionHandle;

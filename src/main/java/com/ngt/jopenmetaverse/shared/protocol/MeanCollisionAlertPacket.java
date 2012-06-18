@@ -10,7 +10,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
     public final class MeanCollisionAlertPacket extends Packet
     {
         /// <exclude/>
-        public final class MeanCollisionBlock extends PacketBlock
+        public static final class MeanCollisionBlock extends PacketBlock
         {
             public UUID Victim;
             public UUID Perp;

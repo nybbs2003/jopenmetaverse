@@ -7,7 +7,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 	public final class LiveHelpGroupRequestPacket extends Packet
     {
         /// <exclude/>
-        public final class RequestDataBlock extends PacketBlock
+        public static final class RequestDataBlock extends PacketBlock
         {
             public UUID RequestID;
             public UUID AgentID;

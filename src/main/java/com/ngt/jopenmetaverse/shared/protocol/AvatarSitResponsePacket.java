@@ -8,7 +8,7 @@ import com.ngt.jopenmetaverse.shared.types.Vector3;
     public final class AvatarSitResponsePacket extends Packet
     {
         /// <exclude/>
-        public final class SitObjectBlock extends PacketBlock
+        public static final class SitObjectBlock extends PacketBlock
         {
             public UUID ID;
 
@@ -48,7 +48,7 @@ import com.ngt.jopenmetaverse.shared.types.Vector3;
         }
 
         /// <exclude/>
-        public final class SitTransformBlock extends PacketBlock
+        public static final class SitTransformBlock extends PacketBlock
         {
             public boolean AutoPilot;
             public Vector3 SitPosition;

@@ -57,7 +57,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <exclude/>
-        public final class DataBlockExtendedBlock extends PacketBlock
+        public static final class DataBlockExtendedBlock extends PacketBlock
         {
             public byte[] MediaType;
 		/** Unsigned Byte */ 

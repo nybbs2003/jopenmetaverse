@@ -9,7 +9,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
     public final class UseCircuitCodePacket extends Packet
     {
         /// <exclude/>
-        public final class CircuitCodeBlock extends PacketBlock
+        public static final class CircuitCodeBlock extends PacketBlock
         {
             public long Code;
             public UUID SessionID;

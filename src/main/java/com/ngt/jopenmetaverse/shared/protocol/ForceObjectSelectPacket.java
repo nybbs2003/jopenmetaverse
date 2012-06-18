@@ -9,7 +9,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
     public final class ForceObjectSelectPacket extends Packet
     {
         /// <exclude/>
-        public final class HeaderBlock extends PacketBlock
+        public static final class HeaderBlock extends PacketBlock
         {
             public boolean ResetList;
 
@@ -49,7 +49,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <exclude/>
-        public final class DataBlock extends PacketBlock
+        public static final class DataBlock extends PacketBlock
         {
             public long LocalID;
 

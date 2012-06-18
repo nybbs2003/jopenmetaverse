@@ -9,7 +9,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
     public final class ChildAgentAlivePacket extends Packet
     {
         /// <exclude/>
-        public final class AgentDataBlock extends PacketBlock
+        public static final class AgentDataBlock extends PacketBlock
         {
             public BigInteger RegionHandle;
             public long ViewerCircuitCode;
