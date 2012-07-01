@@ -10,7 +10,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         /// <exclude/>
         public static final class ReplyBlockBlock extends PacketBlock
         {
-            public UUID RegionID;
+            public UUID RegionID = new UUID();
             public BigInteger RegionHandle;
 
             @Override

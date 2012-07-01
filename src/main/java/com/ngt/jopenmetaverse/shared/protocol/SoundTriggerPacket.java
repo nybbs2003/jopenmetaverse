@@ -11,10 +11,10 @@ public final class SoundTriggerPacket extends Packet
     /// <exclude/>
     public final class SoundDataBlock extends PacketBlock
     {
-        public UUID SoundID;
-        public UUID OwnerID;
-        public UUID ObjectID;
-        public UUID ParentID;
+        public UUID SoundID = new UUID();
+        public UUID OwnerID = new UUID();
+        public UUID ObjectID = new UUID();
+        public UUID ParentID = new UUID();
         /** Unsigned Long */
         public BigInteger Handle;
         public Vector3 Position;

@@ -9,8 +9,8 @@ import com.ngt.jopenmetaverse.shared.types.Vector3;
         /// <exclude/>
         public static final class AgentDataBlock extends PacketBlock
         {
-            public UUID AgentID;
-            public UUID SessionID;
+            public UUID AgentID = new UUID();
+            public UUID SessionID = new UUID();
 
             @Override
 			public int getLength()
@@ -52,7 +52,7 @@ import com.ngt.jopenmetaverse.shared.types.Vector3;
         /// <exclude/>
         public static final class TargetObjectBlock extends PacketBlock
         {
-            public UUID TargetID;
+            public UUID TargetID = new UUID();
             public Vector3 Offset;
 
             @Override

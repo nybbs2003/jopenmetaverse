@@ -17,8 +17,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         {
             public BigInteger RegionHandle;
             public long ViewerCircuitCode;
-            public UUID AgentID;
-            public UUID SessionID;
+            public UUID AgentID = new UUID();
+            public UUID SessionID = new UUID();
             public Vector3 AgentPos;
             public Vector3 AgentVel;
             public Vector3 Center;
@@ -39,12 +39,12 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 		/** Unsigned Byte */ 
 		public byte GodLevel;
             public boolean AlwaysRun;
-            public UUID PreyAgent;
+            public UUID PreyAgent = new UUID();
 		/** Unsigned Byte */ 
 		public byte AgentAccess;
 		/** Unsigned Byte */ 
 		public byte[] AgentTextures;
-            public UUID ActiveGroupID;
+            public UUID ActiveGroupID = new UUID();
 
             @Override
 			public int getLength()
@@ -145,7 +145,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         /// <exclude/>
         public static final class GroupDataBlock extends PacketBlock
         {
-            public UUID GroupID;
+            public UUID GroupID = new UUID();
             public BigInteger GroupPowers;
             public boolean AcceptNotices;
 
@@ -191,8 +191,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         /// <exclude/>
         public static final class AnimationDataBlock extends PacketBlock
         {
-            public UUID Animation;
-            public UUID ObjectID;
+            public UUID Animation = new UUID();
+            public UUID ObjectID = new UUID();
 
             @Override
 			public int getLength()
@@ -234,7 +234,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         /// <exclude/>
         public static final class GranterBlockBlock extends PacketBlock
         {
-            public UUID GranterID;
+            public UUID GranterID = new UUID();
 
             @Override
 			public int getLength()

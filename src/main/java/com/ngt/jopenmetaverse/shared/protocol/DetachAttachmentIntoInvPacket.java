@@ -8,8 +8,8 @@ import com.ngt.jopenmetaverse.shared.types.UUID;
         /// <exclude/>
         public static final class ObjectDataBlock extends PacketBlock
         {
-            public UUID AgentID;
-            public UUID ItemID;
+            public UUID AgentID = new UUID();
+            public UUID ItemID = new UUID();
 
             @Override
 			public int getLength()

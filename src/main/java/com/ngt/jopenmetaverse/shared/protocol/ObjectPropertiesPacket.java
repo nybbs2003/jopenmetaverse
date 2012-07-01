@@ -10,10 +10,10 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         /// <exclude/>
         public static final class ObjectDataBlock extends PacketBlock
         {
-            public UUID ObjectID;
-            public UUID CreatorID;
-            public UUID OwnerID;
-            public UUID GroupID;
+            public UUID ObjectID = new UUID();
+            public UUID CreatorID = new UUID();
+            public UUID OwnerID = new UUID();
+            public UUID GroupID = new UUID();
             public BigInteger CreationDate;
             public long BaseMask;
             public long OwnerMask;
@@ -32,10 +32,10 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 		public byte AggregatePermTexturesOwner;
             public long Category;
             public short InventorySerial;
-            public UUID ItemID;
-            public UUID FolderID;
-            public UUID FromTaskID;
-            public UUID LastOwnerID;
+            public UUID ItemID = new UUID();
+            public UUID FolderID = new UUID();
+            public UUID FromTaskID = new UUID();
+            public UUID LastOwnerID = new UUID();
 		/** Unsigned Byte */ 
 		public byte[] Name;
 		/** Unsigned Byte */ 

@@ -14,19 +14,19 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 		public byte SimAccess;
 		/** Unsigned Byte */ 
 		public byte[] SimName;
-            public UUID SimOwner;
+            public UUID SimOwner = new UUID();
             public boolean IsEstateManager;
             public float WaterHeight;
             public float BillableFactor;
-            public UUID CacheID;
-            public UUID TerrainBase0;
-            public UUID TerrainBase1;
-            public UUID TerrainBase2;
-            public UUID TerrainBase3;
-            public UUID TerrainDetail0;
-            public UUID TerrainDetail1;
-            public UUID TerrainDetail2;
-            public UUID TerrainDetail3;
+            public UUID CacheID = new UUID();
+            public UUID TerrainBase0 = new UUID();
+            public UUID TerrainBase1 = new UUID();
+            public UUID TerrainBase2 = new UUID();
+            public UUID TerrainBase3 = new UUID();
+            public UUID TerrainDetail0 = new UUID();
+            public UUID TerrainDetail1 = new UUID();
+            public UUID TerrainDetail2 = new UUID();
+            public UUID TerrainDetail3 = new UUID();
             public float TerrainStartHeight00;
             public float TerrainStartHeight01;
             public float TerrainStartHeight10;
@@ -126,7 +126,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         /// <exclude/>
         public static final class RegionInfo2Block extends PacketBlock
         {
-            public UUID RegionID;
+            public UUID RegionID = new UUID();
 
             @Override
 			public int getLength()

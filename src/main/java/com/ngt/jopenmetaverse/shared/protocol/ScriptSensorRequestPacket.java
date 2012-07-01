@@ -13,9 +13,9 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         /// <exclude/>
         public static final class RequesterBlock extends PacketBlock
         {
-            public UUID SourceID;
-            public UUID RequestID;
-            public UUID SearchID;
+            public UUID SourceID = new UUID();
+            public UUID RequestID = new UUID();
+            public UUID SearchID = new UUID();
             public Vector3 SearchPos;
             public Quaternion SearchDir;
 		/** Unsigned Byte */ 

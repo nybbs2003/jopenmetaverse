@@ -10,7 +10,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         /// <exclude/>
         public static final class AgentDataBlock extends PacketBlock
         {
-            public UUID AgentID;
+            public UUID AgentID = new UUID();
 
             @Override
 			public int getLength()
@@ -50,8 +50,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         /// <exclude/>
         public static final class DataBlock extends PacketBlock
         {
-            public UUID ClassifiedID;
-            public UUID CreatorID;
+            public UUID ClassifiedID = new UUID();
+            public UUID CreatorID = new UUID();
             public long CreationDate;
             public long ExpirationDate;
             public long Category;
@@ -59,9 +59,9 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 		public byte[] Name;
 		/** Unsigned Byte */ 
 		public byte[] Desc;
-            public UUID ParcelID;
+            public UUID ParcelID = new UUID();
             public long ParentEstate;
-            public UUID SnapshotID;
+            public UUID SnapshotID = new UUID();
 		/** Unsigned Byte */ 
 		public byte[] SimName;
             public Vector3d PosGlobal;

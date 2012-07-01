@@ -12,8 +12,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         /// <exclude/>
         public static final class AgentDataBlock extends PacketBlock
         {
-            public UUID AgentID;
-            public UUID SessionID;
+            public UUID AgentID = new UUID();
+            public UUID SessionID = new UUID();
             public int SerialNum;
 
             @Override
@@ -58,7 +58,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         /// <exclude/>
         public static final class WearableDataBlock extends PacketBlock
         {
-            public UUID TextureID;
+            public UUID TextureID = new UUID();
 		/** Unsigned Byte */ 
 		public byte TextureIndex;
 		/** Unsigned Byte */ 

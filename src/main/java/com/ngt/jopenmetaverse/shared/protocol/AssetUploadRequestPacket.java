@@ -9,7 +9,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         /// <exclude/>
         public static final class AssetBlockBlock extends PacketBlock
         {
-            public UUID TransactionID;
+            public UUID TransactionID = new UUID();
 		/** Signed Byte */ 
 		public byte Type;
             public boolean Tempfile;

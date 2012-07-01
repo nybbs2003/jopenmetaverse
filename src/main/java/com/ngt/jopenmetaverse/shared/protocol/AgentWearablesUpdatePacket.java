@@ -12,8 +12,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         /// <exclude/>
         public static final class AgentDataBlock extends PacketBlock
         {
-            public UUID AgentID;
-            public UUID SessionID;
+            public UUID AgentID = new UUID();
+            public UUID SessionID = new UUID();
             /**
              * S
              */
@@ -61,8 +61,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         /// <exclude/>
         public static final class WearableDataBlock extends PacketBlock
         {
-            public UUID ItemID;
-            public UUID AssetID;
+            public UUID ItemID = new UUID();
+            public UUID AssetID = new UUID();
 		/** Unsigned Byte */ 
 		public byte WearableType;
 

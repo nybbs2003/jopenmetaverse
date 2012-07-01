@@ -9,8 +9,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         /// <exclude/>
         public static final class ReplyDataBlock extends PacketBlock
         {
-            public UUID RequestID;
-            public UUID GroupID;
+            public UUID RequestID = new UUID();
+            public UUID GroupID = new UUID();
 		/** Unsigned Byte */ 
 		public byte[] Selection;
 

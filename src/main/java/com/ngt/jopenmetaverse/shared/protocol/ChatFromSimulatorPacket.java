@@ -11,8 +11,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         public static final class ChatDataBlock extends PacketBlock
         {
             public byte[] FromName;
-            public UUID SourceID;
-            public UUID OwnerID;
+            public UUID SourceID = new UUID();
+            public UUID OwnerID = new UUID();
 		/** Unsigned Byte */ 
 		public byte SourceType;
 		/** Unsigned Byte */ 

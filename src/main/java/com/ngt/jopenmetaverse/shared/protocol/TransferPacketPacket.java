@@ -9,7 +9,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         /// <exclude/>
         public static final class TransferDataBlock extends PacketBlock
         {
-            public UUID TransferID;
+            public UUID TransferID = new UUID();
             public int ChannelType;
             public int Packet;
             public int Status;

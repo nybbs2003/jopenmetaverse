@@ -9,9 +9,9 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         /// <exclude/>
         public static final class DataBlockBlock extends PacketBlock
         {
-            public UUID SoundID;
-            public UUID ObjectID;
-            public UUID OwnerID;
+            public UUID SoundID = new UUID();
+            public UUID ObjectID = new UUID();
+            public UUID OwnerID = new UUID();
             public float Gain;
 		/** Unsigned Byte */ 
 		public byte Flags;

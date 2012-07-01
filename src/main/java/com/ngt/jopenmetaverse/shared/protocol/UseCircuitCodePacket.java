@@ -12,8 +12,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         public static final class CircuitCodeBlock extends PacketBlock
         {
             public long Code;
-            public UUID SessionID;
-            public UUID ID;
+            public UUID SessionID = new UUID();
+            public UUID ID = new UUID();
 
             @Override
             public  int getLength()

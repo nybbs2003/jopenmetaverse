@@ -9,7 +9,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         /// <exclude/>
         public static final class MuteDataBlock extends PacketBlock
         {
-            public UUID AgentID;
+            public UUID AgentID = new UUID();
 		/** Unsigned Byte */ 
 		public byte[] Filename;
 

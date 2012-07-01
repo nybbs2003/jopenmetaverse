@@ -8,7 +8,7 @@ import com.ngt.jopenmetaverse.shared.types.UUID;
         /// <exclude/>
         public static final class TransactionDataBlock extends PacketBlock
         {
-            public UUID TransactionID;
+            public UUID TransactionID = new UUID();
             public boolean Success;
 
             @Override

@@ -9,9 +9,9 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         /// <exclude/>
         public static final class AgentDataBlock extends PacketBlock
         {
-            public UUID AgentID;
-            public UUID SessionID;
-            public UUID GroupID;
+            public UUID AgentID = new UUID();
+            public UUID SessionID = new UUID();
+            public UUID GroupID = new UUID();
 
             @Override
 			public int getLength()
@@ -55,7 +55,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         /// <exclude/>
         public static final class MoneyDataBlock extends PacketBlock
         {
-            public UUID RequestID;
+            public UUID RequestID = new UUID();
             public int IntervalDays;
             public int CurrentInterval;
 

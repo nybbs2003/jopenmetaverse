@@ -10,7 +10,7 @@ import com.ngt.jopenmetaverse.shared.types.Vector3;
         /// <exclude/>
         public static final class SitObjectBlock extends PacketBlock
         {
-            public UUID ID;
+            public UUID ID = new UUID();
 
             @Override
 			public int getLength()

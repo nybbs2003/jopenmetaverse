@@ -7,7 +7,7 @@ import com.ngt.jopenmetaverse.shared.types.UUID;
         /// <exclude/>
         public static final class AssetBlockBlock extends PacketBlock
         {
-            public UUID UUID;
+            public UUID UUID = new UUID();
             /** Signed Byte **/
             public byte Type;
             public boolean Success;

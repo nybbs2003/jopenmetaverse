@@ -10,16 +10,16 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         /// <exclude/>
         public static final class AgentDataBlock extends PacketBlock
         {
-            public UUID AgentID;
-            public UUID SessionID;
-            public UUID GroupID;
+            public UUID AgentID = new UUID();
+            public UUID SessionID = new UUID();
+            public UUID GroupID = new UUID();
             public Vector3 RayStart;
             public Vector3 RayEnd;
             public boolean BypassRaycast;
             public boolean RayEndIsIntersection;
             public boolean CopyCenters;
             public boolean CopyRotates;
-            public UUID RayTargetID;
+            public UUID RayTargetID = new UUID();
             public long DuplicateFlags;
 
             @Override

@@ -9,7 +9,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         /// <exclude/>
         public static final class ImageIDBlock extends PacketBlock
         {
-            public UUID ID;
+            public UUID ID = new UUID();
             /**
              * Unsigned short
              * Only 2 of its least significant bytes should be used 

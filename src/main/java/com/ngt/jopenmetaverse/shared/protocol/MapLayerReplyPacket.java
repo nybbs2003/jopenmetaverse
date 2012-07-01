@@ -9,7 +9,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         /// <exclude/>
         public static final class AgentDataBlock extends PacketBlock
         {
-            public UUID AgentID;
+            public UUID AgentID = new UUID();
             public long Flags;
 
             @Override
@@ -56,7 +56,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             public long Right;
             public long Top;
             public long Bottom;
-            public UUID ImageID;
+            public UUID ImageID = new UUID();
 
             @Override
 			public int getLength()

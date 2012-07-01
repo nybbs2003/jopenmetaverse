@@ -810,7 +810,7 @@ public class Utils
 	    {
 	        if (bytes.length < pos + 4) return new BigInteger("0");
 //	        return ((long)bytes[pos + 0] + ((long)bytes[pos + 1] << 8) + ((long)bytes[pos + 2] << 16) + ((long)bytes[pos + 3] << 24));
-	        return new BigInteger(ArrayUtils.subarray(bytes, pos, pos+7));
+	        return new BigInteger(ArrayUtils.subarray(bytes, pos, pos+8));
 	    }
 	
 	    /// <summary>
@@ -1042,7 +1042,7 @@ public class Utils
 		//        bytes[2] = (byte)((value >> 8) % 256);
 		//        bytes[3] = (byte)(value % 256);
 
-		return ArrayUtils.subarray(ByteBuffer.allocate(8).order(ByteOrder.BIG_ENDIAN).putLong(value).array(), 4, 7);
+		return ArrayUtils.subarray(ByteBuffer.allocate(8).order(ByteOrder.BIG_ENDIAN).putLong(value).array(), 4, 8);
 	}
 	
 	public static void uintToBytes(long value, byte[] dest, int pos)
@@ -1051,8 +1051,9 @@ public class Utils
 		//        dest[pos + 1] = (byte)((value >> 8) % 256);
 		//        dest[pos + 2] = (byte)((value >> 16) % 256);
 		//        dest[pos + 3] = (byte)((value >> 24) % 256);
+
 		byte[] bytes= uintToBytes(value);
-		System.arraycopy(bytes, 4, dest, pos, 4);
+		System.arraycopy(bytes, 0, dest, pos, 4);
 	}
 	
 	//    public static byte[] UIntToBytes(uint value)
@@ -1116,7 +1117,7 @@ public class Utils
 	public static byte[] ulongToBytes(BigInteger value)
 	{
 		byte[] bytes = value.toByteArray();
-		return ArrayUtils.subarray(bytes, bytes.length-8, bytes.length-1);
+		return ArrayUtils.subarray(bytes, bytes.length-8, bytes.length);
 	}
 
 	public static void ulongToBytes(BigInteger value, byte[] dest, int pos)

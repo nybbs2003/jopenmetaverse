@@ -59,7 +59,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             public long ID;
 		/** Unsigned Byte */ 
 		public byte State;
-            public UUID FullID;
+            public UUID FullID = new UUID();
             public long CRC;
 		/** Unsigned Byte */ 
 		public byte PCode;
@@ -126,8 +126,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 		public byte[] PSBlock;
 		/** Unsigned Byte */ 
 		public byte[] ExtraParams;
-            public UUID Sound;
-            public UUID OwnerID;
+            public UUID Sound = new UUID();
+            public UUID OwnerID = new UUID();
             public float Gain;
 		/** Unsigned Byte */ 
 		public byte Flags;

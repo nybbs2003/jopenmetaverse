@@ -9,7 +9,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         /// <exclude/>
         public static final class InventoryDataBlock extends PacketBlock
         {
-            public UUID TaskID;
+            public UUID TaskID = new UUID();
             public short Serial;
 		/** Unsigned Byte */ 
 		public byte[] Filename;

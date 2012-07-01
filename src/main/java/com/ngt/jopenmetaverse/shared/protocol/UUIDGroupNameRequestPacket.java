@@ -9,7 +9,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         /// <exclude/>
         public static final class UUIDNameBlockBlock extends PacketBlock
         {
-            public UUID ID;
+            public UUID ID = new UUID();
 
             @Override
 			public int getLength()

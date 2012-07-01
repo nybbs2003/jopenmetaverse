@@ -9,7 +9,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         public final class DataBlockBlock extends PacketBlock
         {
             public byte[] MediaURL;
-            public UUID MediaID;
+            public UUID MediaID = new UUID();
 		/** Unsigned Byte */ 
 		public byte MediaAutoScale;
 

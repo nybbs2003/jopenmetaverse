@@ -14,8 +14,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         {
             public BigInteger RegionHandle;
             public long ViewerCircuitCode;
-            public UUID AgentID;
-            public UUID SessionID;
+            public UUID AgentID = new UUID();
+            public UUID SessionID = new UUID();
             public Vector3 AgentPos;
             public Vector3 AgentVel;
             public Vector3 Center;

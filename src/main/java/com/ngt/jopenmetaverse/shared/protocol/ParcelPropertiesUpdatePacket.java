@@ -10,8 +10,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         /// <exclude/>
         public static final class AgentDataBlock extends PacketBlock
         {
-            public UUID AgentID;
-            public UUID SessionID;
+            public UUID AgentID = new UUID();
+            public UUID SessionID = new UUID();
 
             @Override
 			public int getLength()
@@ -65,16 +65,16 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 		public byte[] MusicURL;
 		/** Unsigned Byte */ 
 		public byte[] MediaURL;
-            public UUID MediaID;
+            public UUID MediaID = new UUID();
 		/** Unsigned Byte */ 
 		public byte MediaAutoScale;
-            public UUID GroupID;
+            public UUID GroupID = new UUID();
             public int PassPrice;
             public float PassHours;
 		/** Unsigned Byte */ 
 		public byte Category;
-            public UUID AuthBuyerID;
-            public UUID SnapshotID;
+            public UUID AuthBuyerID = new UUID();
+            public UUID SnapshotID = new UUID();
             public Vector3 UserLocation;
             public Vector3 UserLookAt;
 		/** Unsigned Byte */ 

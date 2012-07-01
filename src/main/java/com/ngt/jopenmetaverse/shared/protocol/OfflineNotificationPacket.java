@@ -9,7 +9,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         /// <exclude/>
         public static final class AgentBlockBlock extends PacketBlock
         {
-            public UUID AgentID;
+            public UUID AgentID = new UUID();
 
             @Override
 			public int getLength()

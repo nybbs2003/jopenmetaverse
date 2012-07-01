@@ -9,7 +9,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         /// <exclude/>
         public static final class DataBlock extends PacketBlock
         {
-            public UUID ObjectID;
+            public UUID ObjectID = new UUID();
 		/** Unsigned Byte */ 
 		public byte[] FirstName;
 		/** Unsigned Byte */ 
@@ -19,7 +19,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 		/** Unsigned Byte */ 
 		public byte[] Message;
             public int ChatChannel;
-            public UUID ImageID;
+            public UUID ImageID = new UUID();
 
             @Override
 			public int getLength()
@@ -136,7 +136,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         /// <exclude/>
         public static final class OwnerDataBlock extends PacketBlock
         {
-            public UUID OwnerID;
+            public UUID OwnerID = new UUID();
 
             @Override
 			public int getLength()

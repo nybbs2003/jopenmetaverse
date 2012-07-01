@@ -17,7 +17,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 		public byte FilePath;
             public boolean DeleteOnCompletion;
             public boolean UseBigPackets;
-            public UUID VFileID;
+            public UUID VFileID = new UUID();
             public short VFileType;
 
             @Override

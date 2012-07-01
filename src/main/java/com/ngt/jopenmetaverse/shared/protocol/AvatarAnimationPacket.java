@@ -12,7 +12,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         /// <exclude/>
         public static final class SenderBlock extends PacketBlock
         {
-            public UUID ID;
+            public UUID ID = new UUID();
 
             @Override
 			public int getLength()
@@ -52,7 +52,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         /// <exclude/>
         public static final class AnimationListBlock extends PacketBlock
         {
-            public UUID AnimID;
+            public UUID AnimID = new UUID();
             public int AnimSequenceID;
 
             @Override
@@ -95,7 +95,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         /// <exclude/>
         public static final class AnimationSourceListBlock extends PacketBlock
         {
-            public UUID ObjectID;
+            public UUID ObjectID = new UUID();
 
             @Override
 			public int getLength()

@@ -9,11 +9,11 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         /// <exclude/>
         public static final class DataBlock extends PacketBlock
         {
-            public UUID CovenantID;
+            public UUID CovenantID = new UUID();
             public long CovenantTimestamp;
 		/** Unsigned Byte */ 
 		public byte[] EstateName;
-            public UUID EstateOwnerID;
+            public UUID EstateOwnerID = new UUID();
 
             @Override
 			public int getLength()

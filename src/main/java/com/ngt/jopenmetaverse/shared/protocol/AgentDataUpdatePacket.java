@@ -11,14 +11,14 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         /// <exclude/>
         public static final class AgentDataBlock extends PacketBlock
         {
-            public UUID AgentID;
+            public UUID AgentID = new UUID();
 		/** Unsigned Byte */ 
 		public byte[] FirstName;
 		/** Unsigned Byte */ 
 		public byte[] LastName;
 		/** Unsigned Byte */ 
 		public byte[] GroupTitle;
-            public UUID ActiveGroupID;
+            public UUID ActiveGroupID = new UUID();
             public BigInteger GroupPowers;
 		/** Unsigned Byte */ 
 		public byte[] GroupName;

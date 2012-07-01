@@ -10,9 +10,9 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         /// <exclude/>
         public static final class AgentDataBlock extends PacketBlock
         {
-            public UUID AgentID;
-            public UUID SessionID;
-            public UUID GroupID;
+            public UUID AgentID = new UUID();
+            public UUID SessionID = new UUID();
+            public UUID GroupID = new UUID();
 
             @Override
 			public int getLength()
@@ -56,12 +56,12 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         /// <exclude/>
         public static final class RezDataBlock extends PacketBlock
         {
-            public UUID FromTaskID;
+            public UUID FromTaskID = new UUID();
 		/** Unsigned Byte */ 
 		public byte BypassRaycast;
             public Vector3 RayStart;
             public Vector3 RayEnd;
-            public UUID RayTargetID;
+            public UUID RayTargetID = new UUID();
             public boolean RayEndIsIntersection;
             public boolean RezSelected;
             public boolean RemoveItem;
@@ -130,18 +130,18 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         /// <exclude/>
         public static final class InventoryDataBlock extends PacketBlock
         {
-            public UUID ItemID;
-            public UUID FolderID;
-            public UUID CreatorID;
-            public UUID OwnerID;
-            public UUID GroupID;
+            public UUID ItemID = new UUID();
+            public UUID FolderID = new UUID();
+            public UUID CreatorID = new UUID();
+            public UUID OwnerID = new UUID();
+            public UUID GroupID = new UUID();
             public long BaseMask;
             public long OwnerMask;
             public long GroupMask;
             public long EveryoneMask;
             public long NextOwnerMask;
             public boolean GroupOwned;
-            public UUID TransactionID;
+            public UUID TransactionID = new UUID();
 		/** Signed Byte */ 
 		public byte Type;
 		/** Signed Byte */ 

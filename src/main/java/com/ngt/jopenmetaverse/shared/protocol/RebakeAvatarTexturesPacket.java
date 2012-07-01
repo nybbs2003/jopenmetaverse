@@ -9,7 +9,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         /// <exclude/>
         public static final class TextureDataBlock extends PacketBlock
         {
-            public UUID TextureID;
+            public UUID TextureID = new UUID();
 
             @Override
 			public int getLength()

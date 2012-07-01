@@ -12,8 +12,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         /// <exclude/>
         public static final class AgentDataBlock extends PacketBlock
         {
-            public UUID AgentID;
-            public UUID QueryID;
+            public UUID AgentID = new UUID();
+            public UUID QueryID = new UUID();
 
             @Override
 			public int getLength()
@@ -55,7 +55,7 @@ public void FromBytes(byte[] bytes, int[] i) throws MalformedDataException
         /// <exclude/>
         public static final class TransactionDataBlock extends PacketBlock
         {
-            public UUID TransactionID;
+            public UUID TransactionID = new UUID();
 
             @Override
 		public int getLength()
@@ -95,7 +95,7 @@ public void FromBytes(byte[] bytes, int[] i) throws MalformedDataException
         /// <exclude/>
         public static final class QueryDataBlock extends PacketBlock
         {
-            public UUID OwnerID;
+            public UUID OwnerID = new UUID();
 		/** Unsigned Byte */ 
 		public byte[] Name;
 		/** Unsigned Byte */ 
@@ -109,7 +109,7 @@ public void FromBytes(byte[] bytes, int[] i) throws MalformedDataException
             public float GlobalZ;
 		/** Unsigned Byte */ 
 		public byte[] SimName;
-            public UUID SnapshotID;
+            public UUID SnapshotID = new UUID();
             public float Dwell;
             public int Price;
 

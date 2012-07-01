@@ -9,8 +9,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         /// <exclude/>
         public static final class MoneyDataBlock extends PacketBlock
         {
-            public UUID AgentID;
-            public UUID TransactionID;
+            public UUID AgentID = new UUID();
+            public UUID TransactionID = new UUID();
             public boolean TransactionSuccess;
             public int MoneyBalance;
             public int SquareMetersCredit;
@@ -75,9 +75,9 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         public static final class TransactionInfoBlock extends PacketBlock
         {
             public int TransactionType;
-            public UUID SourceID;
+            public UUID SourceID = new UUID();
             public boolean IsSourceGroup;
-            public UUID DestID;
+            public UUID DestID = new UUID();
             public boolean IsDestGroup;
             public int Amount;
 		/** Unsigned Byte */ 

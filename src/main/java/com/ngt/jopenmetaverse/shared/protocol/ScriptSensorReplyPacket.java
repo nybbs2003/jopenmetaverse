@@ -12,7 +12,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         /// <exclude/>
         public static final class RequesterBlock extends PacketBlock
         {
-            public UUID SourceID;
+            public UUID SourceID = new UUID();
 
             @Override
 			public int getLength()
@@ -52,9 +52,9 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         /// <exclude/>
         public static final class SensedDataBlock extends PacketBlock
         {
-            public UUID ObjectID;
-            public UUID OwnerID;
-            public UUID GroupID;
+            public UUID ObjectID = new UUID();
+            public UUID OwnerID = new UUID();
+            public UUID GroupID = new UUID();
             public Vector3 Position;
             public Vector3 Velocity;
             public Quaternion Rotation;

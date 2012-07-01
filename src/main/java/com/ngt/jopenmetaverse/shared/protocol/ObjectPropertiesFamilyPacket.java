@@ -10,9 +10,9 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         public static final class ObjectDataBlock extends PacketBlock
         {
             public long RequestFlags;
-            public UUID ObjectID;
-            public UUID OwnerID;
-            public UUID GroupID;
+            public UUID ObjectID = new UUID();
+            public UUID OwnerID = new UUID();
+            public UUID GroupID = new UUID();
             public long BaseMask;
             public long OwnerMask;
             public long GroupMask;
@@ -23,7 +23,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 		public byte SaleType;
             public int SalePrice;
             public long Category;
-            public UUID LastOwnerID;
+            public UUID LastOwnerID = new UUID();
 		/** Unsigned Byte */ 
 		public byte[] Name;
 		/** Unsigned Byte */ 

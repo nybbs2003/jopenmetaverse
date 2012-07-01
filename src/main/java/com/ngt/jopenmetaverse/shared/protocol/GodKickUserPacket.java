@@ -8,9 +8,9 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         /// <exclude/>
         public static final class UserInfoBlock extends PacketBlock
         {
-            public UUID GodID;
-            public UUID GodSessionID;
-            public UUID AgentID;
+            public UUID GodID = new UUID();
+            public UUID GodSessionID = new UUID();
+            public UUID AgentID = new UUID();
             public long KickFlags;
 		/** Unsigned Byte */ 
 		public byte[] Reason;

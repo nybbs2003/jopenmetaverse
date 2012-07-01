@@ -9,8 +9,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         /// <exclude/>
         public static final class AgentDataBlock extends PacketBlock
         {
-            public UUID AgentID;
-            public UUID GroupID;
+            public UUID AgentID = new UUID();
+            public UUID GroupID = new UUID();
 
             @Override
 			public int getLength()
@@ -52,7 +52,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         /// <exclude/>
         public static final class TransactionDataBlock extends PacketBlock
         {
-            public UUID TransactionID;
+            public UUID TransactionID = new UUID();
             public long TotalNumItems;
 
             @Override
@@ -95,14 +95,14 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         /// <exclude/>
         public static final class HistoryItemDataBlock extends PacketBlock
         {
-            public UUID VoteID;
+            public UUID VoteID = new UUID();
 		/** Unsigned Byte */ 
 		public byte[] TerseDateID;
 		/** Unsigned Byte */ 
 		public byte[] StartDateTime;
 		/** Unsigned Byte */ 
 		public byte[] EndDateTime;
-            public UUID VoteInitiator;
+            public UUID VoteInitiator = new UUID();
 		/** Unsigned Byte */ 
 		public byte[] VoteType;
 		/** Unsigned Byte */ 
@@ -195,7 +195,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         /// <exclude/>
         public static final class VoteItemBlock extends PacketBlock
         {
-            public UUID CandidateID;
+            public UUID CandidateID = new UUID();
 		/** Unsigned Byte */ 
 		public byte[] VoteCast;
             public int NumVotes;

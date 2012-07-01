@@ -8,7 +8,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
     {
         public final class AgentDataBlock extends PacketBlock
         {
-            public UUID AgentID;
+            public UUID AgentID = new UUID();
 
             @Override
 			public int getLength()
@@ -47,8 +47,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 
         public final class DataBlock extends PacketBlock
         {
-            public UUID ParcelID;
-            public UUID OwnerID;
+            public UUID ParcelID = new UUID();
+            public UUID OwnerID = new UUID();
 		/** Unsigned Byte */ 
 		public byte[] Name;
 		/** Unsigned Byte */ 
@@ -62,7 +62,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             public float GlobalZ;
 		/** Unsigned Byte */ 
 		public byte[] SimName;
-            public UUID SnapshotID;
+            public UUID SnapshotID = new UUID();
             public float Dwell;
             public int SalePrice;
             public int AuctionID;

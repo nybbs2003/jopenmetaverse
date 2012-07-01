@@ -56,7 +56,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         public static final class ReportDataBlock extends PacketBlock
         {
             public long TaskLocalID;
-            public UUID TaskID;
+            public UUID TaskID = new UUID();
             public float LocationX;
             public float LocationY;
             public float LocationZ;

@@ -11,8 +11,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         /// <exclude/>
         public static final class AgentBlockBlock extends PacketBlock
         {
-            public UUID Hunter;
-            public UUID Prey;
+            public UUID Hunter = new UUID();
+            public UUID Prey = new UUID();
             public long SpaceIP;
 
             @Override

@@ -11,7 +11,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
     {
         public final class DataBlock extends PacketBlock
         {
-            public UUID OwnerID;
+            public UUID OwnerID = new UUID();
             public Boolean IsGroupOwned;
             public int Count;
             public Boolean OnlineStatus;

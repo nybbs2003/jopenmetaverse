@@ -12,7 +12,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         /// <exclude/>
         public static final class SenderBlock extends PacketBlock
         {
-            public UUID ID;
+            public UUID ID = new UUID();
             public boolean IsTrial;
 
             @Override

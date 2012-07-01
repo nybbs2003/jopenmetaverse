@@ -10,7 +10,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         /// <exclude/>
         public static final class InfoBlock extends PacketBlock
         {
-            public UUID AgentID;
+            public UUID AgentID = new UUID();
             public long LocationID;
             public long SimIP;
             /** Unsigned Short **/

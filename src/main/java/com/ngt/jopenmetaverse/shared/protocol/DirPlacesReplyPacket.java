@@ -12,7 +12,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         /// <exclude/>
         public static final class AgentDataBlock extends PacketBlock
         {
-            public UUID AgentID;
+            public UUID AgentID = new UUID();
 
             @Override
 			public int getLength()
@@ -37,6 +37,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 }
                 catch (Exception e)
                 {
+                	e.printStackTrace();
                     throw new MalformedDataException();
                 }
             }
@@ -52,7 +53,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         /// <exclude/>
         public static final class QueryDataBlock extends PacketBlock
         {
-            public UUID QueryID;
+            public UUID QueryID  = new UUID();
 
             @Override
 			public int getLength()
@@ -92,7 +93,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         /// <exclude/>
         public static final class QueryRepliesBlock extends PacketBlock
         {
-            public UUID ParcelID;
+            public UUID ParcelID = new UUID();
 		/** Unsigned Byte */ 
 		public byte[] Name;
             public boolean ForSale;
@@ -183,6 +184,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
+            	System.out.println(bytes.length + " To Bytes:  " + i[0]);
                 Utils.uintToBytes(Status, bytes, i[0]); i[0] += 4;
             }
 

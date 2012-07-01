@@ -9,9 +9,9 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         /// <exclude/>
         public static final class InfoBlock extends PacketBlock
         {
-            public UUID AgentID;
-            public UUID SessionID;
-            public UUID LandmarkID;
+            public UUID AgentID = new UUID();
+            public UUID SessionID = new UUID();
+            public UUID LandmarkID = new UUID();
 
             @Override
 			public int getLength()

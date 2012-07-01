@@ -16,7 +16,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             public int OtherCount;
             public int PublicCount;
             public int LocalID;
-            public UUID OwnerID;
+            public UUID OwnerID = new UUID();
             public boolean IsGroupOwned;
             public long AuctionID;
             public int ClaimDate;
@@ -49,16 +49,16 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 		public byte[] MusicURL;
 		/** Unsigned Byte */ 
 		public byte[] MediaURL;
-            public UUID MediaID;
+            public UUID MediaID = new UUID();
 		/** Unsigned Byte */ 
 		public byte MediaAutoScale;
-            public UUID GroupID;
+            public UUID GroupID = new UUID();
             public int PassPrice;
             public float PassHours;
 		/** Unsigned Byte */ 
 		public byte Category;
-            public UUID AuthBuyerID;
-            public UUID SnapshotID;
+            public UUID AuthBuyerID = new UUID();
+            public UUID SnapshotID = new UUID();
             public Vector3 UserLocation;
             public Vector3 UserLookAt;
 		/** Unsigned Byte */ 

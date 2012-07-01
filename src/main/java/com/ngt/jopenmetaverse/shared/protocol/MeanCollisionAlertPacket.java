@@ -12,8 +12,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         /// <exclude/>
         public static final class MeanCollisionBlock extends PacketBlock
         {
-            public UUID Victim;
-            public UUID Perp;
+            public UUID Victim = new UUID();
+            public UUID Perp = new UUID();
             public long Time;
             public float Mag;
 		/** Unsigned Byte */ 

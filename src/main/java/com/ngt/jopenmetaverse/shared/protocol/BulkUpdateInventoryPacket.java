@@ -12,8 +12,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         /// <exclude/>
         public static final class AgentDataBlock extends PacketBlock
         {
-            public UUID AgentID;
-            public UUID TransactionID;
+            public UUID AgentID = new UUID();
+            public UUID TransactionID = new UUID();
 
             @Override
 			public int getLength()
@@ -55,8 +55,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         /// <exclude/>
         public static final class FolderDataBlock extends PacketBlock
         {
-            public UUID FolderID;
-            public UUID ParentID;
+            public UUID FolderID = new UUID();
+            public UUID ParentID = new UUID();
 		/** Signed Byte */ 
 		public byte Type;
 		/** Unsigned Byte */ 
@@ -112,19 +112,19 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         /// <exclude/>
         public static final class ItemDataBlock extends PacketBlock
         {
-            public UUID ItemID;
+            public UUID ItemID = new UUID();
             public long CallbackID;
-            public UUID FolderID;
-            public UUID CreatorID;
-            public UUID OwnerID;
-            public UUID GroupID;
+            public UUID FolderID = new UUID();
+            public UUID CreatorID = new UUID();
+            public UUID OwnerID = new UUID();
+            public UUID GroupID = new UUID();
             public long BaseMask;
             public long OwnerMask;
             public long GroupMask;
             public long EveryoneMask;
             public long NextOwnerMask;
             public boolean GroupOwned;
-            public UUID AssetID;
+            public UUID AssetID = new UUID();
 		/** Signed Byte */ 
 		public byte Type;
 		/** Signed Byte */ 

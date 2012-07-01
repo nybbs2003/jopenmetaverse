@@ -11,8 +11,8 @@ import com.ngt.jopenmetaverse.shared.protocol.DirPlacesReplyPacket;
 
 public class PacketTest {
 
-	
-	
+
+
 	@Test
 
 	public void HeaderFlags()
@@ -71,7 +71,7 @@ public class PacketTest {
 	}
 
 	@Test
-			public void ToBytesMultiple() throws MalformedDataException
+	public void ToBytesMultiple() throws MalformedDataException
 	{
 		UUID testID = UUID.Random();
 
@@ -117,7 +117,7 @@ public class PacketTest {
 			int[] len = new int[]{packetData.length - 1};
 			DirPlacesReplyPacket packet = (DirPlacesReplyPacket)Packet.BuildPacket(packetData, len, packetData);
 
-			Assert.assertTrue(packet.AgentData.AgentID == bigPacket.AgentData.AgentID);
+			Assert.assertTrue(packet.AgentData.AgentID.equals(bigPacket.AgentData.AgentID));
 
 			for (int j = 0; j < packet.QueryReplies.length; j++)
 			{

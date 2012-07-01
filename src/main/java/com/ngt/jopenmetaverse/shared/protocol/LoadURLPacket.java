@@ -10,8 +10,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         public static final class DataBlock extends PacketBlock
         {
             public byte[] ObjectName;
-            public UUID ObjectID;
-            public UUID OwnerID;
+            public UUID ObjectID = new UUID();
+            public UUID OwnerID = new UUID();
             public boolean OwnerIsGroup;
 		/** Unsigned Byte */ 
 		public byte[] Message;

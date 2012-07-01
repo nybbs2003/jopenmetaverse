@@ -8,8 +8,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         /// <exclude/>
         public static final class ScriptBlock extends PacketBlock
         {
-            public UUID ObjectID;
-            public UUID ItemID;
+            public UUID ObjectID = new UUID();
+            public UUID ItemID = new UUID();
 
             @Override
 			public int getLength()
