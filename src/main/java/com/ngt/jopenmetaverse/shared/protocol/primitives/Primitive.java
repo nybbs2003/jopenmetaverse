@@ -634,7 +634,7 @@ public class Primitive
         {
             return (Object)rhs == (Object)lhs;
         }
-        return (lhs.ID == rhs.ID);
+        return (lhs.ID.equals(rhs.ID));
     }
 
     public static boolean notEquals(Primitive lhs, Primitive rhs)
@@ -643,7 +643,7 @@ public class Primitive
         {
             return (Object)rhs != (Object)lhs;
         }
-        return !(lhs.ID == rhs.ID);
+        return !(lhs.ID.equals(rhs.ID));
     }
 
     //endregion Operators

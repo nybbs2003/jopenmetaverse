@@ -123,7 +123,7 @@ public class PacketTest {
 			{
 				Assert.assertTrue("Expected Dwell of " + (float)(queryRepliesCount + j) + " but got " + packet.QueryReplies[j].Dwell, 
 						packet.QueryReplies[j].Dwell == (float)(queryRepliesCount + j));
-				Assert.assertTrue(packet.QueryReplies[j].ParcelID == testID);
+				Assert.assertTrue(packet.QueryReplies[j].ParcelID.equals(testID));
 			}
 
 			queryDataCount += packet.QueryData.length;

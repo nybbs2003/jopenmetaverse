@@ -831,7 +831,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 bytes = packetBuffer;
             }
-            Arrays.fill(bytes, packetEnd[0] + 1, bytes.length - 1, (byte)0x00);
+            Arrays.fill(bytes, packetEnd[0] + 1, bytes.length, (byte)0x00);
 
             switch (header.Frequency)
             {
