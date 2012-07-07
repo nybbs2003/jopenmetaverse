@@ -63,14 +63,14 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 		public byte[] Description;
 		/** Unsigned Byte */ 
 		public byte[] Title;
-            public BigInteger Powers;
+        public BigInteger Powers;
 		/** Unsigned Byte */ 
 		public byte UpdateType;
 
             @Override
 			public int getLength()
             {
-                                {
+                {
                     int length = 28;
                     if (Name != null) { length += Name.length; }
                     if (Description != null) { length += Description.length; }

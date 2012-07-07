@@ -8,12 +8,9 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
-import java.util.TimeZone;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.joda.time.format.DateTimeFormatter;
@@ -650,7 +647,7 @@ public class Utils
 	/// at the given position</returns>
 	public static int bytesToInt(byte[] bytes, int pos)
 	{
-		//    	System.out.println(Utils.bytesToHexString(bytes, "To Int B"));
+		//    	//System.out.println(Utils.bytesToHexString(bytes, "To Int B"));
 		//        if (bytes.length < pos + 4) return 0;
 		//        return (int)(bytes[pos + 3] + (bytes[pos + 2] << 8) + (bytes[pos + 1] << 16) + (bytes[pos + 0] << 24));
 		return ByteBuffer.wrap(bytes).order(ByteOrder.BIG_ENDIAN).getInt(pos);
@@ -804,7 +801,6 @@ public class Utils
 	    {
 	        return bytesToUInt(bytes, 0);
 	    }
-	    
 	    
 	    public static BigInteger bytesToULong(byte[] bytes, int pos)
 	    {
@@ -1116,8 +1112,8 @@ public class Utils
 
 	public static byte[] ulongToBytes(BigInteger value)
 	{
-		byte[] bytes = value.toByteArray();
-		return ArrayUtils.subarray(bytes, bytes.length-8, bytes.length);
+		byte[] bytes = int64ToBytes(value.longValue());
+		return bytes;
 	}
 
 	public static void ulongToBytes(BigInteger value, byte[] dest, int pos)
@@ -1662,9 +1658,9 @@ public class Utils
 						path = parts[0];
 				}
 
-				System.out.println(String.format("%s:%s:%s", path, query, fragment));
+				//System.out.println(String.format("%s:%s:%s", path, query, fragment));
 				URI f = new URI(null, null, path, query, fragment);
-				System.out.println("Parsed URI:" + f.toString());
+				//System.out.println("Parsed URI:" + f.toString());
 				result[0] = f;
 				return true;
 			}

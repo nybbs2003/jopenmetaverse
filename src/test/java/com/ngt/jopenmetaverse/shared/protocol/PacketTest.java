@@ -11,8 +11,6 @@ import com.ngt.jopenmetaverse.shared.protocol.DirPlacesReplyPacket;
 
 public class PacketTest {
 
-
-
 	@Test
 
 	public void HeaderFlags()
@@ -105,7 +103,7 @@ public class PacketTest {
 			bigPacket.StatusData[i] = new DirPlacesReplyPacket.StatusDataBlock();
 			bigPacket.StatusData[i].Status = (long)i;
 		}
-
+		
 		byte[][] splitPackets = bigPacket.ToBytesMultiple();
 
 		int queryDataCount = 0;
@@ -125,7 +123,7 @@ public class PacketTest {
 						packet.QueryReplies[j].Dwell == (float)(queryRepliesCount + j));
 				Assert.assertTrue(packet.QueryReplies[j].ParcelID.equals(testID));
 			}
-
+			
 			queryDataCount += packet.QueryData.length;
 			queryRepliesCount += packet.QueryReplies.length;
 			statusDataCount += packet.StatusData.length;
