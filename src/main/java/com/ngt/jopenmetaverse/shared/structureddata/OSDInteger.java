@@ -10,10 +10,17 @@ public final class OSDInteger extends OSD
 {
     private int value;
 
-    public  OSDType type = OSDType.Integer; 
+//    public  OSDType type = OSDType.Integer; 
 
+    public OSDInteger()
+    {
+    	super();
+    	type = OSDType.Integer; 
+    }
+    
     public OSDInteger(int value)
     {
+    	this();
         this.value = value;
     }
 

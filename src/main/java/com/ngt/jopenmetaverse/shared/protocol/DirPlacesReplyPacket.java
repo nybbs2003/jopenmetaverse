@@ -184,7 +184,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-            	System.out.println(bytes.length + " To Bytes:  " + i[0]);
+            	//System.out.println(bytes.length + " To Bytes:  " + i[0]);
                 Utils.uintToBytes(Status, bytes, i[0]); i[0] += 4;
             }
 

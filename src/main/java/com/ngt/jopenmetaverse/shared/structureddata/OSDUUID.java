@@ -9,9 +9,16 @@ import com.ngt.jopenmetaverse.shared.types.UUID;
 public final class OSDUUID extends OSD
 {
     private UUID value;
-    public  final OSDType type = OSDType.UUID; 
+    
+    public OSDUUID()
+    {
+    	super();
+    	type = OSDType.UUID; 
+    }
+    
     public OSDUUID(UUID value)
     {
+    	this();
         this.value = value;
     }
 

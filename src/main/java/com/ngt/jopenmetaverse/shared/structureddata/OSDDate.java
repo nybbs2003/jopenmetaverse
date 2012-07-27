@@ -18,15 +18,20 @@ public final class OSDDate extends OSD
 {
   private Date value;
 
-   public  final OSDType type =  OSDType.Date;
-
   public OSDType getType()
   {
   	return type;
   }
   
+  public OSDDate()
+  {
+	  super();
+	  type =  OSDType.Date;
+  }
+  
   public OSDDate(Date value)
   {
+	  this();
       this.value = value;
   }
 

@@ -1,10 +1,6 @@
 package com.ngt.jopenmetaverse.shared.structureddata;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
-import java.net.URLDecoder;
-import java.nio.charset.Charset;
-
 import com.ngt.jopenmetaverse.shared.util.Utils;
 
 
@@ -15,16 +11,21 @@ public final class OSDUri extends OSD
 {
     private URI value;
 
-     public  final OSDType type  = OSDType.URI;
-
      @Override
     public OSDType getType()
     {
     	return type;
     }
-    
+
+     public OSDUri()
+     {
+    	 super();
+    	 type  = OSDType.URI;
+     }
+     
     public OSDUri(URI value)
     {
+    	this();
         this.value = value;
     }
 

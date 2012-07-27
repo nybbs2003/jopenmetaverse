@@ -18,7 +18,7 @@ public final class OSDArray extends OSD implements Iterable<OSD>
 {
     private List<OSD> value;
 
-     public  final OSDType type = OSDType.Array;
+//     public  final OSDType type = OSDType.Array;
 
     public OSDType getType()
     {
@@ -27,16 +27,20 @@ public final class OSDArray extends OSD implements Iterable<OSD>
     
     public OSDArray()
     {
+    	super();
+    	type = OSDType.Array;
         value = new ArrayList<OSD>();
     }
 
     public OSDArray(int capacity)
     {
+    	this();
         value = new ArrayList<OSD>(capacity);
     }
 
     public OSDArray(List<OSD> value)
     {
+    	this();
         if (value != null)
             this.value = value;
         else

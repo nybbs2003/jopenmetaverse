@@ -371,7 +371,7 @@ public class NotationalLLSDOSDParserTest
 	            DocumentBuilder db = dbf.newDocumentBuilder();
 	            Document doc = db.parse(new ByteArrayInputStream(bytes));
 	            Element rootNode = doc.getDocumentElement();
-	            System.out.println("Root element " + doc.getDocumentElement().getNodeName());
+//	            System.out.println("Root element " + doc.getDocumentElement().getNodeName());
 	            rootNode.normalize();
 	           
 	            String content = rootNode.getChildNodes().item(0).getNodeValue();
@@ -407,7 +407,7 @@ public class NotationalLLSDOSDParserTest
 	            Utils.tryParseUri("http://test.org/test test>\\\"/&yes\"", uriOne);
 	            OSD llsdOne = OSD.FromUri(uriOne[0]);
 	            String sUriOne = NotationalLLSDOSDParser.SerializeLLSDNotation(llsdOne);
-	            System.out.println("sUriOne: " + sUriOne);
+//	            System.out.println("sUriOne: " + sUriOne);
 	            OSD llsdOneDS = NotationalLLSDOSDParser.DeserializeLLSDNotation(sUriOne);
 	            Assert.assertEquals(OSDType.URI, llsdOneDS.getType());
 	            Assert.assertEquals(uriOne[0], llsdOneDS.asUri());
@@ -464,7 +464,7 @@ public class NotationalLLSDOSDParserTest
 	            OSD llsdTwoDS = NotationalLLSDOSDParser.DeserializeLLSDNotation(sDtTwo);
 	            Assert.assertEquals(OSDType.Date, llsdTwoDS.getType());
 	            Date dtTwoDS = llsdTwoDS.asDate();
-	            System.out.println(dtTwo.getTime() + " : " + dtTwoDS.getTime());
+//	            System.out.println(dtTwo.getTime() + " : " + dtTwoDS.getTime());
 	            Assert.assertEquals(dtTwo, dtTwoDS);
 
 	            // check if a *local* time can be serialized and deserialized
@@ -659,7 +659,7 @@ public class NotationalLLSDOSDParserTest
 	            DocumentBuilder db = dbf.newDocumentBuilder();
 	            Document doc = db.parse(new ByteArrayInputStream(bytes));
 	            Element rootNode = doc.getDocumentElement();
-	            System.out.println("Root element " + doc.getDocumentElement().getNodeName());
+//	            System.out.println("Root element " + doc.getDocumentElement().getNodeName());
 	            rootNode.normalize();
 	           
 	            String content = rootNode.getChildNodes().item(0).getNodeValue();

@@ -312,11 +312,11 @@ public class BinaryLLSDOSDParserTest
         DocumentBuilder db = dbf.newDocumentBuilder();
         Document doc = db.parse(new ByteArrayInputStream(bytes));
         Element rootNode = doc.getDocumentElement();
-        System.out.println("Root element " + doc.getDocumentElement().getNodeName());
+//        System.out.println("Root element " + doc.getDocumentElement().getNodeName());
         rootNode.normalize();
        
         String contentAString = rootNode.getChildNodes().item(0).getNodeValue();
-        System.out.println("Node Value:" + contentAString);
+//        System.out.println("Node Value:" + contentAString);
         OSD llsdAString = OSD.FromString(contentAString);
         byte[] binaryAString = BinaryLLSDOSDParser.SerializeLLSDBinary(llsdAString);
         OSD llsdAStringDS = BinaryLLSDOSDParser.DeserializeLLSDBinary(binaryAString);

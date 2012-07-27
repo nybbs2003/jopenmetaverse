@@ -11,10 +11,15 @@ public final class OSDBoolean extends OSD
   private static byte[] trueBinary = { 0x31 };
   private static byte[] falseBinary = { 0x30 };
 
-  final public  OSDType type = getType();
-
+  public OSDBoolean()
+  {
+	  super();
+	  type = getType();
+  }
+  
   public OSDBoolean(boolean value)
   {
+	  this();
       this.value = value;
   }
 

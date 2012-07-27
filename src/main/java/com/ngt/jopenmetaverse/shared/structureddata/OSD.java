@@ -19,7 +19,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 /// </summary>
 public class OSD
 {
-    public final OSDType type =  OSDType.Unknown;
+    protected OSDType type;
 
     public boolean asBoolean() { return false; }
     public int asInteger() { return 0; }
@@ -52,6 +52,11 @@ public class OSD
     public static OSD FromUri(URI value) { return new OSDUri(value); }
     public static OSD FromBinary(byte[] value) { return new OSDBinary(value); }
 
+    public OSD()
+    {
+    	type =  OSDType.Unknown;
+    }
+    
     public OSDType getType()
     {
     	return type;

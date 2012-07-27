@@ -13,10 +13,17 @@ public final class OSDString extends OSD
 {
     private String value;
 
-    public final OSDType type =  OSDType.String;
+//    public final OSDType type =  OSDType.String;
 
+    public OSDString()
+    {
+    	super();
+    	type =  OSDType.String;
+    }
+    
     public OSDString(String value)
     {
+    	this();
         // Refuse to hold null pointers
         if (value != null)
             this.value = value;

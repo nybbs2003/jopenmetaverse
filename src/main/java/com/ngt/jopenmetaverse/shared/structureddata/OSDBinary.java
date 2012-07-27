@@ -11,16 +11,21 @@ public final class OSDBinary extends OSD
 {
   private byte[] value;
 
-   public  final OSDType type =  OSDType.Binary;
-
    @Override
   public OSDType getType()
-  {
+   {
   	return type;
   }
   
+  public OSDBinary()
+  {
+	  super();
+	  type =  OSDType.Binary;
+  }
+   
   public OSDBinary(byte[] value)
   {
+	  this();
       if (value != null)
           this.value = value;
       else
@@ -29,6 +34,7 @@ public final class OSDBinary extends OSD
 
   public OSDBinary(int value)
   {
+	  this();
       this.value = new byte[]
       {
           (byte)((value >> 24) % 256),
@@ -41,6 +47,7 @@ public final class OSDBinary extends OSD
   
   public OSDBinary(long value)
   {
+	  this();
       this.value = new byte[]
       {
           (byte)((value >> 56) % 256),

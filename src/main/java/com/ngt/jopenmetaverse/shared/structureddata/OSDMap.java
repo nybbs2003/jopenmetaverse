@@ -2,7 +2,6 @@ package com.ngt.jopenmetaverse.shared.structureddata;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -13,7 +12,7 @@ public final class OSDMap extends OSD
 {
     private Map<String, OSD> value;
 
-     public  final OSDType type =  OSDType.Map;
+//     public final OSDType type =  OSDType.Map;
 
     public OSDType getType()
     {
@@ -22,16 +21,20 @@ public final class OSDMap extends OSD
     
     public OSDMap()
     {
+    	super();
+    	type =  OSDType.Map;
         value = new HashMap<String, OSD>();
     }
 
     public OSDMap(int capacity)
     {
+    	this();
         value = new HashMap<String, OSD>(capacity);
     }
 
     public OSDMap(Map<String, OSD> value)
     {
+    	this();
         if (value != null)
             this.value = value;
         else

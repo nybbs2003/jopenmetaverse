@@ -10,10 +10,17 @@ public final class OSDReal extends OSD
 {
     private double value;
 
-    public final OSDType type = OSDType.Real;
+//    public final OSDType type = OSDType.Real;
 
+    public OSDReal()
+    {
+    	super();
+    	type = OSDType.Real;
+    }
+    
     public OSDReal(double value)
     {
+    	this();
         this.value = value;
     }
 

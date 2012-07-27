@@ -26,22 +26,25 @@ public class Color4 implements Comparable<Color4>, Serializable
 		this(0f, 0f, 0f, 0f);	
 		}
 	
-	/// <summary>
-	/// 
-	/// </summary>
-	/// <param name="r"></param>
-	/// <param name="g"></param>
-	/// <param name="b"></param>
-	/// <param name="a"></param>
-	public Color4(byte r, byte g, byte b, byte a)
-	{
-		final float quanta = 1.0f / 255.0f;
-
-		R = (float)r * quanta;
-		G = (float)g * quanta;
-		B = (float)b * quanta;
-		A = (float)a * quanta;
-	}
+/*
+ * Removed following constructor, as floating point constructor will always take precedence	
+ */
+//	/// <summary>
+//	/// 
+//	/// </summary>
+//	/// <param name="r"></param>
+//	/// <param name="g"></param>
+//	/// <param name="b"></param>
+//	/// <param name="a"></param>
+//	public Color4(short r, short g, short b, short a)
+//	{
+//		final float quanta = 1.0f / 255.0f;
+//
+//		R = (float)r * quanta;
+//		G = (float)g * quanta;
+//		B = (float)b * quanta;
+//		A = (float)a * quanta;
+//	}
 
 	public Color4(float r, float g, float b, float a)
 	{
