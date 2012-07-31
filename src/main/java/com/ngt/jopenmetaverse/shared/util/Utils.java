@@ -16,6 +16,8 @@ import org.apache.commons.lang.ArrayUtils;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 
+import com.ngt.jopenmetaverse.shared.types.UUID;
+
 public class Utils
 {   
 	/// <summary>
@@ -1603,12 +1605,34 @@ public class Utils
 	/// <returns>True if the parse was successful, otherwise false</returns>
 	public static boolean tryParseDate(String s, Date[] result)
 	{			
+		try
+		{
 			DateTimeFormatter parser2 = ISODateTimeFormat.dateTimeParser();
 			Date f = parser2.parseDateTime(s).toDate();			
 			result[0] = f;
 			return true;
+		}
+		catch(IllegalArgumentException e)
+		{
+			return false;
+		}
 	}
 
+	public static boolean tryParseUUID(String s, UUID[] result)
+	{
+		try
+		{
+		UUID uuid = new UUID(s);
+		result[0] = uuid;
+		return true;
+		}
+		catch(IllegalArgumentException e)
+		{
+			return false;
+		}
+	}
+	
+	
 	/// <summary>
 	/// Attempts to parse a floating point value from a String, using an
 	/// EN-US number format
@@ -1670,6 +1694,23 @@ public class Utils
 		}
 	}
 
+	public static boolean tryParseUri2(String s, URI[] result)
+	{
+		try
+		{
+			URI f = new URI(s);
+			result[0] = f;
+			if(!f.isAbsolute())
+				return false;
+			
+			return true;
+		}
+		catch(URISyntaxException e0)
+		{
+			return false;
+		}
+	}
+	
 
 	//    /// <summary>
 	//    /// Tries to parse an unsigned 32-bit integer from a hexadecimal String
