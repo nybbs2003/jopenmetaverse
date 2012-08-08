@@ -12,15 +12,10 @@ import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import javax.xml.validation.Schema;
-
 import org.apache.commons.codec.binary.Base64;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
@@ -33,7 +28,6 @@ import com.ngt.jopenmetaverse.shared.structureddata.OSD;
 import com.ngt.jopenmetaverse.shared.structureddata.OSDArray;
 import com.ngt.jopenmetaverse.shared.structureddata.OSDException;
 import com.ngt.jopenmetaverse.shared.structureddata.OSDMap;
-import com.ngt.jopenmetaverse.shared.structureddata.OSDType;
 import com.ngt.jopenmetaverse.shared.types.UUID;
 import com.ngt.jopenmetaverse.shared.util.Utils;
 
@@ -355,7 +349,7 @@ public class XmlLLSDOSDParser
 		{
 			if(nodeList.item(i).getNodeType() == Node.ELEMENT_NODE)
 			{
-				System.out.println(nodeList.item(i).getNodeName());
+				//System.out.println(nodeList.item(i).getNodeName());
 				ret = ParseLLSDXmlElement(nodeList.item(i));
 				break;
 			}
@@ -373,7 +367,7 @@ public class XmlLLSDOSDParser
 		String type = reader.getNodeName();
 		OSD ret;
 
-		System.out.println("Parsing Element..." + type);
+		////System.out.println("Parsing Element..." + type);
 		
 		if(type.equals("undef"))
 		{
@@ -520,7 +514,7 @@ public class XmlLLSDOSDParser
 		if (reader.getNodeType() != Node.ELEMENT_NODE|| !reader.getNodeName().equals("map"))
 			throw new OSDException("Expected <map>");
 
-		System.out.println("Parsing Map...");
+		////System.out.println("Parsing Map...");
 		
 		OSDMap map = new OSDMap();
 
@@ -544,7 +538,7 @@ public class XmlLLSDOSDParser
 		
 		for(int i = 0; i < nl.size(); i+=2)
 		{
-			System.out.println(i);
+			//System.out.println(i);
 				Node keyNode = nl.get(i);
 				Node valueNode = nl.get(i+1);
 			
@@ -553,7 +547,7 @@ public class XmlLLSDOSDParser
 			
 				if (valueNode == null)
 					throw new OSDException("Expected value for a key");				
-				System.out.println(keyNode.getFirstChild().getNodeValue());
+				//System.out.println(keyNode.getFirstChild().getNodeValue());
 				String key = keyNode.getFirstChild().getNodeValue().trim();
 				map.put(key, ParseLLSDXmlElement(valueNode));
 		}
@@ -566,7 +560,7 @@ public class XmlLLSDOSDParser
 		if (reader.getNodeType() != Node.ELEMENT_NODE|| !reader.getNodeName().equals("array"))
 			throw new OSDException("Expected <array>");
 
-		System.out.println("Parsing Array...");
+		//System.out.println("Parsing Array...");
 		
 		OSDArray array = new OSDArray();
 

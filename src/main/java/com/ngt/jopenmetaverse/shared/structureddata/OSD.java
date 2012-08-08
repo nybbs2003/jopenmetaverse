@@ -2,8 +2,10 @@ package com.ngt.jopenmetaverse.shared.structureddata;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
+import java.math.BigInteger;
 import java.net.URI;
 import java.util.Date;
+import java.util.logging.Logger;
 
 import com.ngt.jopenmetaverse.shared.types.Color4;
 import com.ngt.jopenmetaverse.shared.types.Quaternion;
@@ -19,11 +21,14 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 /// </summary>
 public class OSD
 {
+	protected static Logger logger = Logger.getLogger("OSD"); 
     protected OSDType type;
 
     public boolean asBoolean() { return false; }
     public int asInteger() { return 0; }
+    public long asUInteger() { return 0; }
     public long asLong() { return 0; }
+    public BigInteger asULong() { return new BigInteger("0"); }
     public double asReal() { return 0d; }
     public String asString() { return ""; }
     public UUID asUUID() { return UUID.Zero; }
@@ -43,7 +48,9 @@ public class OSD
     public static OSD FromInteger(int value) { return new OSDInteger(value); }
     public static OSD FromInteger(short value) { return new OSDInteger((int)value); }
     public static OSD FromInteger(byte value) { return new OSDInteger((int)value); }
+    public static OSD FromUInteger(long value) { return new OSDBinary(Utils.uintToBytes(value)); }
     public static OSD FromLong(long value) { return new OSDBinary(value); }
+    public static OSD FromULong(BigInteger value) { return new OSDBinary((BigInteger)value); }
     public static OSD FromReal(double value) { return new OSDReal(value); }
     public static OSD FromReal(float value) { return new OSDReal((double)value); }
     public static OSD FromString(String value) { return new OSDString(value); }
@@ -133,6 +140,7 @@ public class OSD
         else if (value instanceof URI) { return new OSDUri((URI)value); }
         else if (value instanceof Byte[]) { return new OSDBinary((byte[])value); }
         else if (value instanceof Long) { return new OSDBinary((Long)value); }
+        else if (value instanceof BigInteger) { return new OSDBinary((BigInteger)value); }        
         else if (value instanceof Vector2) { return FromVector2((Vector2)value); }
         else if (value instanceof Vector3) { return FromVector3((Vector3)value); }
         else if (value instanceof Vector3d) { return FromVector3d((Vector3d)value); }
@@ -156,6 +164,18 @@ public class OSD
                 return (long)value.asInteger();
             }
         }
+        else if (type.equals(BigInteger.class))
+        {
+            if (value.getType() == OSDType.Binary)
+            {
+                byte[] bytes = value.asBinary();
+                return Utils.bytesToULong((bytes));
+            }
+            else
+            {
+                return (BigInteger)value.asULong();
+            }
+        }        
         else if (type == Integer.TYPE)
         {
             if (value.getType() == OSDType.Binary)
@@ -233,6 +253,7 @@ public class OSD
     public static  OSDInteger getInstance(short value) { return new OSDInteger((int)value); }
     public static  OSDInteger getInstance(byte value) { return new OSDInteger((int)value); }
     public static  OSDBinary getInstance(long value) { return new OSDBinary(value); }
+    public static  OSDBinary getInstance(BigInteger value) { return new OSDBinary(value); }
     public static  OSDReal getInstance(double value) { return new OSDReal(value); }
     public static  OSDReal getInstance(float value) { return new OSDReal(value); }
     public static  OSDString getInstance(String value) { return new OSDString(value); }
@@ -283,14 +304,16 @@ public class OSD
         for (int i = 0; i < fields.length; i++)
         {
             Field field = fields[i];
-             
+        	logger.info(field.getName());
             if (field.get(obj) instanceof Serializable)
             {
                 OSD serializedField = OSD.FromObject(field.get(obj));
-
+          
                 if (serializedField.getType() != OSDType.Unknown || (field.get(obj)  instanceof String) || (field.get(obj) instanceof byte[]))
                     map.put(field.getName(), serializedField);
             }
+            else
+            	logger.info(field.getName() + "is not serializable");
         }
         return map;
     }

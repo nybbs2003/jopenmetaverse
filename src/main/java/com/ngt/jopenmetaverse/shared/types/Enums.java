@@ -4,9 +4,6 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.ngt.jopenmetaverse.shared.types.EnumsPrimitive.HoleType;
-
-
 public class Enums
 {
 //    /// <summary>

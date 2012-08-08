@@ -75,6 +75,6 @@ public class GridClient {
     @Override
     public String toString()
     {
-        return self.Name;
+        return self.getName();
     }
 }

@@ -1,253 +1,330 @@
 package com.ngt.jopenmetaverse.shared.sim.events;
 
-import com.ngt.jopenmetaverse.shared.structureddata.OSDMap;
+import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Observable;
+import java.util.Observer;
 
-	    /// <summary>
-	    /// Capabilities is the name of the bi-directional HTTP REST protocol
-	    /// used to communicate non real-time transactions such as teleporting or
-	    /// group messaging
-	    /// </summary>
-	    public class Caps
-	    {
-	    	//TODO Need to implement
-//	        /// <summary>
-//	        /// Triggered when an event is received via the EventQueueGet 
-//	        /// capability
-//	        /// </summary>
-//	        /// <param name="capsKey">Event name</param>
-//	        /// <param name="message">Decoded event data</param>
-//	        /// <param name="simulator">The simulator that generated the event</param>
-//	        //public delegate void EventQueueCallback(String message, StructuredData.OSD body, Simulator simulator);
-//
-//	        public delegate void EventQueueCallback(String capsKey, IMessage message, Simulator simulator);
-//
-//	        /// <summary>Reference to the simulator this system is connected to</summary>
-//	        public Simulator Simulator;
-//
-//	        public String _SeedCapsURI;
-//	        public Dictionary<String, Uri> _Caps = new Dictionary<String, Uri>();
-//
-//	        private CapsClient _SeedRequest;
-//	        private EventQueueClient _EventQueueCap = null;
-//
-//	        /// <summary>Capabilities URI this system was initialized with</summary>
-//	        public String SeedCapsURI { get { return _SeedCapsURI; } }
-//
-//	        /// <summary>Whether the capabilities event queue is connected and
-//	        /// listening for incoming events</summary>
-//	        public boolean IsEventQueueRunning
-//	        {
-//	            get
-//	            {
-//	                if (_EventQueueCap != null)
-//	                    return _EventQueueCap.Running;
-//	                else
-//	                    return false;
-//	            }
-//	        }
-//
-//	        /// <summary>
-//	        /// Default constructor
-//	        /// </summary>
-//	        /// <param name="simulator"></param>
-//	        /// <param name="seedcaps"></param>
-//	        internal Caps(Simulator simulator, String seedcaps)
-//	        {
-//	            Simulator = simulator;
-//	            _SeedCapsURI = seedcaps;
-//
-//	            MakeSeedRequest();
-//	        }
-//
-//	        public void Disconnect(boolean immediate)
-//	        {
-//	            Logger.Log(String.Format("Caps system for {0} is {1}", Simulator,
-//	                (immediate ? "aborting" : "disconnecting")), Helpers.LogLevel.Info, Simulator.Client);
-//
-//	            if (_SeedRequest != null)
-//	                _SeedRequest.Cancel();
-//
-//	            if (_EventQueueCap != null)
-//	                _EventQueueCap.Stop(immediate);
-//	        }
-//
-//	        /// <summary>
-//	        /// Request the URI of a named capability
-//	        /// </summary>
-//	        /// <param name="capability">Name of the capability to request</param>
-//	        /// <returns>The URI of the requested capability, or String.Empty if
-//	        /// the capability does not exist</returns>
-//	        public Uri CapabilityURI(String capability)
-//	        {
-//	            Uri cap;
-//
-//	            if (_Caps.TryGetValue(capability, out cap))
-//	                return cap;
-//	            else
-//	                return null;
-//	        }
-//
-//	        private void MakeSeedRequest()
-//	        {
-//	            if (Simulator == null || !Simulator.Client.Network.Connected)
-//	                return;
-//
-//	            // Create a request list
-//	            OSDArray req = new OSDArray();
-//	            // This list can be updated by using the following command to obtain a current list of capabilities the official linden viewer supports:
-//	            // wget -q -O - http://bitbucket.org/lindenlab/viewer-development/raw/default/indra/newview/llviewerregion.cpp | grep 'capabilityNames.append'  | sed 's/^[ \t]*//;s/capabilityNames.append("/req.Add("/'
-//	            req.Add("AttachmentResources");
-//	            req.Add("AvatarPickerSearch");
-//	            req.Add("ChatSessionRequest");
-//	            req.Add("CopyInventoryFromNotecard");
-//	            req.Add("DispatchRegionInfo");
-//	            req.Add("EstateChangeInfo");
-//	            req.Add("EventQueueGet");
-//	            req.Add("ObjectMedia");
-//	            req.Add("ObjectMediaNavigate");
-//	            req.Add("FetchLib2");
-//	            req.Add("FetchLibDescendents2");
-//	            req.Add("FetchInventory2");
-//	            req.Add("FetchInventoryDescendents2");
-//	            req.Add("GetDisplayNames");
-//	            req.Add("GetTexture");
-//	            req.Add("GetMesh");
-//	            req.Add("GetObjectCost");
-//	            req.Add("GetObjectPhysicsData");
-//	            req.Add("GroupProposalBallot");
-//	            req.Add("HomeLocation");
-//	            req.Add("LandResources");
-//	            req.Add("MapLayer");
-//	            req.Add("MapLayerGod");
-//	            req.Add("NewFileAgentInventory");
-//	            req.Add("NewFileAgentInventoryVariablePrice");
-//	            req.Add("ObjectAdd");
-//	            req.Add("ParcelPropertiesUpdate");
-//	            req.Add("ParcelMediaURLFilterList");
-//	            req.Add("ParcelNavigateMedia");
-//	            req.Add("ParcelVoiceInfoRequest");
-//	            req.Add("ProductInfoRequest");
-//	            req.Add("ProvisionVoiceAccountRequest");
-//	            req.Add("RemoteParcelRequest");
-//	            req.Add("RequestTextureDownload");
-//	            req.Add("SearchStatRequest");
-//	            req.Add("SearchStatTracking");
-//	            req.Add("SendPostcard");
-//	            req.Add("SendUserReport");
-//	            req.Add("SendUserReportWithScreenshot");
-//	            req.Add("ServerReleaseNotes");
-//	            req.Add("SimConsole");
-//	            req.Add("SimulatorFeatures");
-//	            req.Add("SetDisplayName");
-//	            req.Add("SimConsoleAsync");
-//	            req.Add("StartGroupProposal");
-//	            req.Add("TextureStats");
-//	            req.Add("UntrustedSimulatorMessage");
-//	            req.Add("UpdateAgentInformation");
-//	            req.Add("UpdateAgentLanguage");
-//	            req.Add("UpdateGestureAgentInventory");
-//	            req.Add("UpdateNotecardAgentInventory");
-//	            req.Add("UpdateScriptAgent");
-//	            req.Add("UpdateGestureTaskInventory");
-//	            req.Add("UpdateNotecardTaskInventory");
-//	            req.Add("UpdateScriptTask");
-//	            req.Add("UploadBakedTexture");
-//	            req.Add("UploadObjectAsset");
-//	            req.Add("ViewerMetrics");
-//	            req.Add("ViewerStartAuction");
-//	            req.Add("ViewerStats");
-//
-//	            _SeedRequest = new CapsClient(new Uri(_SeedCapsURI));
-//	            _SeedRequest.OnComplete += new CapsClient.CompleteCallback(SeedRequestCompleteHandler);
-//	            _SeedRequest.BeginGetResponse(req, OSDFormat.Xml, Simulator.Client.Settings.CAPS_TIMEOUT);
-//	        }
-//
-//	        private void SeedRequestCompleteHandler(CapsClient client, OSD result, Exception error)
-//	        {
-//	            if (result != null && result.Type == OSDType.Map)
-//	            {
-//	                OSDMap respTable = (OSDMap)result;
-//
-//	                foreach (String cap in respTable.Keys)
-//	                {
-//	                    _Caps[cap] = respTable[cap].AsUri();
-//	                }
-//
-//	                if (_Caps.ContainsKey("EventQueueGet"))
-//	                {
-//	                    Logger.DebugLog("Starting event queue for " + Simulator.ToString(), Simulator.Client);
-//
-//	                    _EventQueueCap = new EventQueueClient(_Caps["EventQueueGet"]);
-//	                    _EventQueueCap.OnConnected += EventQueueConnectedHandler;
-//	                    _EventQueueCap.OnEvent += EventQueueEventHandler;
-//	                    _EventQueueCap.Start();
-//	                }
-//	            }
-//	            else if (
-//	                error != null &&
-//	                error is WebException &&
-//	                ((WebException)error).Response != null &&
-//	                ((HttpWebResponse)((WebException)error).Response).StatusCode == HttpStatusCode.NotFound)
-//	            {
-//	                // 404 error
-//	                Logger.Log("Seed capability returned a 404, capability system is aborting", Helpers.LogLevel.Error);
-//	            }
-//	            else
-//	            {
-//	                // The initial CAPS connection failed, try again
-//	                MakeSeedRequest();
-//	            }
-//	        }
-//
-//	        private void EventQueueConnectedHandler()
-//	        {
-//	            Simulator.Client.Network.RaiseConnectedEvent(Simulator);
-//	        }
-//
-//	        /// <summary>
-//	        /// Process any incoming events, check to see if we have a message created for the event, 
-//	        /// </summary>
-//	        /// <param name="eventName"></param>
-//	        /// <param name="body"></param>
-//	        private void EventQueueEventHandler(String eventName, OSDMap body)
-//	        {
-//	            IMessage message = Messages.MessageUtils.DecodeEvent(eventName, body);
-//	            if (message != null)
-//	            {
-//	                Simulator.Client.Network.CapsEvents.BeginRaiseEvent(eventName, message, Simulator);
-//
-//	                #region Stats Tracking
-//	                if (Simulator.Client.Settings.TRACK_UTILIZATION)
-//	                {
-//	                    Simulator.Client.Stats.Update(eventName, OpenMetaverse.Stats.Type.Message, 0, body.ToString().Length);
-//	                }
-//	                #endregion
-//	            }
-//	            else
-//	            {
-//	                Logger.Log("No Message handler exists for event " + eventName + ". Unable to decode. Will try Generic Handler next", Helpers.LogLevel.Warning);
-//	                Logger.Log("Please report this information to http://jira.openmv.org/: \n" + body, Helpers.LogLevel.Debug);
-//
-//	                // try generic decoder next which takes a caps event and tries to match it to an existing packet
-//	                if (body.Type == OSDType.Map)
-//	                {
-//	                    OSDMap map = (OSDMap)body;
-//	                    Packet packet = Packet.BuildPacket(eventName, map);
-//	                    if (packet != null)
-//	                    {
-//	                        NetworkManager.IncomingPacket incomingPacket;
-//	                        incomingPacket.Simulator = Simulator;
-//	                        incomingPacket.Packet = packet;
-//
-//	                        Logger.DebugLog("Serializing " + packet.Type.ToString() + " capability with generic handler", Simulator.Client);
-//
-//	                        Simulator.Client.Network.PacketInbox.Enqueue(incomingPacket);
-//	                    }
-//	                    else
-//	                    {
-//	                        Logger.Log("No Packet or Message handler exists for " + eventName, Helpers.LogLevel.Warning);
-//	                    }
-//	                }
-//	            }
-//	        }        
-	    }
+import com.ngt.jopenmetaverse.shared.cap.http.CapsHttpClient;
+import com.ngt.jopenmetaverse.shared.cap.http.CapsHttpRequestCompletedArg;
+import com.ngt.jopenmetaverse.shared.cap.http.EventQueueClient;
+import com.ngt.jopenmetaverse.shared.cap.http.EventQueueClientEventObservableArg;
+import com.ngt.jopenmetaverse.shared.protocol.Packet;
+import com.ngt.jopenmetaverse.shared.structureddata.OSD;
+import com.ngt.jopenmetaverse.shared.structureddata.OSDArray;
+import com.ngt.jopenmetaverse.shared.structureddata.OSDFormat;
+import com.ngt.jopenmetaverse.shared.structureddata.OSDMap;
+import com.ngt.jopenmetaverse.shared.structureddata.OSDType;
+import com.ngt.jopenmetaverse.shared.sim.NetworkManager;
+import com.ngt.jopenmetaverse.shared.sim.Simulator;
+import com.ngt.jopenmetaverse.shared.sim.interfaces.IMessage;
+import com.ngt.jopenmetaverse.shared.sim.message.MessageUtils;
+import com.ngt.jopenmetaverse.shared.util.JLogger;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+
+/// <summary>
+/// Capabilities is the name of the bi-directional HTTP REST protocol
+/// used to communicate non real-time transactions such as teleporting or
+/// group messaging
+/// </summary>
+public class Caps
+{
+	/// <summary>
+	/// Triggered when an event is received via the EventQueueGet 
+	/// capability
+	/// </summary>
+	/// <param name="capsKey">Event name</param>
+	/// <param name="message">Decoded event data</param>
+	/// <param name="simulator">The simulator that generated the event</param>
+	//public delegate void EventQueueCallback(string message, StructuredData.OSD body, Simulator simulator);
+
+//	public delegate void EventQueueCallback(string capsKey, IMessage message, Simulator simulator);
+
+	protected EventObservable<CapsEventObservableArg> eventQueueObservable;
+
+
+	public void addEventQueueObserver(EventObserver<CapsEventObservableArg> o)
+	{
+		eventQueueObservable.addObserver(o);
+	}
+
+	public void removeEventQueueObserver(EventObserver<CapsEventObservableArg> o)
+	{
+		eventQueueObservable.deleteObserver(o);
+	}	        
+	
+
+	public EventObservable<CapsEventObservableArg> getEventQueueObservable() {
+		return eventQueueObservable;
+	}
+
+	public void setEventQueueObservable(
+			EventObservable<CapsEventObservableArg> eventQueueObservable) {
+		this.eventQueueObservable = eventQueueObservable;
+	}
+
+
+	/// <summary>Reference to the simulator this system is connected to</summary>
+	public Simulator Simulator;
+
+	public String _SeedCapsURI;
+	public Map<String, URI> _Caps = new HashMap<String, URI>();
+
+	private CapsHttpClient _SeedRequest;
+	private EventQueueClient _EventQueueCap = null;
+
+	/// <summary>Capabilities URI this system was initialized with</summary>
+	public String getSeedCapsURI() {  return _SeedCapsURI; } 
+
+	/// <summary>Whether the capabilities event queue is connected and
+	/// listening for incoming events</summary>
+	public boolean isEventQueueRunning()
+	{
+		if (_EventQueueCap != null)
+			return _EventQueueCap.getRunning();
+		else
+			return false;
+	}
+
+	/// <summary>
+	/// Default constructor
+	/// </summary>
+	/// <param name="simulator"></param>
+	/// <param name="seedcaps"></param>
+	public Caps(Simulator simulator, String seedcaps) throws Exception
+	{
+		Simulator = simulator;
+		_SeedCapsURI = seedcaps;
+
+		MakeSeedRequest();
+	}
+
+	public void Disconnect(boolean immediate)
+	{
+		JLogger.info(String.format("Caps system for %s is %s", Simulator,
+				(immediate ? "aborting" : "disconnecting")));
+
+		if (_SeedRequest != null)
+			_SeedRequest.Cancel();
+
+		if (_EventQueueCap != null)
+			_EventQueueCap.Stop(immediate);
+	}
+
+	/// <summary>
+	/// Request the URI of a named capability
+	/// </summary>
+	/// <param name="capability">Name of the capability to request</param>
+	/// <returns>The URI of the requested capability, or String.Empty if
+	/// the capability does not exist</returns>
+	public URI CapabilityURI(String capability)
+	{
+		URI cap;
+
+		if ((cap = _Caps.get(capability))!=null)
+			return cap;
+		else
+			return null;
+	}
+
+	private void MakeSeedRequest() throws Exception 
+	{
+		if (Simulator == null || !Simulator.Client.network.getConnected())
+			return;
+
+		// Create a request list
+		OSDArray req = new OSDArray();
+		// This list can be updated by using the following command to obtain a current list of capabilities the official linden viewer supports:
+		// wget -q -O - http://bitbucket.org/lindenlab/viewer-development/raw/default/indra/newview/llviewerregion.cpp | grep 'capabilityNames.append'  | sed 's/^[ \t]*//;s/capabilityNames.append("/req.add(OSD.FromString("/'
+		req.add(OSD.FromString("AttachmentResources"));
+		req.add(OSD.FromString("AvatarPickerSearch"));
+		req.add(OSD.FromString("ChatSessionRequest"));
+		req.add(OSD.FromString("CopyInventoryFromNotecard"));
+		req.add(OSD.FromString("DispatchRegionInfo"));
+		req.add(OSD.FromString("EstateChangeInfo"));
+		req.add(OSD.FromString("EventQueueGet"));
+		req.add(OSD.FromString("ObjectMedia"));
+		req.add(OSD.FromString("ObjectMediaNavigate"));
+		req.add(OSD.FromString("FetchLib2"));
+		req.add(OSD.FromString("FetchLibDescendents2"));
+		req.add(OSD.FromString("FetchInventory2"));
+		req.add(OSD.FromString("FetchInventoryDescendents2"));
+		req.add(OSD.FromString("GetDisplayNames"));
+		req.add(OSD.FromString("GetTexture"));
+		req.add(OSD.FromString("GetMesh"));
+		req.add(OSD.FromString("GetObjectCost"));
+		req.add(OSD.FromString("GetObjectPhysicsData"));
+		req.add(OSD.FromString("GroupProposalBallot"));
+		req.add(OSD.FromString("HomeLocation"));
+		req.add(OSD.FromString("LandResources"));
+		req.add(OSD.FromString("MapLayer"));
+		req.add(OSD.FromString("MapLayerGod"));
+		req.add(OSD.FromString("NewFileAgentInventory"));
+		req.add(OSD.FromString("NewFileAgentInventoryVariablePrice"));
+		req.add(OSD.FromString("ObjectAdd"));
+		req.add(OSD.FromString("ParcelPropertiesUpdate"));
+		req.add(OSD.FromString("ParcelMediaURLFilterList"));
+		req.add(OSD.FromString("ParcelNavigateMedia"));
+		req.add(OSD.FromString("ParcelVoiceInfoRequest"));
+		req.add(OSD.FromString("ProductInfoRequest"));
+		req.add(OSD.FromString("ProvisionVoiceAccountRequest"));
+		req.add(OSD.FromString("RemoteParcelRequest"));
+		req.add(OSD.FromString("RequestTextureDownload"));
+		req.add(OSD.FromString("SearchStatRequest"));
+		req.add(OSD.FromString("SearchStatTracking"));
+		req.add(OSD.FromString("SendPostcard"));
+		req.add(OSD.FromString("SendUserReport"));
+		req.add(OSD.FromString("SendUserReportWithScreenshot"));
+		req.add(OSD.FromString("ServerReleaseNotes"));
+		req.add(OSD.FromString("SimConsole"));
+		req.add(OSD.FromString("SimulatorFeatures"));
+		req.add(OSD.FromString("SetDisplayName"));
+		req.add(OSD.FromString("SimConsoleAsync"));
+		req.add(OSD.FromString("StartGroupProposal"));
+		req.add(OSD.FromString("TextureStats"));
+		req.add(OSD.FromString("UntrustedSimulatorMessage"));
+		req.add(OSD.FromString("UpdateAgentInformation"));
+		req.add(OSD.FromString("UpdateAgentLanguage"));
+		req.add(OSD.FromString("UpdateGestureAgentInventory"));
+		req.add(OSD.FromString("UpdateNotecardAgentInventory"));
+		req.add(OSD.FromString("UpdateScriptAgent"));
+		req.add(OSD.FromString("UpdateGestureTaskInventory"));
+		req.add(OSD.FromString("UpdateNotecardTaskInventory"));
+		req.add(OSD.FromString("UpdateScriptTask"));
+		req.add(OSD.FromString("UploadBakedTexture"));
+		req.add(OSD.FromString("UploadObjectAsset"));
+		req.add(OSD.FromString("ViewerMetrics"));
+		req.add(OSD.FromString("ViewerStartAuction"));
+		req.add(OSD.FromString("ViewerStats"));
+
+		_SeedRequest = new CapsHttpClient(new URI(_SeedCapsURI));
+		_SeedRequest.addRequestCompleteObserver(new Observer(){
+			public void update(Observable arg0, Object arg1) {
+				CapsHttpRequestCompletedArg obj1= (CapsHttpRequestCompletedArg) arg1;
+				SeedRequestCompleteHandler(_SeedRequest, obj1.getResult(), obj1.getError());
+			}
+		});
+		//	            _SeedRequest.OnComplete += new CapsHttpClient.CompleteCallback(SeedRequestCompleteHandler);
+		_SeedRequest.BeginGetResponse(req, OSDFormat.Xml, Simulator.Client.settings.CAPS_TIMEOUT);
+	}
+
+	private void SeedRequestCompleteHandler(CapsHttpClient client, OSD result, Exception error)
+	{
+		if (result != null && result.getType().equals(OSDType.Map))
+		{
+			OSDMap respTable = (OSDMap)result;
+
+			for (String cap : respTable.keys())
+			{
+				_Caps.put(cap, respTable.get(cap).asUri());
+			}
+
+			if (_Caps.containsKey("EventQueueGet"))
+			{
+				JLogger.debug("Starting event queue for " + Simulator.toString());
+
+				_EventQueueCap = new EventQueueClient(_Caps.get("EventQueueGet"));
+
+				_EventQueueCap.registerConnectedObserver(new Observer(){
+					public void update(Observable o, Object arg) {
+						EventQueueConnectedHandler();
+					}
+
+				});
+				_EventQueueCap.registerEventObserver(new Observer(){
+					public void update(Observable o, Object arg) {
+						// TODO Auto-generated method stub
+						EventQueueClientEventObservableArg obj = (EventQueueClientEventObservableArg) arg;
+						EventQueueEventHandler(obj.getEventName(), obj.getBody());
+					}
+
+				});
+
+				//	                    _EventQueueCap.OnConnected += EventQueueConnectedHandler;
+				//	                    _EventQueueCap.OnEvent += EventQueueEventHandler;
+				try {
+					_EventQueueCap.Start();
+				} catch (Exception e) {
+					JLogger.error("Error Encountered while starting EventQueueCap" +  Utils.getExceptionStackTraceAsString(e));
+				}
+			}
+		}
+		//TODO Handle retrying if the error is recoverable
+//		else if (
+//				error != null &&
+//				error is WebException &&
+//				((WebException)error).Response != null &&
+//				((HttpWebResponse)((WebException)error).Response).StatusCode == HttpStatusCode.NotFound)
+//		{
+//			// 404 error
+//			Logger.Log("Seed capability returned a 404, capability system is aborting", Helpers.LogLevel.Error);
+//		}
+//		else
+//		{
+//			// The initial CAPS connection failed, try again
+//			MakeSeedRequest();
+//		}
+	}
+
+	private void EventQueueConnectedHandler()
+	{
+		Simulator.Client.network.RaiseConnectedEvent(Simulator);
+	}
+
+	/// <summary>
+	/// Process any incoming events, check to see if we have a message created for the event, 
+	/// </summary>
+	/// <param name="eventName"></param>
+	/// <param name="body"></param>
+	private void EventQueueEventHandler(String eventName, OSDMap body)
+	{
+		IMessage message = MessageUtils.DecodeEvent(eventName, body);
+		if (message != null)
+		{
+			Simulator.Client.network.getCapsEvents().BeginRaiseEvent(eventName, message, Simulator);
+
+			//region Stats Tracking
+			if (Simulator.Client.settings.TRACK_UTILIZATION)
+			{
+				//TODO Implement following
+				//Simulator.Client.Stats.Update(eventName, OpenMetaverse.Stats.Type.Message, 0, body.toString().Length);
+			}
+			//endregion
+		}
+		else
+		{
+			JLogger.warn("No Message handler exists for event " + eventName + ". Unable to decode. Will try Generic Handler next");
+			JLogger.debug("Please report this information to http://jira.openmv.org/: \n" + body);
+
+			// try generic decoder next which takes a caps event and tries to match it to an existing packet
+			if (body.getType().equals(OSDType.Map))
+			{
+				OSDMap map = (OSDMap)body;
+				Packet packet;
+				try {
+					packet = Packet.BuildPacket(eventName, map);
+				} catch (Exception e) {
+					JLogger.warn("Error in building packet for event " 
+				+ eventName + Utils.getExceptionStackTraceAsString(e));
+					packet = null;
+				}
+				
+				if (packet != null)
+				{
+					NetworkManager.IncomingPacket incomingPacket = new NetworkManager.IncomingPacket();
+					incomingPacket.simulator = Simulator;
+					incomingPacket.packet = packet;
+
+					JLogger.debug("Serializing " + packet.Type.toString() + " capability with generic handler");
+
+					Simulator.Client.network.PacketInbox.add(incomingPacket);
+				}
+				else
+				{
+					JLogger.warn("No Packet or Message handler exists for " + eventName);
+				}
+			}
+		}
+	}        
+}

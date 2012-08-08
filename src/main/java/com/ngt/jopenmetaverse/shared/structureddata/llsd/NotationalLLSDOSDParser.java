@@ -232,7 +232,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                      if (reader.read() < 0)
                          throw new OSDException("Notation LLSD parsing: Unexpected end of stream in String.");
                      String sUri = GetStringDelimitedBy(reader, doubleQuotesNotationMarker);
-                     System.out.println("URI: " + sUri);
+                     //System.out.println("URI: " + sUri);
                      URI[] uri = new URI[1];
                      if(Utils.tryParseUri(sUri, uri))
                      {

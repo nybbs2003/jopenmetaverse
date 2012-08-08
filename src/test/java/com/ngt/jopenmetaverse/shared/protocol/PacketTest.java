@@ -4,6 +4,8 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
+import com.ngt.jopenmetaverse.shared.structureddata.OSD;
+import com.ngt.jopenmetaverse.shared.structureddata.llsd.NotationalLLSDOSDParser;
 import com.ngt.jopenmetaverse.shared.types.UUID;
 import com.ngt.jopenmetaverse.shared.util.Utils;
 
@@ -12,7 +14,6 @@ import com.ngt.jopenmetaverse.shared.protocol.DirPlacesReplyPacket;
 public class PacketTest {
 
 	@Test
-
 	public void HeaderFlags()
 	{
 		TestMessagePacket packet = new TestMessagePacket();
@@ -189,5 +190,32 @@ public class PacketTest {
 
 		Assert.assertTrue("InventoryDescendents packet came back with " + invPacket.FolderData.length + " FolderData blocks", invPacket.FolderData.length == 1);
 		Assert.assertTrue("InventoryDescendents packet came back with " + invPacket.ItemData.length + " ItemData blocks", invPacket.ItemData.length == 5);
+	}
+	
+	@Test
+	public void parseOSDTest()
+	{
+		ScriptDialogPacket scriptDialogPacket = new ScriptDialogPacket();
+		scriptDialogPacket.Data.ChatChannel = 0;
+		scriptDialogPacket.Data.FirstName = Utils.EmptyBytes;
+		scriptDialogPacket.Data.ImageID = UUID.Zero;
+		scriptDialogPacket.Data.LastName = Utils.EmptyBytes;
+		scriptDialogPacket.Data.Message = Utils.EmptyBytes;
+		scriptDialogPacket.Data.ObjectID = UUID.Zero;
+		scriptDialogPacket.Data.ObjectName = Utils.EmptyBytes;
+		scriptDialogPacket.Buttons = new ScriptDialogPacket.ButtonsBlock[0];
+		scriptDialogPacket.OwnerData = new ScriptDialogPacket.OwnerDataBlock[1];
+		scriptDialogPacket.OwnerData[0] = new ScriptDialogPacket.OwnerDataBlock();
+		scriptDialogPacket.OwnerData[0].OwnerID = UUID.Zero;
+		
+		OSD osd = null;
+		try {
+			osd = Packet.GetLLSD(scriptDialogPacket);
+			String osdString = NotationalLLSDOSDParser.SerializeLLSDNotation(osd);
+			System.out.println(osdString);
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.fail("Test Case failed with the message" + e.getMessage());
+		} 
 	}
 }

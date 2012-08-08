@@ -299,17 +299,17 @@ public class JsonLLSDOSDParser
 		OSD ret = new OSD();
 		if(reader.isJsonNull())
 		{
-			System.out.println("Got Json Null...");
+			//System.out.println("Got Json Null...");
 			return new OSD();
 		}
 		else if(reader.isJsonPrimitive())
 		{
-			System.out.println("Got Json Primitive...");
+			//System.out.println("Got Json Primitive...");
 			JsonPrimitive primitive = reader.getAsJsonPrimitive();
 			OSD[] result = new OSD[1];
 			if(primitive.isBoolean())
 			{
-				System.out.println("Got Json Primitive Boolean...");
+				//System.out.println("Got Json Primitive Boolean...");
 				ret = OSD.FromBoolean(primitive.getAsBoolean());
 			}
 			else if(stringToNumber(primitive.getAsString(), result))
@@ -324,7 +324,7 @@ public class JsonLLSDOSDParser
 //				double[] resultFloat = new double[1];
 				
 				String s = primitive.getAsString();
-				System.out.println("Got Json Primitive String...");
+				//System.out.println("Got Json Primitive String...");
 				//TODO Json do not permit NaN and Infinity numbers verify
 //				if(Utils.tryParseDouble(s, resultFloat))
 //				{
@@ -334,12 +334,12 @@ public class JsonLLSDOSDParser
 //				else 
 					if(!s.equals("") &&  Utils.tryParseUUID(s, resultUUID))
 				{
-					System.out.println("Got Json Primitive UUID...");
+					//System.out.println("Got Json Primitive UUID...");
 					ret =  OSD.FromUUID(resultUUID[0]);
 				}
 				else if(Utils.tryParseDate(s, resultDate))
 				{
-					System.out.println("Got Json Primitive Date...");
+					//System.out.println("Got Json Primitive Date...");
 					ret = OSD.FromDate(resultDate[0]);
 				}
 					/*
@@ -347,7 +347,7 @@ public class JsonLLSDOSDParser
 					 */
 				else if(Utils.tryParseUri2(s, resultURI))
 				{
-					System.out.println("Got Json Primitive URI...");
+					//System.out.println("Got Json Primitive URI...");
 					ret = OSD.FromUri(resultURI[0]);
 				}
 				else
@@ -358,7 +358,7 @@ public class JsonLLSDOSDParser
 		}
 		else if(reader.isJsonArray())
 		{
-			System.out.println("Got Json Array...");
+			//System.out.println("Got Json Array...");
 			JsonArray jarray = reader.getAsJsonArray();
 			byte[][] result = new byte[1][];
 			/*TODO Issue how to represent array of bytes in json, 
@@ -366,14 +366,14 @@ public class JsonLLSDOSDParser
 			 */
 			if(tryParseBinary(jarray, result))
 			{
-				System.out.println("Got Json Binary...");
+				//System.out.println("Got Json Binary...");
 				return OSD.FromBinary(result[0]);
 			}
 			return ParseLLSDJsonArray(jarray);
 		}
 		else if(reader.isJsonObject())
 		{
-			System.out.println("Got Json Map...");
+			//System.out.println("Got Json Map...");
 			JsonObject jobject = reader.getAsJsonObject(); 
 			return ParseLLSDJsonMap(jobject);
 		}
@@ -383,12 +383,12 @@ public class JsonLLSDOSDParser
 	private static OSDMap ParseLLSDJsonMap(JsonObject jobject) throws OSDException, URISyntaxException
 	{
 
-		System.out.println("Parsing Map...");
+		//System.out.println("Parsing Map...");
 
 		OSDMap map = new OSDMap();
 		for(Entry<String, JsonElement> entry :jobject.entrySet())
 		{
-			System.out.println("Parsing Map Key..." + entry.getKey());
+			//System.out.println("Parsing Map Key..." + entry.getKey());
 			map.put(entry.getKey(), ParseLLSDJsonElement(entry.getValue()));
 		}
 
@@ -397,7 +397,7 @@ public class JsonLLSDOSDParser
 
 	private static OSDArray ParseLLSDJsonArray(JsonArray jarray) throws OSDException, URISyntaxException
 	{
-		System.out.println("Parsing Array...");
+		//System.out.println("Parsing Array...");
 
 		OSDArray array = new OSDArray();
 

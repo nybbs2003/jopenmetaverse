@@ -1,5 +1,7 @@
 package com.ngt.jopenmetaverse.shared.util;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.net.URI;
@@ -11,7 +13,9 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
+import java.util.logging.Logger;
 
+import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang.ArrayUtils;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
@@ -20,6 +24,7 @@ import com.ngt.jopenmetaverse.shared.types.UUID;
 
 public class Utils
 {   
+	static Logger logger = Logger.getLogger("Utils"); 
 	/// <summary>
 	/// Operating system
 	/// </summary>
@@ -281,6 +286,11 @@ public class Utils
 		return MessageDigest.getInstance("MD5").digest(data);
 	}
 
+	public static String MD5(String data) throws NoSuchAlgorithmException
+	{
+		return bytesToHexString(MD5(Utils.stringToBytes(data)), false);
+	}
+	
 	//    /// <summary>
 	//    /// Compute the SHA1 hash for a byte array
 	//    /// </summary>
@@ -1240,8 +1250,7 @@ public class Utils
 	public static String bytesToString(byte[] bytes) throws UnsupportedEncodingException
 	{
 		if (bytes.length > 0 && bytes[bytes.length - 1] == 0x00)
-			//            return UTF8Encoding.UTF8.GetString(bytes, 0, bytes.length - 1);
-			return new String(bytes, 0, bytes.length - 1, "UTF-8");
+				return new String(bytes, 0, bytes.length - 1, "UTF-8");
 		else
 			//            return UTF8Encoding.UTF8.GetString(bytes, 0, bytes.length);
 			return new String(bytes, 0, bytes.length, "UTF-8");
@@ -1273,9 +1282,9 @@ public class Utils
 	/// line of the String</param>
 	/// <returns>A String containing hexadecimal characters on multiple
 	/// lines. Each line is prepended with the field name</returns>
-	public static String bytesToHexString(byte[] bytes, String fieldName)
+	public static String bytesToHexDebugString(byte[] bytes, String fieldName)
 	{
-		return bytesToHexString(bytes, bytes.length, fieldName);
+		return bytesToHexDebugString(bytes, bytes.length, fieldName);
 	}
 
 	/// <summary>
@@ -1287,7 +1296,7 @@ public class Utils
 	/// dump</param>
 	/// <returns>A String containing hexadecimal characters on multiple
 	/// lines. Each line is prepended with the field name</returns>
-	public static String bytesToHexString(byte[] bytes, int length, String fieldName)
+	public static String bytesToHexDebugString(byte[] bytes, int length, String fieldName)
 	{
 		StringBuilder output = new StringBuilder();
 
@@ -1309,7 +1318,7 @@ public class Utils
 					if (j != 0)
 						output.append(' ');
 
-					output.append(String.format("%2X", bytes[i + j]));
+					output.append(String.format("%02X", bytes[i + j]));
 				}
 			}
 		}
@@ -1317,6 +1326,20 @@ public class Utils
 		return output.toString();
 	}
 
+	public static String bytesToHexString(byte[] bytes, boolean uppercase)
+	{
+		StringBuilder output = new StringBuilder();
+
+			for (int j = 0; j < bytes.length; j++)
+			{
+				//System.out.println(String.format("%02X", bytes[j]));
+				output.append(String.format("%02X", bytes[j]));
+			}
+
+		return uppercase? output.toString() : output.toString().toLowerCase();
+	}
+	
+	
 	/// <summary>
 	/// Convert a String to a UTF8 encoded byte array
 	/// </summary>
@@ -1326,7 +1349,14 @@ public class Utils
 	{
 		if (isNullOrEmpty(str)) { return Utils.EmptyBytes; }
 		//   if (!str.endsWith("\0")) { str += "\0"; }
-		return str.getBytes();
+		
+		try {
+			return str.getBytes("UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			logger.warning(e.getMessage());
+		}
+		return Utils.EmptyBytes;
 	}
 
 	/// <summary>
@@ -1871,7 +1901,12 @@ public class Utils
 	    {
 	        return ((long)a << 32) | (long)b;
 	    }
-	
+
+	    public static long uintsToLong(long a, long b)
+	    {
+	        return ((long)a << 32) | (long)b;
+	    }
+	    
 	    /// <summary>
 	    /// Unpacks two 32-bit unsigned integers from a 64-bit unsigned integer
 	    /// </summary>
@@ -1883,6 +1918,19 @@ public class Utils
 	        b[0] = (int)(a >> 32);
 	        b[1] = (int)(a & 0x00000000FFFFFFFF);
 	    }
+	    
+	    /// <summary>
+	    /// Unpacks two 32-bit unsigned integers from a 64-bit unsigned integer
+	    /// </summary>
+	    /// <param name="a">The 64-bit input integer</param>
+	    /// <param name="b">The left-hand (or X) output value</param>
+	    /// <param name="c">The right-hand (or Y) output value</param>
+	    public static void longToUInts(long a, long[] b)
+	    {
+	        b[0] = (a >> 32);
+	        b[1] = (a & 0x00000000FFFFFFFF);
+	    }
+	    
 	//
 	//    /// <summary>
 	//    /// Convert an IP address object to an unsigned 32-bit integer
@@ -2051,4 +2099,11 @@ public class Utils
 	{
 		ArrayUtils.reverse(array);
 	}
+	
+	public static String getExceptionStackTraceAsString(Exception exception) {
+		  StringWriter sw = new StringWriter();
+		  exception.printStackTrace(new PrintWriter(sw));
+		  return sw.toString();
+		}
+	
 }

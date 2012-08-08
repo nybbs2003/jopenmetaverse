@@ -1,11 +1,13 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
+import java.io.Serializable;
+
 
   /// <summary>
     /// A block of data in a packet. Packets are composed of one or more blocks,
     /// each block containing one or more fields
     /// </summary>
-    public abstract class PacketBlock
+    public abstract class PacketBlock implements Serializable
     {
         /// <summary>Current length of the data in this packet</summary>
         public abstract int getLength();

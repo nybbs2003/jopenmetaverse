@@ -1,5 +1,7 @@
 package com.ngt.jopenmetaverse.shared.sim.events;
 
+import java.math.BigInteger;
+import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
@@ -11,6 +13,7 @@ import org.junit.Test;
 
 import com.ngt.jopenmetaverse.shared.protocol.PacketType;
 import com.ngt.jopenmetaverse.shared.sim.GridClient;
+import com.ngt.jopenmetaverse.shared.sim.Settings;
 import com.ngt.jopenmetaverse.shared.sim.Simulator;
 
 public class PacketEventDictionaryTest {
@@ -18,11 +21,11 @@ public class PacketEventDictionaryTest {
 	private final class SimpleTestObserver implements Observer
 	{
 		public int called = 0;
-		@Override
+		
 		public void update(Observable o, Object arg) {
-//			System.out.println("TestObserver1 Observer is called");
-			called += 1;
+				called += 1;
 		}
+		
 	}
 	
 	/*
@@ -59,7 +62,7 @@ public class PacketEventDictionaryTest {
 	private void createAndRaisePacketEventDictionary(int observerListNum, boolean isAsync, int timeout)
 	{
 		GridClient gd = new GridClient();
-		Simulator sim = new Simulator();
+		Simulator sim = new Simulator(gd, new InetSocketAddress(Settings.BIND_ADDR, 4444), new BigInteger("9999"));
 		
 		/* Add few Observers and raise event*/
 		List<SimpleTestObserver> observerList1 = new ArrayList<SimpleTestObserver>();

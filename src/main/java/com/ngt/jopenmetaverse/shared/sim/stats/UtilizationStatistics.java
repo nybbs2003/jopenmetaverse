@@ -88,7 +88,7 @@ public class UtilizationStatistics {
     }
 
     //internal accessibility
-    private void Update(String key, Type Type, long txBytes, long rxBytes)
+    public void Update(String key, Type Type, long txBytes, long rxBytes)
     {            
     	synchronized (m_StatsCollection)
         {

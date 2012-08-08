@@ -2,10 +2,8 @@ package com.ngt.jopenmetaverse.shared.sim;
 
 import java.net.Inet4Address;
 import java.net.InetAddress;
-
 import com.ngt.jopenmetaverse.shared.protocol.EconomyDataPacket;
 import com.ngt.jopenmetaverse.shared.protocol.Helpers;
-import com.ngt.jopenmetaverse.shared.protocol.PacketType;
 import com.ngt.jopenmetaverse.shared.sim.events.PacketReceivedEventArgs;
 import com.ngt.jopenmetaverse.shared.types.Color4;
 import com.ngt.jopenmetaverse.shared.types.UUID;
@@ -28,11 +26,10 @@ import com.ngt.jopenmetaverse.shared.types.UUID;
         /// <summary>Beta grid login server</summary>
         public final String ADITI_LOGIN_SERVER = "https://login.aditi.lindenlab.com/cgi-bin/login.cgi";
 
+        public final String LOCAL_LOGIN_SERVER = "http://127.0.0.1:9000/";
+        
         /// <summary>The relative directory where external resources are kept</summary>
         public static String RESOURCE_DIR = "openmetaverse_data";
-
-        /// <summary>Login server to connect to</summary>
-        public String LOGIN_SERVER = AGNI_LOGIN_SERVER;
 
         /// <summary>IP Address the client will bind to</summary>
         public static InetAddress BIND_ADDR;
@@ -49,8 +46,13 @@ import com.ngt.jopenmetaverse.shared.types.UUID;
         }
         
         
+        /// <summary>Login server to connect to</summary>
+//        public String LOGIN_SERVER = AGNI_LOGIN_SERVER;
+        public String LOGIN_SERVER = LOCAL_LOGIN_SERVER;
+        
         /// <summary>Use XML-RPC Login or LLSD Login, default is XML-RPC Login</summary>
-        public boolean USE_LLSD_LOGIN = false;
+        //TODO Need to change following to false as default
+        public boolean USE_LLSD_LOGIN = true;
         //endregion
         //region Inventory
         /// <summary>
@@ -98,33 +100,33 @@ import com.ngt.jopenmetaverse.shared.types.UUID;
         public int MAP_REQUEST_TIMEOUT = 5 * 1000;
 
         /// <summary>Number of milliseconds between sending pings to each sim</summary>
-        public final int PING_INTERVAL = 2200;
+        public final static int PING_INTERVAL = 2200;
 
         /// <summary>Number of milliseconds between sending camera updates</summary>
-        public final int DEFAULT_AGENT_UPDATE_INTERVAL = 500;
+        public final static int DEFAULT_AGENT_UPDATE_INTERVAL = 500;
 
         /// <summary>Number of milliseconds between updating the current
         /// positions of moving, non-accelerating and non-colliding objects</summary>
-        public final int INTERPOLATION_INTERVAL = 250;
+        public final static int INTERPOLATION_INTERVAL = 250;
 
         /// <summary>Millisecond interval between ticks, where all ACKs are 
         /// sent out and the age of unACKed packets is checked</summary>
-        public final int NETWORK_TICK_INTERVAL = 500;
+        public final static int NETWORK_TICK_INTERVAL = 500;
 
         //endregion
         //region Sizes
 
         /// <summary>The initial size of the packet inbox, where packets are
         /// stored before processing</summary>
-        public final int PACKET_INBOX_SIZE = 100;
+        public final static int PACKET_INBOX_SIZE = 100;
         /// <summary>Maximum size of packet that we want to send over the wire</summary>
-        public final int MAX_PACKET_SIZE = 1200;
+        public final static int MAX_PACKET_SIZE = 1200;
         /// <summary>The maximum value of a packet sequence number before it
         /// rolls over back to one</summary>
-        public final int MAX_SEQUENCE = 0xFFFFFF;
+        public final static int MAX_SEQUENCE = 0xFFFFFF;
         /// <summary>The maximum size of the sequence number archive, used to
         /// check for resent and/or duplicate packets</summary>
-        public final int PACKET_ARCHIVE_SIZE = 200;
+        public final static int PACKET_ARCHIVE_SIZE = 200;
         /// <summary>Maximum number of queued ACKs to be sent before SendAcks()
         /// is forced</summary>
         public int MAX_PENDING_ACKS = 10;

@@ -34,7 +34,7 @@ public final class OSDBoolean extends OSD
   
   @Override
   public  int asInteger() { return value ? 1 : 0; }
-  
+
   @Override
   public  double asReal() { return value ? 1d : 0d; }
   

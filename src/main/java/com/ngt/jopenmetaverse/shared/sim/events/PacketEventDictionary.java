@@ -42,7 +42,7 @@ public class PacketEventDictionary {
 	
 	/// <summary>Reference to the GridClient object</summary>
 	public GridClient Client;
-	private ThreadPool threadPool = new DefaultThreadPoolExecutor();
+	private ThreadPool threadPool = ThreadPoolFactory.getThreadPool();
 	private Logger logger = Logger.getLogger("");
 	private Map<PacketType, PacketCallback> _EventTable = new HashMap<PacketType, PacketCallback>();
 

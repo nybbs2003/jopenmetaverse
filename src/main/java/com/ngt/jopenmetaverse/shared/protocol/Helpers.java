@@ -287,7 +287,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                   //  i, srclen, bodylen, zerolen, Utils.bytesToHexString(src, srclen, null), ex), LogLevel.Error);
 
                 throw new IndexOutOfBoundsException(String.format("Zerodecoding error: i={0}, srclen={1}, bodylen={2}, zerolen={3}\n{4}\n{5}",
-                    i, srclen, bodylen, zerolen, Utils.bytesToHexString(src, srclen, null), ex));
+                    i, srclen, bodylen, zerolen, Utils.bytesToHexDebugString(src, srclen, null), ex));
             }
         }
 

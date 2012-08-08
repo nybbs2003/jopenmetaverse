@@ -1,5 +1,7 @@
 package com.ngt.jopenmetaverse.shared.structureddata;
 
+import java.math.BigInteger;
+
 import com.ngt.jopenmetaverse.shared.util.Utils;
 import org.apache.commons.codec.binary.Base64;
 
@@ -43,7 +45,6 @@ public final class OSDBinary extends OSD
           (byte)(value % 256)
       };
   }
-
   
   public OSDBinary(long value)
   {
@@ -61,6 +62,12 @@ public final class OSDBinary extends OSD
       };
   }
 
+  public OSDBinary(BigInteger value)
+  {
+	  this();
+      this.value = Utils.ulongToBytes(value);
+  }
+  
   public  String asString() { return Base64.encodeBase64String(value); }
   public  byte[] asBinary() { return value; }
 
@@ -74,6 +81,16 @@ public final class OSDBinary extends OSD
           (value[3] << 0));
   }
 
+  @Override
+  public long asUInteger()
+  {
+      return (int) (
+          (value[0] << 24) +
+          (value[1] << 16) +
+          (value[2] << 8) +
+          (value[3] << 0));
+  }
+  
   @Override
   public  long asLong()
   {
@@ -89,8 +106,14 @@ public final class OSDBinary extends OSD
   }
 
   @Override
+  public BigInteger asULong()
+  {
+	  return new BigInteger(value);
+  }
+  
+  @Override
   public  String toString()
   {
-      return Utils.bytesToHexString(value, null);
+      return Utils.bytesToHexDebugString(value, null);
   }
 }
