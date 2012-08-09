@@ -63,7 +63,7 @@ public final class EconomyDataPacket extends Packet
                 }
                 catch (Exception e)
                 {
-                    throw new MalformedDataException();
+                    throw new MalformedDataException(Utils.getExceptionStackTraceAsString(e));
                 }
             }
 

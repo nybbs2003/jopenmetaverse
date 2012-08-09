@@ -14,8 +14,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
 import java.util.logging.Logger;
-
-import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang.ArrayUtils;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
@@ -797,8 +795,8 @@ public class Utils
 	    public static long bytesToUInt(byte[] bytes, int pos)
 	    {
 	        if (bytes.length < pos + 4) return 0;
-	        return ( ((long)(bytes[pos + 0] & 0xFF)) + (((long)(bytes[pos + 1] & 0xFF)) << 8) 
-	        		+ (((long)(bytes[pos + 2] & 0xFF)) << 16) + (((long)(bytes[pos + 3] & 0xFF)) << 24)
+	        return ( ((long)(bytes[pos + 3] & 0xFF)) + (((long)(bytes[pos + 2] & 0xFF)) << 8) 
+	        		+ (((long)(bytes[pos + 1] & 0xFF)) << 16) + (((long)(bytes[pos + 0] & 0xFF)) << 24)
 	        		);
 	    }
 	
@@ -813,6 +811,36 @@ public class Utils
 	    {
 	        return bytesToUInt(bytes, 0);
 	    }
+	    
+		//    /// <summary>
+		//    /// Convert the first four bytes starting at the given position in
+		//    /// little endian ordering to an unsigned integer
+		//    /// </summary>
+		//    /// <param name="bytes">Byte array containing the uint</param>
+		//    /// <param name="pos">Position to start reading the uint from</param>
+		//    /// <returns>An unsigned integer, will be zero if a uint can't be read
+		//    /// at the given position</returns>
+		    public static long bytesToUIntLit(byte[] bytes, int pos)
+		    {
+		        if (bytes.length < pos + 4) return 0;
+		        return ( ((long)(bytes[pos + 0] & 0xFF)) + (((long)(bytes[pos + 1] & 0xFF)) << 8) 
+		        		+ (((long)(bytes[pos + 2] & 0xFF)) << 16) + (((long)(bytes[pos + 3] & 0xFF)) << 24)
+		        		);
+		    }
+		
+		    /// <summary>
+		    /// Convert the first four bytes of the given array in little endian
+		    /// ordering to an unsigned integer
+		    /// </summary>
+		    /// <param name="bytes">An array four bytes or longer</param>
+		    /// <returns>An unsigned integer, will be zero if the array contains
+		    /// less than four bytes</returns>
+		    public static long bytesToUIntLit(byte[] bytes)
+		    {
+		        return bytesToUIntLit(bytes, 0);
+		    }
+	    
+	    
 	    
 	    public static BigInteger bytesToULong(byte[] bytes, int pos)
 	    {
@@ -844,7 +872,7 @@ public class Utils
 		    public static int bytesToUInt16(byte[] bytes, int pos)
 		    {
 		        if (bytes.length < pos + 2) return 0;
-		        return (bytes[pos + 0] & 0xFF) + ((bytes[pos + 1] & 0xFF) << 8) ;
+		        return (bytes[pos + 1] & 0xFF) + ((bytes[pos + 0] & 0xFF) << 8) ;
 		    }
 		
 		    /// <summary>
@@ -858,7 +886,35 @@ public class Utils
 		    {
 		        return bytesToUInt16(bytes, 0);
 		    }
-	    
+
+		    
+		    
+			//    /// <summary>
+			//    /// Convert the first four bytes starting at the given position in
+			//    /// little endian ordering to an unsigned integer
+			//    /// </summary>
+			//    /// <param name="bytes">Byte array containing the uint</param>
+			//    /// <param name="pos">Position to start reading the uint from</param>
+			//    /// <returns>An unsigned integer, will be zero if a uint can't be read
+			//    /// at the given position</returns>
+			    public static int bytesToUInt16Lit(byte[] bytes, int pos)
+			    {
+			        if (bytes.length < pos + 2) return 0;
+			        return (bytes[pos + 0] & 0xFF) + ((bytes[pos + 1] & 0xFF) << 8) ;
+			    }
+			
+			    /// <summary>
+			    /// Convert the first four bytes of the given array in little endian
+			    /// ordering to an unsigned integer
+			    /// </summary>
+			    /// <param name="bytes">An array four bytes or longer</param>
+			    /// <returns>An unsigned integer, will be zero if the array contains
+			    /// less than four bytes</returns>
+			    public static int bytesToUInt16Lit(byte[] bytes)
+			    {
+			        return bytesToUInt16Lit(bytes, 0);
+			    }
+		    
 	    
 	//
 	//    /// <summary>
@@ -1050,7 +1106,8 @@ public class Utils
 		//        bytes[2] = (byte)((value >> 8) % 256);
 		//        bytes[3] = (byte)(value % 256);
 
-		return ArrayUtils.subarray(ByteBuffer.allocate(8).order(ByteOrder.BIG_ENDIAN).putLong(value).array(), 4, 8);
+		return ArrayUtils.subarray(
+				ByteBuffer.allocate(8).order(ByteOrder.BIG_ENDIAN).putLong(value).array(), 4, 8);
 	}
 	
 	public static void uintToBytes(long value, byte[] dest, int pos)
@@ -1061,6 +1118,21 @@ public class Utils
 		//        dest[pos + 3] = (byte)((value >> 24) % 256);
 
 		byte[] bytes= uintToBytes(value);
+		System.arraycopy(bytes, 0, dest, pos, 4);
+	}
+
+	
+	
+	public static byte[] uintToBytesLit(long value)
+	{
+		return ArrayUtils.subarray(
+				ByteBuffer.allocate(8).order(ByteOrder.LITTLE_ENDIAN).putLong(value).array(), 0, 4);
+	}
+	
+	public static void uintToBytesLit(long value, byte[] dest, int pos)
+	{
+
+		byte[] bytes= uintToBytesLit(value);
 		System.arraycopy(bytes, 0, dest, pos, 4);
 	}
 	
@@ -1131,6 +1203,18 @@ public class Utils
 	public static void ulongToBytes(BigInteger value, byte[] dest, int pos)
 	{
 		byte[] bytes = ulongToBytes(value);
+		System.arraycopy(bytes, 0, dest, pos, 8);
+	}
+
+	public static byte[] ulongToBytesLit(BigInteger value)
+	{
+		byte[] bytes = int64ToBytesLit(value.longValue());
+		return bytes;
+	}
+
+	public static void ulongToBytesLit(BigInteger value, byte[] dest, int pos)
+	{
+		byte[] bytes = ulongToBytesLit(value);
 		System.arraycopy(bytes, 0, dest, pos, 8);
 	}
 	
@@ -2105,5 +2189,4 @@ public class Utils
 		  exception.printStackTrace(new PrintWriter(sw));
 		  return sw.toString();
 		}
-	
 }

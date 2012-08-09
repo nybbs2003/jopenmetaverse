@@ -1,5 +1,6 @@
 package com.ngt.jopenmetaverse.shared.util;
 
+import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
 
 import org.junit.Assert;
@@ -17,6 +18,20 @@ public class UtilsTest {
 			e.printStackTrace();
 			Assert.fail();
 		}
+	}
+	
+	@Test
+	public void uintToBytesTests()
+	{
+		long a1 = 763435512;
+		byte[] a1bytes = Utils.uintToBytes(a1);
+		Assert.assertEquals(new BigInteger(a1bytes).longValue(), a1);
+		System.out.println(new BigInteger(a1bytes).longValue() + " HEX: " 
+		+ Utils.bytesToHexDebugString(a1bytes, "") + " " + Utils.bytesToHexDebugString(new BigInteger("763435512").toByteArray(), ""));
+		long a2 = 4162421037L;
+		byte[] a2bytes = Utils.uintToBytes(a2);
+		System.out.println(" HEX: " + Utils.bytesToHexDebugString(a2bytes, ""));
+		Assert.assertEquals(a2 & 0x0000000000000000ffffffffffffffffL, new BigInteger(a2bytes).longValue());
 	}
 
 }

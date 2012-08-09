@@ -731,6 +731,7 @@ public class Simulator extends UDPBase
 		use.CircuitCode.Code = Network.getCircuitCode();
 		use.CircuitCode.ID = Client.self.getAgentID();
 		use.CircuitCode.SessionID = Client.self.getSessionID();
+		JLogger.info("Got Circuit Code: " + Network.getCircuitCode());
 
 		if (waitForAck)
 		{
@@ -743,10 +744,13 @@ public class Simulator extends UDPBase
 		if (waitForAck)
 		{
 			try {
+				JLogger.info("Going to wait to get ACK for UseCircuitCode packet: timeout: " + Client.settings.SIMULATOR_TIMEOUT);
 				if (!GotUseCircuitCodeAck.waitOne(Client.settings.SIMULATOR_TIMEOUT))
 				{
 					JLogger.error("Failed to get ACK for UseCircuitCode packet");
 				}
+				else
+					JLogger.info("Got ACK for UseCircuitCode packet");
 			} 
 			catch (InterruptedException e) {
 				JLogger.error("Got Interrupted while geting ACK for UseCircuitCode packet");
@@ -1123,8 +1127,9 @@ public class Simulator extends UDPBase
 		}
 		catch (MalformedDataException e)
 		{
-			JLogger.error(String.format("Malformed data, cannot parse packet:\n%s",
-					Utils.bytesToHexDebugString(buffer.getData(), buffer.getDataLength(), null)));
+			JLogger.error(String.format("Malformed data, cannot parse packet:\n%s\nException: %s",
+					Utils.bytesToHexDebugString(buffer.getData(), buffer.getDataLength(), null),
+					Utils.getExceptionStackTraceAsString(e)));
 		}
 
 		// Fail-safe check

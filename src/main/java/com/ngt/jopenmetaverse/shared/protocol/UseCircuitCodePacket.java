@@ -32,20 +32,20 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 try
                 {
-                    Code = (long)Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    Code = (long)Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
                     ID.FromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)
                 {
-                    throw new MalformedDataException();
+                    throw new MalformedDataException(Utils.getExceptionStackTraceAsString(e));
                 }
             }
 
             @Override
             public  void ToBytes(byte[] bytes, int i[])
             {
-                Utils.intToBytes((int)Code, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(Code, bytes, i[0]); i[0] += 4;
                 SessionID.ToBytes(bytes, i[0]); i[0] += 16;
                 ID.ToBytes(bytes, i[0]); i[0] += 16;
             }

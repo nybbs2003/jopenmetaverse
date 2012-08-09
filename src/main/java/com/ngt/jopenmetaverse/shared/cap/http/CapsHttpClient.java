@@ -171,7 +171,7 @@ public class CapsHttpClient
 		{
 			// GET
 			//Logger.Log.Debug("[CapsClient] GET " + _Address);
-			System.out.println("Going to send GET request");
+//			System.out.println("Going to send GET request");
 			_Request = HttpBaseClient.DownloadStringAsync(_Address, _ClientCert, millisecondsTimeout,internaldownloadProgressObservable, 
 					internalRequestCompletedObservable);
 		}

@@ -1636,6 +1636,9 @@ public class NetworkManager {
 				{
 					simulator = outgoingPacket.Simulator;
 
+					JLogger.info(String.format("Sending packet %s to %s",
+							outgoingPacket.Type, simulator.getIPEndPoint()));
+					
 					// Very primitive rate limiting, keeps a fixed buffer of time between each packet
 					currentTime = System.currentTimeMillis();
 
@@ -1666,15 +1669,15 @@ public class NetworkManager {
 		{
 			// Reset packet to null for the check below
 			packet = null;
-
 			try {
 				if (((incomingPacket = PacketInbox.poll(100, TimeUnit.MILLISECONDS))!= null))
 				{
 					packet = incomingPacket.packet;
 					simulator = incomingPacket.simulator;
-
 					if (packet != null)
 					{
+						JLogger.info(String.format("Recieved packet %s from %s",
+								packet.Type, simulator.getIPEndPoint()));
 						// Skip blacklisted packets
 						if (UDPBlacklist.contains(packet.Type.toString()))
 						{

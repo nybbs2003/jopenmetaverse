@@ -124,6 +124,7 @@ public abstract class UDPBase {
 					try {
 						udpSocket.receive(receivePacket);
 						buf.setDataLength(receivePacket.getLength());
+						buf.setRemoteEndPoint(receivePacket.getSocketAddress());
 						//Start another receiving, it will keep the server going
 						AsyncBeginReceive();
 						

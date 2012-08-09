@@ -36,7 +36,7 @@ import com.ngt.jopenmetaverse.shared.types.Vector3;
                 }
                 catch (Exception e)
                 {
-                    throw new MalformedDataException();
+                    throw new MalformedDataException(Utils.getExceptionStackTraceAsString(e));
                 }
             }
 
@@ -79,7 +79,7 @@ import com.ngt.jopenmetaverse.shared.types.Vector3;
                 }
                 catch (Exception e)
                 {
-                    throw new MalformedDataException();
+                    throw new MalformedDataException(Utils.getExceptionStackTraceAsString(e));
                 }
             }
 

@@ -1,38 +1,42 @@
 package com.ngt.jopenmetaverse.shared.sim.events;
 
-public class ManualResetEvent {
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
-		  private final Object monitor = new Object();
-		  private volatile boolean open = false;
-
-		  public ManualResetEvent(boolean open) {
-		    this.open = open;
-		  }
-
-		  public boolean waitOne() throws InterruptedException {
-			  return waitOne(0);
-		  }
-
-		  public boolean waitOne(long timeout) throws InterruptedException {
-			  boolean signalled = false;
-			    synchronized (monitor) {
-			      while (open == false) { 
-			        monitor.wait(timeout);
-			        signalled = open;
-			      }
-			      open = false; // close for other
-			    }
-			    return signalled;
-			  }
-		  
-		  public void set() {//open start
-		    synchronized (monitor) {
-		      open = true;
-		      monitor.notifyAll();
-		    }
-		  }
-
-		  public void reset() {//close stop
-		    open = false;
-		  }
+public class ManualResetEvent implements IResetEvent {
+    private volatile CountDownLatch event;
+    private final Integer mutex;
+    
+    public ManualResetEvent(boolean signalled) {
+            mutex = new Integer(-1);
+            if (signalled) {
+                    event = new CountDownLatch(0);
+            } else {
+                    event = new CountDownLatch(1);
+            }
+    }
+    
+    public void set() {
+            event.countDown();
+    }
+    
+    public void reset() {
+            synchronized (mutex) {
+                    if (event.getCount() == 0) {
+                            event = new CountDownLatch(1);
+                    }
+            }
+    }
+    
+    public void waitOne() throws InterruptedException {
+            event.await();
+    }
+    
+    public boolean waitOne(int timeout) throws InterruptedException {
+            return event.await(timeout, TimeUnit.MILLISECONDS);
+    }
+    
+    public boolean isSignalled() {
+            return event.getCount() == 0;
+    }
 }

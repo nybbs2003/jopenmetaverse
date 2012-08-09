@@ -1,37 +1,39 @@
 package com.ngt.jopenmetaverse.shared.sim.events;
 
-public final class AutoResetEvent {
-	private final Object monitor = new Object();
-	  private volatile boolean open = false;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
 
-	  public AutoResetEvent(boolean open) {
-	    this.open = open;
-	  }
 
-	  public boolean waitOne() throws InterruptedException {
-		  return waitOne(0);
-	  }
+public final class AutoResetEvent implements IResetEvent{
+	private final Semaphore event;
+	private final Integer mutex;
 
-	  public boolean waitOne(long timeout) throws InterruptedException {
-		  boolean signalled = false;
-		    synchronized (monitor) {
-		      while (open == false) { 
-		        monitor.wait(timeout);
-		        signalled = open;
-		      }
-		      open = false; // close for other
-		    }
-		    return signalled;
-		  }
-	  
-	  public void set() {
-	    synchronized (monitor) {
-	      open = true;
-	      monitor.notify(); // open one
-	    }
-	  }
+	public AutoResetEvent(boolean signalled) {
+		event = new Semaphore(signalled ? 1 : 0);
+		mutex = new Integer(-1);
 
-	  public void reset() {//close stop
-	    open = false;
-	  }
+	}
+
+	public void set() {
+		synchronized (mutex) {
+			if (event.availablePermits() == 0)
+				event.release();        
+		}
+	}
+
+	public void reset() {
+		event.drainPermits();
+	}
+
+	public void waitOne() throws InterruptedException {
+		event.acquire();
+	}
+
+	public boolean waitOne(int timeout) throws InterruptedException {
+		return event.tryAcquire(timeout, TimeUnit.MILLISECONDS);
+	}       
+
+	public boolean isSignalled() {
+		return event.availablePermits() > 0;
+	}       
 }

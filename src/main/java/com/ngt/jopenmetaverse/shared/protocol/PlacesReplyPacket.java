@@ -39,7 +39,7 @@ public void FromBytes(byte[] bytes, int[] i) throws MalformedDataException
                 }
                 catch (Exception e)
                 {
-                    throw new MalformedDataException();
+                    throw new MalformedDataException(Utils.getExceptionStackTraceAsString(e));
                 }
             }
 
@@ -80,7 +80,7 @@ public void FromBytes(byte[] bytes, int[] i) throws MalformedDataException
                 }
                 catch (Exception e)
                 {
-                    throw new MalformedDataException();
+                    throw new MalformedDataException(Utils.getExceptionStackTraceAsString(e));
                 }
             }
 
@@ -159,7 +159,7 @@ public void FromBytes(byte[] bytes, int[] i) throws MalformedDataException
                 }
                 catch (Exception e)
                 {
-                    throw new MalformedDataException();
+                    throw new MalformedDataException(Utils.getExceptionStackTraceAsString(e));
                 }
             }
 

@@ -43,7 +43,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 }
                 catch (Exception e)
                 {
-                    throw new MalformedDataException();
+                    throw new MalformedDataException(Utils.getExceptionStackTraceAsString(e));
                 }
             }
 
