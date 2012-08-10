@@ -32,9 +32,9 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 try
                 {
-                    ReportType = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    RequestFlags = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    TotalObjectCount = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    ReportType = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
+                    RequestFlags = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
+                    TotalObjectCount = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -45,9 +45,9 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.uintToBytes(ReportType, bytes, i[0]); i[0] += 4;
-                Utils.uintToBytes(RequestFlags, bytes, i[0]); i[0] += 4;
-                Utils.uintToBytes(TotalObjectCount, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(ReportType, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(RequestFlags, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(TotalObjectCount, bytes, i[0]); i[0] += 4;
             }
 
         }
@@ -89,12 +89,12 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 int length;
                 try
                 {
-                    TaskLocalID = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    TaskLocalID = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                     TaskID.FromBytes(bytes, i[0]); i[0] += 16;
-                    LocationX = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
-                    LocationY = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
-                    LocationZ = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
-                    Score = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
+                    LocationX = Utils.bytesToFloatLit(bytes, i[0]); i[0] += 4;
+                    LocationY = Utils.bytesToFloatLit(bytes, i[0]); i[0] += 4;
+                    LocationZ = Utils.bytesToFloatLit(bytes, i[0]); i[0] += 4;
+                    Score = Utils.bytesToFloatLit(bytes, i[0]); i[0] += 4;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     TaskName = new byte[length];
                     Utils.arraycopy(bytes, i[0], TaskName, 0, length); i[0] +=  length;
@@ -111,12 +111,12 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.uintToBytes(TaskLocalID, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(TaskLocalID, bytes, i[0]); i[0] += 4;
                 TaskID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.floatToBytes(LocationX, bytes, i[0]); i[0] += 4;
-                Utils.floatToBytes(LocationY, bytes, i[0]); i[0] += 4;
-                Utils.floatToBytes(LocationZ, bytes, i[0]); i[0] += 4;
-                Utils.floatToBytes(Score, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytesLit(LocationX, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytesLit(LocationY, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytesLit(LocationZ, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytesLit(Score, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)TaskName.length;
                 Utils.arraycopy(TaskName, 0, bytes, i[0], TaskName.length); i[0] +=  TaskName.length;
                 bytes[i[0]++] = (byte)OwnerName.length;

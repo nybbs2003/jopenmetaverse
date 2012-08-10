@@ -32,7 +32,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 try
                 {
                     AgentID.FromBytes(bytes, i[0]); i[0] += 16;
-                    Flags = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    Flags = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -44,7 +44,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.uintToBytes(Flags, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(Flags, bytes, i[0]); i[0] += 4;
             }
 
         }
@@ -93,13 +93,13 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 int length;
                 try
                 {
-                    X = (int)Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
-                    Y = (int)Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
+                    X = (int)Utils.bytesToUInt16Lit(bytes, i[0]); i[0] += 2;
+                    Y = (int)Utils.bytesToUInt16Lit(bytes, i[0]); i[0] += 2;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     Name = new byte[length];
                     Utils.arraycopy(bytes, i[0], Name, 0, length); i[0] +=  length;
                     Access = (byte)bytes[i[0]++];
-                    RegionFlags = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    RegionFlags = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                     WaterHeight = (byte)bytes[i[0]++];
                     Agents = (byte)bytes[i[0]++];
                     MapImageID.FromBytes(bytes, i[0]); i[0] += 16;
@@ -120,7 +120,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 bytes[i[0]++] = (byte)Name.length;
                 Utils.arraycopy(Name, 0, bytes, i[0], Name.length); i[0] +=  Name.length;
                 bytes[i[0]++] = Access;
-                Utils.uintToBytes(RegionFlags, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(RegionFlags, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = WaterHeight;
                 bytes[i[0]++] = Agents;
                 MapImageID.ToBytes(bytes, i[0]); i[0] += 16;

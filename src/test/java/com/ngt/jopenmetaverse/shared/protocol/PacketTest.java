@@ -192,30 +192,30 @@ public class PacketTest {
 		Assert.assertTrue("InventoryDescendents packet came back with " + invPacket.ItemData.length + " ItemData blocks", invPacket.ItemData.length == 5);
 	}
 	
-	@Test
-	public void parseOSDTest()
-	{
-		ScriptDialogPacket scriptDialogPacket = new ScriptDialogPacket();
-		scriptDialogPacket.Data.ChatChannel = 0;
-		scriptDialogPacket.Data.FirstName = Utils.EmptyBytes;
-		scriptDialogPacket.Data.ImageID = UUID.Zero;
-		scriptDialogPacket.Data.LastName = Utils.EmptyBytes;
-		scriptDialogPacket.Data.Message = Utils.EmptyBytes;
-		scriptDialogPacket.Data.ObjectID = UUID.Zero;
-		scriptDialogPacket.Data.ObjectName = Utils.EmptyBytes;
-		scriptDialogPacket.Buttons = new ScriptDialogPacket.ButtonsBlock[0];
-		scriptDialogPacket.OwnerData = new ScriptDialogPacket.OwnerDataBlock[1];
-		scriptDialogPacket.OwnerData[0] = new ScriptDialogPacket.OwnerDataBlock();
-		scriptDialogPacket.OwnerData[0].OwnerID = UUID.Zero;
-		
-		OSD osd = null;
-		try {
-			osd = Packet.GetLLSD(scriptDialogPacket);
-			String osdString = NotationalLLSDOSDParser.SerializeLLSDNotation(osd);
-			System.out.println(osdString);
-		} catch (Exception e) {
-			e.printStackTrace();
-			Assert.fail("Test Case failed with the message" + e.getMessage());
-		} 
-	}
+//	@Test
+//	public void parseOSDTest()
+//	{
+//		ScriptDialogPacket scriptDialogPacket = new ScriptDialogPacket();
+//		scriptDialogPacket.Data.ChatChannel = 0;
+//		scriptDialogPacket.Data.FirstName = Utils.EmptyBytes;
+//		scriptDialogPacket.Data.ImageID = UUID.Zero;
+//		scriptDialogPacket.Data.LastName = Utils.EmptyBytes;
+//		scriptDialogPacket.Data.Message = Utils.EmptyBytes;
+//		scriptDialogPacket.Data.ObjectID = UUID.Zero;
+//		scriptDialogPacket.Data.ObjectName = Utils.EmptyBytes;
+//		scriptDialogPacket.Buttons = new ScriptDialogPacket.ButtonsBlock[0];
+//		scriptDialogPacket.OwnerData = new ScriptDialogPacket.OwnerDataBlock[1];
+//		scriptDialogPacket.OwnerData[0] = new ScriptDialogPacket.OwnerDataBlock();
+//		scriptDialogPacket.OwnerData[0].OwnerID = UUID.Zero;
+//		
+//		OSD osd = null;
+//		try {
+//			osd = Packet.GetLLSD(scriptDialogPacket);
+//			String osdString = NotationalLLSDOSDParser.SerializeLLSDNotation(osd);
+//			System.out.println(osdString);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			Assert.fail("Test Case failed with the message" + e.getMessage());
+//		} 
+//	}
 }

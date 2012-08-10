@@ -79,11 +79,11 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 try
                 {
                     QueryID.FromBytes(bytes, i[0]); i[0] += 16;
-                    QueryFlags = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    SearchType = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    Price = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
-                    Area = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
-                    QueryStart = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    QueryFlags = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
+                    SearchType = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
+                    Price = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
+                    Area = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
+                    QueryStart = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
                 }
                 catch (Exception e)
                 {
@@ -95,11 +95,11 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 QueryID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.uintToBytes(QueryFlags, bytes, i[0]); i[0] += 4;
-                Utils.uintToBytes(SearchType, bytes, i[0]); i[0] += 4;
-                Utils.intToBytes(Price, bytes, i[0]); i[0] += 4;
-                Utils.intToBytes(Area, bytes, i[0]); i[0] += 4;
-                Utils.intToBytes(QueryStart, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(QueryFlags, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(SearchType, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(Price, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(Area, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(QueryStart, bytes, i[0]); i[0] += 4;
             }
 
         }

@@ -122,10 +122,10 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 try
                 {
-                    West = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
-                    South = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
-                    East = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
-                    North = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
+                    West = Utils.bytesToFloatLit(bytes, i[0]); i[0] += 4;
+                    South = Utils.bytesToFloatLit(bytes, i[0]); i[0] += 4;
+                    East = Utils.bytesToFloatLit(bytes, i[0]); i[0] += 4;
+                    North = Utils.bytesToFloatLit(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -136,10 +136,10 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.floatToBytes(West, bytes, i[0]); i[0] += 4;
-                Utils.floatToBytes(South, bytes, i[0]); i[0] += 4;
-                Utils.floatToBytes(East, bytes, i[0]); i[0] += 4;
-                Utils.floatToBytes(North, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytesLit(West, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytesLit(South, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytesLit(East, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytesLit(North, bytes, i[0]); i[0] += 4;
             }
 
         }

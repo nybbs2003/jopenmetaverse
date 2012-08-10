@@ -34,7 +34,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 {
                     AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
-                    CircuitCode = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    CircuitCode = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -47,7 +47,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
                 SessionID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.uintToBytes(CircuitCode, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(CircuitCode, bytes, i[0]); i[0] += 4;
             }
 
         }
@@ -77,8 +77,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 try
                 {
-                    GenCounter = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    VerticalAngle = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
+                    GenCounter = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
+                    VerticalAngle = Utils.bytesToFloatLit(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -89,8 +89,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.uintToBytes(GenCounter, bytes, i[0]); i[0] += 4;
-                Utils.floatToBytes(VerticalAngle, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(GenCounter, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytesLit(VerticalAngle, bytes, i[0]); i[0] += 4;
             }
 
         }

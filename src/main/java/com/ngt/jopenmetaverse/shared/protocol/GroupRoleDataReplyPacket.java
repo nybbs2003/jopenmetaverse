@@ -75,7 +75,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 {
                     GroupID.FromBytes(bytes, i[0]); i[0] += 16;
                     RequestID.FromBytes(bytes, i[0]); i[0] += 16;
-                    RoleCount = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    RoleCount = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
                 }
                 catch (Exception e)
                 {
@@ -88,7 +88,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 GroupID.ToBytes(bytes, i[0]); i[0] += 16;
                 RequestID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.intToBytes(RoleCount, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(RoleCount, bytes, i[0]); i[0] += 4;
             }
 
         }
@@ -140,8 +140,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     Description = new byte[length];
                     Utils.arraycopy(bytes, i[0], Description, 0, length); i[0] +=  length;
-                    Powers = Utils.bytesToULong(bytes, i[0]); i[0] += 8;
-                    Members = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    Powers = Utils.bytesToULongLit(bytes, i[0]); i[0] += 8;
+                    Members = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -159,8 +159,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 Utils.arraycopy(Title, 0, bytes, i[0], Title.length); i[0] +=  Title.length;
                 bytes[i[0]++] = (byte)Description.length;
                 Utils.arraycopy(Description, 0, bytes, i[0], Description.length); i[0] +=  Description.length;
-                Utils.ulongToBytes(Powers, bytes, i[0]); i[0] += 8;
-                Utils.uintToBytes(Members, bytes, i[0]); i[0] += 4;
+                Utils.ulongToBytesLit(Powers, bytes, i[0]); i[0] += 8;
+                Utils.uintToBytesLit(Members, bytes, i[0]); i[0] += 4;
             }
 
         }

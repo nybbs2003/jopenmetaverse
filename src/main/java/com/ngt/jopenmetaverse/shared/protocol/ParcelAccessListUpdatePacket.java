@@ -77,11 +77,11 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 try
                 {
-                    Flags = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    LocalID = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    Flags = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
+                    LocalID = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
                     TransactionID.FromBytes(bytes, i[0]); i[0] += 16;
-                    SequenceID = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
-                    Sections = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    SequenceID = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
+                    Sections = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
                 }
                 catch (Exception e)
                 {
@@ -92,11 +92,11 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.uintToBytes(Flags, bytes, i[0]); i[0] += 4;
-                Utils.intToBytes(LocalID, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(Flags, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(LocalID, bytes, i[0]); i[0] += 4;
                 TransactionID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.intToBytes(SequenceID, bytes, i[0]); i[0] += 4;
-                Utils.intToBytes(Sections, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(SequenceID, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(Sections, bytes, i[0]); i[0] += 4;
             }
 
         }
@@ -128,8 +128,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 try
                 {
                     ID.FromBytes(bytes, i[0]); i[0] += 16;
-                    Time = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
-                    Flags = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    Time = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
+                    Flags = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -141,8 +141,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 ID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.intToBytes(Time, bytes, i[0]); i[0] += 4;
-                Utils.uintToBytes(Flags, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(Time, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(Flags, bytes, i[0]); i[0] += 4;
             }
 
         }

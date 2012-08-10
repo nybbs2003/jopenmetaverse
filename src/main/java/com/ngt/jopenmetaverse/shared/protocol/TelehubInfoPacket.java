@@ -19,8 +19,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             public UUID ObjectID = new UUID();
 		/** Unsigned Byte */ 
 		public byte[] ObjectName;
-            public Vector3 TelehubPos;
-            public Quaternion TelehubRot;
+            public Vector3 TelehubPos = new Vector3();
+            public Quaternion TelehubRot = new Quaternion();
 
             @Override
             public int getLength()
@@ -46,8 +46,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     ObjectName = new byte[length];
                     System.arraycopy(bytes, i[0], ObjectName, 0, length); i[0] += length;
-                    TelehubPos.fromBytes(bytes, i[0]); i[0] += 12;
-                    TelehubRot.fromBytes(bytes, i[0], true); i[0] += 12;
+                    TelehubPos.fromBytesLit(bytes, i[0]); i[0] += 12;
+                    TelehubRot.fromBytesLit(bytes, i[0], true); i[0] += 12;
                 }
                 catch (Exception e)
                 {
@@ -61,8 +61,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 ObjectID.ToBytes(bytes, i[0]); i[0] += 16;
                 bytes[i[0]++] = (byte)ObjectName.length;
                 System.arraycopy(ObjectName, 0, bytes, i[0], ObjectName.length); i[0] += ObjectName.length;
-                TelehubPos.toBytes(bytes, i[0]); i[0] += 12;
-                TelehubRot.toBytes(bytes, i[0]); i[0] += 12;
+                TelehubPos.toBytesLit(bytes, i[0]); i[0] += 12;
+                TelehubRot.toBytesLit(bytes, i[0]); i[0] += 12;
             }
 
         }
@@ -70,7 +70,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         /// <exclude/>
         public static final class SpawnPointBlockBlock extends PacketBlock
         {
-            public Vector3 SpawnPointPos;
+            public Vector3 SpawnPointPos = new Vector3();
 
             @Override
             public int getLength()
@@ -89,7 +89,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 try
                 {
-                    SpawnPointPos.fromBytes(bytes, i[0]); i[0] += 12;
+                    SpawnPointPos.fromBytesLit(bytes, i[0]); i[0] += 12;
                 }
                 catch (Exception e)
                 {
@@ -100,7 +100,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             @Override
             public void ToBytes(byte[] bytes, int i[])
             {
-                SpawnPointPos.toBytes(bytes, i[0]); i[0] += 12;
+                SpawnPointPos.toBytesLit(bytes, i[0]); i[0] += 12;
             }
 
         }

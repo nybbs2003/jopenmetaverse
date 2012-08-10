@@ -12,8 +12,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         {
             public UUID AgentID = new UUID();
             public long LocationID;
-            public Vector3 Position;
-            public Vector3 LookAt;
+            public Vector3 Position = new Vector3();
+            public Vector3 LookAt = new Vector3();
             public long TeleportFlags;
 
             @Override
@@ -36,10 +36,10 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 try
                 {
                     AgentID.FromBytes(bytes, i[0]); i[0] += 16;
-                    LocationID = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    Position.fromBytes(bytes, i[0]); i[0] += 12;
-                    LookAt.fromBytes(bytes, i[0]); i[0] += 12;
-                    TeleportFlags = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    LocationID = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
+                    Position.fromBytesLit(bytes, i[0]); i[0] += 12;
+                    LookAt.fromBytesLit(bytes, i[0]); i[0] += 12;
+                    TeleportFlags = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -51,10 +51,10 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.uintToBytes(LocationID, bytes, i[0]); i[0] += 4;
-                Position.toBytes(bytes, i[0]); i[0] += 12;
-                LookAt.toBytes(bytes, i[0]); i[0] += 12;
-                Utils.uintToBytes(TeleportFlags, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(LocationID, bytes, i[0]); i[0] += 4;
+                Position.toBytesLit(bytes, i[0]); i[0] += 12;
+                LookAt.toBytesLit(bytes, i[0]); i[0] += 12;
+                Utils.uintToBytesLit(TeleportFlags, bytes, i[0]); i[0] += 4;
             }
 
         }

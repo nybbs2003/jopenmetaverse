@@ -54,8 +54,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         public static final class InfoBlock extends PacketBlock
         {
             public UUID RegionID = new UUID();
-            public Vector3 Position;
-            public Vector3 LookAt;
+            public Vector3 Position = new Vector3();
+            public Vector3 LookAt = new Vector3();
 
             @Override
 			public int getLength()
@@ -77,8 +77,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 try
                 {
                     RegionID.FromBytes(bytes, i[0]); i[0] += 16;
-                    Position.fromBytes(bytes, i[0]); i[0] += 12;
-                    LookAt.fromBytes(bytes, i[0]); i[0] += 12;
+                    Position.fromBytesLit(bytes, i[0]); i[0] += 12;
+                    LookAt.fromBytesLit(bytes, i[0]); i[0] += 12;
                 }
                 catch (Exception e)
                 {
@@ -90,8 +90,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 RegionID.ToBytes(bytes, i[0]); i[0] += 16;
-                Position.toBytes(bytes, i[0]); i[0] += 12;
-                LookAt.toBytes(bytes, i[0]); i[0] += 12;
+                Position.toBytesLit(bytes, i[0]); i[0] += 12;
+                LookAt.toBytesLit(bytes, i[0]); i[0] += 12;
             }
 
         }

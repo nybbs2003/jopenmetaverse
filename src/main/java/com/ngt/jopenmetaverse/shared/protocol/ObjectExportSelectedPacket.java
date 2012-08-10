@@ -34,7 +34,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 {
                     AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     RequestID.FromBytes(bytes, i[0]); i[0] += 16;
-                    VolumeDetail = (short)Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
+                    VolumeDetail = (short)Utils.bytesToUInt16Lit(bytes, i[0]); i[0] += 2;
                 }
                 catch (Exception e)
                 {

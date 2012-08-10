@@ -64,7 +64,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             public UUID SnapshotID = new UUID();
 		/** Unsigned Byte */ 
 		public byte[] SimName;
-            public Vector3d PosGlobal;
+            public Vector3d PosGlobal = new Vector3d();
 		/** Unsigned Byte */ 
 		public byte[] ParcelName;
 		/** Unsigned Byte */ 
@@ -98,27 +98,27 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 {
                     ClassifiedID.FromBytes(bytes, i[0]); i[0] += 16;
                     CreatorID.FromBytes(bytes, i[0]); i[0] += 16;
-                    CreationDate = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    ExpirationDate = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    Category = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    CreationDate = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
+                    ExpirationDate = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
+                    Category = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     Name = new byte[length];
                     Utils.arraycopy(bytes, i[0], Name, 0, length); i[0] +=  length;
-                    length = Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
+                    length = Utils.bytesToUInt16Lit(bytes, i[0]); i[0] += 2;
                     Desc = new byte[length];
                     Utils.arraycopy(bytes, i[0], Desc, 0, length); i[0] +=  length;
                     ParcelID.FromBytes(bytes, i[0]); i[0] += 16;
-                    ParentEstate = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    ParentEstate = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                     SnapshotID.FromBytes(bytes, i[0]); i[0] += 16;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     SimName = new byte[length];
                     Utils.arraycopy(bytes, i[0], SimName, 0, length); i[0] +=  length;
-                    PosGlobal.fromBytes(bytes, i[0]); i[0] += 24;
+                    PosGlobal.fromBytesLit(bytes, i[0]); i[0] += 24;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     ParcelName = new byte[length];
                     Utils.arraycopy(bytes, i[0], ParcelName, 0, length); i[0] +=  length;
                     ClassifiedFlags = (byte)bytes[i[0]++];
-                    PriceForListing = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    PriceForListing = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
                 }
                 catch (Exception e)
                 {
@@ -131,24 +131,24 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 ClassifiedID.ToBytes(bytes, i[0]); i[0] += 16;
                 CreatorID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.uintToBytes(CreationDate, bytes, i[0]); i[0] += 4;
-                Utils.uintToBytes(ExpirationDate, bytes, i[0]); i[0] += 4;
-                Utils.uintToBytes(Category, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(CreationDate, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(ExpirationDate, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(Category, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)Name.length;
                 Utils.arraycopy(Name, 0, bytes, i[0], Name.length); i[0] +=  Name.length;
                 bytes[i[0]++] = (byte)(Desc.length % 256);
                 bytes[i[0]++] = (byte)((Desc.length >> 8) % 256);
                 Utils.arraycopy(Desc, 0, bytes, i[0], Desc.length); i[0] +=  Desc.length;
                 ParcelID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.uintToBytes(ParentEstate, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(ParentEstate, bytes, i[0]); i[0] += 4;
                 SnapshotID.ToBytes(bytes, i[0]); i[0] += 16;
                 bytes[i[0]++] = (byte)SimName.length;
                 Utils.arraycopy(SimName, 0, bytes, i[0], SimName.length); i[0] +=  SimName.length;
-                PosGlobal.toBytes(bytes, i[0]); i[0] += 24;
+                PosGlobal.toBytesLit(bytes, i[0]); i[0] += 24;
                 bytes[i[0]++] = (byte)ParcelName.length;
                 Utils.arraycopy(ParcelName, 0, bytes, i[0], ParcelName.length); i[0] +=  ParcelName.length;
                 bytes[i[0]++] = ClassifiedFlags;
-                Utils.intToBytes(PriceForListing, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(PriceForListing, bytes, i[0]); i[0] += 4;
             }
 
         }

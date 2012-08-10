@@ -57,7 +57,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             public UUID ToAgentID = new UUID();
             public long ParentEstateID;
             public UUID RegionID = new UUID();
-            public Vector3 Position;
+            public Vector3 Position = new Vector3();
 		/** Unsigned Byte */ 
 		public byte Offline;
 		/** Unsigned Byte */ 
@@ -97,20 +97,20 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 {
                     FromGroup = (bytes[i[0]++] != 0) ? true : false;
                     ToAgentID.FromBytes(bytes, i[0]); i[0] += 16;
-                    ParentEstateID = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    ParentEstateID = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                     RegionID.FromBytes(bytes, i[0]); i[0] += 16;
-                    Position.fromBytes(bytes, i[0]); i[0] += 12;
+                    Position.fromBytesLit(bytes, i[0]); i[0] += 12;
                     Offline = (byte)bytes[i[0]++];
                     Dialog = (byte)bytes[i[0]++];
                     ID.FromBytes(bytes, i[0]); i[0] += 16;
-                    Timestamp = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    Timestamp = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     FromAgentName = new byte[length];
                     Utils.arraycopy(bytes, i[0], FromAgentName, 0, length); i[0] +=  length;
-                    length = Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
+                    length = Utils.bytesToUInt16Lit(bytes, i[0]); i[0] += 2;
                     Message = new byte[length];
                     Utils.arraycopy(bytes, i[0], Message, 0, length); i[0] +=  length;
-                    length = Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
+                    length = Utils.bytesToUInt16Lit(bytes, i[0]); i[0] += 2;
                     BinaryBucket = new byte[length];
                     Utils.arraycopy(bytes, i[0], BinaryBucket, 0, length); i[0] +=  length;
                 }
@@ -125,13 +125,13 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 bytes[i[0]++] = (byte)((FromGroup) ? 1 : 0);
                 ToAgentID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.uintToBytes(ParentEstateID, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(ParentEstateID, bytes, i[0]); i[0] += 4;
                 RegionID.ToBytes(bytes, i[0]); i[0] += 16;
-                Position.toBytes(bytes, i[0]); i[0] += 12;
+                Position.toBytesLit(bytes, i[0]); i[0] += 12;
                 bytes[i[0]++] = Offline;
                 bytes[i[0]++] = Dialog;
                 ID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.uintToBytes(Timestamp, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(Timestamp, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)FromAgentName.length;
                 Utils.arraycopy(FromAgentName, 0, bytes, i[0], FromAgentName.length); i[0] +=  FromAgentName.length;
                 bytes[i[0]++] = (byte)(Message.length % 256);

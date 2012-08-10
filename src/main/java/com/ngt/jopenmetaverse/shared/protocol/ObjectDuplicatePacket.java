@@ -56,7 +56,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         /// <exclude/>
         public static final class SharedDataBlock extends PacketBlock
         {
-            public Vector3 Offset;
+            public Vector3 Offset = new Vector3();
             public long DuplicateFlags;
 
             @Override
@@ -78,8 +78,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 try
                 {
-                    Offset.fromBytes(bytes, i[0]); i[0] += 12;
-                    DuplicateFlags = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    Offset.fromBytesLit(bytes, i[0]); i[0] += 12;
+                    DuplicateFlags = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -90,8 +90,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Offset.toBytes(bytes, i[0]); i[0] += 12;
-                Utils.uintToBytes(DuplicateFlags, bytes, i[0]); i[0] += 4;
+                Offset.toBytesLit(bytes, i[0]); i[0] += 12;
+                Utils.uintToBytesLit(DuplicateFlags, bytes, i[0]); i[0] += 4;
             }
 
         }
@@ -120,7 +120,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 try
                 {
-                    ObjectLocalID = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    ObjectLocalID = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -131,7 +131,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.uintToBytes(ObjectLocalID, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(ObjectLocalID, bytes, i[0]); i[0] += 4;
             }
 
         }

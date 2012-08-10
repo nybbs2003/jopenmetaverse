@@ -1,6 +1,7 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
 import com.ngt.jopenmetaverse.shared.types.Vector4;
+import com.ngt.jopenmetaverse.shared.util.Utils;
 
 
     public final class CameraConstraintPacket extends Packet
@@ -8,7 +9,7 @@ import com.ngt.jopenmetaverse.shared.types.Vector4;
         /// <exclude/>
         public static final class CameraCollidePlaneBlock extends PacketBlock
         {
-            public Vector4 Plane;
+            public Vector4 Plane = new Vector4();
 
             @Override
 			public int getLength()
@@ -29,7 +30,7 @@ import com.ngt.jopenmetaverse.shared.types.Vector4;
             {
                 try
                 {
-                    Plane.fromBytes(bytes, i[0]); i[0] += 16;
+                    Plane.fromBytesLit(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)
                 {
@@ -40,7 +41,7 @@ import com.ngt.jopenmetaverse.shared.types.Vector4;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Plane.toBytes(bytes, i[0]); i[0] += 16;
+                Plane.toBytesLit(bytes, i[0]); i[0] += 16;
             }
 
         }

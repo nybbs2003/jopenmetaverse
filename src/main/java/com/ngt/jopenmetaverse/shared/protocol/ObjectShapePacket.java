@@ -109,11 +109,11 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 try
                 {
-                    ObjectLocalID = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    ObjectLocalID = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                     PathCurve = (byte)bytes[i[0]++];
                     ProfileCurve = (byte)bytes[i[0]++];
-                    PathBegin = (int)Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
-                    PathEnd = (int)Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
+                    PathBegin = (int)Utils.bytesToUInt16Lit(bytes, i[0]); i[0] += 2;
+                    PathEnd = (int)Utils.bytesToUInt16Lit(bytes, i[0]); i[0] += 2;
                     PathScaleX = (byte)bytes[i[0]++];
                     PathScaleY = (byte)bytes[i[0]++];
                     PathShearX = (byte)bytes[i[0]++];
@@ -125,9 +125,9 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                     PathTaperY = (byte)bytes[i[0]++];
                     PathRevolutions = (byte)bytes[i[0]++];
                     PathSkew = (byte)bytes[i[0]++];
-                    ProfileBegin = (int)Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
-                    ProfileEnd = (int)Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
-                    ProfileHollow = (int)Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
+                    ProfileBegin = (int)Utils.bytesToUInt16Lit(bytes, i[0]); i[0] += 2;
+                    ProfileEnd = (int)Utils.bytesToUInt16Lit(bytes, i[0]); i[0] += 2;
+                    ProfileHollow = (int)Utils.bytesToUInt16Lit(bytes, i[0]); i[0] += 2;
                 }
                 catch (Exception e)
                 {
@@ -138,7 +138,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.uintToBytes(ObjectLocalID, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(ObjectLocalID, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = PathCurve;
                 bytes[i[0]++] = ProfileCurve;
                 bytes[i[0]++] = (byte)(PathBegin % 256);

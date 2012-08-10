@@ -75,7 +75,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 int length;
                 try
                 {
-                    TeleportFlags = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    TeleportFlags = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     Message = new byte[length];
                     Utils.arraycopy(bytes, i[0], Message, 0, length); i[0] +=  length;
@@ -89,7 +89,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.uintToBytes(TeleportFlags, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(TeleportFlags, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)Message.length;
                 Utils.arraycopy(Message, 0, bytes, i[0], Message.length); i[0] +=  Message.length;
             }

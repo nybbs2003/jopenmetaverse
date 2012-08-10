@@ -81,8 +81,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 try
                 {
                     RequestID.FromBytes(bytes, i[0]); i[0] += 16;
-                    IntervalDays = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
-                    CurrentInterval = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    IntervalDays = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
+                    CurrentInterval = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     StartDate = new byte[length];
                     Utils.arraycopy(bytes, i[0], StartDate, 0, length); i[0] +=  length;
@@ -97,8 +97,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 RequestID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.intToBytes(IntervalDays, bytes, i[0]); i[0] += 4;
-                Utils.intToBytes(CurrentInterval, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(IntervalDays, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(CurrentInterval, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)StartDate.length;
                 Utils.arraycopy(StartDate, 0, bytes, i[0], StartDate.length); i[0] +=  StartDate.length;
             }
@@ -146,11 +146,11 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     User = new byte[length];
                     Utils.arraycopy(bytes, i[0], User, 0, length); i[0] +=  length;
-                    Type = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    Type = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     Item = new byte[length];
                     Utils.arraycopy(bytes, i[0], Item, 0, length); i[0] +=  length;
-                    Amount = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    Amount = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
                 }
                 catch (Exception e)
                 {
@@ -165,10 +165,10 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 Utils.arraycopy(Time, 0, bytes, i[0], Time.length); i[0] +=  Time.length;
                 bytes[i[0]++] = (byte)User.length;
                 Utils.arraycopy(User, 0, bytes, i[0], User.length); i[0] +=  User.length;
-                Utils.intToBytes(Type, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(Type, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)Item.length;
                 Utils.arraycopy(Item, 0, bytes, i[0], Item.length); i[0] +=  Item.length;
-                Utils.intToBytes(Amount, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(Amount, bytes, i[0]); i[0] += 4;
             }
 
         }

@@ -39,10 +39,10 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 try
                 {
                     TransferID.FromBytes(bytes, i[0]); i[0] += 16;
-                    ChannelType = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
-                    SourceType = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
-                    Priority = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
-                    length = Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
+                    ChannelType = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
+                    SourceType = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
+                    Priority = Utils.bytesToFloatLit(bytes, i[0]); i[0] += 4;
+                    length = Utils.bytesToUInt16Lit(bytes, i[0]); i[0] += 2;
                     Params = new byte[length];
                     Utils.arraycopy(bytes, i[0], Params, 0, length); i[0] +=  length;
                 }
@@ -56,9 +56,9 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 TransferID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.intToBytes(ChannelType, bytes, i[0]); i[0] += 4;
-                Utils.intToBytes(SourceType, bytes, i[0]); i[0] += 4;
-                Utils.floatToBytes(Priority, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(ChannelType, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(SourceType, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytesLit(Priority, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)(Params.length % 256);
                 bytes[i[0]++] = (byte)((Params.length >> 8) % 256);
                 Utils.arraycopy(Params, 0, bytes, i[0], Params.length); i[0] +=  Params.length;

@@ -79,8 +79,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 try
                 {
                     RequestID.FromBytes(bytes, i[0]); i[0] += 16;
-                    IntervalDays = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
-                    CurrentInterval = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    IntervalDays = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
+                    CurrentInterval = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
                 }
                 catch (Exception e)
                 {
@@ -92,8 +92,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 RequestID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.intToBytes(IntervalDays, bytes, i[0]); i[0] += 4;
-                Utils.intToBytes(CurrentInterval, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(IntervalDays, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(CurrentInterval, bytes, i[0]); i[0] += 4;
             }
 
         }

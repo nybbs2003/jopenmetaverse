@@ -2545,7 +2545,7 @@ public class AgentManager {
 			Utils.arraycopy(sourceAvatar.GetBytes(), 0, typeData, 0, 16);
 		if (targetObject != UUID.Zero)
 			Utils.arraycopy(targetObject.GetBytes(), 0, typeData, 16, 16);
-		Utils.arraycopy(globalOffset.getBytes(), 0, typeData, 32, 24);
+		Utils.arraycopy(globalOffset.getBytesLit(), 0, typeData, 32, 24);
 		typeData[56] = (byte)type.getIndex();
 
 		effect.Effect[0].TypeData = typeData;
@@ -2614,7 +2614,7 @@ public class AgentManager {
 		byte[] typeData = new byte[57];
 		Utils.arraycopy(sourceAvatar.GetBytes(), 0, typeData, 0, 16);
 		Utils.arraycopy(targetObject.GetBytes(), 0, typeData, 16, 16);
-		Utils.arraycopy(globalOffset.getBytes(), 0, typeData, 32, 24);
+		Utils.arraycopy(globalOffset.getBytesLit(), 0, typeData, 32, 24);
 		typeData[56] = (byte)type.getIndex();
 
 		effect.Effect[0].TypeData = typeData;
@@ -2652,7 +2652,7 @@ public class AgentManager {
 		byte[] typeData = new byte[56];
 		Utils.arraycopy(sourceAvatar.GetBytes(), 0, typeData, 0, 16);
 		Utils.arraycopy(targetObject.GetBytes(), 0, typeData, 16, 16);
-		Utils.arraycopy(globalOffset.getBytes(), 0, typeData, 32, 24);
+		Utils.arraycopy(globalOffset.getBytesLit(), 0, typeData, 32, 24);
 
 		effect.Effect[0].TypeData = typeData;
 
@@ -2685,7 +2685,7 @@ public class AgentManager {
 		byte[] typeData = new byte[56];
 		Utils.arraycopy(UUID.Zero.GetBytes(), 0, typeData, 0, 16);
 		Utils.arraycopy(UUID.Zero.GetBytes(), 0, typeData, 16, 16);
-		Utils.arraycopy(globalOffset.getBytes(), 0, typeData, 32, 24);
+		Utils.arraycopy(globalOffset.getBytesLit(), 0, typeData, 32, 24);
 
 		effect.Effect[0].TypeData = typeData;
 

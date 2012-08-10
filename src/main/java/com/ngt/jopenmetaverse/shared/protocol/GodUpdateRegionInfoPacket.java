@@ -85,13 +85,13 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     SimName = new byte[length];
                     Utils.arraycopy(bytes, i[0], SimName, 0, length); i[0] +=  length;
-                    EstateID = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    ParentEstateID = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    RegionFlags = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    BillableFactor = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
-                    PricePerMeter = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
-                    RedirectGridX = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
-                    RedirectGridY = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    EstateID = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
+                    ParentEstateID = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
+                    RegionFlags = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
+                    BillableFactor = Utils.bytesToFloatLit(bytes, i[0]); i[0] += 4;
+                    PricePerMeter = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
+                    RedirectGridX = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
+                    RedirectGridY = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
                 }
                 catch (Exception e)
                 {
@@ -104,13 +104,13 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 bytes[i[0]++] = (byte)SimName.length;
                 Utils.arraycopy(SimName, 0, bytes, i[0], SimName.length); i[0] +=  SimName.length;
-                Utils.uintToBytes(EstateID, bytes, i[0]); i[0] += 4;
-                Utils.uintToBytes(ParentEstateID, bytes, i[0]); i[0] += 4;
-                Utils.uintToBytes(RegionFlags, bytes, i[0]); i[0] += 4;
-                Utils.floatToBytes(BillableFactor, bytes, i[0]); i[0] += 4;
-                Utils.intToBytes(PricePerMeter, bytes, i[0]); i[0] += 4;
-                Utils.intToBytes(RedirectGridX, bytes, i[0]); i[0] += 4;
-                Utils.intToBytes(RedirectGridY, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(EstateID, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(ParentEstateID, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(RegionFlags, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytesLit(BillableFactor, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(PricePerMeter, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(RedirectGridX, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(RedirectGridY, bytes, i[0]); i[0] += 4;
             }
 
         }

@@ -40,8 +40,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 {
                     ID.FromBytes(bytes, i[0]); i[0] += 16;
                     Codec = (byte)bytes[i[0]++];
-                    Size = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    Packets = (int)Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
+                    Size = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
+                    Packets = (int)Utils.bytesToUInt16Lit(bytes, i[0]); i[0] += 2;
                 }
                 catch (Exception e)
                 {
@@ -54,7 +54,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 ID.ToBytes(bytes, i[0]); i[0] += 16;
                 bytes[i[0]++] = Codec;
-                Utils.uintToBytes(Size, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(Size, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)(Packets % 256);
                 bytes[i[0]++] = (byte)((Packets >> 8) % 256);
             }
@@ -88,7 +88,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 int length;
                 try
                 {
-                    length = Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
+                    length = Utils.bytesToUInt16Lit(bytes, i[0]); i[0] += 2;
                     Data = new byte[length];
                     Utils.arraycopy(bytes, i[0], Data, 0, length); i[0] +=  length;
                 }

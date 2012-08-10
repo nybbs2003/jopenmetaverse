@@ -37,7 +37,7 @@ public class Header implements Serializable
 		// Sequence number
 
 		//need to take only 4 bytes out of 8 bytes of long
-		Utils.intToBytes((int)Sequence, bytes, i[0]);
+		Utils.uintToBytes(Sequence, bytes, i[0]);
 		i[0] += 4;
 
 		// Extra byte
@@ -85,7 +85,7 @@ public class Header implements Serializable
 	{
 		for(int j=0; j < AckList.length; j++ )
 		{
-			Utils.intToBytes((int)AckList[j], bytes, i[0]);
+			Utils.uintToBytes(AckList[j], bytes, i[0]);
 			i[0] += 4;
 		}
 		if (AckList.length > 0) { bytes[i[0]++] = (byte)AckList.length; }

@@ -102,13 +102,13 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             public int ProfileHollow;
 		/** Unsigned Byte */ 
 		public byte BypassRaycast;
-            public Vector3 RayStart;
-            public Vector3 RayEnd;
+            public Vector3 RayStart = new Vector3();
+            public Vector3 RayEnd = new Vector3();
             public UUID RayTargetID = new UUID();
 		/** Unsigned Byte */ 
 		public byte RayEndIsIntersection;
-            public Vector3 Scale;
-            public Quaternion Rotation;
+            public Vector3 Scale = new Vector3();
+            public Quaternion Rotation = new Quaternion();
 		/** Unsigned Byte */ 
 		public byte State;
 
@@ -133,11 +133,11 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 {
                     PCode = (byte)bytes[i[0]++];
                     Material = (byte)bytes[i[0]++];
-                    AddFlags = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    AddFlags = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                     PathCurve = (byte)bytes[i[0]++];
                     ProfileCurve = (byte)bytes[i[0]++];
-                    PathBegin = (int)Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
-                    PathEnd = (int)Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
+                    PathBegin = (int)Utils.bytesToUInt16Lit(bytes, i[0]); i[0] += 2;
+                    PathEnd = (int)Utils.bytesToUInt16Lit(bytes, i[0]); i[0] += 2;
                     PathScaleX = (byte)bytes[i[0]++];
                     PathScaleY = (byte)bytes[i[0]++];
                     PathShearX = (byte)bytes[i[0]++];
@@ -149,16 +149,16 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                     PathTaperY = (byte)bytes[i[0]++];
                     PathRevolutions = (byte)bytes[i[0]++];
                     PathSkew = (byte)bytes[i[0]++];
-                    ProfileBegin = (int)Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
-                    ProfileEnd = (int)Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
-                    ProfileHollow = (int)Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
+                    ProfileBegin = (int)Utils.bytesToUInt16Lit(bytes, i[0]); i[0] += 2;
+                    ProfileEnd = (int)Utils.bytesToUInt16Lit(bytes, i[0]); i[0] += 2;
+                    ProfileHollow = (int)Utils.bytesToUInt16Lit(bytes, i[0]); i[0] += 2;
                     BypassRaycast = (byte)bytes[i[0]++];
-                    RayStart.fromBytes(bytes, i[0]); i[0] += 12;
-                    RayEnd.fromBytes(bytes, i[0]); i[0] += 12;
+                    RayStart.fromBytesLit(bytes, i[0]); i[0] += 12;
+                    RayEnd.fromBytesLit(bytes, i[0]); i[0] += 12;
                     RayTargetID.FromBytes(bytes, i[0]); i[0] += 16;
                     RayEndIsIntersection = (byte)bytes[i[0]++];
-                    Scale.fromBytes(bytes, i[0]); i[0] += 12;
-                    Rotation.fromBytes(bytes, i[0], true); i[0] += 12;
+                    Scale.fromBytesLit(bytes, i[0]); i[0] += 12;
+                    Rotation.fromBytesLit(bytes, i[0], true); i[0] += 12;
                     State = (byte)bytes[i[0]++];
                 }
                 catch (Exception e)
@@ -172,7 +172,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 bytes[i[0]++] = PCode;
                 bytes[i[0]++] = Material;
-                Utils.uintToBytes(AddFlags, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(AddFlags, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = PathCurve;
                 bytes[i[0]++] = ProfileCurve;
                 bytes[i[0]++] = (byte)(PathBegin % 256);
@@ -197,12 +197,12 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 bytes[i[0]++] = (byte)(ProfileHollow % 256);
                 bytes[i[0]++] = (byte)((ProfileHollow >> 8) % 256);
                 bytes[i[0]++] = BypassRaycast;
-                RayStart.toBytes(bytes, i[0]); i[0] += 12;
-                RayEnd.toBytes(bytes, i[0]); i[0] += 12;
+                RayStart.toBytesLit(bytes, i[0]); i[0] += 12;
+                RayEnd.toBytesLit(bytes, i[0]); i[0] += 12;
                 RayTargetID.ToBytes(bytes, i[0]); i[0] += 16;
                 bytes[i[0]++] = RayEndIsIntersection;
-                Scale.toBytes(bytes, i[0]); i[0] += 12;
-                Rotation.toBytes(bytes, i[0]); i[0] += 12;
+                Scale.toBytesLit(bytes, i[0]); i[0] += 12;
+                Rotation.toBytesLit(bytes, i[0]); i[0] += 12;
                 bytes[i[0]++] = State;
             }
 

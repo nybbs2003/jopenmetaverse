@@ -79,7 +79,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 int length;
                 try
                 {
-                    length = Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
+                    length = Utils.bytesToUInt16Lit(bytes, i[0]); i[0] += 2;
                     TextureEntry = new byte[length];
                     Utils.arraycopy(bytes, i[0], TextureEntry, 0, length); i[0] +=  length;
                 }

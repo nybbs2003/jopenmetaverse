@@ -38,7 +38,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 {
                     AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
-                    ObjectLocalID = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    ObjectLocalID = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                     UsePhysics = (bytes[i[0]++] != 0) ? true : false;
                     IsTemporary = (bytes[i[0]++] != 0) ? true : false;
                     IsPhantom = (bytes[i[0]++] != 0) ? true : false;
@@ -55,7 +55,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
                 SessionID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.uintToBytes(ObjectLocalID, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(ObjectLocalID, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)((UsePhysics) ? 1 : 0);
                 bytes[i[0]++] = (byte)((IsTemporary) ? 1 : 0);
                 bytes[i[0]++] = (byte)((IsPhantom) ? 1 : 0);
@@ -93,10 +93,10 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 try
                 {
                     PhysicsShapeType = (byte)bytes[i[0]++];
-                    Density = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
-                    Friction = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
-                    Restitution = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
-                    GravityMultiplier = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
+                    Density = Utils.bytesToFloatLit(bytes, i[0]); i[0] += 4;
+                    Friction = Utils.bytesToFloatLit(bytes, i[0]); i[0] += 4;
+                    Restitution = Utils.bytesToFloatLit(bytes, i[0]); i[0] += 4;
+                    GravityMultiplier = Utils.bytesToFloatLit(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -108,10 +108,10 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 bytes[i[0]++] = PhysicsShapeType;
-                Utils.floatToBytes(Density, bytes, i[0]); i[0] += 4;
-                Utils.floatToBytes(Friction, bytes, i[0]); i[0] += 4;
-                Utils.floatToBytes(Restitution, bytes, i[0]); i[0] += 4;
-                Utils.floatToBytes(GravityMultiplier, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytesLit(Density, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytesLit(Friction, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytesLit(Restitution, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytesLit(GravityMultiplier, bytes, i[0]); i[0] += 4;
             }
 
         }

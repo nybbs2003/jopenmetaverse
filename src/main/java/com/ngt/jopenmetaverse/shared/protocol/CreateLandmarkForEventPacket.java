@@ -73,7 +73,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 try
                 {
-                    EventID = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    EventID = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -84,7 +84,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.uintToBytes(EventID, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(EventID, bytes, i[0]); i[0] += 4;
             }
 
         }

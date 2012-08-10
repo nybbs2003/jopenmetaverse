@@ -55,7 +55,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         public static final class ObjectDataBlock extends PacketBlock
         {
             public UUID ObjectID = new UUID();
-            public Quaternion Rotation;
+            public Quaternion Rotation = new Quaternion();
 
             @Override
 			public int getLength()
@@ -77,7 +77,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 try
                 {
                     ObjectID.FromBytes(bytes, i[0]); i[0] += 16;
-                    Rotation.fromBytes(bytes, i[0], true); i[0] += 12;
+                    Rotation.fromBytesLit(bytes, i[0], true); i[0] += 12;
                 }
                 catch (Exception e)
                 {
@@ -89,7 +89,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 ObjectID.ToBytes(bytes, i[0]); i[0] += 16;
-                Rotation.toBytes(bytes, i[0]); i[0] += 12;
+                Rotation.toBytesLit(bytes, i[0]); i[0] += 12;
             }
 
         }

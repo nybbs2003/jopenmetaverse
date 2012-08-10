@@ -56,7 +56,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             public byte ReportType;
 		/** Unsigned Byte */ 
 		public byte Category;
-            public Vector3 Position;
+            public Vector3 Position = new Vector3();
 		/** Unsigned Byte */ 
 		public byte CheckFlags;
             public UUID ScreenshotID = new UUID();
@@ -99,7 +99,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 {
                     ReportType = (byte)bytes[i[0]++];
                     Category = (byte)bytes[i[0]++];
-                    Position.fromBytes(bytes, i[0]); i[0] += 12;
+                    Position.fromBytesLit(bytes, i[0]); i[0] += 12;
                     CheckFlags = (byte)bytes[i[0]++];
                     ScreenshotID.FromBytes(bytes, i[0]); i[0] += 16;
                     ObjectID.FromBytes(bytes, i[0]); i[0] += 16;
@@ -111,7 +111,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     Summary = new byte[length];
                     Utils.arraycopy(bytes, i[0], Summary, 0, length); i[0] +=  length;
-                    length = Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
+                    length = Utils.bytesToUInt16Lit(bytes, i[0]); i[0] += 2;
                     Details = new byte[length];
                     Utils.arraycopy(bytes, i[0], Details, 0, length); i[0] +=  length;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
@@ -129,7 +129,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 bytes[i[0]++] = ReportType;
                 bytes[i[0]++] = Category;
-                Position.toBytes(bytes, i[0]); i[0] += 12;
+                Position.toBytesLit(bytes, i[0]); i[0] += 12;
                 bytes[i[0]++] = CheckFlags;
                 ScreenshotID.ToBytes(bytes, i[0]); i[0] += 16;
                 ObjectID.ToBytes(bytes, i[0]); i[0] += 16;

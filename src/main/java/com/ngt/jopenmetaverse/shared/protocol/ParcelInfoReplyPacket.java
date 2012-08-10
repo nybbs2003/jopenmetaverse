@@ -99,19 +99,19 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     Desc = new byte[length];
                     Utils.arraycopy(bytes, i[0], Desc, 0, length); i[0] += length;
-                    ActualArea = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
-                    BillableArea = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    ActualArea = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
+                    BillableArea = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
                     Flags = (byte)bytes[i[0]++];
-                    GlobalX = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
-                    GlobalY = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
-                    GlobalZ = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
+                    GlobalX = Utils.bytesToFloatLit(bytes, i[0]); i[0] += 4;
+                    GlobalY = Utils.bytesToFloatLit(bytes, i[0]); i[0] += 4;
+                    GlobalZ = Utils.bytesToFloatLit(bytes, i[0]); i[0] += 4;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     SimName = new byte[length];
                     Utils.arraycopy(bytes, i[0], SimName, 0, length); i[0] += length;
                     SnapshotID.FromBytes(bytes, i[0]); i[0] += 16;
-                    Dwell = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
-                    SalePrice = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
-                    AuctionID = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    Dwell = Utils.bytesToFloatLit(bytes, i[0]); i[0] += 4;
+                    SalePrice = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
+                    AuctionID = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
                 }
                 catch (Exception e)
                 {
@@ -128,18 +128,18 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 Utils.arraycopy(Name, 0, bytes, i[0], Name.length); i[0] += Name.length;
                 bytes[i[0]++] = (byte)Desc.length;
                 Utils.arraycopy(Desc, 0, bytes, i[0], Desc.length); i[0] += Desc.length;
-                Utils.intToBytes(ActualArea, bytes, i[0]); i[0] += 4;
-                Utils.intToBytes(BillableArea, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(ActualArea, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(BillableArea, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = Flags;
-                Utils.floatToBytes(GlobalX, bytes, i[0]); i[0] += 4;
-                Utils.floatToBytes(GlobalY, bytes, i[0]); i[0] += 4;
-                Utils.floatToBytes(GlobalZ, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytesLit(GlobalX, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytesLit(GlobalY, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytesLit(GlobalZ, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)SimName.length;
                 Utils.arraycopy(SimName, 0, bytes, i[0], SimName.length); i[0] += SimName.length;
                 SnapshotID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.floatToBytes(Dwell, bytes, i[0]); i[0] += 4;
-                Utils.intToBytes(SalePrice, bytes, i[0]); i[0] += 4;
-                Utils.intToBytes(AuctionID, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytesLit(Dwell, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(SalePrice, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(AuctionID, bytes, i[0]); i[0] += 4;
             }
 
         }

@@ -80,7 +80,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 {
                     RoleID.FromBytes(bytes, i[0]); i[0] += 16;
                     MemberID.FromBytes(bytes, i[0]); i[0] += 16;
-                    Change = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    Change = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -93,7 +93,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 RoleID.ToBytes(bytes, i[0]); i[0] += 16;
                 MemberID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.uintToBytes(Change, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(Change, bytes, i[0]); i[0] += 4;
             }
 
         }

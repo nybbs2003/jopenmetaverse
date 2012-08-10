@@ -36,7 +36,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 {
                     Hunter.FromBytes(bytes, i[0]); i[0] += 16;
                     Prey.FromBytes(bytes, i[0]); i[0] += 16;
-                    SpaceIP = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    SpaceIP = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -49,7 +49,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 Hunter.ToBytes(bytes, i[0]); i[0] += 16;
                 Prey.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.uintToBytes(SpaceIP, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(SpaceIP, bytes, i[0]); i[0] += 4;
             }
 
         }
@@ -79,8 +79,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 try
                 {
-                    GlobalX = Utils.bytesToDouble(bytes, i[0]); i[0] += 8;
-                    GlobalY = Utils.bytesToDouble(bytes, i[0]); i[0] += 8;
+                    GlobalX = Utils.bytesToDoubleLit(bytes, i[0]); i[0] += 8;
+                    GlobalY = Utils.bytesToDoubleLit(bytes, i[0]); i[0] += 8;
                 }
                 catch (Exception e)
                 {
@@ -91,8 +91,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.doubleToBytes(GlobalX, bytes, i[0]); i[0] += 8;
-                Utils.doubleToBytes(GlobalY, bytes, i[0]); i[0] += 8;
+                Utils.doubleToBytesLit(GlobalX, bytes, i[0]); i[0] += 8;
+                Utils.doubleToBytesLit(GlobalY, bytes, i[0]); i[0] += 8;
             }
 
         }

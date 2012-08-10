@@ -75,7 +75,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 try
                 {
                     ObjectID.FromBytes(bytes, i[0]); i[0] += 16;
-                    ObjectPermissions = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    ObjectPermissions = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -87,7 +87,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 ObjectID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.uintToBytes(ObjectPermissions, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(ObjectPermissions, bytes, i[0]); i[0] += 4;
             }
 
         }

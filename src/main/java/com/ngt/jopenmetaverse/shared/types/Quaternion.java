@@ -60,7 +60,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         }
 
         /// <summary>
-        /// Constructor, builds a quaternion Object from a byte array
+        /// Constructor, builds a quaternion Object from a byte array (Little Endian)
         /// </summary>
         /// <param name="byteArray">Byte array containing four four-byte floats</param>
         /// <param name="pos">Offset in the byte array to start reading at</param>
@@ -70,7 +70,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         public Quaternion(byte[] byteArray, int pos, boolean normalized)
         {
             X = Y = Z = W = 0;
-            fromBytes(byteArray, pos, normalized);
+            fromBytesLit(byteArray, pos, normalized);
         }
 
         public Quaternion(Quaternion q)
@@ -117,9 +117,91 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         /// <param name="normalized">Whether the source data is normalized or
         /// not. If this is true 12 bytes will be read, otherwise 16 bytes will
         /// be read.</param>
+        public void fromBytesLit(byte[] bytes, int pos, boolean normalized)
+        {
+            X = Utils.bytesToFloatLit(bytes, pos);
+            Y = Utils.bytesToFloatLit(bytes, pos+4);
+            Z = Utils.bytesToFloatLit(bytes, pos+8);
+        	
+            if (!normalized)
+            {
+                    W = Utils.bytesToFloatLit(bytes, pos+12);
+            }
+            else
+            {
+                float xyzsum = 1f - X * X - Y * Y - Z * Z;
+                W = (xyzsum > 0f) ? (float)Math.sqrt(xyzsum) : 0f;
+            }
+        }
+
+        /// <summary>
+        /// Normalize this quaternion and serialize it to a byte array
+        /// </summary>
+        /// <returns>A 12 byte array containing normalized X, Y, and Z floating
+        /// point values in order using little endian byte ordering</returns>
+        public byte[] getBytesLit()
+        {
+            byte[] bytes = new byte[12];
+            toBytesLit(bytes, 0);
+            return bytes;
+        }
+
+        /// <summary>
+        /// Writes the raw bytes for this quaternion to a byte array
+        /// </summary>
+        /// <param name="dest">Destination byte array</param>
+        /// <param name="pos">Position in the destination array to start
+        /// writing. Must be at least 12 bytes before the end of the array</param>
+        public void toBytesLit(byte[] dest, int pos)
+        {
+            float norm = (float)Math.sqrt(X * X + Y * Y + Z * Z + W * W);
+
+            if (norm != 0f)
+            {
+                norm = 1f / norm;
+
+                float x, y, z;
+                if (W >= 0f)
+                {
+                    x = X; y = Y; z = Z;
+                }
+                else
+                {
+                    x = -X; y = -Y; z = -Z;
+                }
+//                Buffer.BlockCopy(BitConverter.GetBytes(norm * x), 0, dest, pos + 0, 4);
+//                Buffer.BlockCopy(BitConverter.GetBytes(norm * y), 0, dest, pos + 4, 4);
+//                Buffer.BlockCopy(BitConverter.GetBytes(norm * z), 0, dest, pos + 8, 4);
+//
+//                if (!BitConverter.IsLittleEndian)
+//                {
+//                    Array.Reverse(dest, pos + 0, 4);
+//                    Array.Reverse(dest, pos + 4, 4);
+//                    Array.Reverse(dest, pos + 8, 4);
+//                }
+                byte[] xbytes = Utils.floatToBytesLit(x*norm);
+                byte[] ybytes = Utils.floatToBytesLit(y*norm);
+                byte[] zbytes = Utils.floatToBytesLit(z*norm);
+                System.arraycopy(xbytes, 0, dest, pos, 4);
+                System.arraycopy(ybytes, 0, dest, pos+4, 4);
+                System.arraycopy(zbytes, 0, dest, pos+8, 4);
+            }
+            else
+            {
+                throw new IllegalStateException("Quaternion {0} normalized to zero");
+            }
+        }
+
+        /// <summary>
+        /// Builds a quaternion Object from a byte array
+        /// </summary>
+        /// <param name="byteArray">The source byte array</param>
+        /// <param name="pos">Offset in the byte array to start reading at</param>
+        /// <param name="normalized">Whether the source data is normalized or
+        /// not. If this is true 12 bytes will be read, otherwise 16 bytes will
+        /// be read.</param>
         public void fromBytes(byte[] bytes, int pos, boolean normalized)
         {
-        	
             X = Utils.bytesToFloat(bytes, pos);
             Y = Utils.bytesToFloat(bytes, pos+4);
             Z = Utils.bytesToFloat(bytes, pos+8);
@@ -134,7 +216,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 W = (xyzsum > 0f) ? (float)Math.sqrt(xyzsum) : 0f;
             }
         }
-
+        
         /// <summary>
         /// Normalize this quaternion and serialize it to a byte array
         /// </summary>
@@ -170,16 +252,6 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 {
                     x = -X; y = -Y; z = -Z;
                 }
-//                Buffer.BlockCopy(BitConverter.GetBytes(norm * x), 0, dest, pos + 0, 4);
-//                Buffer.BlockCopy(BitConverter.GetBytes(norm * y), 0, dest, pos + 4, 4);
-//                Buffer.BlockCopy(BitConverter.GetBytes(norm * z), 0, dest, pos + 8, 4);
-//
-//                if (!BitConverter.IsLittleEndian)
-//                {
-//                    Array.Reverse(dest, pos + 0, 4);
-//                    Array.Reverse(dest, pos + 4, 4);
-//                    Array.Reverse(dest, pos + 8, 4);
-//                }
                 byte[] xbytes = Utils.floatToBytes(x*norm);
                 byte[] ybytes = Utils.floatToBytes(y*norm);
                 byte[] zbytes = Utils.floatToBytes(z*norm);
@@ -192,7 +264,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 throw new IllegalStateException("Quaternion {0} normalized to zero");
             }
         }
-
+        
+        
         /// <summary>
         /// Convert this quaternion to euler angles
         /// </summary>

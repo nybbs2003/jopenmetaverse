@@ -80,7 +80,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                     GroupID.FromBytes(bytes, i[0]); i[0] += 16;
                     IsGroupOwned = (bytes[i[0]++] != 0) ? true : false;
                     RemoveContribution = (bytes[i[0]++] != 0) ? true : false;
-                    LocalID = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    LocalID = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
                     Final = (bytes[i[0]++] != 0) ? true : false;
                 }
                 catch (Exception e)
@@ -95,7 +95,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 GroupID.ToBytes(bytes, i[0]); i[0] += 16;
                 bytes[i[0]++] = (byte)((IsGroupOwned) ? 1 : 0);
                 bytes[i[0]++] = (byte)((RemoveContribution) ? 1 : 0);
-                Utils.intToBytes(LocalID, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(LocalID, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)((Final) ? 1 : 0);
             }
 
@@ -126,8 +126,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 try
                 {
-                    Price = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
-                    Area = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    Price = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
+                    Area = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
                 }
                 catch (Exception e)
                 {
@@ -138,8 +138,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.intToBytes(Price, bytes, i[0]); i[0] += 4;
-                Utils.intToBytes(Area, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(Price, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(Area, bytes, i[0]); i[0] += 4;
             }
 
         }

@@ -63,7 +63,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         public Vector4(byte[] byteArray, int pos)
         {
             X = Y = Z = W = 0f;
-            fromBytes(byteArray, pos);
+            fromBytesLit(byteArray, pos);
         }
 
         public Vector4(Vector4 value)
@@ -129,6 +129,48 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         /// </summary>
         /// <param name="byteArray">Byte array containing a 16 byte vector</param>
         /// <param name="pos">Beginning position in the byte array</param>
+        public void fromBytesLit(byte[] bytes, int pos)
+        {            
+            X = Utils.bytesToFloatLit(bytes, pos);
+            Y = Utils.bytesToFloatLit(bytes, pos+4);
+            Z = Utils.bytesToFloatLit(bytes, pos+8);
+            W = Utils.bytesToFloatLit(bytes, pos+12);
+        }
+
+        /// <summary>
+        /// Returns the raw bytes for this vector
+        /// </summary>
+        /// <returns>A 16 byte array containing X, Y, Z, and W</returns>
+        public byte[] getBytesLit()
+        {
+            byte[] byteArray = new byte[16];
+            toBytesLit(byteArray, 0);
+            return byteArray;
+        }
+
+        /// <summary>
+        /// Writes the raw bytes for this vector to a byte array
+        /// </summary>
+        /// <param name="dest">Destination byte array</param>
+        /// <param name="pos">Position in the destination array to start
+        /// writing. Must be at least 16 bytes before the end of the array</param>
+        public void toBytesLit(byte[] dest, int pos)
+        {   
+            byte[] xbytes = Utils.floatToBytesLit(X);
+            byte[] ybytes = Utils.floatToBytesLit(Y);
+            byte[] zbytes = Utils.floatToBytesLit(Z);
+            byte[] wbytes = Utils.floatToBytesLit(W);            
+            System.arraycopy(xbytes, 0, dest, pos, 4);
+            System.arraycopy(ybytes, 0, dest, pos+4, 4);
+            System.arraycopy(zbytes, 0, dest, pos+8, 4);
+            System.arraycopy(wbytes, 0, dest, pos+12, 4);            
+        }
+
+        /// <summary>
+        /// Builds a vector from a byte array
+        /// </summary>
+        /// <param name="byteArray">Byte array containing a 16 byte vector</param>
+        /// <param name="pos">Beginning position in the byte array</param>
         public void fromBytes(byte[] bytes, int pos)
         {            
             X = Utils.bytesToFloat(bytes, pos);
@@ -165,7 +207,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             System.arraycopy(zbytes, 0, dest, pos+8, 4);
             System.arraycopy(wbytes, 0, dest, pos+12, 4);            
         }
-
+        
         //endregion Public Methods
 
         //region Static Methods

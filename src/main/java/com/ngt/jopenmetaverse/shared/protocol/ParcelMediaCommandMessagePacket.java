@@ -28,9 +28,9 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 try
                 {
-                    Flags = (long)Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    Command = (long)Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    Time = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
+                    Flags = (long)Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
+                    Command = (long)Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
+                    Time = Utils.bytesToFloatLit(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -41,9 +41,9 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.uintToBytes(Flags, bytes, i[0]); i[0] += 4;
-                Utils.uintToBytes(Command, bytes, i[0]); i[0] += 4;
-                Utils.floatToBytes(Time, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(Flags, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(Command, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytesLit(Time, bytes, i[0]); i[0] += 4;
             }
 
         }

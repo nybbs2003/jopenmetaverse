@@ -56,10 +56,10 @@ public final class ScriptDialogPacket extends Packet
 				length = Utils.ubyteToInt(bytes[i[0]++]);
 				ObjectName = new byte[length];
 				Utils.arraycopy(bytes, i[0], ObjectName, 0, length); i[0] +=  length;
-				length = Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
+				length = Utils.bytesToUInt16Lit(bytes, i[0]); i[0] += 2;
 				Message = new byte[length];
 				Utils.arraycopy(bytes, i[0], Message, 0, length); i[0] +=  length;
-				ChatChannel = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+				ChatChannel = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
 				ImageID.FromBytes(bytes, i[0]); i[0] += 16;
 			}
 			catch (Exception e)
@@ -81,7 +81,7 @@ public final class ScriptDialogPacket extends Packet
 			bytes[i[0]++] = (byte)(Message.length % 256);
 			bytes[i[0]++] = (byte)((Message.length >> 8) % 256);
 			Utils.arraycopy(Message, 0, bytes, i[0], Message.length); i[0] +=  Message.length;
-			Utils.intToBytes(ChatChannel, bytes, i[0]); i[0] += 4;
+			Utils.intToBytesLit(ChatChannel, bytes, i[0]); i[0] += 4;
 			ImageID.ToBytes(bytes, i[0]); i[0] += 16;
 		}
 

@@ -75,7 +75,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 try
                 {
                     AnimID.FromBytes(bytes, i[0]); i[0] += 16;
-                    AnimSequenceID = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    AnimSequenceID = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
                 }
                 catch (Exception e)
                 {
@@ -87,7 +87,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 AnimID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.intToBytes(AnimSequenceID, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(AnimSequenceID, bytes, i[0]); i[0] += 4;
             }
 
         }

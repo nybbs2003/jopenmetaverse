@@ -59,8 +59,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             public UUID FromTaskID = new UUID();
 		/** Unsigned Byte */ 
 		public byte BypassRaycast;
-            public Vector3 RayStart;
-            public Vector3 RayEnd;
+            public Vector3 RayStart = new Vector3();
+            public Vector3 RayEnd = new Vector3();
             public UUID RayTargetID = new UUID();
             public boolean RayEndIsIntersection;
             public boolean RezSelected;
@@ -91,16 +91,16 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 {
                     FromTaskID.FromBytes(bytes, i[0]); i[0] += 16;
                     BypassRaycast = (byte)bytes[i[0]++];
-                    RayStart.fromBytes(bytes, i[0]); i[0] += 12;
-                    RayEnd.fromBytes(bytes, i[0]); i[0] += 12;
+                    RayStart.fromBytesLit(bytes, i[0]); i[0] += 12;
+                    RayEnd.fromBytesLit(bytes, i[0]); i[0] += 12;
                     RayTargetID.FromBytes(bytes, i[0]); i[0] += 16;
                     RayEndIsIntersection = (bytes[i[0]++] != 0) ? true : false;
                     RezSelected = (bytes[i[0]++] != 0) ? true : false;
                     RemoveItem = (bytes[i[0]++] != 0) ? true : false;
-                    ItemFlags = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    GroupMask = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    EveryoneMask = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    NextOwnerMask = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    ItemFlags = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
+                    GroupMask = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
+                    EveryoneMask = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
+                    NextOwnerMask = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -113,16 +113,16 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 FromTaskID.ToBytes(bytes, i[0]); i[0] += 16;
                 bytes[i[0]++] = BypassRaycast;
-                RayStart.toBytes(bytes, i[0]); i[0] += 12;
-                RayEnd.toBytes(bytes, i[0]); i[0] += 12;
+                RayStart.toBytesLit(bytes, i[0]); i[0] += 12;
+                RayEnd.toBytesLit(bytes, i[0]); i[0] += 12;
                 RayTargetID.ToBytes(bytes, i[0]); i[0] += 16;
                 bytes[i[0]++] = (byte)((RayEndIsIntersection) ? 1 : 0);
                 bytes[i[0]++] = (byte)((RezSelected) ? 1 : 0);
                 bytes[i[0]++] = (byte)((RemoveItem) ? 1 : 0);
-                Utils.uintToBytes(ItemFlags, bytes, i[0]); i[0] += 4;
-                Utils.uintToBytes(GroupMask, bytes, i[0]); i[0] += 4;
-                Utils.uintToBytes(EveryoneMask, bytes, i[0]); i[0] += 4;
-                Utils.uintToBytes(NextOwnerMask, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(ItemFlags, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(GroupMask, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(EveryoneMask, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(NextOwnerMask, bytes, i[0]); i[0] += 4;
             }
 
         }
@@ -185,26 +185,26 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                     CreatorID.FromBytes(bytes, i[0]); i[0] += 16;
                     OwnerID.FromBytes(bytes, i[0]); i[0] += 16;
                     GroupID.FromBytes(bytes, i[0]); i[0] += 16;
-                    BaseMask = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    OwnerMask = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    GroupMask = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    EveryoneMask = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    NextOwnerMask = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    BaseMask = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
+                    OwnerMask = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
+                    GroupMask = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
+                    EveryoneMask = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
+                    NextOwnerMask = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                     GroupOwned = (bytes[i[0]++] != 0) ? true : false;
                     TransactionID.FromBytes(bytes, i[0]); i[0] += 16;
                     Type = (byte)bytes[i[0]++];
                     InvType = (byte)bytes[i[0]++];
-                    Flags = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    Flags = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                     SaleType = (byte)bytes[i[0]++];
-                    SalePrice = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    SalePrice = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     Name = new byte[length];
                     Utils.arraycopy(bytes, i[0], Name, 0, length); i[0] +=  length;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     Description = new byte[length];
                     Utils.arraycopy(bytes, i[0], Description, 0, length); i[0] +=  length;
-                    CreationDate = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
-                    CRC = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    CreationDate = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
+                    CRC = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -220,24 +220,24 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 CreatorID.ToBytes(bytes, i[0]); i[0] += 16;
                 OwnerID.ToBytes(bytes, i[0]); i[0] += 16;
                 GroupID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.uintToBytes(BaseMask, bytes, i[0]); i[0] += 4;
-                Utils.uintToBytes(OwnerMask, bytes, i[0]); i[0] += 4;
-                Utils.uintToBytes(GroupMask, bytes, i[0]); i[0] += 4;
-                Utils.uintToBytes(EveryoneMask, bytes, i[0]); i[0] += 4;
-                Utils.uintToBytes(NextOwnerMask, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(BaseMask, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(OwnerMask, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(GroupMask, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(EveryoneMask, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(NextOwnerMask, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)((GroupOwned) ? 1 : 0);
                 TransactionID.ToBytes(bytes, i[0]); i[0] += 16;
                 bytes[i[0]++] = (byte)Type;
                 bytes[i[0]++] = (byte)InvType;
-                Utils.uintToBytes(Flags, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(Flags, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = SaleType;
-                Utils.intToBytes(SalePrice, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(SalePrice, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)Name.length;
                 Utils.arraycopy(Name, 0, bytes, i[0], Name.length); i[0] +=  Name.length;
                 bytes[i[0]++] = (byte)Description.length;
                 Utils.arraycopy(Description, 0, bytes, i[0], Description.length); i[0] +=  Description.length;
-                Utils.intToBytes(CreationDate, bytes, i[0]); i[0] += 4;
-                Utils.uintToBytes(CRC, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(CreationDate, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(CRC, bytes, i[0]); i[0] += 4;
             }
 
         }

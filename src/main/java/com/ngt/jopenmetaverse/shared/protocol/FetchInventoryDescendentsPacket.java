@@ -79,7 +79,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 {
                     FolderID.FromBytes(bytes, i[0]); i[0] += 16;
                     OwnerID.FromBytes(bytes, i[0]); i[0] += 16;
-                    SortOrder = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    SortOrder = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
                     FetchFolders = (bytes[i[0]++] != 0) ? true : false;
                     FetchItems = (bytes[i[0]++] != 0) ? true : false;
                 }
@@ -94,7 +94,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 FolderID.ToBytes(bytes, i[0]); i[0] += 16;
                 OwnerID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.intToBytes(SortOrder, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(SortOrder, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)((FetchFolders) ? 1 : 0);
                 bytes[i[0]++] = (byte)((FetchItems) ? 1 : 0);
             }

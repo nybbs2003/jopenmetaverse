@@ -14,9 +14,9 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             public BigInteger UsecSinceStart;
             public long SecPerDay;
             public long SecPerYear;
-            public Vector3 SunDirection;
+            public Vector3 SunDirection = new Vector3();
             public float SunPhase;
-            public Vector3 SunAngVelocity;
+            public Vector3 SunAngVelocity = new Vector3();
 
             @Override
 			public int getLength()
@@ -37,12 +37,12 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 try
                 {
-                    UsecSinceStart = Utils.bytesToULong(bytes, i[0]); i[0] += 8;
-                    SecPerDay = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    SecPerYear = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    SunDirection.fromBytes(bytes, i[0]); i[0] += 12;
-                    SunPhase = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
-                    SunAngVelocity.fromBytes(bytes, i[0]); i[0] += 12;
+                    UsecSinceStart = Utils.bytesToULongLit(bytes, i[0]); i[0] += 8;
+                    SecPerDay = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
+                    SecPerYear = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
+                    SunDirection.fromBytesLit(bytes, i[0]); i[0] += 12;
+                    SunPhase = Utils.bytesToFloatLit(bytes, i[0]); i[0] += 4;
+                    SunAngVelocity.fromBytesLit(bytes, i[0]); i[0] += 12;
                 }
                 catch (Exception e)
                 {
@@ -53,12 +53,12 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.ulongToBytes(UsecSinceStart, bytes, i[0]); i[0] += 8;
-                Utils.uintToBytes(SecPerDay, bytes, i[0]); i[0] += 4;
-                Utils.uintToBytes(SecPerYear, bytes, i[0]); i[0] += 4;
-                SunDirection.toBytes(bytes, i[0]); i[0] += 12;
-                Utils.floatToBytes(SunPhase, bytes, i[0]); i[0] += 4;
-                SunAngVelocity.toBytes(bytes, i[0]); i[0] += 12;
+                Utils.ulongToBytesLit(UsecSinceStart, bytes, i[0]); i[0] += 8;
+                Utils.uintToBytesLit(SecPerDay, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(SecPerYear, bytes, i[0]); i[0] += 4;
+                SunDirection.toBytesLit(bytes, i[0]); i[0] += 12;
+                Utils.floatToBytesLit(SunPhase, bytes, i[0]); i[0] += 4;
+                SunAngVelocity.toBytesLit(bytes, i[0]); i[0] += 12;
             }
 
         }

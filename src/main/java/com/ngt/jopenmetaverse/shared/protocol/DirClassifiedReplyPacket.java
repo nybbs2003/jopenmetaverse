@@ -128,9 +128,9 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                     Name = new byte[length];
                     Utils.arraycopy(bytes, i[0], Name, 0, length); i[0] +=  length;
                     ClassifiedFlags = (byte)bytes[i[0]++];
-                    CreationDate = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    ExpirationDate = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    PriceForListing = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    CreationDate = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
+                    ExpirationDate = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
+                    PriceForListing = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
                 }
                 catch (Exception e)
                 {
@@ -145,9 +145,9 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 bytes[i[0]++] = (byte)Name.length;
                 Utils.arraycopy(Name, 0, bytes, i[0], Name.length); i[0] +=  Name.length;
                 bytes[i[0]++] = ClassifiedFlags;
-                Utils.uintToBytes(CreationDate, bytes, i[0]); i[0] += 4;
-                Utils.uintToBytes(ExpirationDate, bytes, i[0]); i[0] += 4;
-                Utils.intToBytes(PriceForListing, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(CreationDate, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(ExpirationDate, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(PriceForListing, bytes, i[0]); i[0] += 4;
             }
 
         }
@@ -176,7 +176,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 try
                 {
-                    Status = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    Status = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -187,7 +187,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.uintToBytes(Status, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(Status, bytes, i[0]); i[0] += 4;
             }
 
         }

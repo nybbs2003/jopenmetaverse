@@ -33,7 +33,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 try
                 {
                     RegionID.FromBytes(bytes, i[0]); i[0] += 16;
-                    RegionHandle = Utils.bytesToULong(bytes, i[0]); i[0] += 8;
+                    RegionHandle = Utils.bytesToULongLit(bytes, i[0]); i[0] += 8;
                 }
                 catch (Exception e)
                 {
@@ -45,7 +45,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 RegionID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.ulongToBytes(RegionHandle, bytes, i[0]); i[0] += 8;
+                Utils.ulongToBytesLit(RegionHandle, bytes, i[0]); i[0] += 8;
             }
 
         }

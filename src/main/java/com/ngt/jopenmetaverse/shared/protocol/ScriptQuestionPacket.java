@@ -48,7 +48,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     ObjectOwner = new byte[length];
                     Utils.arraycopy(bytes, i[0], ObjectOwner, 0, length); i[0] +=  length;
-                    Questions = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    Questions = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
                 }
                 catch (Exception e)
                 {
@@ -65,7 +65,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 Utils.arraycopy(ObjectName, 0, bytes, i[0], ObjectName.length); i[0] +=  ObjectName.length;
                 bytes[i[0]++] = (byte)ObjectOwner.length;
                 Utils.arraycopy(ObjectOwner, 0, bytes, i[0], ObjectOwner.length); i[0] +=  ObjectOwner.length;
-                Utils.intToBytes(Questions, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(Questions, bytes, i[0]); i[0] += 4;
             }
 
         }

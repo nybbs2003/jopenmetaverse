@@ -37,7 +37,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 {
                     AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
-                    CircuitCode = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    CircuitCode = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -50,7 +50,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
                 SessionID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.uintToBytes(CircuitCode, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(CircuitCode, bytes, i[0]); i[0] += 4;
             }
 
         }
@@ -87,9 +87,9 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 try
                 {
-                    GenCounter = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    Height = (int)Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
-                    Width = (int)Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
+                    GenCounter = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
+                    Height = (int)Utils.bytesToUInt16Lit(bytes, i[0]); i[0] += 2;
+                    Width = (int)Utils.bytesToUInt16Lit(bytes, i[0]); i[0] += 2;
                 }
                 catch (Exception e)
                 {
@@ -100,7 +100,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.uintToBytes(GenCounter, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(GenCounter, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)(Height % 256);
                 bytes[i[0]++] = (byte)((Height >> 8) % 256);
                 bytes[i[0]++] = (byte)(Width % 256);

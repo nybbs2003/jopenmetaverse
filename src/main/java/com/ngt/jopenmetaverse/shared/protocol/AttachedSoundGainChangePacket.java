@@ -32,7 +32,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 try
                 {
                     ObjectID.FromBytes(bytes, i[0]); i[0] += 16;
-                    Gain = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
+                    Gain = Utils.bytesToFloatLit(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -44,7 +44,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 ObjectID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.floatToBytes(Gain, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytesLit(Gain, bytes, i[0]); i[0] += 4;
             }
 
         }

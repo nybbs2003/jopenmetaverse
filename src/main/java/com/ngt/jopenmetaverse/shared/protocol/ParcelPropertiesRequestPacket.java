@@ -74,11 +74,11 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 try
                 {
-                    SequenceID = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
-                    West = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
-                    South = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
-                    East = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
-                    North = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
+                    SequenceID = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
+                    West = Utils.bytesToFloatLit(bytes, i[0]); i[0] += 4;
+                    South = Utils.bytesToFloatLit(bytes, i[0]); i[0] += 4;
+                    East = Utils.bytesToFloatLit(bytes, i[0]); i[0] += 4;
+                    North = Utils.bytesToFloatLit(bytes, i[0]); i[0] += 4;
                     SnapSelection = (bytes[i[0]++] != 0) ? true : false;
                 }
                 catch (Exception e)
@@ -90,11 +90,11 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.intToBytes(SequenceID, bytes, i[0]); i[0] += 4;
-                Utils.floatToBytes(West, bytes, i[0]); i[0] += 4;
-                Utils.floatToBytes(South, bytes, i[0]); i[0] += 4;
-                Utils.floatToBytes(East, bytes, i[0]); i[0] += 4;
-                Utils.floatToBytes(North, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(SequenceID, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytesLit(West, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytesLit(South, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytesLit(East, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytesLit(North, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)((SnapSelection) ? 1 : 0);
             }
 

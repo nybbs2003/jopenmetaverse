@@ -37,9 +37,9 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 try
                 {
-                    Handle = Utils.bytesToULong(bytes, i[0]); i[0] += 8;
-                    IP = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    Port = (int)Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
+                    Handle = Utils.bytesToULongLit(bytes, i[0]); i[0] += 8;
+                    IP = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
+                    Port = (int)Utils.bytesToUInt16Lit(bytes, i[0]); i[0] += 2;
                 }
                 catch (Exception e)
                 {
@@ -50,8 +50,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.ulongToBytes(Handle, bytes, i[0]); i[0] += 8;
-                Utils.uintToBytes(IP, bytes, i[0]); i[0] += 4;
+                Utils.ulongToBytesLit(Handle, bytes, i[0]); i[0] += 8;
+                Utils.uintToBytesLit(IP, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)((Port >> 8) % 256);
                 bytes[i[0]++] = (byte)(Port % 256);
             }

@@ -33,10 +33,10 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 try
                 {
-                    RegionX = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    RegionY = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    RegionFlags = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    ObjectCapacity = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    RegionX = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
+                    RegionY = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
+                    RegionFlags = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
+                    ObjectCapacity = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -47,10 +47,10 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.uintToBytes(RegionX, bytes, i[0]); i[0] += 4;
-                Utils.uintToBytes(RegionY, bytes, i[0]); i[0] += 4;
-                Utils.uintToBytes(RegionFlags, bytes, i[0]); i[0] += 4;
-                Utils.uintToBytes(ObjectCapacity, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(RegionX, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(RegionY, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(RegionFlags, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(ObjectCapacity, bytes, i[0]); i[0] += 4;
             }
 
         }
@@ -80,8 +80,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 try
                 {
-                    StatID = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    StatValue = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
+                    StatID = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
+                    StatValue = Utils.bytesToFloatLit(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -92,8 +92,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.uintToBytes(StatID, bytes, i[0]); i[0] += 4;
-                Utils.floatToBytes(StatValue, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(StatID, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytesLit(StatValue, bytes, i[0]); i[0] += 4;
             }
 
         }
@@ -122,7 +122,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 try
                 {
-                    PID = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    PID = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
                 }
                 catch (Exception e)
                 {
@@ -133,7 +133,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.intToBytes(PID, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(PID, bytes, i[0]); i[0] += 4;
             }
 
         }

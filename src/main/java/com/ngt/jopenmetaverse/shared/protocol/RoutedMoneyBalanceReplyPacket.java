@@ -32,8 +32,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 try
                 {
-                    TargetIP = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    TargetPort = (int)Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
+                    TargetIP = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
+                    TargetPort = (int)Utils.bytesToUInt16Lit(bytes, i[0]); i[0] += 2;
                 }
                 catch (Exception e)
                 {
@@ -44,7 +44,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.uintToBytes(TargetIP, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(TargetIP, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)((TargetPort >> 8) % 256);
                 bytes[i[0]++] = (byte)(TargetPort % 256);
             }
@@ -88,9 +88,9 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                     AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     TransactionID.FromBytes(bytes, i[0]); i[0] += 16;
                     TransactionSuccess = (bytes[i[0]++] != 0) ? true : false;
-                    MoneyBalance = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
-                    SquareMetersCredit = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
-                    SquareMetersCommitted = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    MoneyBalance = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
+                    SquareMetersCredit = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
+                    SquareMetersCommitted = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     Description = new byte[length];
                     Utils.arraycopy(bytes, i[0], Description, 0, length); i[0] +=  length;
@@ -107,9 +107,9 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
                 TransactionID.ToBytes(bytes, i[0]); i[0] += 16;
                 bytes[i[0]++] = (byte)((TransactionSuccess) ? 1 : 0);
-                Utils.intToBytes(MoneyBalance, bytes, i[0]); i[0] += 4;
-                Utils.intToBytes(SquareMetersCredit, bytes, i[0]); i[0] += 4;
-                Utils.intToBytes(SquareMetersCommitted, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(MoneyBalance, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(SquareMetersCredit, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(SquareMetersCommitted, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)Description.length;
                 Utils.arraycopy(Description, 0, bytes, i[0], Description.length); i[0] +=  Description.length;
             }
@@ -150,12 +150,12 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 int length;
                 try
                 {
-                    TransactionType = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    TransactionType = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
                     SourceID.FromBytes(bytes, i[0]); i[0] += 16;
                     IsSourceGroup = (bytes[i[0]++] != 0) ? true : false;
                     DestID.FromBytes(bytes, i[0]); i[0] += 16;
                     IsDestGroup = (bytes[i[0]++] != 0) ? true : false;
-                    Amount = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    Amount = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     ItemDescription = new byte[length];
                     Utils.arraycopy(bytes, i[0], ItemDescription, 0, length); i[0] +=  length;
@@ -169,12 +169,12 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.intToBytes(TransactionType, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(TransactionType, bytes, i[0]); i[0] += 4;
                 SourceID.ToBytes(bytes, i[0]); i[0] += 16;
                 bytes[i[0]++] = (byte)((IsSourceGroup) ? 1 : 0);
                 DestID.ToBytes(bytes, i[0]); i[0] += 16;
                 bytes[i[0]++] = (byte)((IsDestGroup) ? 1 : 0);
-                Utils.intToBytes(Amount, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(Amount, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)ItemDescription.length;
                 Utils.arraycopy(ItemDescription, 0, bytes, i[0], ItemDescription.length); i[0] +=  ItemDescription.length;
             }

@@ -81,8 +81,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 try
                 {
                     ObjectID.FromBytes(bytes, i[0]); i[0] += 16;
-                    ChatChannel = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
-                    ButtonIndex = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    ChatChannel = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
+                    ButtonIndex = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     ButtonLabel = new byte[length];
                     Utils.arraycopy(bytes, i[0], ButtonLabel, 0, length); i[0] +=  length;
@@ -97,8 +97,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 ObjectID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.intToBytes(ChatChannel, bytes, i[0]); i[0] += 4;
-                Utils.intToBytes(ButtonIndex, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(ChatChannel, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(ButtonIndex, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)ButtonLabel.length;
                 Utils.arraycopy(ButtonLabel, 0, bytes, i[0], ButtonLabel.length); i[0] +=  ButtonLabel.length;
             }

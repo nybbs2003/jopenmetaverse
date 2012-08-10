@@ -86,7 +86,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 int length;
                 try
                 {
-                    GroupPowers = Utils.bytesToULong(bytes, i[0]); i[0] += 8;
+                    GroupPowers = Utils.bytesToULongLit(bytes, i[0]); i[0] += 8;
                     AcceptNotices = (bytes[i[0]++] != 0) ? true : false;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     GroupTitle = new byte[length];
@@ -106,7 +106,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.ulongToBytes(GroupPowers, bytes, i[0]); i[0] += 8;
+                Utils.ulongToBytesLit(GroupPowers, bytes, i[0]); i[0] += 8;
                 bytes[i[0]++] = (byte)((AcceptNotices) ? 1 : 0);
                 bytes[i[0]++] = (byte)GroupTitle.length;
                 Utils.arraycopy(GroupTitle, 0, bytes, i[0], GroupTitle.length); i[0] +=  GroupTitle.length;

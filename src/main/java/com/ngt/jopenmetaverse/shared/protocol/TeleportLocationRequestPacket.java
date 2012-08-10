@@ -55,8 +55,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         public static final class InfoBlock extends PacketBlock
         {
             public BigInteger RegionHandle;
-            public Vector3 Position;
-            public Vector3 LookAt;
+            public Vector3 Position = new Vector3();
+            public Vector3 LookAt = new Vector3();
 
             @Override
 			public int getLength()
@@ -77,9 +77,9 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 try
                 {
-                    RegionHandle = Utils.bytesToULong(bytes, i[0]); i[0] += 8;
-                    Position.fromBytes(bytes, i[0]); i[0] += 12;
-                    LookAt.fromBytes(bytes, i[0]); i[0] += 12;
+                    RegionHandle = Utils.bytesToULongLit(bytes, i[0]); i[0] += 8;
+                    Position.fromBytesLit(bytes, i[0]); i[0] += 12;
+                    LookAt.fromBytesLit(bytes, i[0]); i[0] += 12;
                 }
                 catch (Exception e)
                 {
@@ -90,9 +90,9 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.ulongToBytes(RegionHandle, bytes, i[0]); i[0] += 8;
-                Position.toBytes(bytes, i[0]); i[0] += 12;
-                LookAt.toBytes(bytes, i[0]); i[0] += 12;
+                Utils.ulongToBytesLit(RegionHandle, bytes, i[0]); i[0] += 8;
+                Position.toBytesLit(bytes, i[0]); i[0] += 12;
+                LookAt.toBytesLit(bytes, i[0]); i[0] += 12;
             }
 
         }

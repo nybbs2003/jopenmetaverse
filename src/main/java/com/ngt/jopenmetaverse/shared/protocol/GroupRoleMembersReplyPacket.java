@@ -36,7 +36,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                     AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     GroupID.FromBytes(bytes, i[0]); i[0] += 16;
                     RequestID.FromBytes(bytes, i[0]); i[0] += 16;
-                    TotalPairs = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    TotalPairs = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -50,7 +50,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
                 GroupID.ToBytes(bytes, i[0]); i[0] += 16;
                 RequestID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.uintToBytes(TotalPairs, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(TotalPairs, bytes, i[0]); i[0] += 4;
             }
 
         }

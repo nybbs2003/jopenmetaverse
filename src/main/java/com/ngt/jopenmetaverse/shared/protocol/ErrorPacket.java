@@ -85,7 +85,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 int length;
                 try
                 {
-                    Code = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    Code = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     Token = new byte[length];
                     Utils.arraycopy(bytes, i[0], Token, 0, length); i[0] +=  length;
@@ -93,10 +93,10 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     System = new byte[length];
                     Utils.arraycopy(bytes, i[0], System, 0, length); i[0] +=  length;
-                    length = Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
+                    length = Utils.bytesToUInt16Lit(bytes, i[0]); i[0] += 2;
                     Message = new byte[length];
                     Utils.arraycopy(bytes, i[0], Message, 0, length); i[0] +=  length;
-                    length = Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
+                    length = Utils.bytesToUInt16Lit(bytes, i[0]); i[0] += 2;
                     Data = new byte[length];
                     Utils.arraycopy(bytes, i[0], Data, 0, length); i[0] +=  length;
                 }
@@ -109,7 +109,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.intToBytes(Code, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(Code, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)Token.length;
                 Utils.arraycopy(Token, 0, bytes, i[0], Token.length); i[0] +=  Token.length;
                 ID.ToBytes(bytes, i[0]); i[0] += 16;

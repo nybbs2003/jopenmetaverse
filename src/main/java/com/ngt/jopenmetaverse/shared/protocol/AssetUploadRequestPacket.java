@@ -43,7 +43,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                     Type = (byte)bytes[i[0]++];
                     Tempfile = (bytes[i[0]++] != 0) ? true : false;
                     StoreLocal = (bytes[i[0]++] != 0) ? true : false;
-                    length = Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
+                    length = Utils.bytesToUInt16Lit(bytes, i[0]); i[0] += 2;
                     AssetData = new byte[length];
                     Utils.arraycopy(bytes, i[0], AssetData, 0, length); i[0] +=  length;
                 }

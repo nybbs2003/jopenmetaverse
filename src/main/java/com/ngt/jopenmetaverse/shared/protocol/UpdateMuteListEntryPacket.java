@@ -84,8 +84,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     MuteName = new byte[length];
                     Utils.arraycopy(bytes, i[0], MuteName, 0, length); i[0] +=  length;
-                    MuteType = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
-                    MuteFlags = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    MuteType = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
+                    MuteFlags = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -99,8 +99,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 MuteID.ToBytes(bytes, i[0]); i[0] += 16;
                 bytes[i[0]++] = (byte)MuteName.length;
                 Utils.arraycopy(MuteName, 0, bytes, i[0], MuteName.length); i[0] +=  MuteName.length;
-                Utils.intToBytes(MuteType, bytes, i[0]); i[0] += 4;
-                Utils.uintToBytes(MuteFlags, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(MuteType, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(MuteFlags, bytes, i[0]); i[0] += 4;
             }
 
         }

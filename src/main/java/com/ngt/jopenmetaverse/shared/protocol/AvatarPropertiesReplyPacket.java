@@ -96,7 +96,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                     ImageID.FromBytes(bytes, i[0]); i[0] += 16;
                     FLImageID.FromBytes(bytes, i[0]); i[0] += 16;
                     PartnerID.FromBytes(bytes, i[0]); i[0] += 16;
-                    length = Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
+                    length = Utils.bytesToUInt16Lit(bytes, i[0]); i[0] += 2;
                     AboutText = new byte[length];
                     Utils.arraycopy(bytes, i[0], AboutText, 0, length); i[0] +=  length;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
@@ -111,7 +111,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     CharterMember = new byte[length];
                     Utils.arraycopy(bytes, i[0], CharterMember, 0, length); i[0] +=  length;
-                    Flags = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    Flags = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -136,7 +136,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 Utils.arraycopy(ProfileURL, 0, bytes, i[0], ProfileURL.length); i[0] +=  ProfileURL.length;
                 bytes[i[0]++] = (byte)CharterMember.length;
                 Utils.arraycopy(CharterMember, 0, bytes, i[0], CharterMember.length); i[0] +=  CharterMember.length;
-                Utils.uintToBytes(Flags, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(Flags, bytes, i[0]); i[0] += 4;
             }
 
         }

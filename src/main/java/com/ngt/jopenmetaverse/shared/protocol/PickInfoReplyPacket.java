@@ -65,7 +65,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 		public byte[] OriginalName;
 		/** Unsigned Byte */ 
 		public byte[] SimName;
-            public Vector3d PosGlobal;
+            public Vector3d PosGlobal = new Vector3d();
             public int SortOrder;
             public boolean Enabled;
 
@@ -102,7 +102,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     Name = new byte[length];
                     Utils.arraycopy(bytes, i[0], Name, 0, length); i[0] +=  length;
-                    length = Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
+                    length = Utils.bytesToUInt16Lit(bytes, i[0]); i[0] += 2;
                     Desc = new byte[length];
                     Utils.arraycopy(bytes, i[0], Desc, 0, length); i[0] +=  length;
                     SnapshotID.FromBytes(bytes, i[0]); i[0] += 16;
@@ -115,8 +115,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     SimName = new byte[length];
                     Utils.arraycopy(bytes, i[0], SimName, 0, length); i[0] +=  length;
-                    PosGlobal.fromBytes(bytes, i[0]); i[0] += 24;
-                    SortOrder = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    PosGlobal.fromBytesLit(bytes, i[0]); i[0] += 24;
+                    SortOrder = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
                     Enabled = (bytes[i[0]++] != 0) ? true : false;
                 }
                 catch (Exception e)
@@ -144,8 +144,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 Utils.arraycopy(OriginalName, 0, bytes, i[0], OriginalName.length); i[0] +=  OriginalName.length;
                 bytes[i[0]++] = (byte)SimName.length;
                 Utils.arraycopy(SimName, 0, bytes, i[0], SimName.length); i[0] +=  SimName.length;
-                PosGlobal.toBytes(bytes, i[0]); i[0] += 24;
-                Utils.intToBytes(SortOrder, bytes, i[0]); i[0] += 4;
+                PosGlobal.toBytesLit(bytes, i[0]); i[0] += 24;
+                Utils.intToBytesLit(SortOrder, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)((Enabled) ? 1 : 0);
             }
 

@@ -43,23 +43,23 @@ public final class EconomyDataPacket extends Packet
             {
                 try
                 {
-                    ObjectCapacity = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
-                    ObjectCount = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
-                    PriceEnergyUnit = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
-                    PriceObjectClaim = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
-                    PricePublicObjectDecay = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
-                    PricePublicObjectDelete = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
-                    PriceParcelClaim = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
-                    PriceParcelClaimFactor = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
-                    PriceUpload = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
-                    PriceRentLight = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
-                    TeleportMinPrice = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
-                    TeleportPriceExponent = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
-                    EnergyEfficiency = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
-                    PriceObjectRent = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
-                    PriceObjectScaleFactor = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
-                    PriceParcelRent = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
-                    PriceGroupCreate = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    ObjectCapacity = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
+                    ObjectCount = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
+                    PriceEnergyUnit = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
+                    PriceObjectClaim = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
+                    PricePublicObjectDecay = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
+                    PricePublicObjectDelete = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
+                    PriceParcelClaim = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
+                    PriceParcelClaimFactor = Utils.bytesToFloatLit(bytes, i[0]); i[0] += 4;
+                    PriceUpload = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
+                    PriceRentLight = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
+                    TeleportMinPrice = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
+                    TeleportPriceExponent = Utils.bytesToFloatLit(bytes, i[0]); i[0] += 4;
+                    EnergyEfficiency = Utils.bytesToFloatLit(bytes, i[0]); i[0] += 4;
+                    PriceObjectRent = Utils.bytesToFloatLit(bytes, i[0]); i[0] += 4;
+                    PriceObjectScaleFactor = Utils.bytesToFloatLit(bytes, i[0]); i[0] += 4;
+                    PriceParcelRent = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
+                    PriceGroupCreate = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
                 }
                 catch (Exception e)
                 {
@@ -70,23 +70,23 @@ public final class EconomyDataPacket extends Packet
             @Override
             public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.intToBytes(ObjectCapacity, bytes, i[0]); i[0] += 4;
-                Utils.intToBytes(ObjectCount, bytes, i[0]); i[0] += 4;
-                Utils.intToBytes(PriceEnergyUnit, bytes, i[0]); i[0] += 4;
-                Utils.intToBytes(PriceObjectClaim, bytes, i[0]); i[0] += 4;
-                Utils.intToBytes(PricePublicObjectDecay, bytes, i[0]); i[0] += 4;
-                Utils.intToBytes(PricePublicObjectDelete, bytes, i[0]); i[0] += 4;
-                Utils.intToBytes(PriceParcelClaim, bytes, i[0]); i[0] += 4;
-                Utils.floatToBytes(PriceParcelClaimFactor, bytes, i[0]); i[0] += 4;
-                Utils.intToBytes(PriceUpload, bytes, i[0]); i[0] += 4;
-                Utils.intToBytes(PriceRentLight, bytes, i[0]); i[0] += 4;
-                Utils.intToBytes(TeleportMinPrice, bytes, i[0]); i[0] += 4;
-                Utils.floatToBytes(TeleportPriceExponent, bytes, i[0]); i[0] += 4;
-                Utils.floatToBytes(EnergyEfficiency, bytes, i[0]); i[0] += 4;
-                Utils.floatToBytes(PriceObjectRent, bytes, i[0]); i[0] += 4;
-                Utils.floatToBytes(PriceObjectScaleFactor, bytes, i[0]); i[0] += 4;
-                Utils.intToBytes(PriceParcelRent, bytes, i[0]); i[0] += 4;
-                Utils.intToBytes(PriceGroupCreate, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(ObjectCapacity, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(ObjectCount, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(PriceEnergyUnit, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(PriceObjectClaim, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(PricePublicObjectDecay, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(PricePublicObjectDelete, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(PriceParcelClaim, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytesLit(PriceParcelClaimFactor, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(PriceUpload, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(PriceRentLight, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(TeleportMinPrice, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytesLit(TeleportPriceExponent, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytesLit(EnergyEfficiency, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytesLit(PriceObjectRent, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytesLit(PriceObjectScaleFactor, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(PriceParcelRent, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(PriceGroupCreate, bytes, i[0]); i[0] += 4;
             }
 
         }

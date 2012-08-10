@@ -32,7 +32,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 try
                 {
                     AgentID.FromBytes(bytes, i[0]); i[0] += 16;
-                    Flags = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    Flags = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -44,7 +44,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.uintToBytes(Flags, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(Flags, bytes, i[0]); i[0] += 4;
             }
 
         }
@@ -73,7 +73,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 try
                 {
-                    ItemType = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    ItemType = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -84,7 +84,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.uintToBytes(ItemType, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(ItemType, bytes, i[0]); i[0] += 4;
             }
 
         }
@@ -122,11 +122,11 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 int length;
                 try
                 {
-                    X = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    Y = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    X = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
+                    Y = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                     ID.FromBytes(bytes, i[0]); i[0] += 16;
-                    Extra = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
-                    Extra2 = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    Extra = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
+                    Extra2 = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     Name = new byte[length];
                     Utils.arraycopy(bytes, i[0], Name, 0, length); i[0] +=  length;
@@ -140,11 +140,11 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.uintToBytes(X, bytes, i[0]); i[0] += 4;
-                Utils.uintToBytes(Y, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(X, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(Y, bytes, i[0]); i[0] += 4;
                 ID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.intToBytes(Extra, bytes, i[0]); i[0] += 4;
-                Utils.intToBytes(Extra2, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(Extra, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(Extra2, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)Name.length;
                 Utils.arraycopy(Name, 0, bytes, i[0], Name.length); i[0] +=  Name.length;
             }

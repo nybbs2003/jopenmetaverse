@@ -75,7 +75,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 try
                 {
                     AgentRelated.FromBytes(bytes, i[0]); i[0] += 16;
-                    RelatedRights = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    RelatedRights = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
                 }
                 catch (Exception e)
                 {
@@ -87,7 +87,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 AgentRelated.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.intToBytes(RelatedRights, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(RelatedRights, bytes, i[0]); i[0] += 4;
             }
 
         }

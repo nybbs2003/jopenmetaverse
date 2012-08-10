@@ -75,7 +75,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 {
                     GroupID.FromBytes(bytes, i[0]); i[0] += 16;
                     RequestID.FromBytes(bytes, i[0]); i[0] += 16;
-                    MemberCount = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    MemberCount = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
                 }
                 catch (Exception e)
                 {
@@ -88,7 +88,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 GroupID.ToBytes(bytes, i[0]); i[0] += 16;
                 RequestID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.intToBytes(MemberCount, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(MemberCount, bytes, i[0]); i[0] += 4;
             }
 
         }
@@ -129,11 +129,11 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 try
                 {
                     AgentID.FromBytes(bytes, i[0]); i[0] += 16;
-                    Contribution = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    Contribution = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     OnlineStatus = new byte[length];
                     Utils.arraycopy(bytes, i[0], OnlineStatus, 0, length); i[0] +=  length;
-                    AgentPowers = Utils.bytesToULong(bytes, i[0]); i[0] += 8;
+                    AgentPowers = Utils.bytesToULongLit(bytes, i[0]); i[0] += 8;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     Title = new byte[length];
                     Utils.arraycopy(bytes, i[0], Title, 0, length); i[0] +=  length;
@@ -149,10 +149,10 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.intToBytes(Contribution, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(Contribution, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)OnlineStatus.length;
                 Utils.arraycopy(OnlineStatus, 0, bytes, i[0], OnlineStatus.length); i[0] +=  OnlineStatus.length;
-                Utils.ulongToBytes(AgentPowers, bytes, i[0]); i[0] += 8;
+                Utils.ulongToBytesLit(AgentPowers, bytes, i[0]); i[0] += 8;
                 bytes[i[0]++] = (byte)Title.length;
                 Utils.arraycopy(Title, 0, bytes, i[0], Title.length); i[0] +=  Title.length;
                 bytes[i[0]++] = (byte)((IsOwner) ? 1 : 0);

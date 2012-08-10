@@ -27,7 +27,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 try
                 {
-                    test1 = (long)Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    test1 = (long)Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -38,7 +38,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             @Override
             public void ToBytes(byte[] bytes, int i[])
             {
-                Utils.intToBytes((int)test1, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit((int)test1, bytes, i[0]); i[0] += 4;
             }
 
         }
@@ -67,9 +67,9 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 try
                 {
-                    test0 = (long)Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    test1 = (long)Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    test2 = (long)Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    test0 = (long)Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
+                    test1 = (long)Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
+                    test2 = (long)Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -80,9 +80,9 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             @Override
             public void ToBytes(byte[] bytes, int i[])
             {
-                Utils.intToBytes((int)test0, bytes, i[0]); i[0] += 4;
-                Utils.intToBytes((int)test1, bytes, i[0]); i[0] += 4;
-                Utils.intToBytes((int)test2, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit((int)test0, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit((int)test1, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit((int)test2, bytes, i[0]); i[0] += 4;
             }
 
         }

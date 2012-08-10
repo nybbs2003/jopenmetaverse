@@ -38,7 +38,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 try
                 {
                     CovenantID.FromBytes(bytes, i[0]); i[0] += 16;
-                    CovenantTimestamp = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    CovenantTimestamp = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     EstateName = new byte[length];
                     Utils.arraycopy(bytes, i[0], EstateName, 0, length); i[0] +=  length;
@@ -54,7 +54,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 CovenantID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.uintToBytes(CovenantTimestamp, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(CovenantTimestamp, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)EstateName.length;
                 Utils.arraycopy(EstateName, 0, bytes, i[0], EstateName.length); i[0] +=  EstateName.length;
                 EstateOwnerID.ToBytes(bytes, i[0]); i[0] += 16;

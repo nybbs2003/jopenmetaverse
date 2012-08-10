@@ -62,7 +62,7 @@ public class Color4 implements Comparable<Color4>, Serializable
 	}
 
 	/// <summary>
-	/// Builds a color from a byte array
+	/// Builds a color from a byte array (Little Endian)
 	/// </summary>
 	/// <param name="byteArray">Byte array containing a 16 byte color</param>
 	/// <param name="pos">Beginning position in the byte array</param>
@@ -72,11 +72,11 @@ public class Color4 implements Comparable<Color4>, Serializable
 	public Color4(byte[] byteArray, int pos, boolean inverted)
 	{
 		R = G = B = A = 0f;
-		FromBytes(byteArray, pos, inverted);
+		fromBytes(byteArray, pos, inverted);
 	}
 
 	/// <summary>
-	/// Returns the raw bytes for this vector
+	/// Returns the raw bytes for this vector (Liitle Endian)
 	/// </summary>
 	/// <param name="byteArray">Byte array containing a 16 byte color</param>
 	/// <param name="pos">Beginning position in the byte array</param>
@@ -149,7 +149,7 @@ public class Color4 implements Comparable<Color4>, Serializable
 		}
 	}
 
-	public void FromBytes(byte[] byteArray, int pos, boolean inverted)
+	public void fromBytes(byte[] byteArray, int pos, boolean inverted)
 	{
 		final float quanta = 1.0f / 255.0f;
 
@@ -183,7 +183,7 @@ public class Color4 implements Comparable<Color4>, Serializable
 	/// but keep the other color bytes inverted</param>
 	public void fromBytes(byte[] byteArray, int pos, boolean inverted, boolean alphaInverted)
 	{
-		FromBytes(byteArray, pos, inverted);
+		fromBytes(byteArray, pos, inverted);
 
 		if (alphaInverted)
 			A = 1.0f - A;

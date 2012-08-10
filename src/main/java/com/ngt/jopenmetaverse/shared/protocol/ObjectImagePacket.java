@@ -81,11 +81,11 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 int length;
                 try
                 {
-                    ObjectLocalID = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    ObjectLocalID = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     MediaURL = new byte[length];
                     Utils.arraycopy(bytes, i[0], MediaURL, 0, length); i[0] +=  length;
-                    length = Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
+                    length = Utils.bytesToUInt16Lit(bytes, i[0]); i[0] += 2;
                     TextureEntry = new byte[length];
                     Utils.arraycopy(bytes, i[0], TextureEntry, 0, length); i[0] +=  length;
                 }
@@ -98,7 +98,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.uintToBytes(ObjectLocalID, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(ObjectLocalID, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)MediaURL.length;
                 Utils.arraycopy(MediaURL, 0, bytes, i[0], MediaURL.length); i[0] +=  MediaURL.length;
                 bytes[i[0]++] = (byte)(TextureEntry.length % 256);

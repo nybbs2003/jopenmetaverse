@@ -77,7 +77,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 {
                     TaskID.FromBytes(bytes, i[0]); i[0] += 16;
                     ItemID.FromBytes(bytes, i[0]); i[0] += 16;
-                    Questions = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    Questions = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
                 }
                 catch (Exception e)
                 {
@@ -90,7 +90,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 TaskID.ToBytes(bytes, i[0]); i[0] += 16;
                 ItemID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.intToBytes(Questions, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(Questions, bytes, i[0]); i[0] += 4;
             }
 
         }

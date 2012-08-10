@@ -80,12 +80,12 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 int length;
                 try
                 {
-                    ReportType = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    RequestFlags = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    ReportType = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
+                    RequestFlags = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     Filter = new byte[length];
                     Utils.arraycopy(bytes, i[0], Filter, 0, length); i[0] +=  length;
-                    ParcelLocalID = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    ParcelLocalID = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
                 }
                 catch (Exception e)
                 {
@@ -96,11 +96,11 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.uintToBytes(ReportType, bytes, i[0]); i[0] += 4;
-                Utils.uintToBytes(RequestFlags, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(ReportType, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(RequestFlags, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)Filter.length;
                 Utils.arraycopy(Filter, 0, bytes, i[0], Filter.length); i[0] +=  Filter.length;
-                Utils.intToBytes(ParcelLocalID, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(ParcelLocalID, bytes, i[0]); i[0] += 4;
             }
 
         }

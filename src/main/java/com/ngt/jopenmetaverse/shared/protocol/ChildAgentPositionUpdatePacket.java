@@ -16,13 +16,13 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             public long ViewerCircuitCode;
             public UUID AgentID = new UUID();
             public UUID SessionID = new UUID();
-            public Vector3 AgentPos;
-            public Vector3 AgentVel;
-            public Vector3 Center;
-            public Vector3 Size;
-            public Vector3 AtAxis;
-            public Vector3 LeftAxis;
-            public Vector3 UpAxis;
+            public Vector3 AgentPos = new Vector3();
+            public Vector3 AgentVel = new Vector3();
+            public Vector3 Center = new Vector3();
+            public Vector3 Size = new Vector3();
+            public Vector3 AtAxis = new Vector3();
+            public Vector3 LeftAxis = new Vector3();
+            public Vector3 UpAxis = new Vector3();
             public boolean ChangedGrid;
 
             @Override
@@ -44,17 +44,17 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 try
                 {
-                    RegionHandle = Utils.bytesToULong(bytes, i[0]); i[0] += 8;
-                    ViewerCircuitCode = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    RegionHandle = Utils.bytesToULongLit(bytes, i[0]); i[0] += 8;
+                    ViewerCircuitCode = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                     AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
-                    AgentPos.fromBytes(bytes, i[0]); i[0] += 12;
-                    AgentVel.fromBytes(bytes, i[0]); i[0] += 12;
-                    Center.fromBytes(bytes, i[0]); i[0] += 12;
-                    Size.fromBytes(bytes, i[0]); i[0] += 12;
-                    AtAxis.fromBytes(bytes, i[0]); i[0] += 12;
-                    LeftAxis.fromBytes(bytes, i[0]); i[0] += 12;
-                    UpAxis.fromBytes(bytes, i[0]); i[0] += 12;
+                    AgentPos.fromBytesLit(bytes, i[0]); i[0] += 12;
+                    AgentVel.fromBytesLit(bytes, i[0]); i[0] += 12;
+                    Center.fromBytesLit(bytes, i[0]); i[0] += 12;
+                    Size.fromBytesLit(bytes, i[0]); i[0] += 12;
+                    AtAxis.fromBytesLit(bytes, i[0]); i[0] += 12;
+                    LeftAxis.fromBytesLit(bytes, i[0]); i[0] += 12;
+                    UpAxis.fromBytesLit(bytes, i[0]); i[0] += 12;
                     ChangedGrid = (bytes[i[0]++] != 0) ? true : false;
                 }
                 catch (Exception e)
@@ -66,17 +66,17 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.ulongToBytes(RegionHandle, bytes, i[0]); i[0] += 8;
-                Utils.uintToBytes(ViewerCircuitCode, bytes, i[0]); i[0] += 4;
+                Utils.ulongToBytesLit(RegionHandle, bytes, i[0]); i[0] += 8;
+                Utils.uintToBytesLit(ViewerCircuitCode, bytes, i[0]); i[0] += 4;
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
                 SessionID.ToBytes(bytes, i[0]); i[0] += 16;
-                AgentPos.toBytes(bytes, i[0]); i[0] += 12;
-                AgentVel.toBytes(bytes, i[0]); i[0] += 12;
-                Center.toBytes(bytes, i[0]); i[0] += 12;
-                Size.toBytes(bytes, i[0]); i[0] += 12;
-                AtAxis.toBytes(bytes, i[0]); i[0] += 12;
-                LeftAxis.toBytes(bytes, i[0]); i[0] += 12;
-                UpAxis.toBytes(bytes, i[0]); i[0] += 12;
+                AgentPos.toBytesLit(bytes, i[0]); i[0] += 12;
+                AgentVel.toBytesLit(bytes, i[0]); i[0] += 12;
+                Center.toBytesLit(bytes, i[0]); i[0] += 12;
+                Size.toBytesLit(bytes, i[0]); i[0] += 12;
+                AtAxis.toBytesLit(bytes, i[0]); i[0] += 12;
+                LeftAxis.toBytesLit(bytes, i[0]); i[0] += 12;
+                UpAxis.toBytesLit(bytes, i[0]); i[0] += 12;
                 bytes[i[0]++] = (byte)((ChangedGrid) ? 1 : 0);
             }
 

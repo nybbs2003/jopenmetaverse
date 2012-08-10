@@ -54,7 +54,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         public static final class ObjectDataBlock extends PacketBlock
         {
             public long ObjectLocalID;
-            public Vector3 Position;
+            public Vector3 Position = new Vector3();
 
             @Override
 			public int getLength()
@@ -75,8 +75,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 try
                 {
-                    ObjectLocalID = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    Position.fromBytes(bytes, i[0]); i[0] += 12;
+                    ObjectLocalID = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
+                    Position.fromBytesLit(bytes, i[0]); i[0] += 12;
                 }
                 catch (Exception e)
                 {
@@ -87,8 +87,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.uintToBytes(ObjectLocalID, bytes, i[0]); i[0] += 4;
-                Position.toBytes(bytes, i[0]); i[0] += 12;
+                Utils.uintToBytesLit(ObjectLocalID, bytes, i[0]); i[0] += 4;
+                Position.toBytesLit(bytes, i[0]); i[0] += 12;
             }
 
         }

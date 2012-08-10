@@ -33,8 +33,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 try
                 {
-                    RegionHandle = Utils.bytesToULong(bytes, i[0]); i[0] += 8;
-                    TimeDilation = (int)Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
+                    RegionHandle = Utils.bytesToULongLit(bytes, i[0]); i[0] += 8;
+                    TimeDilation = (int)Utils.bytesToUInt16Lit(bytes, i[0]); i[0] += 2;
                 }
                 catch (Exception e)
                 {
@@ -45,7 +45,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.ulongToBytes(RegionHandle, bytes, i[0]); i[0] += 8;
+                Utils.ulongToBytesLit(RegionHandle, bytes, i[0]); i[0] += 8;
                 bytes[i[0]++] = (byte)(TimeDilation % 256);
                 bytes[i[0]++] = (byte)((TimeDilation >> 8) % 256);
             }
@@ -78,9 +78,9 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 try
                 {
-                    ID = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    CRC = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    UpdateFlags = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    ID = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
+                    CRC = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
+                    UpdateFlags = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -91,9 +91,9 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.uintToBytes(ID, bytes, i[0]); i[0] += 4;
-                Utils.uintToBytes(CRC, bytes, i[0]); i[0] += 4;
-                Utils.uintToBytes(UpdateFlags, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(ID, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(CRC, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(UpdateFlags, bytes, i[0]); i[0] += 4;
             }
 
         }

@@ -33,7 +33,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 try
                 {
                     TakeControls = (bytes[i[0]++] != 0) ? true : false;
-                    Controls = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    Controls = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                     PassToAgent = (bytes[i[0]++] != 0) ? true : false;
                 }
                 catch (Exception e)
@@ -46,7 +46,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 bytes[i[0]++] = (byte)((TakeControls) ? 1 : 0);
-                Utils.uintToBytes(Controls, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(Controls, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)((PassToAgent) ? 1 : 0);
             }
 

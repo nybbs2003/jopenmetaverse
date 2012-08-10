@@ -55,8 +55,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         /// <exclude/>
         public static final class DataBlock extends PacketBlock
         {
-            public Vector3 Position;
-            public Vector3 LookAt;
+            public Vector3 Position = new Vector3();
+            public Vector3 LookAt = new Vector3();
             /**
              * Unsigned Long, only 8 bytes should be used and stored
              */
@@ -82,10 +82,10 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 try
                 {
-                    Position.fromBytes(bytes, i[0]); i[0] += 12;
-                    LookAt.fromBytes(bytes, i[0]); i[0] += 12;
-                    RegionHandle = Utils.bytesToULong(bytes, i[0]); i[0] += 8;
-                    Timestamp = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    Position.fromBytesLit(bytes, i[0]); i[0] += 12;
+                    LookAt.fromBytesLit(bytes, i[0]); i[0] += 12;
+                    RegionHandle = Utils.bytesToULongLit(bytes, i[0]); i[0] += 8;
+                    Timestamp = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -96,10 +96,10 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Position.fromBytes(bytes, i[0]); i[0] += 12;
-                LookAt.fromBytes(bytes, i[0]); i[0] += 12;
-                Utils.ulongToBytes(RegionHandle, bytes, i[0]); i[0] += 8;
-                Utils.uintToBytes(Timestamp, bytes, i[0]); i[0] += 4;
+                Position.fromBytesLit(bytes, i[0]); i[0] += 12;
+                LookAt.fromBytesLit(bytes, i[0]); i[0] += 12;
+                Utils.ulongToBytesLit(RegionHandle, bytes, i[0]); i[0] += 8;
+                Utils.uintToBytesLit(Timestamp, bytes, i[0]); i[0] += 4;
             }
 
         }
@@ -131,7 +131,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 int length;
                 try
                 {
-                    length = Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
+                    length = Utils.bytesToUInt16Lit(bytes, i[0]); i[0] += 2;
                     ChannelVersion = new byte[length];
                     Utils.arraycopy(bytes, i[0], ChannelVersion, 0, length); i[0] +=  length;
                 }

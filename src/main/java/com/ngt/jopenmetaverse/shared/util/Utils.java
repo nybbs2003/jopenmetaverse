@@ -839,8 +839,27 @@ public class Utils
 		    {
 		        return bytesToUIntLit(bytes, 0);
 		    }
-	    
-	    
+		    
+		    public static BigInteger bytesToULongLit(byte[] bytes, int pos)
+		    {
+		        if (bytes.length < pos + 4) return new BigInteger("0");
+//		        return ((long)bytes[pos + 0] + ((long)bytes[pos + 1] << 8) + ((long)bytes[pos + 2] << 16) + ((long)bytes[pos + 3] << 24));
+		        byte[] bytes2 = ArrayUtils.subarray(bytes, pos, pos+8);
+		        reverse(bytes2);
+		        return new BigInteger(bytes2);
+		    }
+		
+		    /// <summary>
+		    /// Convert the first four bytes of the given array in little endian
+		    /// ordering to an unsigned integer
+		    /// </summary>
+		    /// <param name="bytes">An array four bytes or longer</param>
+		    /// <returns>An unsigned integer, will be zero if the array contains
+		    /// less than four bytes</returns>
+		    public static BigInteger bytesToULongLit(byte[] bytes)
+		    {
+		        return bytesToULong(bytes, 0);
+		    }    
 	    
 	    public static BigInteger bytesToULong(byte[] bytes, int pos)
 	    {

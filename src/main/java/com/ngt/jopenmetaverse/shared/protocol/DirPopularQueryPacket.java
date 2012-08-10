@@ -75,7 +75,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 try
                 {
                     QueryID.FromBytes(bytes, i[0]); i[0] += 16;
-                    QueryFlags = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    QueryFlags = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -87,7 +87,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 QueryID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.uintToBytes(QueryFlags, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(QueryFlags, bytes, i[0]); i[0] += 4;
             }
 
         }

@@ -75,7 +75,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 try
                 {
                     TransactionID.FromBytes(bytes, i[0]); i[0] += 16;
-                    TotalNumItems = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    TotalNumItems = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -87,7 +87,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 TransactionID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.uintToBytes(TotalNumItems, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(TotalNumItems, bytes, i[0]); i[0] += 4;
             }
 
         }
@@ -156,9 +156,9 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     VoteResult = new byte[length];
                     Utils.arraycopy(bytes, i[0], VoteResult, 0, length); i[0] +=  length;
-                    Majority = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
-                    Quorum = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
-                    length = Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
+                    Majority = Utils.bytesToFloatLit(bytes, i[0]); i[0] += 4;
+                    Quorum = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
+                    length = Utils.bytesToUInt16Lit(bytes, i[0]); i[0] += 2;
                     ProposalText = new byte[length];
                     Utils.arraycopy(bytes, i[0], ProposalText, 0, length); i[0] +=  length;
                 }
@@ -183,8 +183,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 Utils.arraycopy(VoteType, 0, bytes, i[0], VoteType.length); i[0] +=  VoteType.length;
                 bytes[i[0]++] = (byte)VoteResult.length;
                 Utils.arraycopy(VoteResult, 0, bytes, i[0], VoteResult.length); i[0] +=  VoteResult.length;
-                Utils.floatToBytes(Majority, bytes, i[0]); i[0] += 4;
-                Utils.intToBytes(Quorum, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytesLit(Majority, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(Quorum, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)(ProposalText.length % 256);
                 bytes[i[0]++] = (byte)((ProposalText.length >> 8) % 256);
                 Utils.arraycopy(ProposalText, 0, bytes, i[0], ProposalText.length); i[0] +=  ProposalText.length;
@@ -226,7 +226,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     VoteCast = new byte[length];
                     Utils.arraycopy(bytes, i[0], VoteCast, 0, length); i[0] +=  length;
-                    NumVotes = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    NumVotes = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
                 }
                 catch (Exception e)
                 {
@@ -240,7 +240,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 CandidateID.ToBytes(bytes, i[0]); i[0] += 16;
                 bytes[i[0]++] = (byte)VoteCast.length;
                 Utils.arraycopy(VoteCast, 0, bytes, i[0], VoteCast.length); i[0] +=  VoteCast.length;
-                Utils.intToBytes(NumVotes, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(NumVotes, bytes, i[0]); i[0] += 4;
             }
 
         }

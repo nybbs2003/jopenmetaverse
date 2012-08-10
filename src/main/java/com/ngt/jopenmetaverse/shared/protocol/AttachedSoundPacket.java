@@ -38,7 +38,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                     SoundID.FromBytes(bytes, i[0]); i[0] += 16;
                     ObjectID.FromBytes(bytes, i[0]); i[0] += 16;
                     OwnerID.FromBytes(bytes, i[0]); i[0] += 16;
-                    Gain = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
+                    Gain = Utils.bytesToFloatLit(bytes, i[0]); i[0] += 4;
                     Flags = (byte)bytes[i[0]++];
                 }
                 catch (Exception e)
@@ -53,7 +53,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 SoundID.ToBytes(bytes, i[0]); i[0] += 16;
                 ObjectID.ToBytes(bytes, i[0]); i[0] += 16;
                 OwnerID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.floatToBytes(Gain, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytesLit(Gain, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = Flags;
             }
 

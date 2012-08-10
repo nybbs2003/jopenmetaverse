@@ -79,11 +79,11 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 int length;
                 try
                 {
-                    length = Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
+                    length = Utils.bytesToUInt16Lit(bytes, i[0]); i[0] += 2;
                     Message = new byte[length];
                     Utils.arraycopy(bytes, i[0], Message, 0, length); i[0] +=  length;
                     Type = (byte)bytes[i[0]++];
-                    Channel = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    Channel = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
                 }
                 catch (Exception e)
                 {
@@ -98,7 +98,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 bytes[i[0]++] = (byte)((Message.length >> 8) % 256);
                 Utils.arraycopy(Message, 0, bytes, i[0], Message.length); i[0] +=  Message.length;
                 bytes[i[0]++] = Type;
-                Utils.intToBytes(Channel, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(Channel, bytes, i[0]); i[0] += 4;
             }
 
         }

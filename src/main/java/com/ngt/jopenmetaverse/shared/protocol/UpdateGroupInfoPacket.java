@@ -85,12 +85,12 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 try
                 {
                     GroupID.FromBytes(bytes, i[0]); i[0] += 16;
-                    length = Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
+                    length = Utils.bytesToUInt16Lit(bytes, i[0]); i[0] += 2;
                     Charter = new byte[length];
                     Utils.arraycopy(bytes, i[0], Charter, 0, length); i[0] +=  length;
                     ShowInList = (bytes[i[0]++] != 0) ? true : false;
                     InsigniaID.FromBytes(bytes, i[0]); i[0] += 16;
-                    MembershipFee = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    MembershipFee = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
                     OpenEnrollment = (bytes[i[0]++] != 0) ? true : false;
                     AllowPublish = (bytes[i[0]++] != 0) ? true : false;
                     MaturePublish = (bytes[i[0]++] != 0) ? true : false;
@@ -110,7 +110,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 Utils.arraycopy(Charter, 0, bytes, i[0], Charter.length); i[0] +=  Charter.length;
                 bytes[i[0]++] = (byte)((ShowInList) ? 1 : 0);
                 InsigniaID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.intToBytes(MembershipFee, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(MembershipFee, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)((OpenEnrollment) ? 1 : 0);
                 bytes[i[0]++] = (byte)((AllowPublish) ? 1 : 0);
                 bytes[i[0]++] = (byte)((MaturePublish) ? 1 : 0);

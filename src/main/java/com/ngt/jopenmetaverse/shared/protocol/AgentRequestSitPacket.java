@@ -2,6 +2,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 
 import com.ngt.jopenmetaverse.shared.types.UUID;
 import com.ngt.jopenmetaverse.shared.types.Vector3;
+import com.ngt.jopenmetaverse.shared.util.Utils;
 
 
     public final class AgentRequestSitPacket extends Packet
@@ -53,7 +54,7 @@ import com.ngt.jopenmetaverse.shared.types.Vector3;
         public static final class TargetObjectBlock extends PacketBlock
         {
             public UUID TargetID = new UUID();
-            public Vector3 Offset;
+            public Vector3 Offset = new Vector3();
 
             @Override
 			public int getLength()
@@ -75,7 +76,7 @@ import com.ngt.jopenmetaverse.shared.types.Vector3;
                 try
                 {
                     TargetID.FromBytes(bytes, i[0]); i[0] += 16;
-                    Offset.fromBytes(bytes, i[0]); i[0] += 12;
+                    Offset.fromBytesLit(bytes, i[0]); i[0] += 12;
                 }
                 catch (Exception e)
                 {
@@ -87,7 +88,7 @@ import com.ngt.jopenmetaverse.shared.types.Vector3;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 TargetID.ToBytes(bytes, i[0]); i[0] += 16;
-                Offset.toBytes(bytes, i[0]); i[0] += 12;
+                Offset.toBytesLit(bytes, i[0]); i[0] += 12;
             }
 
         }

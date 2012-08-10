@@ -37,8 +37,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 {
                     AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
-                    Flags = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    EstateID = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    Flags = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
+                    EstateID = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                     Godlike = (bytes[i[0]++] != 0) ? true : false;
                 }
                 catch (Exception e)
@@ -52,8 +52,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
                 SessionID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.uintToBytes(Flags, bytes, i[0]); i[0] += 4;
-                Utils.uintToBytes(EstateID, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(Flags, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(EstateID, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)((Godlike) ? 1 : 0);
             }
 
@@ -84,8 +84,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 try
                 {
-                    ItemType = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    RegionHandle = Utils.bytesToULong(bytes, i[0]); i[0] += 8;
+                    ItemType = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
+                    RegionHandle = Utils.bytesToULongLit(bytes, i[0]); i[0] += 8;
                 }
                 catch (Exception e)
                 {
@@ -96,8 +96,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.uintToBytes(ItemType, bytes, i[0]); i[0] += 4;
-                Utils.ulongToBytes(RegionHandle, bytes, i[0]); i[0] += 8;
+                Utils.uintToBytesLit(ItemType, bytes, i[0]); i[0] += 4;
+                Utils.ulongToBytesLit(RegionHandle, bytes, i[0]); i[0] += 8;
             }
 
         }

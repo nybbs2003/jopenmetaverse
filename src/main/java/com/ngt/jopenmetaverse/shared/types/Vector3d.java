@@ -46,7 +46,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         public Vector3d(byte[] byteArray, int pos)
         {
             X = Y = Z = 0d;
-            fromBytes(byteArray, pos);
+            fromBytesLit(byteArray, pos);
         }
 
         public Vector3d(Vector3 vector)
@@ -118,6 +118,47 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         /// </summary>
         /// <param name="byteArray">Byte array containing a 24 byte vector</param>
         /// <param name="pos">Beginning position in the byte array</param>
+        public void fromBytesLit(byte[] bytes, int pos)
+        {
+            X = Utils.bytesToDoubleLit(bytes, pos);
+            Y = Utils.bytesToDoubleLit(bytes, pos+8);
+            Z = Utils.bytesToDoubleLit(bytes, pos+16);
+        }
+
+        /// <summary>
+        /// Returns the raw bytes for this vector
+        /// </summary>
+        /// <returns>A 24 byte array containing X, Y, and Z</returns>
+        public byte[] getBytesLit()
+        {
+            byte[] byteArray = new byte[24];
+            toBytesLit(byteArray, 0);
+            return byteArray;
+        }
+
+        /// <summary>
+        /// Writes the raw bytes for this vector to a byte array
+        /// </summary>
+        /// <param name="dest">Destination byte array</param>
+        /// <param name="pos">Position in the destination array to start
+        /// writing. Must be at least 24 bytes before the end of the array</param>
+        public void toBytesLit(byte[] dest, int pos)
+        {   
+            byte[] xbytes = Utils.doubleToBytesLit(X);
+            byte[] ybytes = Utils.doubleToBytesLit(Y);
+            byte[] zbytes = Utils.doubleToBytesLit(Z);
+            System.arraycopy(xbytes, 0, dest, pos, 8);
+            System.arraycopy(ybytes, 0, dest, pos+8, 8);
+            System.arraycopy(zbytes, 0, dest, pos+16, 8);
+            
+        }
+
+        
+        /// <summary>
+        /// Builds a vector from a byte array
+        /// </summary>
+        /// <param name="byteArray">Byte array containing a 24 byte vector</param>
+        /// <param name="pos">Beginning position in the byte array</param>
         public void fromBytes(byte[] bytes, int pos)
         {
             X = Utils.bytesToDouble(bytes, pos);
@@ -152,7 +193,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             System.arraycopy(zbytes, 0, dest, pos+16, 8);
             
         }
-
+        
+        
         //endregion Public Methods
 
         //region Static Methods

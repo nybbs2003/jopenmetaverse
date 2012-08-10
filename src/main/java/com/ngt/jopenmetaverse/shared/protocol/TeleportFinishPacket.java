@@ -45,15 +45,15 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 try
                 {
                     AgentID.FromBytes(bytes, i[0]); i[0] += 16;
-                    LocationID = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    SimIP = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    SimPort = (int)Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
-                    RegionHandle = Utils.bytesToULong(bytes, i[0]); i[0] += 8;
-                    length = Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
+                    LocationID = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
+                    SimIP = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
+                    SimPort = (int)Utils.bytesToUInt16Lit(bytes, i[0]); i[0] += 2;
+                    RegionHandle = Utils.bytesToULongLit(bytes, i[0]); i[0] += 8;
+                    length = Utils.bytesToUInt16Lit(bytes, i[0]); i[0] += 2;
                     SeedCapability = new byte[length];
                     Utils.arraycopy(bytes, i[0], SeedCapability, 0, length); i[0] +=  length;
                     SimAccess = (byte)bytes[i[0]++];
-                    TeleportFlags = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    TeleportFlags = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -65,16 +65,16 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.uintToBytes(LocationID, bytes, i[0]); i[0] += 4;
-                Utils.uintToBytes(SimIP, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(LocationID, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(SimIP, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)((SimPort >> 8) % 256);
                 bytes[i[0]++] = (byte)(SimPort % 256);
-                Utils.ulongToBytes(RegionHandle, bytes, i[0]); i[0] += 8;
+                Utils.ulongToBytesLit(RegionHandle, bytes, i[0]); i[0] += 8;
                 bytes[i[0]++] = (byte)(SeedCapability.length % 256);
                 bytes[i[0]++] = (byte)((SeedCapability.length >> 8) % 256);
                 Utils.arraycopy(SeedCapability, 0, bytes, i[0], SeedCapability.length); i[0] +=  SeedCapability.length;
                 bytes[i[0]++] = SimAccess;
-                Utils.uintToBytes(TeleportFlags, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(TeleportFlags, bytes, i[0]); i[0] += 4;
             }
 
         }

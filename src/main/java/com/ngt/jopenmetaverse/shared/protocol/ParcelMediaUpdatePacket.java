@@ -96,8 +96,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     MediaDesc = new byte[length];
                     Utils.arraycopy(bytes, i[0], MediaDesc, 0, length); i[0] += length;
-                    MediaWidth = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
-                    MediaHeight = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    MediaWidth = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
+                    MediaHeight = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
                     MediaLoop = (byte)bytes[i[0]++];
                 }
                 catch (Exception e)
@@ -113,8 +113,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 Utils.arraycopy(MediaType, 0, bytes, i[0], MediaType.length); i[0] += MediaType.length;
                 bytes[i[0]++] = (byte)MediaDesc.length;
                 Utils.arraycopy(MediaDesc, 0, bytes, i[0], MediaDesc.length); i[0] += MediaDesc.length;
-                Utils.intToBytes(MediaWidth, bytes, i[0]); i[0] += 4;
-                Utils.intToBytes(MediaHeight, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(MediaWidth, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(MediaHeight, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = MediaLoop;
             }
 

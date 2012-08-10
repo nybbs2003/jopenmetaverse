@@ -73,7 +73,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 try
                 {
-                    MuteCRC = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    MuteCRC = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -84,7 +84,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.uintToBytes(MuteCRC, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(MuteCRC, bytes, i[0]); i[0] += 4;
             }
 
         }

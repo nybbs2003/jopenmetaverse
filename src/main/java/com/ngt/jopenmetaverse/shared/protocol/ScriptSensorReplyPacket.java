@@ -55,9 +55,9 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             public UUID ObjectID = new UUID();
             public UUID OwnerID = new UUID();
             public UUID GroupID = new UUID();
-            public Vector3 Position;
-            public Vector3 Velocity;
-            public Quaternion Rotation;
+            public Vector3 Position = new Vector3();
+            public Vector3 Velocity = new Vector3();
+            public Quaternion Rotation = new Quaternion();
 		/** Unsigned Byte */ 
 		public byte[] Name;
             public int Type;
@@ -88,14 +88,14 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                     ObjectID.FromBytes(bytes, i[0]); i[0] += 16;
                     OwnerID.FromBytes(bytes, i[0]); i[0] += 16;
                     GroupID.FromBytes(bytes, i[0]); i[0] += 16;
-                    Position.fromBytes(bytes, i[0]); i[0] += 12;
-                    Velocity.fromBytes(bytes, i[0]); i[0] += 12;
-                    Rotation.fromBytes(bytes, i[0], true); i[0] += 12;
+                    Position.fromBytesLit(bytes, i[0]); i[0] += 12;
+                    Velocity.fromBytesLit(bytes, i[0]); i[0] += 12;
+                    Rotation.fromBytesLit(bytes, i[0], true); i[0] += 12;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     Name = new byte[length];
                     Utils.arraycopy(bytes, i[0], Name, 0, length); i[0] +=  length;
-                    Type = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
-                    Range = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
+                    Type = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
+                    Range = Utils.bytesToFloatLit(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -109,13 +109,13 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 ObjectID.ToBytes(bytes, i[0]); i[0] += 16;
                 OwnerID.ToBytes(bytes, i[0]); i[0] += 16;
                 GroupID.ToBytes(bytes, i[0]); i[0] += 16;
-                Position.toBytes(bytes, i[0]); i[0] += 12;
-                Velocity.toBytes(bytes, i[0]); i[0] += 12;
-                Rotation.toBytes(bytes, i[0]); i[0] += 12;
+                Position.toBytesLit(bytes, i[0]); i[0] += 12;
+                Velocity.toBytesLit(bytes, i[0]); i[0] += 12;
+                Rotation.toBytesLit(bytes, i[0]); i[0] += 12;
                 bytes[i[0]++] = (byte)Name.length;
                 Utils.arraycopy(Name, 0, bytes, i[0], Name.length); i[0] +=  Name.length;
-                Utils.intToBytes(Type, bytes, i[0]); i[0] += 4;
-                Utils.floatToBytes(Range, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(Type, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytesLit(Range, bytes, i[0]); i[0] += 4;
             }
 
         }

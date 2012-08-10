@@ -32,8 +32,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 try
                 {
-                    ID = Utils.bytesToULong(bytes, i[0]); i[0] += 8;
-                    Packet = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    ID = Utils.bytesToULongLit(bytes, i[0]); i[0] += 8;
+                    Packet = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -44,8 +44,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.ulongToBytes(ID, bytes, i[0]); i[0] += 8;
-                Utils.uintToBytes(Packet, bytes, i[0]); i[0] += 4;
+                Utils.ulongToBytesLit(ID, bytes, i[0]); i[0] += 8;
+                Utils.uintToBytesLit(Packet, bytes, i[0]); i[0] += 4;
             }
 
         }
@@ -77,7 +77,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 int length;
                 try
                 {
-                    length = Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
+                    length = Utils.bytesToUInt16Lit(bytes, i[0]); i[0] += 2;
                     Data = new byte[length];
                     Utils.arraycopy(bytes, i[0], Data, 0, length); i[0] +=  length;
                 }

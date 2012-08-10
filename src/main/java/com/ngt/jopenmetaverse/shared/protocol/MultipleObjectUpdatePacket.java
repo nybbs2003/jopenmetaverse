@@ -80,7 +80,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 int length;
                 try
                 {
-                    ObjectLocalID = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    ObjectLocalID = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                     Type = (byte)bytes[i[0]++];
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     Data = new byte[length];
@@ -95,7 +95,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.uintToBytes(ObjectLocalID, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(ObjectLocalID, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = Type;
                 bytes[i[0]++] = (byte)Data.length;
                 Utils.arraycopy(Data, 0, bytes, i[0], Data.length); i[0] +=  Data.length;

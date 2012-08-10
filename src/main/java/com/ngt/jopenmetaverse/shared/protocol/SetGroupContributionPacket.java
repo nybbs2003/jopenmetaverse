@@ -75,7 +75,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 try
                 {
                     GroupID.FromBytes(bytes, i[0]); i[0] += 16;
-                    Contribution = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    Contribution = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
                 }
                 catch (Exception e)
                 {
@@ -87,7 +87,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 GroupID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.intToBytes(Contribution, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(Contribution, bytes, i[0]); i[0] += 4;
             }
 
         }

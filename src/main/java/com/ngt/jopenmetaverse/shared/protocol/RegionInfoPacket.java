@@ -96,21 +96,21 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     SimName = new byte[length];
                     Utils.arraycopy(bytes, i[0], SimName, 0, length); i[0] +=  length;
-                    EstateID = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    ParentEstateID = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    RegionFlags = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    EstateID = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
+                    ParentEstateID = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
+                    RegionFlags = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                     SimAccess = (byte)bytes[i[0]++];
                     MaxAgents = (byte)bytes[i[0]++];
-                    BillableFactor = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
-                    ObjectBonusFactor = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
-                    WaterHeight = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
-                    TerrainRaiseLimit = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
-                    TerrainLowerLimit = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
-                    PricePerMeter = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
-                    RedirectGridX = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
-                    RedirectGridY = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    BillableFactor = Utils.bytesToFloatLit(bytes, i[0]); i[0] += 4;
+                    ObjectBonusFactor = Utils.bytesToFloatLit(bytes, i[0]); i[0] += 4;
+                    WaterHeight = Utils.bytesToFloatLit(bytes, i[0]); i[0] += 4;
+                    TerrainRaiseLimit = Utils.bytesToFloatLit(bytes, i[0]); i[0] += 4;
+                    TerrainLowerLimit = Utils.bytesToFloatLit(bytes, i[0]); i[0] += 4;
+                    PricePerMeter = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
+                    RedirectGridX = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
+                    RedirectGridY = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
                     UseEstateSun = (bytes[i[0]++] != 0) ? true : false;
-                    SunHour = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
+                    SunHour = Utils.bytesToFloatLit(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -123,21 +123,21 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 bytes[i[0]++] = (byte)SimName.length;
                 Utils.arraycopy(SimName, 0, bytes, i[0], SimName.length); i[0] +=  SimName.length;
-                Utils.uintToBytes(EstateID, bytes, i[0]); i[0] += 4;
-                Utils.uintToBytes(ParentEstateID, bytes, i[0]); i[0] += 4;
-                Utils.uintToBytes(RegionFlags, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(EstateID, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(ParentEstateID, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(RegionFlags, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = SimAccess;
                 bytes[i[0]++] = MaxAgents;
-                Utils.floatToBytes(BillableFactor, bytes, i[0]); i[0] += 4;
-                Utils.floatToBytes(ObjectBonusFactor, bytes, i[0]); i[0] += 4;
-                Utils.floatToBytes(WaterHeight, bytes, i[0]); i[0] += 4;
-                Utils.floatToBytes(TerrainRaiseLimit, bytes, i[0]); i[0] += 4;
-                Utils.floatToBytes(TerrainLowerLimit, bytes, i[0]); i[0] += 4;
-                Utils.intToBytes(PricePerMeter, bytes, i[0]); i[0] += 4;
-                Utils.intToBytes(RedirectGridX, bytes, i[0]); i[0] += 4;
-                Utils.intToBytes(RedirectGridY, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytesLit(BillableFactor, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytesLit(ObjectBonusFactor, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytesLit(WaterHeight, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytesLit(TerrainRaiseLimit, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytesLit(TerrainLowerLimit, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(PricePerMeter, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(RedirectGridX, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(RedirectGridY, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)((UseEstateSun) ? 1 : 0);
-                Utils.floatToBytes(SunHour, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytesLit(SunHour, bytes, i[0]); i[0] += 4;
             }
 
         }
@@ -181,9 +181,9 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     ProductName = new byte[length];
                     Utils.arraycopy(bytes, i[0], ProductName, 0, length); i[0] +=  length;
-                    MaxAgents32 = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    HardMaxAgents = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    HardMaxObjects = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    MaxAgents32 = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
+                    HardMaxAgents = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
+                    HardMaxObjects = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -198,9 +198,9 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 Utils.arraycopy(ProductSKU, 0, bytes, i[0], ProductSKU.length); i[0] +=  ProductSKU.length;
                 bytes[i[0]++] = (byte)ProductName.length;
                 Utils.arraycopy(ProductName, 0, bytes, i[0], ProductName.length); i[0] +=  ProductName.length;
-                Utils.uintToBytes(MaxAgents32, bytes, i[0]); i[0] += 4;
-                Utils.uintToBytes(HardMaxAgents, bytes, i[0]); i[0] += 4;
-                Utils.uintToBytes(HardMaxObjects, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(MaxAgents32, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(HardMaxAgents, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(HardMaxObjects, bytes, i[0]); i[0] += 4;
             }
 
         }

@@ -128,12 +128,12 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     Name = new byte[length];
                     Utils.arraycopy(bytes, i[0], Name, 0, length); i[0] +=  length;
-                    EventID = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    EventID = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     Date = new byte[length];
                     Utils.arraycopy(bytes, i[0], Date, 0, length); i[0] +=  length;
-                    UnixTime = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    EventFlags = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    UnixTime = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
+                    EventFlags = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -147,11 +147,11 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 OwnerID.ToBytes(bytes, i[0]); i[0] += 16;
                 bytes[i[0]++] = (byte)Name.length;
                 Utils.arraycopy(Name, 0, bytes, i[0], Name.length); i[0] +=  Name.length;
-                Utils.uintToBytes(EventID, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(EventID, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)Date.length;
                 Utils.arraycopy(Date, 0, bytes, i[0], Date.length); i[0] +=  Date.length;
-                Utils.uintToBytes(UnixTime, bytes, i[0]); i[0] += 4;
-                Utils.uintToBytes(EventFlags, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(UnixTime, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(EventFlags, bytes, i[0]); i[0] += 4;
             }
 
         }
@@ -180,7 +180,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 try
                 {
-                    Status = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    Status = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -191,7 +191,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.uintToBytes(Status, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(Status, bytes, i[0]); i[0] += 4;
             }
 
         }

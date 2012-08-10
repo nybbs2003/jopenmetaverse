@@ -78,7 +78,7 @@ import com.ngt.jopenmetaverse.shared.types.Vector3;
             data[i++] = (byte)((Gravity + 10.0f) * 10.01f);
             data[i++] = (byte)(Wind * 10.01f);
 
-            byte[] src = Force.getBytes();
+            byte[] src = Force.getBytesLit();
             System.arraycopy(src, 0, data, i, src.length);
             return data;
         }

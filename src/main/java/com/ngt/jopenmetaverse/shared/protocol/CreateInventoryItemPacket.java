@@ -90,10 +90,10 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 int length;
                 try
                 {
-                    CallbackID = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    CallbackID = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                     FolderID.FromBytes(bytes, i[0]); i[0] += 16;
                     TransactionID.FromBytes(bytes, i[0]); i[0] += 16;
-                    NextOwnerMask = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    NextOwnerMask = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                     Type = (byte)bytes[i[0]++];
                     InvType = (byte)bytes[i[0]++];
                     WearableType = (byte)bytes[i[0]++];
@@ -113,10 +113,10 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.uintToBytes(CallbackID, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(CallbackID, bytes, i[0]); i[0] += 4;
                 FolderID.ToBytes(bytes, i[0]); i[0] += 16;
                 TransactionID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.uintToBytes(NextOwnerMask, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(NextOwnerMask, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)Type;
                 bytes[i[0]++] = (byte)InvType;
                 bytes[i[0]++] = WearableType;

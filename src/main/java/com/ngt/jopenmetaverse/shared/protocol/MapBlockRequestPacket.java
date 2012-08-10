@@ -36,8 +36,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 {
                     AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
-                    Flags = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    EstateID = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    Flags = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
+                    EstateID = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                     Godlike = (bytes[i[0]++] != 0) ? true : false;
                 }
                 catch (Exception e)
@@ -51,8 +51,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
                 SessionID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.uintToBytes(Flags, bytes, i[0]); i[0] += 4;
-                Utils.uintToBytes(EstateID, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(Flags, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(EstateID, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)((Godlike) ? 1 : 0);
             }
 
@@ -101,10 +101,10 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 try
                 {
-                    MinX = (int)Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
-                    MaxX = (int)Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
-                    MinY = (int)Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
-                    MaxY = (int)Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
+                    MinX = (int)Utils.bytesToUInt16Lit(bytes, i[0]); i[0] += 2;
+                    MaxX = (int)Utils.bytesToUInt16Lit(bytes, i[0]); i[0] += 2;
+                    MinY = (int)Utils.bytesToUInt16Lit(bytes, i[0]); i[0] += 2;
+                    MaxY = (int)Utils.bytesToUInt16Lit(bytes, i[0]); i[0] += 2;
                 }
                 catch (Exception e)
                 {

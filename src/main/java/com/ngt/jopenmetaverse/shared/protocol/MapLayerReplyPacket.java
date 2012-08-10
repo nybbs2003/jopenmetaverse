@@ -32,7 +32,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 try
                 {
                     AgentID.FromBytes(bytes, i[0]); i[0] += 16;
-                    Flags = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    Flags = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -44,7 +44,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.uintToBytes(Flags, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(Flags, bytes, i[0]); i[0] += 4;
             }
 
         }
@@ -77,10 +77,10 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 try
                 {
-                    Left = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    Right = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    Top = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    Bottom = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    Left = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
+                    Right = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
+                    Top = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
+                    Bottom = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                     ImageID.FromBytes(bytes, i[0]); i[0] += 16;
                 }
                 catch (Exception e)
@@ -92,10 +92,10 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.uintToBytes(Left, bytes, i[0]); i[0] += 4;
-                Utils.uintToBytes(Right, bytes, i[0]); i[0] += 4;
-                Utils.uintToBytes(Top, bytes, i[0]); i[0] += 4;
-                Utils.uintToBytes(Bottom, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(Left, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(Right, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(Top, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(Bottom, bytes, i[0]); i[0] += 4;
                 ImageID.ToBytes(bytes, i[0]); i[0] += 16;
             }
 

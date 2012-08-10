@@ -67,7 +67,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             public long Amount;
 		/** Unsigned Byte */ 
 		public byte[] SimName;
-            public Vector3d GlobalPos;
+            public Vector3d GlobalPos = new Vector3d();
             public long EventFlags;
 
             @Override
@@ -97,7 +97,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 int length;
                 try
                 {
-                    EventID = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    EventID = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     Creator = new byte[length];
                     Utils.arraycopy(bytes, i[0], Creator, 0, length); i[0] +=  length;
@@ -107,21 +107,21 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     Category = new byte[length];
                     Utils.arraycopy(bytes, i[0], Category, 0, length); i[0] +=  length;
-                    length = Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
+                    length = Utils.bytesToUInt16Lit(bytes, i[0]); i[0] += 2;
                     Desc = new byte[length];
                     Utils.arraycopy(bytes, i[0], Desc, 0, length); i[0] +=  length;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     Date = new byte[length];
                     Utils.arraycopy(bytes, i[0], Date, 0, length); i[0] +=  length;
-                    DateUTC = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    Duration = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    Cover = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    Amount = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    DateUTC = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
+                    Duration = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
+                    Cover = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
+                    Amount = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     SimName = new byte[length];
                     Utils.arraycopy(bytes, i[0], SimName, 0, length); i[0] +=  length;
-                    GlobalPos.fromBytes(bytes, i[0]); i[0] += 24;
-                    EventFlags = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    GlobalPos.fromBytesLit(bytes, i[0]); i[0] += 24;
+                    EventFlags = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -132,7 +132,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.uintToBytes(EventID, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(EventID, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)Creator.length;
                 Utils.arraycopy(Creator, 0, bytes, i[0], Creator.length); i[0] +=  Creator.length;
                 bytes[i[0]++] = (byte)Name.length;
@@ -144,14 +144,14 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 Utils.arraycopy(Desc, 0, bytes, i[0], Desc.length); i[0] +=  Desc.length;
                 bytes[i[0]++] = (byte)Date.length;
                 Utils.arraycopy(Date, 0, bytes, i[0], Date.length); i[0] +=  Date.length;
-                Utils.uintToBytes(DateUTC, bytes, i[0]); i[0] += 4;
-                Utils.uintToBytes(Duration, bytes, i[0]); i[0] += 4;
-                Utils.uintToBytes(Cover, bytes, i[0]); i[0] += 4;
-                Utils.uintToBytes(Amount, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(DateUTC, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(Duration, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(Cover, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(Amount, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)SimName.length;
                 Utils.arraycopy(SimName, 0, bytes, i[0], SimName.length); i[0] +=  SimName.length;
-                GlobalPos.toBytes(bytes, i[0]); i[0] += 24;
-                Utils.uintToBytes(EventFlags, bytes, i[0]); i[0] += 4;
+                GlobalPos.toBytesLit(bytes, i[0]); i[0] += 24;
+                Utils.uintToBytesLit(EventFlags, bytes, i[0]); i[0] += 4;
             }
 
         }

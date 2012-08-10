@@ -13,8 +13,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             public UUID AgentID = new UUID();
             public UUID SessionID = new UUID();
             public UUID GroupID = new UUID();
-            public Vector3 RayStart;
-            public Vector3 RayEnd;
+            public Vector3 RayStart = new Vector3();
+            public Vector3 RayEnd = new Vector3();
             public boolean BypassRaycast;
             public boolean RayEndIsIntersection;
             public boolean CopyCenters;
@@ -44,14 +44,14 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                     AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
                     GroupID.FromBytes(bytes, i[0]); i[0] += 16;
-                    RayStart.fromBytes(bytes, i[0]); i[0] += 12;
-                    RayEnd.fromBytes(bytes, i[0]); i[0] += 12;
+                    RayStart.fromBytesLit(bytes, i[0]); i[0] += 12;
+                    RayEnd.fromBytesLit(bytes, i[0]); i[0] += 12;
                     BypassRaycast = (bytes[i[0]++] != 0) ? true : false;
                     RayEndIsIntersection = (bytes[i[0]++] != 0) ? true : false;
                     CopyCenters = (bytes[i[0]++] != 0) ? true : false;
                     CopyRotates = (bytes[i[0]++] != 0) ? true : false;
                     RayTargetID.FromBytes(bytes, i[0]); i[0] += 16;
-                    DuplicateFlags = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    DuplicateFlags = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -65,14 +65,14 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
                 SessionID.ToBytes(bytes, i[0]); i[0] += 16;
                 GroupID.ToBytes(bytes, i[0]); i[0] += 16;
-                RayStart.toBytes(bytes, i[0]); i[0] += 12;
-                RayEnd.toBytes(bytes, i[0]); i[0] += 12;
+                RayStart.toBytesLit(bytes, i[0]); i[0] += 12;
+                RayEnd.toBytesLit(bytes, i[0]); i[0] += 12;
                 bytes[i[0]++] = (byte)((BypassRaycast) ? 1 : 0);
                 bytes[i[0]++] = (byte)((RayEndIsIntersection) ? 1 : 0);
                 bytes[i[0]++] = (byte)((CopyCenters) ? 1 : 0);
                 bytes[i[0]++] = (byte)((CopyRotates) ? 1 : 0);
                 RayTargetID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.uintToBytes(DuplicateFlags, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(DuplicateFlags, bytes, i[0]); i[0] += 4;
             }
 
         }
@@ -101,7 +101,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 try
                 {
-                    ObjectLocalID = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    ObjectLocalID = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -112,7 +112,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.uintToBytes(ObjectLocalID, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(ObjectLocalID, bytes, i[0]); i[0] += 4;
             }
 
         }

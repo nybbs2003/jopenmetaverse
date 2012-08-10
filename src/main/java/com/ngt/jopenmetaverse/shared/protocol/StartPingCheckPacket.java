@@ -32,7 +32,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 try
                 {
                     PingID = (byte)bytes[i[0]++];
-                    OldestUnacked = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    OldestUnacked = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -44,7 +44,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 bytes[i[0]++] = PingID;
-                Utils.uintToBytes(OldestUnacked, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(OldestUnacked, bytes, i[0]); i[0] += 4;
             }
 
         }

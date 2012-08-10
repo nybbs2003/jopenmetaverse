@@ -128,8 +128,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                     Utils.arraycopy(bytes, i[0], Name, 0, length); i[0] +=  length;
                     Auction = (bytes[i[0]++] != 0) ? true : false;
                     ForSale = (bytes[i[0]++] != 0) ? true : false;
-                    SalePrice = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
-                    ActualArea = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    SalePrice = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
+                    ActualArea = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
                 }
                 catch (Exception e)
                 {
@@ -145,8 +145,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 Utils.arraycopy(Name, 0, bytes, i[0], Name.length); i[0] +=  Name.length;
                 bytes[i[0]++] = (byte)((Auction) ? 1 : 0);
                 bytes[i[0]++] = (byte)((ForSale) ? 1 : 0);
-                Utils.intToBytes(SalePrice, bytes, i[0]); i[0] += 4;
-                Utils.intToBytes(ActualArea, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(SalePrice, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(ActualArea, bytes, i[0]); i[0] += 4;
             }
 
         }

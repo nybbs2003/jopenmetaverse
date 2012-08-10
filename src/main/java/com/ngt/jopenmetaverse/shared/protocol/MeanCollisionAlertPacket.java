@@ -40,8 +40,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 {
                     Victim.FromBytes(bytes, i[0]); i[0] += 16;
                     Perp.FromBytes(bytes, i[0]); i[0] += 16;
-                    Time = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    Mag = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
+                    Time = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
+                    Mag = Utils.bytesToFloatLit(bytes, i[0]); i[0] += 4;
                     Type = (byte)bytes[i[0]++];
                 }
                 catch (Exception e)
@@ -55,8 +55,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 Victim.ToBytes(bytes, i[0]); i[0] += 16;
                 Perp.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.uintToBytes(Time, bytes, i[0]); i[0] += 4;
-                Utils.floatToBytes(Mag, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(Time, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytesLit(Mag, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = Type;
             }
 

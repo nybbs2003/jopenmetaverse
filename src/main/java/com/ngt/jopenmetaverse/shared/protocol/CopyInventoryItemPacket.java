@@ -84,7 +84,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 int length;
                 try
                 {
-                    CallbackID = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    CallbackID = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                     OldAgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     OldItemID.FromBytes(bytes, i[0]); i[0] += 16;
                     NewFolderID.FromBytes(bytes, i[0]); i[0] += 16;
@@ -101,7 +101,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.uintToBytes(CallbackID, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(CallbackID, bytes, i[0]); i[0] += 4;
                 OldAgentID.ToBytes(bytes, i[0]); i[0] += 16;
                 OldItemID.ToBytes(bytes, i[0]); i[0] += 16;
                 NewFolderID.ToBytes(bytes, i[0]); i[0] += 16;

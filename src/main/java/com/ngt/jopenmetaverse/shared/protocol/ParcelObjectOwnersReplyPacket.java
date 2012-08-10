@@ -35,7 +35,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 {
                     OwnerID.FromBytes(bytes, i[0]); i[0] += 16;
                     IsGroupOwned = (bytes[i[0]++] != 0) ? (Boolean)true : (Boolean)false;
-                    Count = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    Count = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
                     OnlineStatus = (bytes[i[0]++] != 0) ? (Boolean)true : (Boolean)false;
                 }
                 catch (Exception e)
@@ -49,7 +49,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 OwnerID.ToBytes(bytes, i[0]); i[0] += 16;
                 bytes[i[0]++] = (byte)((IsGroupOwned) ? 1 : 0);
-                Utils.intToBytes(Count, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(Count, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)((OnlineStatus) ? 1 : 0);
             }
 

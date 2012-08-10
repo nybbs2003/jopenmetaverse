@@ -30,7 +30,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 try
                 {
-                    TeleportFlags = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    TeleportFlags = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -41,7 +41,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.uintToBytes(TeleportFlags, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(TeleportFlags, bytes, i[0]); i[0] += 4;
             }
 
         }

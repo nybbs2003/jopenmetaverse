@@ -124,8 +124,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     GroupName = new byte[length];
                     Utils.arraycopy(bytes, i[0], GroupName, 0, length); i[0] +=  length;
-                    Members = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
-                    SearchOrder = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
+                    Members = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
+                    SearchOrder = Utils.bytesToFloatLit(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -139,8 +139,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 GroupID.ToBytes(bytes, i[0]); i[0] += 16;
                 bytes[i[0]++] = (byte)GroupName.length;
                 Utils.arraycopy(GroupName, 0, bytes, i[0], GroupName.length); i[0] +=  GroupName.length;
-                Utils.intToBytes(Members, bytes, i[0]); i[0] += 4;
-                Utils.floatToBytes(SearchOrder, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(Members, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytesLit(SearchOrder, bytes, i[0]); i[0] += 4;
             }
 
         }

@@ -89,12 +89,12 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     QueryText = new byte[length];
                     Utils.arraycopy(bytes, i[0], QueryText, 0, length); i[0] +=  length;
-                    QueryFlags = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    QueryFlags = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                     Category = (byte)bytes[i[0]++];
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     SimName = new byte[length];
                     Utils.arraycopy(bytes, i[0], SimName, 0, length); i[0] +=  length;
-                    QueryStart = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    QueryStart = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
                 }
                 catch (Exception e)
                 {
@@ -108,11 +108,11 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 QueryID.ToBytes(bytes, i[0]); i[0] += 16;
                 bytes[i[0]++] = (byte)QueryText.length;
                 Utils.arraycopy(QueryText, 0, bytes, i[0], QueryText.length); i[0] +=  QueryText.length;
-                Utils.uintToBytes(QueryFlags, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(QueryFlags, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)Category;
                 bytes[i[0]++] = (byte)SimName.length;
                 Utils.arraycopy(SimName, 0, bytes, i[0], SimName.length); i[0] +=  SimName.length;
-                Utils.intToBytes(QueryStart, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(QueryStart, bytes, i[0]); i[0] += 4;
             }
 
         }

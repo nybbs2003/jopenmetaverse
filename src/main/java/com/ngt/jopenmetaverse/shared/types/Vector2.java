@@ -76,7 +76,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         /// </summary>
         /// <param name="byteArray">Byte array containing two four-byte floats</param>
         /// <param name="pos">Beginning position in the byte array</param>
-        public void fromBytes(byte[] bytes, int pos)
+        public void fromBytesLit(byte[] bytes, int pos)
         {
 //            if (!BitConverter.IsLittleEndian)
 //            {
@@ -98,6 +98,52 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 //                Y = BitConverter.ToSingle(byteArray, pos + 4);
 //            }
             
+            X = Utils.bytesToFloatLit(bytes, pos);
+            Y = Utils.bytesToFloatLit(bytes, pos+4);
+            
+        }
+
+        /// <summary>
+        /// Returns the raw bytes for this vector
+        /// </summary>
+        /// <returns>An eight-byte array containing X and Y</returns>
+        public byte[] getBytesLit()
+        {
+            byte[] byteArray = new byte[8];
+            toBytesLit(byteArray, 0);
+            return byteArray;
+        }
+
+        /// <summary>
+        /// Writes the raw bytes for this vector to a byte array
+        /// </summary>
+        /// <param name="dest">Destination byte array</param>
+        /// <param name="pos">Position in the destination array to start
+        /// writing. Must be at least 8 bytes before the end of the array</param>
+        public void toBytesLit(byte[] dest, int pos)
+        {
+//            Buffer.BlockCopy(BitConverter.GetBytes(X), 0, dest, pos + 0, 4);
+//            Buffer.BlockCopy(BitConverter.GetBytes(Y), 0, dest, pos + 4, 4);
+//
+//            if (!BitConverter.IsLittleEndian)
+//            {
+//                Array.Reverse(dest, pos + 0, 4);
+//                Array.Reverse(dest, pos + 4, 4);
+//            }
+            byte[] xbytes = Utils.floatToBytesLit(X);
+            byte[] ybytes = Utils.floatToBytesLit(Y);
+            System.arraycopy(xbytes, 0, dest, pos, 4);
+            System.arraycopy(ybytes, 0, dest, pos+4, 4);
+            
+        }
+
+        /// <summary>
+        /// Builds a vector from a byte array
+        /// </summary>
+        /// <param name="byteArray">Byte array containing two four-byte floats</param>
+        /// <param name="pos">Beginning position in the byte array</param>
+        public void fromBytes(byte[] bytes, int pos)
+        {   
             X = Utils.bytesToFloat(bytes, pos);
             Y = Utils.bytesToFloat(bytes, pos+4);
             
@@ -122,21 +168,14 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         /// writing. Must be at least 8 bytes before the end of the array</param>
         public void toBytes(byte[] dest, int pos)
         {
-//            Buffer.BlockCopy(BitConverter.GetBytes(X), 0, dest, pos + 0, 4);
-//            Buffer.BlockCopy(BitConverter.GetBytes(Y), 0, dest, pos + 4, 4);
-//
-//            if (!BitConverter.IsLittleEndian)
-//            {
-//                Array.Reverse(dest, pos + 0, 4);
-//                Array.Reverse(dest, pos + 4, 4);
-//            }
             byte[] xbytes = Utils.floatToBytes(X);
             byte[] ybytes = Utils.floatToBytes(Y);
             System.arraycopy(xbytes, 0, dest, pos, 4);
             System.arraycopy(ybytes, 0, dest, pos+4, 4);
             
         }
-
+        
+        
         public float length()
         {
             return (float)Math.sqrt(distanceSquared(this, Zero));

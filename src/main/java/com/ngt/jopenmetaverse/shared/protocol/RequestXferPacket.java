@@ -42,7 +42,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 int length;
                 try
                 {
-                    ID = Utils.bytesToULong(bytes, i[0]); i[0] += 8;
+                    ID = Utils.bytesToULongLit(bytes, i[0]); i[0] += 8;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     Filename = new byte[length];
                     Utils.arraycopy(bytes, i[0], Filename, 0, length); i[0] +=  length;
@@ -50,7 +50,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                     DeleteOnCompletion = (bytes[i[0]++] != 0) ? true : false;
                     UseBigPackets = (bytes[i[0]++] != 0) ? true : false;
                     VFileID.FromBytes(bytes, i[0]); i[0] += 16;
-                    VFileType = (short)Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
+                    VFileType = (short)Utils.bytesToUInt16Lit(bytes, i[0]); i[0] += 2;
                 }
                 catch (Exception e)
                 {
@@ -61,7 +61,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.ulongToBytes(ID, bytes, i[0]); i[0] += 8;
+                Utils.ulongToBytesLit(ID, bytes, i[0]); i[0] += 8;
                 bytes[i[0]++] = (byte)Filename.length;
                 Utils.arraycopy(Filename, 0, bytes, i[0], Filename.length); i[0] +=  Filename.length;
                 bytes[i[0]++] = FilePath;

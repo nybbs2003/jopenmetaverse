@@ -71,8 +71,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 try
                 {
-                    Type = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
-                    Value = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
+                    Type = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
+                    Value = Utils.bytesToFloatLit(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -83,8 +83,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.intToBytes(Type, bytes, i[0]); i[0] += 4;
-                Utils.floatToBytes(Value, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(Type, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytesLit(Value, bytes, i[0]); i[0] += 4;
             }
 
         }

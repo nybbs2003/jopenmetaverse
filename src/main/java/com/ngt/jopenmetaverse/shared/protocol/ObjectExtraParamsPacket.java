@@ -82,10 +82,10 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 int length;
                 try
                 {
-                    ObjectLocalID = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    ParamType = (int)Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
+                    ObjectLocalID = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
+                    ParamType = (int)Utils.bytesToUInt16Lit(bytes, i[0]); i[0] += 2;
                     ParamInUse = (bytes[i[0]++] != 0) ? true : false;
-                    ParamSize = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    ParamSize = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     ParamData = new byte[length];
                     Utils.arraycopy(bytes, i[0], ParamData, 0, length); i[0] +=  length;
@@ -99,11 +99,11 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.uintToBytes(ObjectLocalID, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(ObjectLocalID, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)(ParamType % 256);
                 bytes[i[0]++] = (byte)((ParamType >> 8) % 256);
                 bytes[i[0]++] = (byte)((ParamInUse) ? 1 : 0);
-                Utils.uintToBytes(ParamSize, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(ParamSize, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)ParamData.length;
                 Utils.arraycopy(ParamData, 0, bytes, i[0], ParamData.length); i[0] +=  ParamData.length;
             }

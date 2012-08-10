@@ -79,8 +79,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 {
                     Action = (byte)bytes[i[0]++];
                     BrushSize = (byte)bytes[i[0]++];
-                    Seconds = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
-                    Height = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
+                    Seconds = Utils.bytesToFloatLit(bytes, i[0]); i[0] += 4;
+                    Height = Utils.bytesToFloatLit(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -93,8 +93,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 bytes[i[0]++] = Action;
                 bytes[i[0]++] = BrushSize;
-                Utils.floatToBytes(Seconds, bytes, i[0]); i[0] += 4;
-                Utils.floatToBytes(Height, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytesLit(Seconds, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytesLit(Height, bytes, i[0]); i[0] += 4;
             }
 
         }
@@ -127,11 +127,11 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 try
                 {
-                    LocalID = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
-                    West = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
-                    South = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
-                    East = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
-                    North = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
+                    LocalID = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
+                    West = Utils.bytesToFloatLit(bytes, i[0]); i[0] += 4;
+                    South = Utils.bytesToFloatLit(bytes, i[0]); i[0] += 4;
+                    East = Utils.bytesToFloatLit(bytes, i[0]); i[0] += 4;
+                    North = Utils.bytesToFloatLit(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -142,11 +142,11 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.intToBytes(LocalID, bytes, i[0]); i[0] += 4;
-                Utils.floatToBytes(West, bytes, i[0]); i[0] += 4;
-                Utils.floatToBytes(South, bytes, i[0]); i[0] += 4;
-                Utils.floatToBytes(East, bytes, i[0]); i[0] += 4;
-                Utils.floatToBytes(North, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(LocalID, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytesLit(West, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytesLit(South, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytesLit(East, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytesLit(North, bytes, i[0]); i[0] += 4;
             }
 
         }
@@ -175,7 +175,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 try
                 {
-                    BrushSize = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
+                    BrushSize = Utils.bytesToFloatLit(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -186,7 +186,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.floatToBytes(BrushSize, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytesLit(BrushSize, bytes, i[0]); i[0] += 4;
             }
 
         }

@@ -30,7 +30,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 try
                 {
-                    Health = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
+                    Health = Utils.bytesToFloatLit(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -41,7 +41,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.floatToBytes(Health, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytesLit(Health, bytes, i[0]); i[0] += 4;
             }
 
         }

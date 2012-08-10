@@ -55,8 +55,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         {
             public byte[] SimName;
             public long LocationID;
-            public Vector3 LocationPos;
-            public Vector3 LocationLookAt;
+            public Vector3 LocationPos = new Vector3();
+            public Vector3 LocationLookAt = new Vector3();
 
             @Override
 			public int getLength()
@@ -83,9 +83,9 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     SimName = new byte[length];
                     Utils.arraycopy(bytes, i[0], SimName, 0, length); i[0] +=  length;
-                    LocationID = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    LocationPos.fromBytes(bytes, i[0]); i[0] += 12;
-                    LocationLookAt.fromBytes(bytes, i[0]); i[0] += 12;
+                    LocationID = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
+                    LocationPos.fromBytesLit(bytes, i[0]); i[0] += 12;
+                    LocationLookAt.fromBytesLit(bytes, i[0]); i[0] += 12;
                 }
                 catch (Exception e)
                 {
@@ -98,9 +98,9 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 bytes[i[0]++] = (byte)SimName.length;
                 Utils.arraycopy(SimName, 0, bytes, i[0], SimName.length); i[0] +=  SimName.length;
-                Utils.uintToBytes(LocationID, bytes, i[0]); i[0] += 4;
-                LocationPos.toBytes(bytes, i[0]); i[0] += 12;
-                LocationLookAt.toBytes(bytes, i[0]); i[0] += 12;
+                Utils.uintToBytesLit(LocationID, bytes, i[0]); i[0] += 4;
+                LocationPos.toBytesLit(bytes, i[0]); i[0] += 12;
+                LocationLookAt.toBytesLit(bytes, i[0]); i[0] += 12;
             }
 
         }

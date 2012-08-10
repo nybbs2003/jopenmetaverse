@@ -73,7 +73,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 try
                 {
                     OwnerID.FromBytes(bytes, i[0]); i[0] += 16;
-                    LocalID = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    LocalID = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
                 }
                 catch (Exception e)
                 {
@@ -85,7 +85,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 OwnerID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.intToBytes(LocalID, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(LocalID, bytes, i[0]); i[0] += 4;
             }
 
         }

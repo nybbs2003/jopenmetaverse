@@ -87,10 +87,10 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 int length;
                 try
                 {
-                    SimIP = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    SimPort = (int)Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
-                    RegionHandle = Utils.bytesToULong(bytes, i[0]); i[0] += 8;
-                    length = Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
+                    SimIP = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
+                    SimPort = (int)Utils.bytesToUInt16Lit(bytes, i[0]); i[0] += 2;
+                    RegionHandle = Utils.bytesToULongLit(bytes, i[0]); i[0] += 8;
+                    length = Utils.bytesToUInt16Lit(bytes, i[0]); i[0] += 2;
                     SeedCapability = new byte[length];
                     Utils.arraycopy(bytes, i[0], SeedCapability, 0, length); i[0] +=  length;
                 }
@@ -103,10 +103,10 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.uintToBytes(SimIP, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(SimIP, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)((SimPort >> 8) % 256);
                 bytes[i[0]++] = (byte)(SimPort % 256);
-                Utils.ulongToBytes(RegionHandle, bytes, i[0]); i[0] += 8;
+                Utils.ulongToBytesLit(RegionHandle, bytes, i[0]); i[0] += 8;
                 bytes[i[0]++] = (byte)(SeedCapability.length % 256);
                 bytes[i[0]++] = (byte)((SeedCapability.length >> 8) % 256);
                 Utils.arraycopy(SeedCapability, 0, bytes, i[0], SeedCapability.length); i[0] +=  SeedCapability.length;
@@ -117,8 +117,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         /// <exclude/>
         public static final class InfoBlock extends PacketBlock
         {
-            public Vector3 Position;
-            public Vector3 LookAt;
+            public Vector3 Position = new Vector3();
+            public Vector3 LookAt = new Vector3();
 
             @Override
 			public int getLength()
@@ -139,8 +139,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 try
                 {
-                    Position.fromBytes(bytes, i[0]); i[0] += 12;
-                    LookAt.fromBytes(bytes, i[0]); i[0] += 12;
+                    Position.fromBytesLit(bytes, i[0]); i[0] += 12;
+                    LookAt.fromBytesLit(bytes, i[0]); i[0] += 12;
                 }
                 catch (Exception e)
                 {
@@ -151,8 +151,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Position.toBytes(bytes, i[0]); i[0] += 12;
-                LookAt.toBytes(bytes, i[0]); i[0] += 12;
+                Position.toBytesLit(bytes, i[0]); i[0] += 12;
+                LookAt.toBytesLit(bytes, i[0]); i[0] += 12;
             }
 
         }

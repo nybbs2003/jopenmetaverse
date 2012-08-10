@@ -84,10 +84,10 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 try
                 {
                     GroupID.FromBytes(bytes, i[0]); i[0] += 16;
-                    GroupPowers = Utils.bytesToULong(bytes, i[0]); i[0] += 8;
+                    GroupPowers = Utils.bytesToULongLit(bytes, i[0]); i[0] += 8;
                     AcceptNotices = (bytes[i[0]++] != 0) ? true : false;
                     GroupInsigniaID.FromBytes(bytes, i[0]); i[0] += 16;
-                    Contribution = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    Contribution = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     GroupName = new byte[length];
                     Utils.arraycopy(bytes, i[0], GroupName, 0, length); i[0] +=  length;
@@ -102,10 +102,10 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 GroupID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.ulongToBytes(GroupPowers, bytes, i[0]); i[0] += 8;
+                Utils.ulongToBytesLit(GroupPowers, bytes, i[0]); i[0] += 8;
                 bytes[i[0]++] = (byte)((AcceptNotices) ? 1 : 0);
                 GroupInsigniaID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.intToBytes(Contribution, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(Contribution, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)GroupName.length;
                 Utils.arraycopy(GroupName, 0, bytes, i[0], GroupName.length); i[0] +=  GroupName.length;
             }

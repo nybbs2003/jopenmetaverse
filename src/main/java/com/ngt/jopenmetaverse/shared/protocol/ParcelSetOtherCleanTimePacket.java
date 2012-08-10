@@ -74,8 +74,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 try
                 {
-                    LocalID = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
-                    OtherCleanTime = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    LocalID = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
+                    OtherCleanTime = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
                 }
                 catch (Exception e)
                 {
@@ -86,8 +86,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.intToBytes(LocalID, bytes, i[0]); i[0] += 4;
-                Utils.intToBytes(OtherCleanTime, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(LocalID, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(OtherCleanTime, bytes, i[0]); i[0] += 4;
             }
 
         }

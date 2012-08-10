@@ -137,7 +137,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                     Group = new byte[length];
                     Utils.arraycopy(bytes, i[0], Group, 0, length); i[0] +=  length;
                     Online = (bytes[i[0]++] != 0) ? true : false;
-                    Reputation = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    Reputation = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
                 }
                 catch (Exception e)
                 {
@@ -156,7 +156,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 bytes[i[0]++] = (byte)Group.length;
                 Utils.arraycopy(Group, 0, bytes, i[0], Group.length); i[0] +=  Group.length;
                 bytes[i[0]++] = (byte)((Online) ? 1 : 0);
-                Utils.intToBytes(Reputation, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(Reputation, bytes, i[0]); i[0] += 4;
             }
 
         }

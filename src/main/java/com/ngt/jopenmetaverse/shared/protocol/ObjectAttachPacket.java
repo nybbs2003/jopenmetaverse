@@ -59,7 +59,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         public static final class ObjectDataBlock extends PacketBlock
         {
             public long ObjectLocalID;
-            public Quaternion Rotation;
+            public Quaternion Rotation = new Quaternion();
 
             @Override
 			public int getLength()
@@ -80,8 +80,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 try
                 {
-                    ObjectLocalID = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    Rotation.fromBytes(bytes, i[0], true); i[0] += 12;
+                    ObjectLocalID = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
+                    Rotation.fromBytesLit(bytes, i[0], true); i[0] += 12;
                 }
                 catch (Exception e)
                 {
@@ -92,8 +92,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.uintToBytes(ObjectLocalID, bytes, i[0]); i[0] += 4;
-                Rotation.toBytes(bytes, i[0]); i[0] += 12;
+                Utils.uintToBytesLit(ObjectLocalID, bytes, i[0]); i[0] += 4;
+                Rotation.toBytesLit(bytes, i[0]); i[0] += 12;
             }
 
         }

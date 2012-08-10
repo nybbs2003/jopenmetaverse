@@ -34,7 +34,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 {
                     AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
-                    CircuitCode = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    CircuitCode = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -47,7 +47,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
                 SessionID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.uintToBytes(CircuitCode, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(CircuitCode, bytes, i[0]); i[0] += 4;
             }
 
         }

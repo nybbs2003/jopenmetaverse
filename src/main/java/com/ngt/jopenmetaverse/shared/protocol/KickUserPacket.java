@@ -35,8 +35,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 try
                 {
-                    TargetIP = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    TargetPort = (int)Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
+                    TargetIP = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
+                    TargetPort = (int)Utils.bytesToUInt16Lit(bytes, i[0]); i[0] += 2;
                 }
                 catch (Exception e)
                 {
@@ -47,7 +47,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.uintToBytes(TargetIP, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(TargetIP, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)((TargetPort >> 8) % 256);
                 bytes[i[0]++] = (byte)(TargetPort % 256);
             }
@@ -86,7 +86,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 {
                     AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
-                    length = Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
+                    length = Utils.bytesToUInt16Lit(bytes, i[0]); i[0] += 2;
                     Reason = new byte[length];
                     Utils.arraycopy(bytes, i[0], Reason, 0, length); i[0] +=  length;
                 }

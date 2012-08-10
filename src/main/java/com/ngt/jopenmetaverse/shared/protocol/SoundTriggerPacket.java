@@ -17,7 +17,7 @@ public final class SoundTriggerPacket extends Packet
         public UUID ParentID = new UUID();
         /** Unsigned Long */
         public BigInteger Handle;
-        public Vector3 Position;
+        public Vector3 Position = new Vector3();
         public float Gain;
 
         @Override
@@ -43,9 +43,9 @@ public final class SoundTriggerPacket extends Packet
                 OwnerID.FromBytes(bytes, i[0]); i[0] += 16;
                 ObjectID.FromBytes(bytes, i[0]); i[0] += 16;
                 ParentID.FromBytes(bytes, i[0]); i[0] += 16;
-                Handle = Utils.bytesToULong(bytes, i[0]); i[0] += 8;
-                Position.fromBytes(bytes, i[0]); i[0] += 12;
-                Gain = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
+                Handle = Utils.bytesToULongLit(bytes, i[0]); i[0] += 8;
+                Position.fromBytesLit(bytes, i[0]); i[0] += 12;
+                Gain = Utils.bytesToFloatLit(bytes, i[0]); i[0] += 4;
             }
             catch (Exception e)
             {
@@ -60,9 +60,9 @@ public final class SoundTriggerPacket extends Packet
             OwnerID.ToBytes(bytes, i[0]); i[0] += 16;
             ObjectID.ToBytes(bytes, i[0]); i[0] += 16;
             ParentID.ToBytes(bytes, i[0]); i[0] += 16;
-            Utils.ulongToBytes(Handle, bytes, i[0]); i[0] += 8;
-            Position.toBytes(bytes, i[0]); i[0] += 12;
-            Utils.floatToBytes(Gain, bytes, i[0]); i[0] += 4;
+            Utils.ulongToBytesLit(Handle, bytes, i[0]); i[0] += 8;
+            Position.toBytesLit(bytes, i[0]); i[0] += 12;
+            Utils.floatToBytesLit(Gain, bytes, i[0]); i[0] += 4;
         }
 
     }

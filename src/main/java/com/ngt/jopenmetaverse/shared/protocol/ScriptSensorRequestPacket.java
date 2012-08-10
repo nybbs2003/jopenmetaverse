@@ -16,8 +16,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             public UUID SourceID = new UUID();
             public UUID RequestID = new UUID();
             public UUID SearchID = new UUID();
-            public Vector3 SearchPos;
-            public Quaternion SearchDir;
+            public Vector3 SearchPos = new Vector3();
+            public Quaternion SearchDir = new Quaternion();
 		/** Unsigned Byte */ 
 		public byte[] SearchName;
             public int Type;
@@ -52,15 +52,15 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                     SourceID.FromBytes(bytes, i[0]); i[0] += 16;
                     RequestID.FromBytes(bytes, i[0]); i[0] += 16;
                     SearchID.FromBytes(bytes, i[0]); i[0] += 16;
-                    SearchPos.fromBytes(bytes, i[0]); i[0] += 12;
-                    SearchDir.fromBytes(bytes, i[0], true); i[0] += 12;
+                    SearchPos.fromBytesLit(bytes, i[0]); i[0] += 12;
+                    SearchDir.fromBytesLit(bytes, i[0], true); i[0] += 12;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     SearchName = new byte[length];
                     Utils.arraycopy(bytes, i[0], SearchName, 0, length); i[0] +=  length;
-                    Type = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
-                    Range = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
-                    Arc = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
-                    RegionHandle = Utils.bytesToULong(bytes, i[0]); i[0] += 8;
+                    Type = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
+                    Range = Utils.bytesToFloatLit(bytes, i[0]); i[0] += 4;
+                    Arc = Utils.bytesToFloatLit(bytes, i[0]); i[0] += 4;
+                    RegionHandle = Utils.bytesToULongLit(bytes, i[0]); i[0] += 8;
                     SearchRegions = (byte)bytes[i[0]++];
                 }
                 catch (Exception e)
@@ -75,14 +75,14 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 SourceID.ToBytes(bytes, i[0]); i[0] += 16;
                 RequestID.ToBytes(bytes, i[0]); i[0] += 16;
                 SearchID.ToBytes(bytes, i[0]); i[0] += 16;
-                SearchPos.toBytes(bytes, i[0]); i[0] += 12;
-                SearchDir.toBytes(bytes, i[0]); i[0] += 12;
+                SearchPos.toBytesLit(bytes, i[0]); i[0] += 12;
+                SearchDir.toBytesLit(bytes, i[0]); i[0] += 12;
                 bytes[i[0]++] = (byte)SearchName.length;
                 Utils.arraycopy(SearchName, 0, bytes, i[0], SearchName.length); i[0] +=  SearchName.length;
-                Utils.intToBytes(Type, bytes, i[0]); i[0] += 4;
-                Utils.floatToBytes(Range, bytes, i[0]); i[0] += 4;
-                Utils.floatToBytes(Arc, bytes, i[0]); i[0] += 4;
-                Utils.ulongToBytes(RegionHandle, bytes, i[0]); i[0] += 8;
+                Utils.intToBytesLit(Type, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytesLit(Range, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytesLit(Arc, bytes, i[0]); i[0] += 4;
+                Utils.ulongToBytesLit(RegionHandle, bytes, i[0]); i[0] += 8;
                 bytes[i[0]++] = SearchRegions;
             }
 

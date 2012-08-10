@@ -13,14 +13,14 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         {
             public UUID AgentID = new UUID();
             public UUID SessionID = new UUID();
-            public Quaternion BodyRotation;
-            public Quaternion HeadRotation;
+            public Quaternion BodyRotation = new Quaternion();
+            public Quaternion HeadRotation = new Quaternion();
 		/** Unsigned Byte */ 
 		public byte State;
-            public Vector3 CameraCenter;
-            public Vector3 CameraAtAxis;
-            public Vector3 CameraLeftAxis;
-            public Vector3 CameraUpAxis;
+            public Vector3 CameraCenter = new Vector3();
+            public Vector3 CameraAtAxis = new Vector3();
+            public Vector3 CameraLeftAxis = new Vector3();
+            public Vector3 CameraUpAxis = new Vector3();
             public float Far;
             public long ControlFlags;
 		/** Unsigned Byte */ 
@@ -47,15 +47,15 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 {
                     AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
-                    BodyRotation.fromBytes(bytes, i[0], true); i[0] += 12;
-                    HeadRotation.fromBytes(bytes, i[0], true); i[0] += 12;
+                    BodyRotation.fromBytesLit(bytes, i[0], true); i[0] += 12;
+                    HeadRotation.fromBytesLit(bytes, i[0], true); i[0] += 12;
                     State = (byte)bytes[i[0]++];
-                    CameraCenter.fromBytes(bytes, i[0]); i[0] += 12;
-                    CameraAtAxis.fromBytes(bytes, i[0]); i[0] += 12;
-                    CameraLeftAxis.fromBytes(bytes, i[0]); i[0] += 12;
-                    CameraUpAxis.fromBytes(bytes, i[0]); i[0] += 12;
-                    Far = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
-                    ControlFlags = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    CameraCenter.fromBytesLit(bytes, i[0]); i[0] += 12;
+                    CameraAtAxis.fromBytesLit(bytes, i[0]); i[0] += 12;
+                    CameraLeftAxis.fromBytesLit(bytes, i[0]); i[0] += 12;
+                    CameraUpAxis.fromBytesLit(bytes, i[0]); i[0] += 12;
+                    Far = Utils.bytesToFloatLit(bytes, i[0]); i[0] += 4;
+                    ControlFlags = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                     Flags = (byte)bytes[i[0]++];
                 }
                 catch (Exception e)
@@ -69,15 +69,15 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
                 SessionID.ToBytes(bytes, i[0]); i[0] += 16;
-                BodyRotation.toBytes(bytes, i[0]); i[0] += 12;
-                HeadRotation.toBytes(bytes, i[0]); i[0] += 12;
+                BodyRotation.toBytesLit(bytes, i[0]); i[0] += 12;
+                HeadRotation.toBytesLit(bytes, i[0]); i[0] += 12;
                 bytes[i[0]++] = State;
-                CameraCenter.toBytes(bytes, i[0]); i[0] += 12;
-                CameraAtAxis.toBytes(bytes, i[0]); i[0] += 12;
-                CameraLeftAxis.toBytes(bytes, i[0]); i[0] += 12;
-                CameraUpAxis.toBytes(bytes, i[0]); i[0] += 12;
-                Utils.floatToBytes(Far, bytes, i[0]); i[0] += 4;
-                Utils.uintToBytes(ControlFlags, bytes, i[0]); i[0] += 4;
+                CameraCenter.toBytesLit(bytes, i[0]); i[0] += 12;
+                CameraAtAxis.toBytesLit(bytes, i[0]); i[0] += 12;
+                CameraLeftAxis.toBytesLit(bytes, i[0]); i[0] += 12;
+                CameraUpAxis.toBytesLit(bytes, i[0]); i[0] += 12;
+                Utils.floatToBytesLit(Far, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(ControlFlags, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = Flags;
             }
 

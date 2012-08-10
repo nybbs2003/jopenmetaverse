@@ -72,7 +72,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 try
                 {
-                    LocalID = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    LocalID = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -83,7 +83,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.uintToBytes(LocalID, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(LocalID, bytes, i[0]); i[0] += 4;
             }
 
         }

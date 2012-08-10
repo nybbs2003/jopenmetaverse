@@ -82,9 +82,9 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 try
                 {
                     GroupID.FromBytes(bytes, i[0]); i[0] += 16;
-                    Quorum = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
-                    Majority = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
-                    Duration = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    Quorum = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
+                    Majority = Utils.bytesToFloatLit(bytes, i[0]); i[0] += 4;
+                    Duration = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     ProposalText = new byte[length];
                     Utils.arraycopy(bytes, i[0], ProposalText, 0, length); i[0] +=  length;
@@ -99,9 +99,9 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 GroupID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.intToBytes(Quorum, bytes, i[0]); i[0] += 4;
-                Utils.floatToBytes(Majority, bytes, i[0]); i[0] += 4;
-                Utils.intToBytes(Duration, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(Quorum, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytesLit(Majority, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(Duration, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)ProposalText.length;
                 Utils.arraycopy(ProposalText, 0, bytes, i[0], ProposalText.length); i[0] +=  ProposalText.length;
             }

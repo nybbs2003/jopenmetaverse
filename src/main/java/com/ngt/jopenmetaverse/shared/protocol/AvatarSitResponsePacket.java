@@ -3,6 +3,7 @@ package com.ngt.jopenmetaverse.shared.protocol;
 import com.ngt.jopenmetaverse.shared.types.Quaternion;
 import com.ngt.jopenmetaverse.shared.types.UUID;
 import com.ngt.jopenmetaverse.shared.types.Vector3;
+import com.ngt.jopenmetaverse.shared.util.Utils;
 
 
     public final class AvatarSitResponsePacket extends Packet
@@ -51,10 +52,10 @@ import com.ngt.jopenmetaverse.shared.types.Vector3;
         public static final class SitTransformBlock extends PacketBlock
         {
             public boolean AutoPilot;
-            public Vector3 SitPosition;
-            public Quaternion SitRotation;
-            public Vector3 CameraEyeOffset;
-            public Vector3 CameraAtOffset;
+            public Vector3 SitPosition = new Vector3();
+            public Quaternion SitRotation = new Quaternion();
+            public Vector3 CameraEyeOffset = new Vector3();
+            public Vector3 CameraAtOffset = new Vector3();
             public boolean ForceMouselook;
 
             @Override
@@ -77,10 +78,10 @@ import com.ngt.jopenmetaverse.shared.types.Vector3;
                 try
                 {
                     AutoPilot = (bytes[i[0]++] != 0) ? true : false;
-                    SitPosition.fromBytes(bytes, i[0]); i[0] += 12;
-                    SitRotation.fromBytes(bytes, i[0], true); i[0] += 12;
-                    CameraEyeOffset.fromBytes(bytes, i[0]); i[0] += 12;
-                    CameraAtOffset.fromBytes(bytes, i[0]); i[0] += 12;
+                    SitPosition.fromBytesLit(bytes, i[0]); i[0] += 12;
+                    SitRotation.fromBytesLit(bytes, i[0], true); i[0] += 12;
+                    CameraEyeOffset.fromBytesLit(bytes, i[0]); i[0] += 12;
+                    CameraAtOffset.fromBytesLit(bytes, i[0]); i[0] += 12;
                     ForceMouselook = (bytes[i[0]++] != 0) ? true : false;
                 }
                 catch (Exception e)
@@ -93,10 +94,10 @@ import com.ngt.jopenmetaverse.shared.types.Vector3;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 bytes[i[0]++] = (byte)((AutoPilot) ? 1 : 0);
-                SitPosition.toBytes(bytes, i[0]); i[0] += 12;
-                SitRotation.toBytes(bytes, i[0]); i[0] += 12;
-                CameraEyeOffset.toBytes(bytes, i[0]); i[0] += 12;
-                CameraAtOffset.toBytes(bytes, i[0]); i[0] += 12;
+                SitPosition.toBytesLit(bytes, i[0]); i[0] += 12;
+                SitRotation.toBytesLit(bytes, i[0]); i[0] += 12;
+                CameraEyeOffset.toBytesLit(bytes, i[0]); i[0] += 12;
+                CameraAtOffset.toBytesLit(bytes, i[0]); i[0] += 12;
                 bytes[i[0]++] = (byte)((ForceMouselook) ? 1 : 0);
             }
 

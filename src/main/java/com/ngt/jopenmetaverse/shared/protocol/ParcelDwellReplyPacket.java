@@ -69,9 +69,9 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 try
                 {
-                    LocalID = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    LocalID = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
                     ParcelID.FromBytes(bytes, i[0]); i[0] += 16;
-                    Dwell = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
+                    Dwell = Utils.bytesToFloatLit(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -82,9 +82,9 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.intToBytes(LocalID, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(LocalID, bytes, i[0]); i[0] += 4;
                 ParcelID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.floatToBytes(Dwell, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytesLit(Dwell, bytes, i[0]); i[0] += 4;
             }
 
         }

@@ -81,8 +81,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 {
                     Image.FromBytes(bytes, i[0]); i[0] += 16;
                     DiscardLevel = (byte)bytes[i[0]++];
-                    DownloadPriority = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
-                    Packet = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    DownloadPriority = Utils.bytesToFloatLit(bytes, i[0]); i[0] += 4;
+                    Packet = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                     Type = (byte)bytes[i[0]++];
                 }
                 catch (Exception e)
@@ -96,8 +96,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 Image.ToBytes(bytes, i[0]); i[0] += 16;
                 bytes[i[0]++] = (byte)DiscardLevel;
-                Utils.floatToBytes(DownloadPriority, bytes, i[0]); i[0] += 4;
-                Utils.uintToBytes(Packet, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytesLit(DownloadPriority, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(Packet, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = Type;
             }
 

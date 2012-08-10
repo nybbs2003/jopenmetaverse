@@ -13,7 +13,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             public UUID AgentID = new UUID();
             public UUID SessionID = new UUID();
             public long SerialNum;
-            public Vector3 Size;
+            public Vector3 Size = new Vector3();
 
             @Override
 			public int getLength()
@@ -36,8 +36,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 {
                     AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
-                    SerialNum = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    Size.toBytes(bytes, i[0]); i[0] += 12;
+                    SerialNum = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
+                    Size.toBytesLit(bytes, i[0]); i[0] += 12;
                 }
                 catch (Exception e)
                 {
@@ -50,8 +50,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
                 SessionID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.uintToBytes(SerialNum, bytes, i[0]); i[0] += 4;
-                Size.toBytes(bytes, i[0]); i[0] += 12;
+                Utils.uintToBytesLit(SerialNum, bytes, i[0]); i[0] += 4;
+                Size.toBytesLit(bytes, i[0]); i[0] += 12;
             }
 
         }
@@ -127,7 +127,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 int length;
                 try
                 {
-                    length = Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
+                    length = Utils.bytesToUInt16Lit(bytes, i[0]); i[0] += 2;
                     TextureEntry = new byte[length];
                     Utils.arraycopy(bytes, i[0], TextureEntry, 0, length); i[0] +=  length;
                 }

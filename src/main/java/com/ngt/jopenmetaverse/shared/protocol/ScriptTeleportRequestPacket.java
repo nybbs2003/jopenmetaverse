@@ -13,8 +13,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             public byte[] ObjectName;
 		/** Unsigned Byte */ 
 		public byte[] SimName;
-            public Vector3 SimPosition;
-            public Vector3 LookAt;
+            public Vector3 SimPosition = new Vector3();
+            public Vector3 LookAt = new Vector3();
 
             @Override
 			public int getLength()
@@ -45,8 +45,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     SimName = new byte[length];
                     Utils.arraycopy(bytes, i[0], SimName, 0, length); i[0] +=  length;
-                    SimPosition.fromBytes(bytes, i[0]); i[0] += 12;
-                    LookAt.fromBytes(bytes, i[0]); i[0] += 12;
+                    SimPosition.fromBytesLit(bytes, i[0]); i[0] += 12;
+                    LookAt.fromBytesLit(bytes, i[0]); i[0] += 12;
                 }
                 catch (Exception e)
                 {
@@ -61,8 +61,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 Utils.arraycopy(ObjectName, 0, bytes, i[0], ObjectName.length); i[0] +=  ObjectName.length;
                 bytes[i[0]++] = (byte)SimName.length;
                 Utils.arraycopy(SimName, 0, bytes, i[0], SimName.length); i[0] +=  SimName.length;
-                SimPosition.toBytes(bytes, i[0]); i[0] += 12;
-                LookAt.toBytes(bytes, i[0]); i[0] += 12;
+                SimPosition.toBytesLit(bytes, i[0]); i[0] += 12;
+                LookAt.toBytesLit(bytes, i[0]); i[0] += 12;
             }
 
         }

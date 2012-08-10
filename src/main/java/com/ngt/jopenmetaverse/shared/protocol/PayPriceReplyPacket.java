@@ -35,7 +35,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 try
                 {
                     ObjectID.FromBytes(bytes, i[0]); i[0] += 16;
-                    DefaultPayPrice = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    DefaultPayPrice = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
                 }
                 catch (Exception e)
                 {
@@ -47,7 +47,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 ObjectID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.intToBytes(DefaultPayPrice, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(DefaultPayPrice, bytes, i[0]); i[0] += 4;
             }
 
         }
@@ -76,7 +76,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 try
                 {
-                    PayButton = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    PayButton = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
                 }
                 catch (Exception e)
                 {
@@ -87,7 +87,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.intToBytes(PayButton, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(PayButton, bytes, i[0]); i[0] += 4;
             }
 
         }

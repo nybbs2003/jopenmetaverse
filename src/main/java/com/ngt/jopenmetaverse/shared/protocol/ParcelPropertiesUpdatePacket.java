@@ -75,8 +75,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 		public byte Category;
             public UUID AuthBuyerID = new UUID();
             public UUID SnapshotID = new UUID();
-            public Vector3 UserLocation;
-            public Vector3 UserLookAt;
+            public Vector3 UserLocation = new Vector3();
+            public Vector3 UserLookAt = new Vector3();
 		/** Unsigned Byte */ 
 		public byte LandingType;
 
@@ -105,10 +105,10 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 int length;
                 try
                 {
-                    LocalID = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
-                    Flags = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    ParcelFlags = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    SalePrice = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    LocalID = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
+                    Flags = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
+                    ParcelFlags = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
+                    SalePrice = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     Name = new byte[length];
                     Utils.arraycopy(bytes, i[0], Name, 0, length); i[0] +=  length;
@@ -124,13 +124,13 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                     MediaID.FromBytes(bytes, i[0]); i[0] += 16;
                     MediaAutoScale = (byte)bytes[i[0]++];
                     GroupID.FromBytes(bytes, i[0]); i[0] += 16;
-                    PassPrice = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
-                    PassHours = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
+                    PassPrice = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
+                    PassHours = Utils.bytesToFloatLit(bytes, i[0]); i[0] += 4;
                     Category = (byte)bytes[i[0]++];
                     AuthBuyerID.FromBytes(bytes, i[0]); i[0] += 16;
                     SnapshotID.FromBytes(bytes, i[0]); i[0] += 16;
-                    UserLocation.fromBytes(bytes, i[0]); i[0] += 12;
-                    UserLookAt.fromBytes(bytes, i[0]); i[0] += 12;
+                    UserLocation.fromBytesLit(bytes, i[0]); i[0] += 12;
+                    UserLookAt.fromBytesLit(bytes, i[0]); i[0] += 12;
                     LandingType = (byte)bytes[i[0]++];
                 }
                 catch (Exception e)
@@ -142,10 +142,10 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.intToBytes(LocalID, bytes, i[0]); i[0] += 4;
-                Utils.uintToBytes(Flags, bytes, i[0]); i[0] += 4;
-                Utils.uintToBytes(ParcelFlags, bytes, i[0]); i[0] += 4;
-                Utils.intToBytes(SalePrice, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(LocalID, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(Flags, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(ParcelFlags, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(SalePrice, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)Name.length;
                 Utils.arraycopy(Name, 0, bytes, i[0], Name.length); i[0] +=  Name.length;
                 bytes[i[0]++] = (byte)Desc.length;
@@ -157,13 +157,13 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 MediaID.ToBytes(bytes, i[0]); i[0] += 16;
                 bytes[i[0]++] = MediaAutoScale;
                 GroupID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.intToBytes(PassPrice, bytes, i[0]); i[0] += 4;
-                Utils.floatToBytes(PassHours, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(PassPrice, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytesLit(PassHours, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = Category;
                 AuthBuyerID.ToBytes(bytes, i[0]); i[0] += 16;
                 SnapshotID.ToBytes(bytes, i[0]); i[0] += 16;
-                UserLocation.toBytes(bytes, i[0]); i[0] += 12;
-                UserLookAt.toBytes(bytes, i[0]); i[0] += 12;
+                UserLocation.toBytesLit(bytes, i[0]); i[0] += 12;
+                UserLookAt.toBytesLit(bytes, i[0]); i[0] += 12;
                 bytes[i[0]++] = LandingType;
             }
 

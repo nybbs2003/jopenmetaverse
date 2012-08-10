@@ -1,9 +1,7 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
-import java.util.ArrayList;
-import java.util.List;
-import com.ngt.jopenmetaverse.shared.types.UUID;
 import com.ngt.jopenmetaverse.shared.util.Utils;
+
 	public final class LayerDataPacket extends Packet
     {
         /// <exclude/>
@@ -73,7 +71,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 int length;
                 try
                 {
-                    length = Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
+                    length = Utils.bytesToUInt16Lit(bytes, i[0]); i[0] += 2;
                     Data = new byte[length];
                     Utils.arraycopy(bytes, i[0], Data, 0, length); i[0] +=  length;
                 }

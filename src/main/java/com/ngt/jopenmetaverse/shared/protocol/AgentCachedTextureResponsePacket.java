@@ -37,7 +37,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 {
                     AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
-                    SerialNum = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    SerialNum = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
                 }
                 catch (Exception e)
                 {
@@ -50,7 +50,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
                 SessionID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.intToBytes(SerialNum, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(SerialNum, bytes, i[0]); i[0] += 4;
             }
 
         }

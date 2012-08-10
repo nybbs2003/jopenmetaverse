@@ -101,7 +101,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     Title = new byte[length];
                     Utils.arraycopy(bytes, i[0], Title, 0, length); i[0] +=  length;
-                    Powers = Utils.bytesToULong(bytes, i[0]); i[0] += 8;
+                    Powers = Utils.bytesToULongLit(bytes, i[0]); i[0] += 8;
                     UpdateType = (byte)bytes[i[0]++];
                 }
                 catch (Exception e)
@@ -120,7 +120,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 Utils.arraycopy(Description, 0, bytes, i[0], Description.length); i[0] +=  Description.length;
                 bytes[i[0]++] = (byte)Title.length;
                 Utils.arraycopy(Title, 0, bytes, i[0], Title.length); i[0] +=  Title.length;
-                Utils.ulongToBytes(Powers, bytes, i[0]); i[0] += 8;
+                Utils.ulongToBytesLit(Powers, bytes, i[0]); i[0] += 8;
                 bytes[i[0]++] = UpdateType;
             }
 

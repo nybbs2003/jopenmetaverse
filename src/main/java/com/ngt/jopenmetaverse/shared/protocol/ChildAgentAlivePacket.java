@@ -35,8 +35,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 try
                 {
-                    RegionHandle = Utils.bytesToULong(bytes, i[0]); i[0] += 8;
-                    ViewerCircuitCode = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    RegionHandle = Utils.bytesToULongLit(bytes, i[0]); i[0] += 8;
+                    ViewerCircuitCode = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                     AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
                 }
@@ -49,8 +49,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.ulongToBytes(RegionHandle, bytes, i[0]); i[0] += 8;
-                Utils.uintToBytes(ViewerCircuitCode, bytes, i[0]); i[0] += 4;
+                Utils.ulongToBytesLit(RegionHandle, bytes, i[0]); i[0] += 8;
+                Utils.uintToBytesLit(ViewerCircuitCode, bytes, i[0]); i[0] += 4;
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
                 SessionID.ToBytes(bytes, i[0]); i[0] += 16;
             }

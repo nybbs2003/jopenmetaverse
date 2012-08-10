@@ -86,11 +86,11 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 try
                 {
                     NoticeID.FromBytes(bytes, i[0]); i[0] += 16;
-                    Timestamp = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    length = Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
+                    Timestamp = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
+                    length = Utils.bytesToUInt16Lit(bytes, i[0]); i[0] += 2;
                     FromName = new byte[length];
                     Utils.arraycopy(bytes, i[0], FromName, 0, length); i[0] +=  length;
-                    length = Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
+                    length = Utils.bytesToUInt16Lit(bytes, i[0]); i[0] += 2;
                     Subject = new byte[length];
                     Utils.arraycopy(bytes, i[0], Subject, 0, length); i[0] +=  length;
                     HasAttachment = (bytes[i[0]++] != 0) ? true : false;
@@ -106,7 +106,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 NoticeID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.uintToBytes(Timestamp, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(Timestamp, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)(FromName.length % 256);
                 bytes[i[0]++] = (byte)((FromName.length >> 8) % 256);
                 Utils.arraycopy(FromName, 0, bytes, i[0], FromName.length); i[0] +=  FromName.length;

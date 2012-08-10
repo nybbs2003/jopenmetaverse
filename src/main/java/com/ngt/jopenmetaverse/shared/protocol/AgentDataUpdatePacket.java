@@ -59,7 +59,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                     GroupTitle = new byte[length];
                     Utils.arraycopy(bytes, i[0], GroupTitle, 0, length); i[0] +=  length;
                     ActiveGroupID.FromBytes(bytes, i[0]); i[0] += 16;
-                    GroupPowers = Utils.bytesToULong(bytes, i[0]); i[0] += 8;
+                    GroupPowers = Utils.bytesToULongLit(bytes, i[0]); i[0] += 8;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     GroupName = new byte[length];
                     Utils.arraycopy(bytes, i[0], GroupName, 0, length); i[0] +=  length;
@@ -81,7 +81,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 bytes[i[0]++] = (byte)GroupTitle.length;
                 Utils.arraycopy(GroupTitle, 0, bytes, i[0], GroupTitle.length); i[0] +=  GroupTitle.length;
                 ActiveGroupID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.ulongToBytes(GroupPowers, bytes, i[0]); i[0] += 8;
+                Utils.ulongToBytesLit(GroupPowers, bytes, i[0]); i[0] += 8;
                 bytes[i[0]++] = (byte)GroupName.length;
                 Utils.arraycopy(GroupName, 0, bytes, i[0], GroupName.length); i[0] +=  GroupName.length;
             }

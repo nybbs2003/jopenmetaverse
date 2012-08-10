@@ -36,8 +36,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 try
                 {
-                    RegionHandle = Utils.bytesToULong(bytes, i[0]); i[0] += 8;
-                    TimeDilation = (int)Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
+                    RegionHandle = Utils.bytesToULongLit(bytes, i[0]); i[0] += 8;
+                    TimeDilation = (int)Utils.bytesToUInt16Lit(bytes, i[0]); i[0] += 2;
                 }
                 catch (Exception e)
                 {
@@ -48,7 +48,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.ulongToBytes(RegionHandle, bytes, i[0]); i[0] += 8;
+                Utils.ulongToBytesLit(RegionHandle, bytes, i[0]); i[0] += 8;
                 bytes[i[0]++] = (byte)(TimeDilation % 256);
                 bytes[i[0]++] = (byte)((TimeDilation >> 8) % 256);
             }
@@ -88,7 +88,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     Data = new byte[length];
                     Utils.arraycopy(bytes, i[0], Data, 0, length); i[0] +=  length;
-                    length = Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
+                    length = Utils.bytesToUInt16Lit(bytes, i[0]); i[0] += 2;
                     TextureEntry = new byte[length];
                     Utils.arraycopy(bytes, i[0], TextureEntry, 0, length); i[0] +=  length;
                 }

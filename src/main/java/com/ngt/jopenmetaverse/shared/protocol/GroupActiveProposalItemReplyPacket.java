@@ -75,7 +75,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 try
                 {
                     TransactionID.FromBytes(bytes, i[0]); i[0] += 16;
-                    TotalNumItems = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    TotalNumItems = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -87,7 +87,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 TransactionID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.uintToBytes(TotalNumItems, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(TotalNumItems, bytes, i[0]); i[0] += 4;
             }
 
         }
@@ -152,8 +152,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     VoteCast = new byte[length];
                     Utils.arraycopy(bytes, i[0], VoteCast, 0, length); i[0] +=  length;
-                    Majority = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
-                    Quorum = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
+                    Majority = Utils.bytesToFloatLit(bytes, i[0]); i[0] += 4;
+                    Quorum = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     ProposalText = new byte[length];
                     Utils.arraycopy(bytes, i[0], ProposalText, 0, length); i[0] +=  length;
@@ -178,8 +178,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 bytes[i[0]++] = (byte)((AlreadyVoted) ? 1 : 0);
                 bytes[i[0]++] = (byte)VoteCast.length;
                 Utils.arraycopy(VoteCast, 0, bytes, i[0], VoteCast.length); i[0] +=  VoteCast.length;
-                Utils.floatToBytes(Majority, bytes, i[0]); i[0] += 4;
-                Utils.intToBytes(Quorum, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytesLit(Majority, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(Quorum, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)ProposalText.length;
                 Utils.arraycopy(ProposalText, 0, bytes, i[0], ProposalText.length); i[0] +=  ProposalText.length;
             }

@@ -54,8 +54,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         public static final class ObjectDataBlock extends PacketBlock
         {
             public UUID ObjectID = new UUID();
-            public Vector3 GrabOffsetInitial;
-            public Vector3 GrabPosition;
+            public Vector3 GrabOffsetInitial = new Vector3();
+            public Vector3 GrabPosition = new Vector3();
             public long TimeSinceLast;
 
             @Override
@@ -78,9 +78,9 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 try
                 {
                     ObjectID.FromBytes(bytes, i[0]); i[0] += 16;
-                    GrabOffsetInitial.fromBytes(bytes, i[0]); i[0] += 12;
-                    GrabPosition.fromBytes(bytes, i[0]); i[0] += 12;
-                    TimeSinceLast = Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    GrabOffsetInitial.fromBytesLit(bytes, i[0]); i[0] += 12;
+                    GrabPosition.fromBytesLit(bytes, i[0]); i[0] += 12;
+                    TimeSinceLast = Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -92,9 +92,9 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 			public void ToBytes(byte[] bytes, int[] i)
             {
                 ObjectID.ToBytes(bytes, i[0]); i[0] += 16;
-                GrabOffsetInitial.toBytes(bytes, i[0]); i[0] += 12;
-                GrabPosition.toBytes(bytes, i[0]); i[0] += 12;
-                Utils.uintToBytes(TimeSinceLast, bytes, i[0]); i[0] += 4;
+                GrabOffsetInitial.toBytesLit(bytes, i[0]); i[0] += 12;
+                GrabPosition.toBytesLit(bytes, i[0]); i[0] += 12;
+                Utils.uintToBytesLit(TimeSinceLast, bytes, i[0]); i[0] += 4;
             }
 
         }
@@ -102,12 +102,12 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         /// <exclude/>
         public static final class SurfaceInfoBlock extends PacketBlock
         {
-            public Vector3 UVCoord;
-            public Vector3 STCoord;
+            public Vector3 UVCoord = new Vector3();
+            public Vector3 STCoord = new Vector3();
             public int FaceIndex;
-            public Vector3 Position;
-            public Vector3 Normal;
-            public Vector3 Binormal;
+            public Vector3 Position = new Vector3();
+            public Vector3 Normal = new Vector3();
+            public Vector3 Binormal = new Vector3();
 
             @Override
 			public int getLength()
@@ -128,12 +128,12 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 try
                 {
-                    UVCoord.fromBytes(bytes, i[0]); i[0] += 12;
-                    STCoord.fromBytes(bytes, i[0]); i[0] += 12;
-                    FaceIndex = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
-                    Position.fromBytes(bytes, i[0]); i[0] += 12;
-                    Normal.fromBytes(bytes, i[0]); i[0] += 12;
-                    Binormal.fromBytes(bytes, i[0]); i[0] += 12;
+                    UVCoord.fromBytesLit(bytes, i[0]); i[0] += 12;
+                    STCoord.fromBytesLit(bytes, i[0]); i[0] += 12;
+                    FaceIndex = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
+                    Position.fromBytesLit(bytes, i[0]); i[0] += 12;
+                    Normal.fromBytesLit(bytes, i[0]); i[0] += 12;
+                    Binormal.fromBytesLit(bytes, i[0]); i[0] += 12;
                 }
                 catch (Exception e)
                 {
@@ -144,12 +144,12 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                UVCoord.toBytes(bytes, i[0]); i[0] += 12;
-                STCoord.toBytes(bytes, i[0]); i[0] += 12;
-                Utils.intToBytes(FaceIndex, bytes, i[0]); i[0] += 4;
-                Position.toBytes(bytes, i[0]); i[0] += 12;
-                Normal.toBytes(bytes, i[0]); i[0] += 12;
-                Binormal.toBytes(bytes, i[0]); i[0] += 12;
+                UVCoord.toBytesLit(bytes, i[0]); i[0] += 12;
+                STCoord.toBytesLit(bytes, i[0]); i[0] += 12;
+                Utils.intToBytesLit(FaceIndex, bytes, i[0]); i[0] += 4;
+                Position.toBytesLit(bytes, i[0]); i[0] += 12;
+                Normal.toBytesLit(bytes, i[0]); i[0] += 12;
+                Binormal.toBytesLit(bytes, i[0]); i[0] += 12;
             }
 
         }

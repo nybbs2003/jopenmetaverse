@@ -31,8 +31,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 int length;
                 try
                 {
-                    SequenceID = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
-                    length = Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
+                    SequenceID = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
+                    length = Utils.bytesToUInt16Lit(bytes, i[0]); i[0] += 2;
                     Data = new byte[length];
                     Utils.arraycopy(bytes, i[0], Data, 0, length); i[0] +=  length;
                 }
@@ -45,7 +45,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.intToBytes(SequenceID, bytes, i[0]); i[0] += 4;
+                Utils.intToBytesLit(SequenceID, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)(Data.length % 256);
                 bytes[i[0]++] = (byte)((Data.length >> 8) % 256);
                 Utils.arraycopy(Data, 0, bytes, i[0], Data.length); i[0] +=  Data.length;

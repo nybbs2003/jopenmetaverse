@@ -37,7 +37,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 try
                 {
                     TaskID.FromBytes(bytes, i[0]); i[0] += 16;
-                    Serial = (short)Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
+                    Serial = (short)Utils.bytesToUInt16Lit(bytes, i[0]); i[0] += 2;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     Filename = new byte[length];
                     Utils.arraycopy(bytes, i[0], Filename, 0, length); i[0] +=  length;

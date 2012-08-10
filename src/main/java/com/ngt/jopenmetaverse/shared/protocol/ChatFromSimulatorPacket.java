@@ -19,7 +19,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 		public byte ChatType;
 		/** Unsigned Byte */ 
 		public byte Audible;
-            public Vector3 Position;
+            public Vector3 Position = new Vector3();
 		/** Unsigned Byte */ 
 		public byte[] Message;
 
@@ -54,8 +54,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                     SourceType = (byte)bytes[i[0]++];
                     ChatType = (byte)bytes[i[0]++];
                     Audible = (byte)bytes[i[0]++];
-                    Position.fromBytes(bytes, i[0]); i[0] += 12;
-                    length = Utils.bytesToUInt16(bytes, i[0]); i[0] += 2;
+                    Position.fromBytesLit(bytes, i[0]); i[0] += 12;
+                    length = Utils.bytesToUInt16Lit(bytes, i[0]); i[0] += 2;
                     Message = new byte[length];
                     Utils.arraycopy(bytes, i[0], Message, 0, length); i[0] +=  length;
                 }
@@ -75,7 +75,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 bytes[i[0]++] = SourceType;
                 bytes[i[0]++] = ChatType;
                 bytes[i[0]++] = Audible;
-                Position.toBytes(bytes, i[0]); i[0] += 12;
+                Position.toBytesLit(bytes, i[0]); i[0] += 12;
                 bytes[i[0]++] = (byte)(Message.length % 256);
                 bytes[i[0]++] = (byte)((Message.length >> 8) % 256);
                 Utils.arraycopy(Message, 0, bytes, i[0], Message.length); i[0] +=  Message.length;

@@ -56,16 +56,16 @@ public final class ViewerStatsPacket extends Packet
                 {
                     AgentID.FromBytes(bytes, i[0]); i[0] += 16;
                     SessionID.FromBytes(bytes, i[0]); i[0] += 16;
-                    IP = (long)Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    StartTime = (long)Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    RunTime = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
-                    SimFPS = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
-                    FPS = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
+                    IP = (long)Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
+                    StartTime = (long)Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
+                    RunTime = Utils.bytesToFloatLit(bytes, i[0]); i[0] += 4;
+                    SimFPS = Utils.bytesToFloatLit(bytes, i[0]); i[0] += 4;
+                    FPS = Utils.bytesToFloatLit(bytes, i[0]); i[0] += 4;
                     AgentsInView = (byte)bytes[i[0]++];
-                    Ping = Utils.bytesToFloat(bytes, i[0]); i[0] += 4;
-                    MetersTraveled = Utils.bytesToDouble(bytes, i[0]); i[0] += 8;
-                    RegionsVisited = Utils.bytesToInt(bytes, i[0]); i[0]+=4;
-                    SysRAM = (long)Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    Ping = Utils.bytesToFloatLit(bytes, i[0]); i[0] += 4;
+                    MetersTraveled = Utils.bytesToDoubleLit(bytes, i[0]); i[0] += 8;
+                    RegionsVisited = Utils.bytesToIntLit(bytes, i[0]); i[0]+=4;
+                    SysRAM = (long)Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                     length = Utils.ubyteToInt(bytes[i[0]++]);
                     SysOS = new byte[length];
                    
@@ -88,16 +88,16 @@ public final class ViewerStatsPacket extends Packet
             {
                 AgentID.ToBytes(bytes, i[0]); i[0] += 16;
                 SessionID.ToBytes(bytes, i[0]); i[0] += 16;
-                Utils.uintToBytes(IP, bytes, i[0]); i[0] += 4;
-                Utils.uintToBytes(StartTime, bytes, i[0]); i[0] += 4;
-                Utils.floatToBytes(RunTime, bytes, i[0]); i[0] += 4;
-                Utils.floatToBytes(SimFPS, bytes, i[0]); i[0] += 4;
-                Utils.floatToBytes(FPS, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(IP, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(StartTime, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytesLit(RunTime, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytesLit(SimFPS, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytesLit(FPS, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = AgentsInView;
-                Utils.floatToBytes(Ping, bytes, i[0]); i[0] += 4;
-                Utils.doubleToBytes(MetersTraveled, bytes, i[0]); i[0] += 8;
-                Utils.intToBytes(RegionsVisited, bytes, i[0]); i[0] += 4;
-                Utils.uintToBytes(SysRAM, bytes, i[0]); i[0] += 4;
+                Utils.floatToBytesLit(Ping, bytes, i[0]); i[0] += 4;
+                Utils.doubleToBytesLit(MetersTraveled, bytes, i[0]); i[0] += 8;
+                Utils.intToBytesLit(RegionsVisited, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(SysRAM, bytes, i[0]); i[0] += 4;
                 bytes[i[0]++] = (byte)SysOS.length;
                 Utils.arraycopy(SysOS, 0, bytes, i[0], SysOS.length); i[0] += SysOS.length;
                 bytes[i[0]++] = (byte)SysCPU.length;
@@ -132,9 +132,9 @@ public final class ViewerStatsPacket extends Packet
             {
                 try
                 {
-                    World = (long)Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    Objects = (long)Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    Textures = (long)Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    World = (long)Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
+                    Objects = (long)Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
+                    Textures = (long)Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -145,9 +145,9 @@ public final class ViewerStatsPacket extends Packet
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.uintToBytes(World, bytes, i[0]); i[0] += 4;
-                Utils.uintToBytes(Objects, bytes, i[0]); i[0] += 4;
-                Utils.uintToBytes(Textures, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(World, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(Objects, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(Textures, bytes, i[0]); i[0] += 4;
             }
 
         }
@@ -177,10 +177,10 @@ public final class ViewerStatsPacket extends Packet
             {
                 try
                 {
-                    Bytes = (long)Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    Packets = (long)Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    Compressed = (long)Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    Savings = (long)Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    Bytes = (long)Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
+                    Packets = (long)Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
+                    Compressed = (long)Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
+                    Savings = (long)Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -191,10 +191,10 @@ public final class ViewerStatsPacket extends Packet
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.uintToBytes(Bytes, bytes, i[0]); i[0] += 4;
-                Utils.uintToBytes(Packets, bytes, i[0]); i[0] += 4;
-                Utils.uintToBytes(Compressed, bytes, i[0]); i[0] += 4;
-                Utils.uintToBytes(Savings, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(Bytes, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(Packets, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(Compressed, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(Savings, bytes, i[0]); i[0] += 4;
             }
 
         }
@@ -226,12 +226,12 @@ public final class ViewerStatsPacket extends Packet
             {
                 try
                 {
-                    SendPacket = (long)Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    Dropped = (long)Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    Resent = (long)Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    FailedResends = (long)Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    OffCircuit = (long)Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    Invalid = (long)Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
+                    SendPacket = (long)Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
+                    Dropped = (long)Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
+                    Resent = (long)Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
+                    FailedResends = (long)Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
+                    OffCircuit = (long)Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
+                    Invalid = (long)Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
                 }
                 catch (Exception e)
                 {
@@ -242,12 +242,12 @@ public final class ViewerStatsPacket extends Packet
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.uintToBytes(SendPacket, bytes, i[0]); i[0] += 4;
-                Utils.uintToBytes(Dropped, bytes, i[0]); i[0] += 4;
-                Utils.uintToBytes(Resent, bytes, i[0]); i[0] += 4;
-                Utils.uintToBytes(FailedResends, bytes, i[0]); i[0] += 4;
-                Utils.uintToBytes(OffCircuit, bytes, i[0]); i[0] += 4;
-                Utils.uintToBytes(Invalid, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(SendPacket, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(Dropped, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(Resent, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(FailedResends, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(OffCircuit, bytes, i[0]); i[0] += 4;
+                Utils.uintToBytesLit(Invalid, bytes, i[0]); i[0] += 4;
             }
 
         }
@@ -275,8 +275,8 @@ public final class ViewerStatsPacket extends Packet
             {
                 try
                 {
-                    Type = (long)Utils.bytesToUInt(bytes, i[0]); i[0] += 4;
-                    Value = Utils.bytesToDouble(bytes, i[0]); i[0] += 8;
+                    Type = (long)Utils.bytesToUIntLit(bytes, i[0]); i[0] += 4;
+                    Value = Utils.bytesToDoubleLit(bytes, i[0]); i[0] += 8;
                 }
                 catch (Exception e)
                 {
@@ -287,8 +287,8 @@ public final class ViewerStatsPacket extends Packet
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                Utils.uintToBytes(Type, bytes, i[0]); i[0] += 4;
-                Utils.doubleToBytes(Value, bytes, i[0]); i[0] += 8;
+                Utils.uintToBytesLit(Type, bytes, i[0]); i[0] += 4;
+                Utils.doubleToBytesLit(Value, bytes, i[0]); i[0] += 8;
             }
 
         }
