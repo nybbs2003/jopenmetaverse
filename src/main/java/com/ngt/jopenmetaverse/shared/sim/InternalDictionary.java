@@ -2,6 +2,10 @@ package com.ngt.jopenmetaverse.shared.sim;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+
+import com.ngt.jopenmetaverse.shared.types.Action;
 
 /*
  * Using Apache Commons Predicate See https://discursive.atlassian.net/wiki/display/CJCOOK/Filtering+a+Collection+with+a+Predicate
@@ -256,7 +260,10 @@ public class InternalDictionary<T, E> {
         /// <returns><see langword="true"/> if found, <see langword="false"/> otherwise</returns>
         public boolean containsKey(T key)
         {
+            synchronized (Dictionary)
+            {
             return Dictionary.containsKey(key);
+            }
         }
 
         /// <summary>Check if Value exists in Dictionary</summary>
@@ -264,7 +271,10 @@ public class InternalDictionary<T, E> {
         /// <returns><see langword="true"/> if found, <see langword="false"/> otherwise</returns>
         public boolean containsValue(T value)
         {
+            synchronized (Dictionary)
+            {
             return Dictionary.containsValue(value);
+            }
         }
 
         /// <summary>
@@ -292,5 +302,16 @@ public class InternalDictionary<T, E> {
             {
                 return Dictionary.remove(key);
             }
+        }
+        
+        public void foreach(Action action)
+        {
+            synchronized (Dictionary)
+            {
+            	for(Entry<T, E> entry: Dictionary.entrySet())
+            	{
+            		action.execute(entry);
+            	}
+            }        	
         }
 }

@@ -1,4 +1,4 @@
-package com.ngt.jopenmetaverse.shared.sim;
+package com.ngt.jopenmetaverse.shared.sim.agent;
 
 import com.ngt.jopenmetaverse.shared.types.Matrix4;
 import com.ngt.jopenmetaverse.shared.types.Quaternion;

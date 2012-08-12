@@ -9,6 +9,7 @@ import com.ngt.jopenmetaverse.shared.structureddata.OSD;
 import com.ngt.jopenmetaverse.shared.structureddata.OSDMap;
 import com.ngt.jopenmetaverse.shared.structureddata.OSDType;
 import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.util.JLogger;
 import com.ngt.jopenmetaverse.shared.util.Utils;
 
 
@@ -542,4 +543,15 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             result.append("\n");
             return result.toString().trim();
         }
+        
+        public static String StructToStringWithOutException(Object t)
+        {
+        	try {
+				return StructToString(t);
+			} catch (Exception e) {
+	            	JLogger.warn(Utils.getExceptionStackTraceAsString(e));
+	            	return 	"Error" + e.getMessage();		
+	        } 
+        }
+        
     }

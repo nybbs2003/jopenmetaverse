@@ -93,7 +93,7 @@ import com.ngt.jopenmetaverse.shared.types.UUID;
 
         /// <summary>Milliseconds without receiving a packet before the 
         /// connection to a simulator is assumed lost</summary>
-        public int SIMULATOR_TIMEOUT = 30 * 1000;
+        public static int SIMULATOR_TIMEOUT = 30 * 1000;
 
         /// <summary>Milliseconds to wait for a simulator info request through
         /// the grid interface</summary>

@@ -4,8 +4,11 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
+import java.net.Inet4Address;
+import java.net.InetAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.security.MessageDigest;
@@ -1611,38 +1614,38 @@ public class Utils
 		return val & 0xff;
 	}
 	
-	//    public static float UInt16ToFloat(byte[] bytes, int pos, float lower, float upper)
-	//    {
-	//        ushort val = BytesToUInt16(bytes, pos);
-	//        return UInt16ToFloat(val, lower, upper);
-	//    }
-	//
-	//    public static float UInt16ToFloat(ushort val, float lower, float upper)
-	//    {
-	//        final float ONE_OVER_U16_MAX = 1.0f / (float)UInt16.MaxValue;
-	//
-	//        float fval = (float)val * ONE_OVER_U16_MAX;
-	//        float delta = upper - lower;
-	//        fval *= delta;
-	//        fval += lower;
-	//
-	//        // Make sure zeroes come through as zero
-	//        float maxError = delta * ONE_OVER_U16_MAX;
-	//        if (Math.abs(fval) < maxError)
-	//            fval = 0.0f;
-	//
-	//        return fval;
-	//    }
-	//
-	//    public static ushort FloatToUInt16(float value, float lower, float upper)
-	//    {
-	//        float delta = upper - lower;
-	//        value -= lower;
-	//        value /= delta;
-	//        value *= (float)UInt16.MaxValue;
-	//
-	//        return (ushort)value;
-	//    }
+	    public static float UInt16ToFloat(byte[] bytes, int pos, float lower, float upper)
+	    {
+	        int val = bytesToUInt16(bytes, pos);
+	        return uint16ToFloat(val, lower, upper);
+	    }
+	
+	    public static float uint16ToFloat(int val, float lower, float upper)
+	    {
+	        final float ONE_OVER_U16_MAX = 1.0f / (float)(2*Short.MAX_VALUE+1);
+	
+	        float fval = (float)val * ONE_OVER_U16_MAX;
+	        float delta = upper - lower;
+	        fval *= delta;
+	        fval += lower;
+	
+	        // Make sure zeroes come through as zero
+	        float maxError = delta * ONE_OVER_U16_MAX;
+	        if (Math.abs(fval) < maxError)
+	            fval = 0.0f;
+	
+	        return fval;
+	    }
+	
+	    public static int floatToUInt16(float value, float lower, float upper)
+	    {
+	        float delta = upper - lower;
+	        value -= lower;
+	        value /= delta;
+	        value *= (float)(2*Short.MAX_VALUE+1);
+	
+	        return (int)value;
+	    }
 
 	//endregion Packed Values
 
@@ -2009,6 +2012,11 @@ public class Utils
 	    {
 	        return ((long)a << 32) | (long)b;
 	    }
+
+	    public static BigInteger uintsToULong(long a, long b)
+	    {
+	        return new BigInteger(int64ToBytes(((long)a << 32) | (long)b));
+	    }
 	    
 	    /// <summary>
 	    /// Unpacks two 32-bit unsigned integers from a 64-bit unsigned integer
@@ -2208,4 +2216,16 @@ public class Utils
 		  exception.printStackTrace(new PrintWriter(sw));
 		  return sw.toString();
 		}
+
+	public static long IPToUInt(InetAddress ip) {
+		return Utils.bytesToUInt(ip.getAddress());
+	}
+	
+	public static InetAddress UIntToIP(long addr) throws UnknownHostException {
+		return Inet4Address.getByAddress(Utils.uintToBytes(addr));
+	}
+
+	public static byte booleanToBytes(boolean set) {
+		 return (byte) (set ? 0x01 : 0x00);
+	}	
 }

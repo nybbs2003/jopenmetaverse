@@ -182,6 +182,18 @@ public class EnumsPrimitive
 		{
 			return index;
 		}
+		
+		private static final Map<Byte,SoundFlags> lookup  = new HashMap<Byte,SoundFlags>();
+
+		static {
+			for(SoundFlags s : EnumSet.allOf(SoundFlags.class))
+				lookup.put(s.getIndex(), s);
+		}
+
+		public static SoundFlags get(Byte index)
+		{
+			return lookup.get(index);
+		}
     }
 
     public enum ProfileCurve
@@ -417,6 +429,18 @@ public class EnumsPrimitive
 		{
 			return index;
 		}
+		private static final Map<Byte,JointType> lookup  = new HashMap<Byte,JointType>();
+
+		static {
+			for(JointType s : EnumSet.allOf(JointType.class))
+				lookup.put(s.getIndex(), s);
+		}
+
+		public static JointType get(Byte index)
+		{
+			return lookup.get(index);
+		}	
+		
     }
 
     /// <summary>
@@ -527,6 +551,18 @@ public class EnumsPrimitive
 		public int getIndex()
 		{
 			return index;
+		}
+		
+		private static final Map<Integer,ObjectCategory> lookup  = new HashMap<Integer,ObjectCategory>();
+
+		static {
+			for(ObjectCategory s : EnumSet.allOf(ObjectCategory.class))
+				lookup.put(s.getIndex(), s);
+		}
+
+		public static ObjectCategory get(Integer index)
+		{
+			return lookup.get(index);
 		}
     }
 
@@ -737,6 +773,18 @@ public class EnumsPrimitive
 		{
 			return index;
 		}
+		
+		private static final Map<Byte,Tree> lookup  = new HashMap<Byte,Tree>();
+
+		static {
+			for(Tree s : EnumSet.allOf(Tree.class))
+				lookup.put(s.getIndex(), s);
+		}
+
+		public static Tree get(Byte index)
+		{
+			return lookup.get(index);
+		}
     }
 
     /// <summary>
@@ -765,6 +813,18 @@ public class EnumsPrimitive
 		public byte getIndex()
 		{
 			return index;
+		}
+		
+		private static final Map<Byte,Grass> lookup  = new HashMap<Byte,Grass>();
+
+		static {
+			for(Grass s : EnumSet.allOf(Grass.class))
+				lookup.put(s.getIndex(), s);
+		}
+
+		public static Grass get(Byte index)
+		{
+			return lookup.get(index);
 		}
     }
 
@@ -797,6 +857,18 @@ public class EnumsPrimitive
 		public byte getIndex()
 		{
 			return index;
+		}
+		
+		private static final Map<Byte,ClickAction> lookup  = new HashMap<Byte,ClickAction>();
+
+		static {
+			for(ClickAction s : EnumSet.allOf(ClickAction.class))
+				lookup.put(s.getIndex(), s);
+		}
+
+		public static ClickAction get(Byte index)
+		{
+			return lookup.get(index);
 		}
     }
 

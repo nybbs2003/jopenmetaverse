@@ -174,7 +174,6 @@ public class PacketEventDictionary {
 
 		if (packetType != PacketType.Default && packetType != PacketType.PacketAck)
 		{
-			
 			logger.log(Level.INFO, "No handler registered for packet event " + packetType, Client);
 		}
 	}

@@ -130,7 +130,7 @@ public class Primitive
     /// <summary></summary>
     public TextureEntry Textures;
     /// <summary></summary>
-    public TextureAnimMode TextureAnim;
+    public TextureAnimation TextureAnim;
     
     //endregion Public Members
 

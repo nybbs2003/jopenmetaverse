@@ -36,7 +36,6 @@ import com.ngt.jopenmetaverse.shared.sim.Simulator.RegionFlags;
 import com.ngt.jopenmetaverse.shared.sim.Simulator.SimAccess;
 import com.ngt.jopenmetaverse.shared.sim.buffers.UDPPacketBuffer;
 import com.ngt.jopenmetaverse.shared.sim.events.AutoResetEvent;
-import com.ngt.jopenmetaverse.shared.sim.events.Caps;
 import com.ngt.jopenmetaverse.shared.sim.events.CapsEventDictionary;
 import com.ngt.jopenmetaverse.shared.sim.events.CapsEventObservableArg;
 import com.ngt.jopenmetaverse.shared.sim.events.EventObservable;

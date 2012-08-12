@@ -1,7 +1,11 @@
 package com.ngt.jopenmetaverse.shared.sim;
 
+import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
+import java.net.Inet4Address;
+import java.net.InetSocketAddress;
 import java.net.URI;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.EnumSet;
@@ -13,48 +17,136 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.Timer;
 import java.util.TimerTask;
-
 import com.ngt.jopenmetaverse.shared.cap.http.CapsHttpClient;
 import com.ngt.jopenmetaverse.shared.cap.http.CapsHttpRequestCompletedArg;
+import com.ngt.jopenmetaverse.shared.exception.NotImplementedException;
 import com.ngt.jopenmetaverse.shared.protocol.ActivateGesturesPacket;
 import com.ngt.jopenmetaverse.shared.protocol.AgentAnimationPacket;
+import com.ngt.jopenmetaverse.shared.protocol.AgentDataUpdatePacket;
+import com.ngt.jopenmetaverse.shared.protocol.AgentHeightWidthPacket;
+import com.ngt.jopenmetaverse.shared.protocol.AgentMovementCompletePacket;
 import com.ngt.jopenmetaverse.shared.protocol.AgentRequestSitPacket;
 import com.ngt.jopenmetaverse.shared.protocol.AgentSitPacket;
 import com.ngt.jopenmetaverse.shared.protocol.AgentUpdatePacket;
+import com.ngt.jopenmetaverse.shared.protocol.AlertMessagePacket;
+import com.ngt.jopenmetaverse.shared.protocol.AvatarAnimationPacket;
+import com.ngt.jopenmetaverse.shared.protocol.AvatarInterestsUpdatePacket;
+import com.ngt.jopenmetaverse.shared.protocol.AvatarPropertiesUpdatePacket;
+import com.ngt.jopenmetaverse.shared.protocol.AvatarSitResponsePacket;
+import com.ngt.jopenmetaverse.shared.protocol.CameraConstraintPacket;
+import com.ngt.jopenmetaverse.shared.protocol.ChatFromSimulatorPacket;
 import com.ngt.jopenmetaverse.shared.protocol.ChatFromViewerPacket;
+import com.ngt.jopenmetaverse.shared.protocol.ClassifiedDeletePacket;
+import com.ngt.jopenmetaverse.shared.protocol.ClassifiedInfoUpdatePacket;
 import com.ngt.jopenmetaverse.shared.protocol.CompleteAgentMovementPacket;
+import com.ngt.jopenmetaverse.shared.protocol.CrossedRegionPacket;
 import com.ngt.jopenmetaverse.shared.protocol.DeactivateGesturesPacket;
 import com.ngt.jopenmetaverse.shared.protocol.GenericMessagePacket;
+import com.ngt.jopenmetaverse.shared.protocol.HealthMessagePacket;
 import com.ngt.jopenmetaverse.shared.protocol.Helpers;
 import com.ngt.jopenmetaverse.shared.protocol.ImprovedInstantMessagePacket;
+import com.ngt.jopenmetaverse.shared.protocol.LoadURLPacket;
+import com.ngt.jopenmetaverse.shared.protocol.MeanCollisionAlertPacket;
+import com.ngt.jopenmetaverse.shared.protocol.MoneyBalanceReplyPacket;
 import com.ngt.jopenmetaverse.shared.protocol.MoneyBalanceRequestPacket;
 import com.ngt.jopenmetaverse.shared.protocol.MoneyTransferRequestPacket;
+import com.ngt.jopenmetaverse.shared.protocol.MuteListRequestPacket;
+import com.ngt.jopenmetaverse.shared.protocol.MuteListUpdatePacket;
 import com.ngt.jopenmetaverse.shared.protocol.ObjectDeGrabPacket;
 import com.ngt.jopenmetaverse.shared.protocol.ObjectGrabPacket;
 import com.ngt.jopenmetaverse.shared.protocol.ObjectGrabUpdatePacket;
+import com.ngt.jopenmetaverse.shared.protocol.Packet;
+import com.ngt.jopenmetaverse.shared.protocol.PacketType;
+import com.ngt.jopenmetaverse.shared.protocol.PickDeletePacket;
+import com.ngt.jopenmetaverse.shared.protocol.PickInfoUpdatePacket;
+import com.ngt.jopenmetaverse.shared.protocol.RemoveMuteListEntryPacket;
 import com.ngt.jopenmetaverse.shared.protocol.RetrieveInstantMessagesPacket;
+import com.ngt.jopenmetaverse.shared.protocol.ScriptAnswerYesPacket;
+import com.ngt.jopenmetaverse.shared.protocol.ScriptControlChangePacket;
+import com.ngt.jopenmetaverse.shared.protocol.ScriptDialogPacket;
 import com.ngt.jopenmetaverse.shared.protocol.ScriptDialogReplyPacket;
+import com.ngt.jopenmetaverse.shared.protocol.ScriptQuestionPacket;
+import com.ngt.jopenmetaverse.shared.protocol.ScriptSensorReplyPacket;
+import com.ngt.jopenmetaverse.shared.protocol.ScriptSensorRequestPacket;
 import com.ngt.jopenmetaverse.shared.protocol.SetAlwaysRunPacket;
+import com.ngt.jopenmetaverse.shared.protocol.SetStartLocationRequestPacket;
+import com.ngt.jopenmetaverse.shared.protocol.StartLurePacket;
+import com.ngt.jopenmetaverse.shared.protocol.TeleportFailedPacket;
+import com.ngt.jopenmetaverse.shared.protocol.TeleportFinishPacket;
 import com.ngt.jopenmetaverse.shared.protocol.TeleportLandmarkRequestPacket;
+import com.ngt.jopenmetaverse.shared.protocol.TeleportLocalPacket;
+import com.ngt.jopenmetaverse.shared.protocol.TeleportLocationRequestPacket;
+import com.ngt.jopenmetaverse.shared.protocol.TeleportLureRequestPacket;
+import com.ngt.jopenmetaverse.shared.protocol.TeleportProgressPacket;
+import com.ngt.jopenmetaverse.shared.protocol.TeleportStartPacket;
+import com.ngt.jopenmetaverse.shared.protocol.UpdateMuteListEntryPacket;
 import com.ngt.jopenmetaverse.shared.protocol.ViewerEffectPacket;
 import com.ngt.jopenmetaverse.shared.protocol.primitives.Primitive;
 import com.ngt.jopenmetaverse.shared.sim.Avatar.ProfileFlags;
 import com.ngt.jopenmetaverse.shared.sim.AvatarManager.AgentDisplayName;
+import com.ngt.jopenmetaverse.shared.sim.GridManager.GridLayerType;
+import com.ngt.jopenmetaverse.shared.sim.GridManager.GridRegion;
 import com.ngt.jopenmetaverse.shared.sim.GroupManager.ChatSessionMember;
 import com.ngt.jopenmetaverse.shared.sim.GroupManager.GroupPowers;
 import com.ngt.jopenmetaverse.shared.sim.ParcelManager.LandingType;
+import com.ngt.jopenmetaverse.shared.sim.agent.AgentMovement;
 import com.ngt.jopenmetaverse.shared.sim.asset.AssetGesture;
+import com.ngt.jopenmetaverse.shared.sim.events.AutoResetEvent;
 import com.ngt.jopenmetaverse.shared.sim.events.EventArgs;
+import com.ngt.jopenmetaverse.shared.sim.events.EventObservable;
 import com.ngt.jopenmetaverse.shared.sim.events.EventObserver;
 import com.ngt.jopenmetaverse.shared.sim.events.ManualResetEvent;
+import com.ngt.jopenmetaverse.shared.sim.events.PacketReceivedEventArgs;
+import com.ngt.jopenmetaverse.shared.sim.events.CapsEventObservableArg;
+import com.ngt.jopenmetaverse.shared.sim.events.ThreadPool;
+import com.ngt.jopenmetaverse.shared.sim.events.ThreadPoolFactory;
+import com.ngt.jopenmetaverse.shared.sim.events.am.AgentDataReplyEventArgs;
+import com.ngt.jopenmetaverse.shared.sim.events.am.AlertMessageEventArgs;
+import com.ngt.jopenmetaverse.shared.sim.events.am.AnimationsChangedEventArgs;
+import com.ngt.jopenmetaverse.shared.sim.events.am.AttachmentResourcesCallbackArg;
+import com.ngt.jopenmetaverse.shared.sim.events.am.AvatarSitResponseEventArgs;
+import com.ngt.jopenmetaverse.shared.sim.events.am.BalanceEventArgs;
+import com.ngt.jopenmetaverse.shared.sim.events.am.CameraConstraintEventArgs;
+import com.ngt.jopenmetaverse.shared.sim.events.am.ChatEventArgs;
+import com.ngt.jopenmetaverse.shared.sim.events.am.ChatSessionMemberAddedEventArgs;
+import com.ngt.jopenmetaverse.shared.sim.events.am.ChatSessionMemberLeftEventArgs;
+import com.ngt.jopenmetaverse.shared.sim.events.am.GroupChatJoinedEventArgs;
+import com.ngt.jopenmetaverse.shared.sim.events.am.InstantMessageEventArgs;
+import com.ngt.jopenmetaverse.shared.sim.events.am.LoadUrlEventArgs;
+import com.ngt.jopenmetaverse.shared.sim.events.am.MeanCollisionEventArgs;
+import com.ngt.jopenmetaverse.shared.sim.events.am.MoneyBalanceReplyEventArgs;
+import com.ngt.jopenmetaverse.shared.sim.events.am.RegionCrossedEventArgs;
+import com.ngt.jopenmetaverse.shared.sim.events.am.ScriptControlEventArgs;
+import com.ngt.jopenmetaverse.shared.sim.events.am.ScriptDialogEventArgs;
+import com.ngt.jopenmetaverse.shared.sim.events.am.ScriptQuestionEventArgs;
+import com.ngt.jopenmetaverse.shared.sim.events.am.ScriptSensorReplyEventArgs;
+import com.ngt.jopenmetaverse.shared.sim.events.am.SetDisplayNameReplyEventArgs;
+import com.ngt.jopenmetaverse.shared.sim.events.am.TeleportEventArgs;
+import com.ngt.jopenmetaverse.shared.sim.events.gm.CoarseLocationUpdateEventArgs;
+import com.ngt.jopenmetaverse.shared.sim.events.gm.GridRegionEventArgs;
 import com.ngt.jopenmetaverse.shared.sim.events.nm.DisconnectedEventArgs;
+import com.ngt.jopenmetaverse.shared.sim.events.nm.EventQueueRunningEventArgs;
 import com.ngt.jopenmetaverse.shared.sim.events.nm.SimDisconnectedEventArgs;
+import com.ngt.jopenmetaverse.shared.sim.interfaces.IMessage;
 import com.ngt.jopenmetaverse.shared.sim.login.LoginProgressEventArgs;
 import com.ngt.jopenmetaverse.shared.sim.login.LoginResponseCallbackArg;
 import com.ngt.jopenmetaverse.shared.sim.login.LoginResponseData;
 import com.ngt.jopenmetaverse.shared.sim.login.LoginStatus;
+import com.ngt.jopenmetaverse.shared.sim.message.LindenMessages.AttachmentResourcesMessage;
 import com.ngt.jopenmetaverse.shared.sim.message.LindenMessages.ChatSessionAcceptInvitation;
+import com.ngt.jopenmetaverse.shared.sim.message.LindenMessages.ChatSessionRequestMuteUpdate;
 import com.ngt.jopenmetaverse.shared.sim.message.LindenMessages.ChatSessionRequestStartConference;
+import com.ngt.jopenmetaverse.shared.sim.message.LindenMessages.ChatterBoxInvitationMessage;
+import com.ngt.jopenmetaverse.shared.sim.message.LindenMessages.ChatterBoxSessionAgentListUpdatesMessage;
+import com.ngt.jopenmetaverse.shared.sim.message.LindenMessages.ChatterBoxSessionStartReplyMessage;
+import com.ngt.jopenmetaverse.shared.sim.message.LindenMessages.ChatterboxSessionEventReplyMessage;
+import com.ngt.jopenmetaverse.shared.sim.message.LindenMessages.CrossedRegionMessage;
+import com.ngt.jopenmetaverse.shared.sim.message.LindenMessages.EstablishAgentCommunicationMessage;
+import com.ngt.jopenmetaverse.shared.sim.message.LindenMessages.SetDisplayNameMessage;
+import com.ngt.jopenmetaverse.shared.sim.message.LindenMessages.SetDisplayNameReplyMessage;
+import com.ngt.jopenmetaverse.shared.sim.message.LindenMessages.TeleportFailedMessage;
+import com.ngt.jopenmetaverse.shared.sim.message.LindenMessages.TeleportFinishMessage;
+import com.ngt.jopenmetaverse.shared.sim.message.LindenMessages.UpdateAgentLanguageMessage;
 import com.ngt.jopenmetaverse.shared.structureddata.OSD;
 import com.ngt.jopenmetaverse.shared.structureddata.OSDFormat;
 import com.ngt.jopenmetaverse.shared.types.Color4;
@@ -67,6 +159,9 @@ import com.ngt.jopenmetaverse.shared.types.Vector4;
 import com.ngt.jopenmetaverse.shared.util.JLogger;
 import com.ngt.jopenmetaverse.shared.util.Utils;
 
+/// <summary>
+/// Manager class for our own avatar
+/// </summary>
 public class AgentManager {
 
 	/*Patch up code*/
@@ -475,17 +570,17 @@ public class AgentManager {
 			return index;
 		}
 
-		//			private static final Map<Byte,ChatType> lookup  = new HashMap<Byte,ChatType>();
-		//
-		//			static {
-		//				for(ChatType s : EnumSet.allOf(ChatType.class))
-		//					lookup.put(s.getIndex(), s);
-		//			}
-		//
-		//			public static ChatType get(Byte index)
-		//			{
-		//				return lookup.get(index);
-		//			}
+		private static final Map<Byte,ChatType> lookup  = new HashMap<Byte,ChatType>();
+
+		static {
+			for(ChatType s : EnumSet.allOf(ChatType.class))
+				lookup.put(s.getIndex(), s);
+		}
+
+		public static ChatType get(Byte index)
+		{
+			return lookup.get(index);
+		}
 	}
 
 	/// <summary>
@@ -511,17 +606,17 @@ public class AgentManager {
 			return index;
 		}
 
-		//			private static final Map<Byte,ChatSourceType> lookup  = new HashMap<Byte,ChatSourceType>();
-		//
-		//			static {
-		//				for(ChatType s : EnumSet.allOf(ChatSourceType.class))
-		//					lookup.put(s.getIndex(), s);
-		//			}
-		//
-		//			public static ChatSourceType get(Byte index)
-		//			{
-		//				return lookup.get(index);
-		//			}
+		private static final Map<Byte,ChatSourceType> lookup  = new HashMap<Byte,ChatSourceType>();
+
+		static {
+			for(ChatSourceType s : EnumSet.allOf(ChatSourceType.class))
+				lookup.put(s.getIndex(), s);
+		}
+
+		public static ChatSourceType get(Byte index)
+		{
+			return lookup.get(index);
+		}
 	}
 
 	/// <summary>
@@ -546,17 +641,17 @@ public class AgentManager {
 			return index;
 		}
 
-		//			private static final Map<Byte,ChatAudibleLevel> lookup  = new HashMap<Byte,ChatAudibleLevel>();
-		//
-		//			static {
-		//				for(ChatType s : EnumSet.allOf(ChatAudibleLevel.class))
-		//					lookup.put(s.getIndex(), s);
-		//			}
-		//
-		//			public static ChatAudibleLevel get(Byte index)
-		//			{
-		//				return lookup.get(index);
-		//			}
+		private static final Map<Byte,ChatAudibleLevel> lookup  = new HashMap<Byte,ChatAudibleLevel>();
+
+		static {
+			for(ChatAudibleLevel s : EnumSet.allOf(ChatAudibleLevel.class))
+				lookup.put(s.getIndex(), s);
+		}
+
+		public static ChatAudibleLevel get(Byte index)
+		{
+			return lookup.get(index);
+		}
 	}
 
 	/// <summary>
@@ -609,17 +704,17 @@ public class AgentManager {
 			return index;
 		}
 
-		//			private static final Map<Byte,EffectType> lookup  = new HashMap<Byte,EffectType>();
-		//
-		//			static {
-		//				for(ChatType s : EnumSet.allOf(EffectType.class))
-		//					lookup.put(s.getIndex(), s);
-		//			}
-		//
-		//			public static EffectType get(Byte index)
-		//			{
-		//				return lookup.get(index);
-		//			}
+		private static final Map<Byte,EffectType> lookup  = new HashMap<Byte,EffectType>();
+
+		static {
+			for(EffectType s : EnumSet.allOf(EffectType.class))
+				lookup.put(s.getIndex(), s);
+		}
+
+		public static EffectType get(Byte index)
+		{
+			return lookup.get(index);
+		}
 	}
 
 	/// <summary>
@@ -912,17 +1007,17 @@ public class AgentManager {
 			return index;
 		}
 
-		//			private static final Map<Byte,MeanCollisionType> lookup  = new HashMap<Byte,MeanCollisionType>();
-		//
-		//			static {
-		//				for(ChatType s : EnumSet.allOf(MeanCollisionType.class))
-		//					lookup.put(s.getIndex(), s);
-		//			}
-		//
-		//			public static MeanCollisionType get(Byte index)
-		//			{
-		//				return lookup.get(index);
-		//			}
+		private static final Map<Byte,MeanCollisionType> lookup  = new HashMap<Byte,MeanCollisionType>();
+
+		static {
+			for(MeanCollisionType s : EnumSet.allOf(MeanCollisionType.class))
+				lookup.put(s.getIndex(), s);
+		}
+
+		public static MeanCollisionType get(Byte index)
+		{
+			return lookup.get(index);
+		}
 	}
 
 	/// <summary>
@@ -966,17 +1061,17 @@ public class AgentManager {
 			return index;
 		}  
 
-		//			private static final Map<Long,ScriptControlChange> lookup  = new HashMap<Long,ScriptControlChange>();
-		//
-		//			static {
-		//				for(ScriptControlChange s : EnumSet.allOf(ScriptControlChange.class))
-		//					lookup.put(s.getIndex(), s);
-		//			}
-		//
-		//			public static ScriptControlChange get(Long index)
-		//			{
-		//				return lookup.get(index);
-		//			}
+		private static final Map<Long,ScriptControlChange> lookup  = new HashMap<Long,ScriptControlChange>();
+
+		static {
+			for(ScriptControlChange s : EnumSet.allOf(ScriptControlChange.class))
+				lookup.put(s.getIndex(), s);
+		}
+
+		public static ScriptControlChange get(Long index)
+		{
+			return lookup.get(index);
+		}
 	}
 
 	/// <summary>
@@ -1178,18 +1273,18 @@ public class AgentManager {
 			return index;
 		}
 
-		//			private static final Map<Integer,ScriptSensorTypeFlags> lookup  
-		//			= new HashMap<Integer,ScriptSensorTypeFlags>();
-		//
-		//			static {
-		//				for(ScriptSensorTypeFlags s : EnumSet.allOf(ScriptSensorTypeFlags.class))
-		//					lookup.put(s.getIndex(), s);
-		//			}
-		//
-		//			public static ScriptSensorTypeFlags get(Integer index)
-		//			{
-		//				return lookup.get(index);
-		//			}
+		private static final Map<Integer,ScriptSensorTypeFlags> lookup  
+		= new HashMap<Integer,ScriptSensorTypeFlags>();
+
+		static {
+			for(ScriptSensorTypeFlags s : EnumSet.allOf(ScriptSensorTypeFlags.class))
+				lookup.put(s.getIndex(), s);
+		}
+
+		public static ScriptSensorTypeFlags get(Integer index)
+		{
+			return lookup.get(index);
+		}
 	}
 
 	/// <summary>
@@ -1359,10 +1454,228 @@ public class AgentManager {
 	}
 	//endregion Structs
 
-	/// <summary>
-	/// Manager class for our own avatar
-	/// </summary>
-	//public partial class AgentManager
+	private EventObservable<ChatEventArgs> onChatFromSimulator = new EventObservable<ChatEventArgs>();
+	private EventObservable<ScriptDialogEventArgs> onScriptDialog = new EventObservable<ScriptDialogEventArgs>();
+	private EventObservable<ScriptQuestionEventArgs> onScriptQuestion = new EventObservable<ScriptQuestionEventArgs>();
+
+
+	public void registerChatFromSimulator(EventObserver<ChatEventArgs> o)
+	{
+		onChatFromSimulator.addObserver(o);
+	}
+	public void unregisterChatFromSimulator(EventObserver<ChatEventArgs> o)
+	{
+		onChatFromSimulator.addObserver(o);
+	}
+	public void registerScriptDialog(EventObserver<ScriptDialogEventArgs> o)
+	{
+		onScriptDialog.addObserver(o);
+	}
+
+	public void unregisterScriptDialog(EventObserver<ScriptDialogEventArgs> o)
+	{
+		onScriptDialog.addObserver(o);
+	}
+
+	public void registerScriptQuestion(EventObserver<ScriptQuestionEventArgs> o)
+	{
+		onScriptQuestion.addObserver(o);
+	}
+	public void unregisterScriptQuestion(EventObserver<ScriptQuestionEventArgs> o)
+	{
+		onScriptQuestion.addObserver(o);
+	}
+
+	private EventObservable<LoadUrlEventArgs> onLoadURL = new EventObservable<LoadUrlEventArgs>();
+	public void registerLoadURL(EventObserver<LoadUrlEventArgs> o)
+	{
+		onLoadURL.addObserver(o);
+	}
+	public void unregisterLoadURL(EventObserver<LoadUrlEventArgs> o)
+	{
+		onLoadURL.addObserver(o);
+	}	
+
+	private EventObservable<BalanceEventArgs> onMoneyBalance = new EventObservable<BalanceEventArgs>();
+	public void registerMoneyBalance(EventObserver<BalanceEventArgs> o)
+	{
+		onMoneyBalance.addObserver(o);
+	}
+	public void unregisterMoneyBalance(EventObserver<BalanceEventArgs> o)
+	{
+		onMoneyBalance.addObserver(o);
+	}
+
+	private EventObservable<MoneyBalanceReplyEventArgs> onMoneyBalanceReply = new EventObservable<MoneyBalanceReplyEventArgs>();
+	public void registerMoneyBalanceReply(EventObserver<MoneyBalanceReplyEventArgs> o)
+	{
+		onMoneyBalanceReply.addObserver(o);
+	}
+	public void unregisterMoneyBalanceReply(EventObserver<MoneyBalanceReplyEventArgs> o)
+	{
+		onMoneyBalanceReply.addObserver(o);
+	}	
+
+	private EventObservable<InstantMessageEventArgs> onIM = new EventObservable<InstantMessageEventArgs>();
+	public void registerIM(EventObserver<InstantMessageEventArgs> o)
+	{
+		onIM.addObserver(o);
+	}
+	public void unregisterIM(EventObserver<InstantMessageEventArgs> o)
+	{
+		onIM.addObserver(o);
+	}	
+
+	private EventObservable<TeleportEventArgs> onTeleportProgress = new EventObservable<TeleportEventArgs>();
+	public void registerTeleportProgress(EventObserver<TeleportEventArgs> o)
+	{
+		onTeleportProgress.addObserver(o);
+	}
+	public void unregisterTeleportProgress(EventObserver<TeleportEventArgs> o)
+	{
+		onTeleportProgress.addObserver(o);
+	}
+
+	private EventObservable<AgentDataReplyEventArgs> onAgentDataReply = new EventObservable<AgentDataReplyEventArgs>();
+	public void registerAgentDataReply(EventObserver<AgentDataReplyEventArgs> o)
+	{
+		onAgentDataReply.addObserver(o);
+	}
+	public void unregisterAgentDataReply(EventObserver<AgentDataReplyEventArgs> o)
+	{
+		onAgentDataReply.addObserver(o);
+	}	
+
+	private EventObservable<AnimationsChangedEventArgs> onAnimationsChanged = new EventObservable<AnimationsChangedEventArgs>();
+	public void registerAnimationsChanged(EventObserver<AnimationsChangedEventArgs> o)
+	{
+		onAnimationsChanged.addObserver(o);
+	}
+	public void unregisterAnimationsChanged(EventObserver<AnimationsChangedEventArgs> o)
+	{
+		onAnimationsChanged.addObserver(o);
+	}
+
+	private EventObservable<MeanCollisionEventArgs> onMeanCollision = new EventObservable<MeanCollisionEventArgs>();
+	public void registerMeanCollision(EventObserver<MeanCollisionEventArgs> o)
+	{
+		onMeanCollision.addObserver(o);
+	}
+	public void unregisterMeanCollision(EventObserver<MeanCollisionEventArgs> o)
+	{
+		onMeanCollision.addObserver(o);
+	}
+
+	private EventObservable<RegionCrossedEventArgs> onRegionCrossed = new EventObservable<RegionCrossedEventArgs>();
+	public void registerRegionCrossed(EventObserver<RegionCrossedEventArgs> o)
+	{
+		onRegionCrossed.addObserver(o);
+	}
+	public void unregisterRegionCrossed(EventObserver<RegionCrossedEventArgs> o)
+	{
+		onRegionCrossed.addObserver(o);
+	}
+
+	private EventObservable<GroupChatJoinedEventArgs> onGroupChatJoined = new EventObservable<GroupChatJoinedEventArgs>();
+	public void registerGroupChatJoined(EventObserver<GroupChatJoinedEventArgs> o)
+	{
+		onGroupChatJoined.addObserver(o);
+	}
+	public void unregisterGroupChatJoined(EventObserver<GroupChatJoinedEventArgs> o)
+	{
+		onGroupChatJoined.addObserver(o);
+	}
+
+	private EventObservable<AlertMessageEventArgs> onAlertMessage = new EventObservable<AlertMessageEventArgs>();
+	public void registerAlertMessage(EventObserver<AlertMessageEventArgs> o)
+	{
+		onAlertMessage.addObserver(o);
+	}
+	public void unregisterAlertMessage(EventObserver<AlertMessageEventArgs> o)
+	{
+		onAlertMessage.addObserver(o);
+	}
+
+	private EventObservable<ScriptControlEventArgs> onOnScriptControlChange = new EventObservable<ScriptControlEventArgs>();
+	public void registerOnScriptControlChange(EventObserver<ScriptControlEventArgs> o)
+	{
+		onOnScriptControlChange.addObserver(o);
+	}
+	public void unregisterOnScriptControlChange(EventObserver<ScriptControlEventArgs> o)
+	{
+		onOnScriptControlChange.addObserver(o);
+	}	
+
+	private EventObservable<CameraConstraintEventArgs> onCameraConstraint = new EventObservable<CameraConstraintEventArgs>();
+	public void registerCameraConstraint(EventObserver<CameraConstraintEventArgs> o)
+	{
+		onCameraConstraint.addObserver(o);
+	}
+	public void unregisterCameraConstraint(EventObserver<CameraConstraintEventArgs> o)
+	{
+		onCameraConstraint.addObserver(o);
+	}	
+	private EventObservable<AvatarSitResponseEventArgs> onAvatarSitResponse = new EventObservable<AvatarSitResponseEventArgs>();
+	public void registerAvatarSitResponse(EventObserver<AvatarSitResponseEventArgs> o)
+	{
+		onAvatarSitResponse.addObserver(o);
+	}
+	public void unregisterAvatarSitResponse(EventObserver<AvatarSitResponseEventArgs> o)
+	{
+		onAvatarSitResponse.addObserver(o);
+	}
+
+	private EventObservable<ScriptSensorReplyEventArgs> onScriptSensorReply = new EventObservable<ScriptSensorReplyEventArgs>();
+	public void registerScriptSensorReply(EventObserver<ScriptSensorReplyEventArgs> o)
+	{
+		onScriptSensorReply.addObserver(o);
+	}
+	public void unregisterScriptSensorReply(EventObserver<ScriptSensorReplyEventArgs> o)
+	{
+		onScriptSensorReply.addObserver(o);
+	}
+
+	private EventObservable<ChatSessionMemberAddedEventArgs> onChatSessionMemberAdded = new EventObservable<ChatSessionMemberAddedEventArgs>();
+	public void registerChatSessionMemberAdded(EventObserver<ChatSessionMemberAddedEventArgs> o)
+	{
+		onChatSessionMemberAdded.addObserver(o);
+	}
+	public void unregisterChatSessionMemberAdded(EventObserver<ChatSessionMemberAddedEventArgs> o)
+	{
+		onChatSessionMemberAdded.addObserver(o);
+	}	
+
+	private EventObservable<ChatSessionMemberLeftEventArgs> onChatSessionMemberLeft = new EventObservable<ChatSessionMemberLeftEventArgs>();
+	public void registerChatSessionMemberLeft(EventObserver<ChatSessionMemberLeftEventArgs> o)
+	{
+		onChatSessionMemberLeft.addObserver(o);
+	}
+	public void unregisterChatSessionMemberLeft(EventObserver<ChatSessionMemberLeftEventArgs> o)
+	{
+		onChatSessionMemberLeft.addObserver(o);
+	}
+
+	private EventObservable<SetDisplayNameReplyEventArgs> onSetDisplayNameReply = new EventObservable<SetDisplayNameReplyEventArgs>();
+	public void registerSetDisplayNameReply(EventObserver<SetDisplayNameReplyEventArgs> o)
+	{
+		onSetDisplayNameReply.addObserver(o);
+	}
+	public void unregisterSetDisplayNameReply(EventObserver<SetDisplayNameReplyEventArgs> o)
+	{
+		onSetDisplayNameReply.addObserver(o);
+	}
+
+	private EventObservable<EventArgs> onMuteListUpdated = new EventObservable<EventArgs>();
+	public void registerMuteListUpdated(EventObserver<EventArgs> o)
+	{
+		onMuteListUpdated.addObserver(o);
+	}
+	public void unregisterMuteListUpdated(EventObserver<EventArgs> o)
+	{
+		onMuteListUpdated.addObserver(o);
+	}
+
+	//TODO Need to implement following 
 
 	//	        //region Delegates
 	//	        /// <summary>
@@ -1392,7 +1705,7 @@ public class AgentManager {
 	//	        private readonly object m_ChatLock = new object();
 	//	
 	//	        /// <summary>Raised when a scripted object or agent within range sends a public message</summary>
-	//	        public event EventHandler<ChatEventArgs> ChatFromSimulator
+	//	        public event EventHandler<ChatEventArgs> ChatFromSimulator 	
 	//	        {
 	//	            add { synchronized (m_ChatLock) { m_Chat += value; } }
 	//	            remove { synchronized (m_ChatLock) { m_Chat -= value; } }
@@ -1415,7 +1728,8 @@ public class AgentManager {
 	//	        private readonly object m_ScriptDialogLock = new object();
 	//	        /// <summary>Raised when a scripted object sends a dialog box containing possible
 	//	        /// options an agent can respond to</summary>
-	//	        public event EventHandler<ScriptDialogEventArgs> ScriptDialog
+	//	        public event EventHandler<ScriptDialogEventArgs> ScriptDialog 
+
 	//	        {
 	//	            add { synchronized (m_ScriptDialogLock) { m_ScriptDialog += value; } }
 	//	            remove { synchronized (m_ScriptDialogLock) { m_ScriptDialog -= value; } }
@@ -1437,7 +1751,8 @@ public class AgentManager {
 	//	        /// <summary>Thread sync lock object</summary>
 	//	        private readonly object m_ScriptQuestionLock = new object();
 	//	        /// <summary>Raised when an object requests a change in the permissions an agent has permitted</summary>
-	//	        public event EventHandler<ScriptQuestionEventArgs> ScriptQuestion
+	//	        public event EventHandler<ScriptQuestionEventArgs> ScriptQuestion 
+
 	//	        {
 	//	            add { synchronized (m_ScriptQuestionLock) { m_ScriptQuestion += value; } }
 	//	            remove { synchronized (m_ScriptQuestionLock) { m_ScriptQuestion -= value; } }
@@ -1459,7 +1774,8 @@ public class AgentManager {
 	//	        /// <summary>Thread sync lock object</summary>
 	//	        private readonly object m_LoadUrlLock = new object();
 	//	        /// <summary>Raised when a script requests an agent open the specified URL</summary>
-	//	        public event EventHandler<LoadUrlEventArgs> LoadURL
+	//	        public event EventHandler<LoadUrlEventArgs> LoadURL 
+
 	//	        {
 	//	            add { synchronized (m_LoadUrlLock) { m_LoadURL += value; } }
 	//	            remove { synchronized (m_LoadUrlLock) { m_LoadURL -= value; } }
@@ -1482,7 +1798,8 @@ public class AgentManager {
 	//	        private readonly object m_BalanceLock = new object();
 	//	
 	//	        /// <summary>Raised when an agents currency balance is updated</summary>
-	//	        public event EventHandler<BalanceEventArgs> MoneyBalance
+	//	        public event EventHandler<BalanceEventArgs> MoneyBalance 
+
 	//	        {
 	//	            add { synchronized (m_BalanceLock) { m_Balance += value; } }
 	//	            remove { synchronized (m_BalanceLock) { m_Balance -= value; } }
@@ -1505,7 +1822,8 @@ public class AgentManager {
 	//	        private readonly object m_MoneyBalanceReplyLock = new object();
 	//	
 	//	        /// <summary>Raised when a transaction occurs involving currency such as a land purchase</summary>
-	//	        public event EventHandler<MoneyBalanceReplyEventArgs> MoneyBalanceReply
+	//	        public event EventHandler<MoneyBalanceReplyEventArgs> MoneyBalanceReply 
+
 	//	        {
 	//	            add { synchronized (m_MoneyBalanceReplyLock) { m_MoneyBalance += value; } }
 	//	            remove { synchronized (m_MoneyBalanceReplyLock) { m_MoneyBalance -= value; } }
@@ -1528,7 +1846,8 @@ public class AgentManager {
 	//	        private readonly object m_InstantMessageLock = new object();
 	//	        /// <summary>Raised when an ImprovedInstantMessage packet is recieved from the simulator, this is used for everything from
 	//	        /// private messaging to friendship offers. The Dialog field defines what type of message has arrived</summary>
-	//	        public event EventHandler<InstantMessageEventArgs> IM
+	//	        public event EventHandler<InstantMessageEventArgs> IM 
+
 	//	        {
 	//	            add { synchronized (m_InstantMessageLock) { m_InstantMessage += value; } }
 	//	            remove { synchronized (m_InstantMessageLock) { m_InstantMessage -= value; } }
@@ -1551,7 +1870,8 @@ public class AgentManager {
 	//	        private readonly object m_TeleportLock = new object();
 	//	        /// <summary>Raised when an agent has requested a teleport to another location, or when responding to a lure. Raised multiple times
 	//	        /// for each teleport indicating the progress of the request</summary>
-	//	        public event EventHandler<TeleportEventArgs> TeleportProgress
+	//	        public event EventHandler<TeleportEventArgs> TeleportProgress 
+
 	//	        {
 	//	            add { synchronized (m_TeleportLock) { m_Teleport += value; } }
 	//	            remove { synchronized (m_TeleportLock) { m_Teleport += value; } }
@@ -1574,7 +1894,8 @@ public class AgentManager {
 	//	        private readonly object m_AgentDataLock = new object();
 	//	
 	//	        /// <summary>Raised when a simulator sends agent specific information for our avatar.</summary>
-	//	        public event EventHandler<AgentDataReplyEventArgs> AgentDataReply
+	//	        public event EventHandler<AgentDataReplyEventArgs> AgentDataReply 
+
 	//	        {
 	//	            add { synchronized (m_AgentDataLock) { m_AgentData += value; } }
 	//	            remove { synchronized (m_AgentDataLock) { m_AgentData -= value; } }
@@ -1597,7 +1918,8 @@ public class AgentManager {
 	//	        private readonly object m_AnimationsChangedLock = new object();
 	//	
 	//	        /// <summary>Raised when our agents animation playlist changes</summary>
-	//	        public event EventHandler<AnimationsChangedEventArgs> AnimationsChanged
+	//	        public event EventHandler<AnimationsChangedEventArgs> AnimationsChanged 
+
 	//	        {
 	//	            add { synchronized (m_AnimationsChangedLock) { m_AnimationsChanged += value; } }
 	//	            remove { synchronized (m_AnimationsChangedLock) { m_AnimationsChanged -= value; } }
@@ -1620,7 +1942,8 @@ public class AgentManager {
 	//	        private readonly object m_MeanCollisionLock = new object();
 	//	
 	//	        /// <summary>Raised when an object or avatar forcefully collides with our agent</summary>
-	//	        public event EventHandler<MeanCollisionEventArgs> MeanCollision
+	//	        public event EventHandler<MeanCollisionEventArgs> MeanCollision 
+
 	//	        {
 	//	            add { synchronized (m_MeanCollisionLock) { m_MeanCollision += value; } }
 	//	            remove { synchronized (m_MeanCollisionLock) { m_MeanCollision -= value; } }
@@ -1643,7 +1966,8 @@ public class AgentManager {
 	//	        private readonly object m_RegionCrossedLock = new object();
 	//	
 	//	        /// <summary>Raised when our agent crosses a region border into another region</summary>
-	//	        public event EventHandler<RegionCrossedEventArgs> RegionCrossed
+	//	        public event EventHandler<RegionCrossedEventArgs> RegionCrossed 
+
 	//	        {
 	//	            add { synchronized (m_RegionCrossedLock) { m_RegionCrossed += value; } }
 	//	            remove { synchronized (m_RegionCrossedLock) { m_RegionCrossed -= value; } }
@@ -1666,7 +1990,8 @@ public class AgentManager {
 	//	        private readonly object m_GroupChatJoinedLock = new object();
 	//	
 	//	        /// <summary>Raised when our agent succeeds or fails to join a group chat session</summary>
-	//	        public event EventHandler<GroupChatJoinedEventArgs> GroupChatJoined
+	//	        public event EventHandler<GroupChatJoinedEventArgs> GroupChatJoined 
+
 	//	        {
 	//	            add { synchronized (m_GroupChatJoinedLock) { m_GroupChatJoined += value; } }
 	//	            remove { synchronized (m_GroupChatJoinedLock) { m_GroupChatJoined -= value; } }
@@ -1690,7 +2015,8 @@ public class AgentManager {
 	//	
 	//	        /// <summary>Raised when a simulator sends an urgent message usually indication the recent failure of
 	//	        /// another action we have attempted to take such as an attempt to enter a parcel where we are denied access</summary>
-	//	        public event EventHandler<AlertMessageEventArgs> AlertMessage
+	//	        public event EventHandler<AlertMessageEventArgs> AlertMessage 
+
 	//	        {
 	//	            add { synchronized (m_AlertMessageLock) { m_AlertMessage += value; } }
 	//	            remove { synchronized (m_AlertMessageLock) { m_AlertMessage -= value; } }
@@ -1713,7 +2039,8 @@ public class AgentManager {
 	//	        private readonly object m_ScriptControlLock = new object();
 	//	
 	//	        /// <summary>Raised when a script attempts to take or release specified controls for our agent</summary>
-	//	        public event EventHandler<ScriptControlEventArgs> ScriptControlChange
+	//	        public event EventHandler<ScriptControlEventArgs> ScriptControlChange 
+
 	//	        {
 	//	            add { synchronized (m_ScriptControlLock) { m_ScriptControl += value; } }
 	//	            remove { synchronized (m_ScriptControlLock) { m_ScriptControl -= value; } }
@@ -1737,7 +2064,8 @@ public class AgentManager {
 	//	
 	//	        /// <summary>Raised when the simulator detects our agent is trying to view something
 	//	        /// beyond its limits</summary>
-	//	        public event EventHandler<CameraConstraintEventArgs> CameraConstraint
+	//	        public event EventHandler<CameraConstraintEventArgs> CameraConstraint 
+
 	//	        {
 	//	            add { synchronized (m_CameraConstraintLock) { m_CameraConstraint += value; } }
 	//	            remove { synchronized (m_CameraConstraintLock) { m_CameraConstraint -= value; } }
@@ -1760,7 +2088,8 @@ public class AgentManager {
 	//	        private readonly object m_ScriptSensorReplyLock = new object();
 	//	
 	//	        /// <summary>Raised when a script sensor reply is received from a simulator</summary>
-	//	        public event EventHandler<ScriptSensorReplyEventArgs> ScriptSensorReply
+	//	        public event EventHandler<ScriptSensorReplyEventArgs> ScriptSensorReply 
+
 	//	        {
 	//	            add { synchronized (m_ScriptSensorReplyLock) { m_ScriptSensorReply += value; } }
 	//	            remove { synchronized (m_ScriptSensorReplyLock) { m_ScriptSensorReply -= value; } }
@@ -1783,7 +2112,7 @@ public class AgentManager {
 	//	        private readonly object m_AvatarSitResponseLock = new object();
 	//	
 	//	        /// <summary>Raised in response to a <see cref="RequestSit"/> request</summary>
-	//	        public event EventHandler<AvatarSitResponseEventArgs> AvatarSitResponse
+	//	        public event EventHandler<AvatarSitResponseEventArgs> AvatarSitResponse 
 	//	        {
 	//	            add { synchronized (m_AvatarSitResponseLock) { m_AvatarSitResponse += value; } }
 	//	            remove { synchronized (m_AvatarSitResponseLock) { m_AvatarSitResponse -= value; } }
@@ -1806,7 +2135,7 @@ public class AgentManager {
 	//	        private readonly object m_ChatSessionMemberAddedLock = new object();
 	//	
 	//	        /// <summary>Raised when an avatar enters a group chat session we are participating in</summary>
-	//	        public event EventHandler<ChatSessionMemberAddedEventArgs> ChatSessionMemberAdded
+	//	        public event EventHandler<ChatSessionMemberAddedEventArgs> ChatSessionMemberAdded 
 	//	        {
 	//	            add { synchronized (m_ChatSessionMemberAddedLock) { m_ChatSessionMemberAdded += value; } }
 	//	            remove { synchronized (m_ChatSessionMemberAddedLock) { m_ChatSessionMemberAdded -= value; } }
@@ -1829,7 +2158,7 @@ public class AgentManager {
 	//	        private readonly object m_ChatSessionMemberLeftLock = new object();
 	//	
 	//	        /// <summary>Raised when an agent exits a group chat session we are participating in</summary>
-	//	        public event EventHandler<ChatSessionMemberLeftEventArgs> ChatSessionMemberLeft
+	//	        public event EventHandler<ChatSessionMemberLeftEventArgs> ChatSessionMemberLeft 
 	//	        {
 	//	            add { synchronized (m_ChatSessionMemberLeftLock) { m_ChatSessionMemberLeft += value; } }
 	//	            remove { synchronized (m_ChatSessionMemberLeftLock) { m_ChatSessionMemberLeft -= value; } }
@@ -1853,7 +2182,7 @@ public class AgentManager {
 	//	
 	//	        /// <summary>Raised when the simulator sends us data containing
 	//	        /// the details of display name change</summary>
-	//	        public event EventHandler<SetDisplayNameReplyEventArgs> SetDisplayNameReply
+	//	        public event EventHandler<SetDisplayNameReplyEventArgs> SetDisplayNameReply 
 	//	        {
 	//	            add { synchronized (m_SetDisplayNameReplyLock) { m_SetDisplayNameReply += value; } }
 	//	            remove { synchronized (m_SetDisplayNameReplyLock) { m_SetDisplayNameReply -= value; } }
@@ -1876,13 +2205,15 @@ public class AgentManager {
 	//	        private readonly object m_MuteListUpdatedLock = new object();
 	//	
 	//	        /// <summary>Raised when a scripted object or agent within range sends a public message</summary>
-	//	        public event EventHandler<EventArgs> MuteListUpdated
+	//	        public event EventHandler<EventArgs> MuteListUpdated 
 	//	        {
 	//	            add { synchronized (m_MuteListUpdatedLock) { m_MuteListUpdated += value; } }
 	//	            remove { synchronized (m_MuteListUpdatedLock) { m_MuteListUpdated -= value; } }
 	//	        }
 	//	        //endregion Callbacks
 
+
+	private static ThreadPool threadPool = ThreadPoolFactory.getThreadPool();
 
 	/// <summary>Reference to the GridClient instance</summary>
 	private GridClient Client;
@@ -1910,6 +2241,7 @@ public class AgentManager {
 	public UUID getSecureSessionID() {return secureSessionID;}
 	/// <summary>Your (client) avatar ID, local to the current region/sim</summary>
 	public long getLocalID() {return localID;}
+	public void setLocalID(long value) {localID = value;}
 	/// <summary>Where the avatar started at login. Can be "last", "home" 
 	/// or a login <seealso cref="T:OpenMetaverse.URI"/></summary>
 	public String getStartLocation() {return startLocation;}
@@ -1917,12 +2249,18 @@ public class AgentManager {
 	public String getAgentAccess() {return agentAccess;}
 	/// <summary>The CollisionPlane of Agent</summary>
 	public Vector4 getCollisionPlane() {return collisionPlane;}
+	public void setCollisionPlane(Vector4 value) {collisionPlane = value;}
+
 	/// <summary>An <seealso cref="Vector3"/> representing the velocity of our agent</summary>
 	public Vector3 getVelocity() {return velocity;}
+	public void setVelocity(Vector3 value) {velocity = value;}
 	/// <summary>An <seealso cref="Vector3"/> representing the acceleration of our agent</summary>
 	public Vector3 getAcceleration() {return acceleration;}
+	public void setAcceleration(Vector3 value) {acceleration = value;}
+	
 	/// <summary>A <seealso cref="Vector3"/> which specifies the angular speed, and axis about which an Avatar is rotating.</summary>
 	public Vector3 getAngularVelocity() {return angularVelocity;}
+	public void setAngularVelocity(Vector3 value) {angularVelocity = value;}
 	/// <summary>Position avatar client will goto when login to 'home' or during
 	/// teleport request to 'home' region.</summary>
 	public Vector3 getHomePosition() {return homePosition;}
@@ -1948,6 +2286,7 @@ public class AgentManager {
 	/// <summary>Gets the local ID of the prim the agent is sitting on,
 	/// zero if the avatar is not currently sitting</summary>
 	public long getSittingOn() {return sittingOn;}
+	public void setSittingOn(long value) {sittingOn = value;}
 	/// <summary>Gets the <seealso cref="UUID"/> of the agents active group.</summary>
 	public UUID getActiveGroup() {return activeGroup;}
 	/// <summary>Gets the Agents powers in the currently active group</summary>
@@ -1962,7 +2301,9 @@ public class AgentManager {
 	{ relativePosition = value;}
 	/// <summary>Current rotation of the agent as a relative rotation from
 	/// the simulator, or the parent object if we are sitting on something</summary>
-	public Quaternion getRelativeRotation() {return relativeRotation; } 
+	public Quaternion getRelativeRotation() {return relativeRotation; }
+	public void setRelativeRotation(Quaternion value) {relativeRotation = value; } 
+
 	public void getRelativeRotation(Quaternion value)	        
 	{ relativeRotation = value;}
 	/// <summary>Current position of the agent in the simulator</summary>
@@ -2075,7 +2416,7 @@ public class AgentManager {
 	private Vector3 angularVelocity;
 	//uint
 	private long sittingOn;
-	private int lastInterpolation;
+	public long lastInterpolation;
 	//region Private Members
 
 	private UUID id;
@@ -2107,78 +2448,372 @@ public class AgentManager {
 	public AgentManager(GridClient client)
 	{
 		Client = client;
-		//TODO Need to uncomment following
 		Movement = new AgentMovement(Client);
 		//TODO Need to implement
 
-		//
-		//            Client.network.Disconnected += Network_OnDisconnected;
-		//
-		//            // Teleport callbacks            
-		//            Client.network.RegisterCallback(PacketType.TeleportStart, TeleportHandler);
-		//            Client.network.RegisterCallback(PacketType.TeleportProgress, TeleportHandler);
-		//            Client.network.RegisterCallback(PacketType.TeleportFailed, TeleportHandler);
-		//            Client.network.RegisterCallback(PacketType.TeleportCancel, TeleportHandler);
-		//            Client.network.RegisterCallback(PacketType.TeleportLocal, TeleportHandler);
-		//            // these come in via the EventQueue
-		//            Client.network.RegisterEventCallback("TeleportFailed", new Caps.EventQueueCallback(TeleportFailedEventHandler));
-		//            Client.network.RegisterEventCallback("TeleportFinish", new Caps.EventQueueCallback(TeleportFinishEventHandler));
-		//
-		//            // Instant message callback
-		//            Client.network.RegisterCallback(PacketType.ImprovedInstantMessage, InstantMessageHandler);
-		//            // Chat callback
-		//            Client.network.RegisterCallback(PacketType.ChatFromSimulator, ChatHandler);
-		//            // Script dialog callback
-		//            Client.network.RegisterCallback(PacketType.ScriptDialog, ScriptDialogHandler);
-		//            // Script question callback
-		//            Client.network.RegisterCallback(PacketType.ScriptQuestion, ScriptQuestionHandler);
-		//            // Script URL callback
-		//            Client.network.RegisterCallback(PacketType.LoadURL, LoadURLHandler);
-		//            // Movement complete callback
-		//            Client.network.RegisterCallback(PacketType.AgentMovementComplete, MovementCompleteHandler);
-		//            // Health callback
-		//            Client.network.RegisterCallback(PacketType.HealthMessage, HealthHandler);
-		//            // Money callback
-		//            Client.network.RegisterCallback(PacketType.MoneyBalanceReply, MoneyBalanceReplyHandler);
-		//            //Agent update callback
-		//            Client.network.RegisterCallback(PacketType.AgentDataUpdate, AgentDataUpdateHandler);
-		//            // Animation callback
-		//            Client.network.RegisterCallback(PacketType.AvatarAnimation, AvatarAnimationHandler, false);
-		//            // Object colliding into our agent callback
-		//            Client.network.RegisterCallback(PacketType.MeanCollisionAlert, MeanCollisionAlertHandler);
-		//            // Region Crossing
-		//            Client.network.RegisterCallback(PacketType.CrossedRegion, CrossedRegionHandler);
-		//            Client.network.RegisterEventCallback("CrossedRegion", new Caps.EventQueueCallback(CrossedRegionEventHandler));
-		//            // CAPS callbacks
-		//            Client.network.RegisterEventCallback("EstablishAgentCommunication", new Caps.EventQueueCallback(EstablishAgentCommunicationEventHandler));
-		//            Client.network.RegisterEventCallback("SetDisplayNameReply", new Caps.EventQueueCallback(SetDisplayNameReplyEventHandler));
-		//            // Incoming Group Chat
-		//            Client.network.RegisterEventCallback("ChatterBoxInvitation", new Caps.EventQueueCallback(ChatterBoxInvitationEventHandler));
-		//            // Outgoing Group Chat Reply
-		//            Client.network.RegisterEventCallback("ChatterBoxSessionEventReply", new Caps.EventQueueCallback(ChatterBoxSessionEventReplyEventHandler));
-		//            Client.network.RegisterEventCallback("ChatterBoxSessionStartReply", new Caps.EventQueueCallback(ChatterBoxSessionStartReplyEventHandler));
-		//            Client.network.RegisterEventCallback("ChatterBoxSessionAgentListUpdates", new Caps.EventQueueCallback(ChatterBoxSessionAgentListUpdatesEventHandler));
-		            
-					// Login
-					Client.network.RegisterLoginResponseCallback(new Observer()
-		            {
-						public void update(Observable arg0, Object arg1) {
-							LoginResponseCallbackArg obj = (LoginResponseCallbackArg)arg1;
-							Network_OnLoginResponse(obj.isLoginSuccess(), obj.isRedirect(), 
-									obj.getMessage(), obj.getReason(), obj.getReplyData());
-						}	
-		            });
-		            
+
+		//		            Client.network.Disconnected += Network_OnDisconnected;
+		Client.network.RegisterOnDisconnectedCallback(new EventObserver<DisconnectedEventArgs>(){
+			@Override
+			public void handleEvent(Observable o, DisconnectedEventArgs arg) {
+				// TODO Auto-generated method stub	
+				Network_OnDisconnected(o, arg);
+			}
+		});
+
+		//		            // Teleport callbacks            
+		//		            // Client.network.RegisterCallback(PacketType.TeleportStart, TeleportHandler);
+
+		Client.network.RegisterCallback(PacketType.TeleportStart, new EventObserver<PacketReceivedEventArgs>()
+				{ 
+			@Override
+			public void handleEvent(Observable o,PacketReceivedEventArgs arg) {
+				try{ TeleportHandler(o, arg);}
+				catch(Exception e) {JLogger.warn(Utils.getExceptionStackTraceAsString(e));}
+			}}
+				);
+		//		            // Client.network.RegisterCallback(PacketType.TeleportProgress, TeleportHandler);
+
+		Client.network.RegisterCallback(PacketType.TeleportProgress, new EventObserver<PacketReceivedEventArgs>()
+				{ 
+			@Override
+			public void handleEvent(Observable o,PacketReceivedEventArgs arg) {
+				try{ TeleportHandler(o, arg);}
+				catch(Exception e) {JLogger.warn(Utils.getExceptionStackTraceAsString(e));}
+			}}
+				);
+		//		            // Client.network.RegisterCallback(PacketType.TeleportFailed, TeleportHandler);
+
+		Client.network.RegisterCallback(PacketType.TeleportFailed, new EventObserver<PacketReceivedEventArgs>()
+				{ 
+			@Override
+			public void handleEvent(Observable o,PacketReceivedEventArgs arg) {
+				try{ TeleportHandler(o, arg);}
+				catch(Exception e) {JLogger.warn(Utils.getExceptionStackTraceAsString(e));}
+			}}
+				);
+		//		            // Client.network.RegisterCallback(PacketType.TeleportCancel, TeleportHandler);
+
+		Client.network.RegisterCallback(PacketType.TeleportCancel, new EventObserver<PacketReceivedEventArgs>()
+				{ 
+			@Override
+			public void handleEvent(Observable o,PacketReceivedEventArgs arg) {
+				try{ TeleportHandler(o, arg);}
+				catch(Exception e) {JLogger.warn(Utils.getExceptionStackTraceAsString(e));}
+			}}
+				);
+		//		            // Client.network.RegisterCallback(PacketType.TeleportLocal, TeleportHandler);
+
+		Client.network.RegisterCallback(PacketType.TeleportLocal, new EventObserver<PacketReceivedEventArgs>()
+				{ 
+			@Override
+			public void handleEvent(Observable o,PacketReceivedEventArgs arg) {
+				try{ TeleportHandler(o, arg);}
+				catch(Exception e) {JLogger.warn(Utils.getExceptionStackTraceAsString(e));}
+			}}
+				);
+		//		            // these come in via the EventQueue
+		//		            // Client.network.RegisterEventCallback("TeleportFailed", new Caps.EventQueueCallback(TeleportFailedEventHandler);
+
+		Client.network.RegisterEventCallback("TeleportFailed", new EventObserver<CapsEventObservableArg>()
+				{ 
+			@Override
+			public void handleEvent(Observable o,CapsEventObservableArg arg) {
+				try{ TeleportFailedEventHandler(arg.getCapsKey(), arg.getMessage(), arg.getSimulator());}
+				catch(Exception e) {JLogger.warn(Utils.getExceptionStackTraceAsString(e));}
+			}}
+				);
+		//		            // Client.network.RegisterEventCallback("TeleportFinish", new Caps.EventQueueCallback(TeleportFinishEventHandler);
+
+		Client.network.RegisterEventCallback("TeleportFinish", new EventObserver<CapsEventObservableArg>()
+				{ 
+			@Override
+			public void handleEvent(Observable o,CapsEventObservableArg arg) {
+				try{ TeleportFinishEventHandler(arg.getCapsKey(), arg.getMessage(), arg.getSimulator());}
+				catch(Exception e) {JLogger.warn(Utils.getExceptionStackTraceAsString(e));}
+			}}
+				);
+		//		
+		//		            // Instant message callback
+		//		            // Client.network.RegisterCallback(PacketType.ImprovedInstantMessage, InstantMessageHandler);
+
+		Client.network.RegisterCallback(PacketType.ImprovedInstantMessage, new EventObserver<PacketReceivedEventArgs>()
+				{ 
+			@Override
+			public void handleEvent(Observable o,PacketReceivedEventArgs arg) {
+				try{ InstantMessageHandler(o, arg);}
+				catch(Exception e) {JLogger.warn(Utils.getExceptionStackTraceAsString(e));}
+			}}
+				);
+		//		            // Chat callback
+		//		            // Client.network.RegisterCallback(PacketType.ChatFromSimulator, ChatHandler);
+
+		Client.network.RegisterCallback(PacketType.ChatFromSimulator, new EventObserver<PacketReceivedEventArgs>()
+				{ 
+			@Override
+			public void handleEvent(Observable o,PacketReceivedEventArgs arg) {
+				try{ ChatHandler(o, arg);}
+				catch(Exception e) {JLogger.warn(Utils.getExceptionStackTraceAsString(e));}
+			}}
+				);
+		//		            // Script dialog callback
+		//		            // Client.network.RegisterCallback(PacketType.ScriptDialog, ScriptDialogHandler);
+
+		Client.network.RegisterCallback(PacketType.ScriptDialog, new EventObserver<PacketReceivedEventArgs>()
+				{ 
+			@Override
+			public void handleEvent(Observable o,PacketReceivedEventArgs arg) {
+				try{ ScriptDialogHandler(o, arg);}
+				catch(Exception e) {JLogger.warn(Utils.getExceptionStackTraceAsString(e));}
+			}}
+				);
+		//		            // Script question callback
+		//		            // Client.network.RegisterCallback(PacketType.ScriptQuestion, ScriptQuestionHandler);
+
+		Client.network.RegisterCallback(PacketType.ScriptQuestion, new EventObserver<PacketReceivedEventArgs>()
+				{ 
+			@Override
+			public void handleEvent(Observable o,PacketReceivedEventArgs arg) {
+				try{ ScriptQuestionHandler(o, arg);}
+				catch(Exception e) {JLogger.warn(Utils.getExceptionStackTraceAsString(e));}
+			}}
+				);
+		//		            // Script URL callback
+		//		            // Client.network.RegisterCallback(PacketType.LoadURL, LoadURLHandler);
+
+		Client.network.RegisterCallback(PacketType.LoadURL, new EventObserver<PacketReceivedEventArgs>()
+				{ 
+			@Override
+			public void handleEvent(Observable o,PacketReceivedEventArgs arg) {
+				try{ LoadURLHandler(o, arg);}
+				catch(Exception e) {JLogger.warn(Utils.getExceptionStackTraceAsString(e));}
+			}}
+				);
+		//		            // Movement complete callback
+		//		            // Client.network.RegisterCallback(PacketType.AgentMovementComplete, MovementCompleteHandler);
+
+		Client.network.RegisterCallback(PacketType.AgentMovementComplete, new EventObserver<PacketReceivedEventArgs>()
+				{ 
+			@Override
+			public void handleEvent(Observable o,PacketReceivedEventArgs arg) {
+				try{ MovementCompleteHandler(o, arg);}
+				catch(Exception e) {JLogger.warn(Utils.getExceptionStackTraceAsString(e));}
+			}}
+				);
+		//		            // Health callback
+		//		            // Client.network.RegisterCallback(PacketType.HealthMessage, HealthHandler);
+
+		Client.network.RegisterCallback(PacketType.HealthMessage, new EventObserver<PacketReceivedEventArgs>()
+				{ 
+			@Override
+			public void handleEvent(Observable o,PacketReceivedEventArgs arg) {
+				try{ HealthHandler(o, arg);}
+				catch(Exception e) {JLogger.warn(Utils.getExceptionStackTraceAsString(e));}
+			}}
+				);
+		//		            // Money callback
+		//		            // Client.network.RegisterCallback(PacketType.MoneyBalanceReply, MoneyBalanceReplyHandler);
+
+		Client.network.RegisterCallback(PacketType.MoneyBalanceReply, new EventObserver<PacketReceivedEventArgs>()
+				{ 
+			@Override
+			public void handleEvent(Observable o,PacketReceivedEventArgs arg) {
+				try{ MoneyBalanceReplyHandler(o, arg);}
+				catch(Exception e) {JLogger.warn(Utils.getExceptionStackTraceAsString(e));}
+			}}
+				);
+		//		            //Agent update callback
+		//		            // Client.network.RegisterCallback(PacketType.AgentDataUpdate, AgentDataUpdateHandler);
+
+		Client.network.RegisterCallback(PacketType.AgentDataUpdate, new EventObserver<PacketReceivedEventArgs>()
+				{ 
+			@Override
+			public void handleEvent(Observable o,PacketReceivedEventArgs arg) {
+				try{ AgentDataUpdateHandler(o, arg);}
+				catch(Exception e) {JLogger.warn(Utils.getExceptionStackTraceAsString(e));}
+			}}
+				);
+		//		            // Animation callback
+		//		            // Client.network.RegisterCallback(PacketType.AvatarAnimation, AvatarAnimationHandler, false);
+
+		Client.network.RegisterCallback(PacketType.AvatarAnimation, new EventObserver<PacketReceivedEventArgs>()
+				{ 
+			@Override
+			public void handleEvent(Observable o,PacketReceivedEventArgs arg) {
+				try{ AvatarAnimationHandler(o, arg);}
+				catch(Exception e) {JLogger.warn(Utils.getExceptionStackTraceAsString(e));}
+			}}
+		, false);
+		//		            // Object colliding into our agent callback
+		//		            // Client.network.RegisterCallback(PacketType.MeanCollisionAlert, MeanCollisionAlertHandler);
+
+		Client.network.RegisterCallback(PacketType.MeanCollisionAlert, new EventObserver<PacketReceivedEventArgs>()
+				{ 
+			@Override
+			public void handleEvent(Observable o,PacketReceivedEventArgs arg) {
+				try{ MeanCollisionAlertHandler(o, arg);}
+				catch(Exception e) {JLogger.warn(Utils.getExceptionStackTraceAsString(e));}
+			}}
+				);
+		//		            // Region Crossing
+		//		            // Client.network.RegisterCallback(PacketType.CrossedRegion, CrossedRegionHandler);
+
+		Client.network.RegisterCallback(PacketType.CrossedRegion, new EventObserver<PacketReceivedEventArgs>()
+				{ 
+			@Override
+			public void handleEvent(Observable o,PacketReceivedEventArgs arg) {
+				try{ CrossedRegionHandler(o, arg);}
+				catch(Exception e) {JLogger.warn(Utils.getExceptionStackTraceAsString(e));}
+			}}
+				);
+		//		            // Client.network.RegisterEventCallback("CrossedRegion", new Caps.EventQueueCallback(CrossedRegionEventHandler);
+
+		Client.network.RegisterEventCallback("CrossedRegion", new EventObserver<CapsEventObservableArg>()
+				{ 
+			@Override
+			public void handleEvent(Observable o,CapsEventObservableArg arg) {
+				try{ CrossedRegionEventHandler(arg.getCapsKey(), arg.getMessage(), arg.getSimulator());}
+				catch(Exception e) {JLogger.warn(Utils.getExceptionStackTraceAsString(e));}
+			}}
+				);
+		//		            // CAPS callbacks
+		//		            // Client.network.RegisterEventCallback("EstablishAgentCommunication", new Caps.EventQueueCallback(EstablishAgentCommunicationEventHandler);
+
+		Client.network.RegisterEventCallback("EstablishAgentCommunication", new EventObserver<CapsEventObservableArg>()
+				{ 
+			@Override
+			public void handleEvent(Observable o,CapsEventObservableArg arg) {
+				try{ EstablishAgentCommunicationEventHandler(arg.getCapsKey(), arg.getMessage(), arg.getSimulator());}
+				catch(Exception e) {JLogger.warn(Utils.getExceptionStackTraceAsString(e));}
+			}}
+				);
+		//		            // Client.network.RegisterEventCallback("SetDisplayNameReply", new Caps.EventQueueCallback(SetDisplayNameReplyEventHandler);
+
+		Client.network.RegisterEventCallback("SetDisplayNameReply", new EventObserver<CapsEventObservableArg>()
+				{ 
+			@Override
+			public void handleEvent(Observable o,CapsEventObservableArg arg) {
+				try{ SetDisplayNameReplyEventHandler(arg.getCapsKey(), arg.getMessage(), arg.getSimulator());}
+				catch(Exception e) {JLogger.warn(Utils.getExceptionStackTraceAsString(e));}
+			}}
+				);
+		//		            // Incoming Group Chat
+		//		            // Client.network.RegisterEventCallback("ChatterBoxInvitation", new Caps.EventQueueCallback(ChatterBoxInvitationEventHandler);
+
+		Client.network.RegisterEventCallback("ChatterBoxInvitation", new EventObserver<CapsEventObservableArg>()
+				{ 
+			@Override
+			public void handleEvent(Observable o,CapsEventObservableArg arg) {
+				try{ ChatterBoxInvitationEventHandler(arg.getCapsKey(), arg.getMessage(), arg.getSimulator());}
+				catch(Exception e) {JLogger.warn(Utils.getExceptionStackTraceAsString(e));}
+			}}
+				);
+		//		            // Outgoing Group Chat Reply
+		//		            // Client.network.RegisterEventCallback("ChatterBoxSessionEventReply", new Caps.EventQueueCallback(ChatterBoxSessionEventReplyEventHandler);
+
+		Client.network.RegisterEventCallback("ChatterBoxSessionEventReply", new EventObserver<CapsEventObservableArg>()
+				{ 
+			@Override
+			public void handleEvent(Observable o,CapsEventObservableArg arg) {
+				try{ ChatterBoxSessionEventReplyEventHandler(arg.getCapsKey(), arg.getMessage(), arg.getSimulator());}
+				catch(Exception e) {JLogger.warn(Utils.getExceptionStackTraceAsString(e));}
+			}}
+				);
+		//		            // Client.network.RegisterEventCallback("ChatterBoxSessionStartReply", new Caps.EventQueueCallback(ChatterBoxSessionStartReplyEventHandler);
+
+		Client.network.RegisterEventCallback("ChatterBoxSessionStartReply", new EventObserver<CapsEventObservableArg>()
+				{ 
+			@Override
+			public void handleEvent(Observable o,CapsEventObservableArg arg) {
+				try{ ChatterBoxSessionStartReplyEventHandler(arg.getCapsKey(), arg.getMessage(), arg.getSimulator());}
+				catch(Exception e) {JLogger.warn(Utils.getExceptionStackTraceAsString(e));}
+			}}
+				);
+		//		            // Client.network.RegisterEventCallback("ChatterBoxSessionAgentListUpdates", new Caps.EventQueueCallback(ChatterBoxSessionAgentListUpdatesEventHandler);
+
+
+		Client.network.RegisterEventCallback("ChatterBoxSessionAgentListUpdates", new EventObserver<CapsEventObservableArg>()
+				{ 
+			@Override
+			public void handleEvent(Observable o,CapsEventObservableArg arg) {
+				try{ ChatterBoxSessionAgentListUpdatesEventHandler(arg.getCapsKey(), arg.getMessage(), arg.getSimulator());}
+				catch(Exception e) {JLogger.warn(Utils.getExceptionStackTraceAsString(e));}
+			}}
+				);
+		// Login
+		Client.network.RegisterLoginResponseCallback(new Observer()
+		{
+			public void update(Observable arg0, Object arg1) {
+				LoginResponseCallbackArg obj = (LoginResponseCallbackArg)arg1;
+				Network_OnLoginResponse(obj.isLoginSuccess(), obj.isRedirect(), 
+						obj.getMessage(), obj.getReason(), obj.getReplyData());
+			}	
+		});
+
 		//            // Alert Messages
-		//            Client.network.RegisterCallback(PacketType.AlertMessage, AlertMessageHandler);
+		//            // Client.network.RegisterCallback(PacketType.AlertMessage, AlertMessageHandler);
+
+		Client.network.RegisterCallback(PacketType.AlertMessage, new EventObserver<PacketReceivedEventArgs>()
+				{ 
+			@Override
+			public void handleEvent(Observable o,PacketReceivedEventArgs arg) {
+				try{ AlertMessageHandler(o, arg);}
+				catch(Exception e) {JLogger.warn(Utils.getExceptionStackTraceAsString(e));}
+			}}
+				);
 		//            // script control change messages, ie: when an in-world LSL script wants to take control of your agent.
-		//            Client.network.RegisterCallback(PacketType.ScriptControlChange, ScriptControlChangeHandler);
+		//            // Client.network.RegisterCallback(PacketType.ScriptControlChange, ScriptControlChangeHandler);
+
+		Client.network.RegisterCallback(PacketType.ScriptControlChange, new EventObserver<PacketReceivedEventArgs>()
+				{ 
+			@Override
+			public void handleEvent(Observable o,PacketReceivedEventArgs arg) {
+				try{ ScriptControlChangeHandler(o, arg);}
+				catch(Exception e) {JLogger.warn(Utils.getExceptionStackTraceAsString(e));}
+			}}
+				);
 		//            // Camera Constraint (probably needs to move to AgentManagerCamera TODO:
-		//            Client.network.RegisterCallback(PacketType.CameraConstraint, CameraConstraintHandler);
-		//            Client.network.RegisterCallback(PacketType.ScriptSensorReply, ScriptSensorReplyHandler);
-		//            Client.network.RegisterCallback(PacketType.AvatarSitResponse, AvatarSitResponseHandler);
+		//            // Client.network.RegisterCallback(PacketType.CameraConstraint, CameraConstraintHandler);
+
+		Client.network.RegisterCallback(PacketType.CameraConstraint, new EventObserver<PacketReceivedEventArgs>()
+				{ 
+			@Override
+			public void handleEvent(Observable o,PacketReceivedEventArgs arg) {
+				try{ CameraConstraintHandler(o, arg);}
+				catch(Exception e) {JLogger.warn(Utils.getExceptionStackTraceAsString(e));}
+			}}
+				);
+		//            // Client.network.RegisterCallback(PacketType.ScriptSensorReply, ScriptSensorReplyHandler);
+
+		Client.network.RegisterCallback(PacketType.ScriptSensorReply, new EventObserver<PacketReceivedEventArgs>()
+				{ 
+			@Override
+			public void handleEvent(Observable o,PacketReceivedEventArgs arg) {
+				try{ ScriptSensorReplyHandler(o, arg);}
+				catch(Exception e) {JLogger.warn(Utils.getExceptionStackTraceAsString(e));}
+			}}
+				);
+		//            // Client.network.RegisterCallback(PacketType.AvatarSitResponse, AvatarSitResponseHandler);
+
+		Client.network.RegisterCallback(PacketType.AvatarSitResponse, new EventObserver<PacketReceivedEventArgs>()
+				{ 
+			@Override
+			public void handleEvent(Observable o,PacketReceivedEventArgs arg) {
+				try{ AvatarSitResponseHandler(o, arg);}
+				catch(Exception e) {JLogger.warn(Utils.getExceptionStackTraceAsString(e));}
+			}}
+				);
 		//            // Process mute list update message
-		//            Client.network.RegisterCallback(PacketType.MuteListUpdate, MuteListUpdateHander);
+		//            // Client.network.RegisterCallback(PacketType.MuteListUpdate, MuteListUpdateHander);
+
+		Client.network.RegisterCallback(PacketType.MuteListUpdate, new EventObserver<PacketReceivedEventArgs>()
+				{ 
+			@Override
+			public void handleEvent(Observable o,PacketReceivedEventArgs arg) {
+				try{ MuteListUpdateHander(o, arg);}
+				catch(Exception e) {JLogger.warn(Utils.getExceptionStackTraceAsString(e));}
+			}}
+				);
 	}
 
 	//TODO Need to implement
@@ -2309,11 +2944,11 @@ public class AgentManager {
 
 				// These fields are mandatory, even if we don't have valid values for them
 				im.MessageBlock.Position = Vector3.Zero;
-						//TODO: Allow region id to be correctly set by caller or fetched from Client.*
-						im.MessageBlock.RegionID = regionID;
+				//TODO: Allow region id to be correctly set by caller or fetched from Client.*
+				im.MessageBlock.RegionID = regionID;
 
-						// Send the message
-						Client.network.SendPacket(im);
+				// Send the message
+				Client.network.SendPacket(im);
 		}
 		else
 		{
@@ -3253,545 +3888,557 @@ public class AgentManager {
 	//	            t.Start();
 	//	        }
 	//	
-	//	        /// <summary>
-	//	        /// Mark gesture active
-	//	        /// </summary>
-	//	        /// <param name="invID">Inventory <seealso cref="UUID"/> of the gesture</param>
-	//	        /// <param name="assetID">Asset <seealso cref="UUID"/> of the gesture</param>
-	//	        public void ActivateGesture(UUID invID, UUID assetID)
-	//	        {
-	//	            ActivateGesturesPacket p = new ActivateGesturesPacket();
-	//	
-	//	            p.AgentData.AgentID = getAgentID();
-	//	            p.AgentData.SessionID = getSessionID();
-	//	            p.AgentData.Flags = 0x00;
-	//	
-	//	            ActivateGesturesPacket.DataBlock b = new ActivateGesturesPacket.DataBlock();
-	//	            b.ItemID = invID;
-	//	            b.AssetID = assetID;
-	//	            b.GestureFlags = 0x00;
-	//	
-	//	            p.Data = new ActivateGesturesPacket.DataBlock[1];
-	//	            p.Data[0] = b;
-	//	
-	//	            Client.network.SendPacket(p);
-	//	
-	//	        }
-	//	
-	//	        /// <summary>
-	//	        /// Mark gesture inactive
-	//	        /// </summary>
-	//	        /// <param name="invID">Inventory <seealso cref="UUID"/> of the gesture</param>
-	//	        public void DeactivateGesture(UUID invID)
-	//	        {
-	//	            DeactivateGesturesPacket p = new DeactivateGesturesPacket();
-	//	
-	//	            p.AgentData.AgentID = getAgentID();
-	//	            p.AgentData.SessionID = getSessionID();
-	//	            p.AgentData.Flags = 0x00;
-	//	
-	//	            DeactivateGesturesPacket.DataBlock b = new DeactivateGesturesPacket.DataBlock();
-	//	            b.ItemID = invID;
-	//	            b.GestureFlags = 0x00;
-	//	
-	//	            p.Data = new DeactivateGesturesPacket.DataBlock[1];
-	//	            p.Data[0] = b;
-	//	
-	//	            Client.network.SendPacket(p);
-	//	        }
-	//	        //endregion
-	//	
-	//	        //region Animations
-	//	
-	//	        /// <summary>
-	//	        /// Send an AgentAnimation packet that toggles a single animation on
-	//	        /// </summary>
-	//	        /// <param name="animation">The <seealso cref="UUID"/> of the animation to start playing</param>
-	//	        /// <param name="reliable">Whether to ensure delivery of this packet or not</param>
-	//	        public void AnimationStart(UUID animation, boolean reliable)
-	//	        {
-	//	            Map<UUID, Boolean> animations = new HashMap<UUID, Boolean>();
-	//	            animations.put(animation, true);
-	//	
-	//	            Animate(animations, reliable);
-	//	        }
-	//	
-	//	        /// <summary>
-	//	        /// Send an AgentAnimation packet that toggles a single animation off
-	//	        /// </summary>
-	//	        /// <param name="animation">The <seealso cref="UUID"/> of a 
-	//	        /// currently playing animation to stop playing</param>
-	//	        /// <param name="reliable">Whether to ensure delivery of this packet or not</param>
-	//	        public void AnimationStop(UUID animation, boolean reliable)
-	//	        {
-	//	            Map<UUID, Boolean> animations = new HashMap<UUID, Boolean>();
-	//	            animations.put(animation, false);
-	//	
-	//	            Animate(animations, reliable);
-	//	        }
-	//	
-	//	        /// <summary>
-	//	        /// Send an AgentAnimation packet that will toggle animations on or off
-	//	        /// </summary>
-	//	        /// <param name="animations">A list of animation <seealso cref="UUID"/>s, and whether to
-	//	        /// turn that animation on or off</param>
-	//	        /// <param name="reliable">Whether to ensure delivery of this packet or not</param>
-	//	        public void Animate(Map<UUID, Boolean> animations, boolean reliable)
-	//	        {
-	//	            AgentAnimationPacket animate = new AgentAnimationPacket();
-	//	            animate.header.Reliable = reliable;
-	//	
-	//	            animate.AgentData.AgentID = Client.self.getAgentID();
-	//	            animate.AgentData.SessionID = Client.self.getSessionID();
-	//	            animate.AnimationList = new AgentAnimationPacket.AnimationListBlock[animations.size()];
-	//	            int i = 0;
-	//	
-	//	            for (Entry<UUID, Boolean> animation : animations.entrySet())
-	//	            {
-	//	                animate.AnimationList[i] = new AgentAnimationPacket.AnimationListBlock();
-	//	                animate.AnimationList[i].AnimID = animation.getKey();
-	//	                animate.AnimationList[i].StartAnim = animation.getValue();
-	//	
-	//	                i++;
-	//	            }
-	//	
-	//	            // TODO: Implement support for this
-	//	            animate.PhysicalAvatarEventList = new AgentAnimationPacket.PhysicalAvatarEventListBlock[0];
-	//	
-	//	            Client.network.SendPacket(animate);
-	//	        }
-	//	
-	//	        //endregion Animations
-	//	
-	//	        //region Teleporting
-	//	
-	//	        /// <summary>
-	//	        /// Teleports agent to their stored home location
-	//	        /// </summary>
-	//	        /// <returns>true on successful teleport to home location</returns>
-	//	        public boolean GoHome() throws InterruptedException
-	//	        {
-	//	            return Teleport(UUID.Zero);
-	//	        }
-	//	
-	//	        /// <summary>
-	//	        /// Teleport agent to a landmark
-	//	        /// </summary>
-	//	        /// <param name="landmark"><seealso cref="UUID"/> of the landmark to teleport agent to</param>
-	//	        /// <returns>true on success, false on failure</returns>
-	//	        public boolean Teleport(UUID landmark) throws InterruptedException
-	//	        {
-	//	            teleportStat = TeleportStatus.None;
-	//	            teleportEvent.reset();
-	//	            TeleportLandmarkRequestPacket p = new TeleportLandmarkRequestPacket();
-	//	            p.Info = new TeleportLandmarkRequestPacket.InfoBlock();
-	//	            p.Info.AgentID = Client.self.getAgentID();
-	//	            p.Info.SessionID = Client.self.getSessionID();
-	//	            p.Info.LandmarkID = landmark;
-	//	            Client.network.SendPacket(p);
-	//	
-	//	            teleportEvent.waitOne(Client.settings.TELEPORT_TIMEOUT);
-	//	
-	//	            if (teleportStat == TeleportStatus.None ||
-	//	                teleportStat == TeleportStatus.Start ||
-	//	                teleportStat == TeleportStatus.Progress)
-	//	            {
-	//	                teleportMessage = "Teleport timed out.";
-	//	                teleportStat = TeleportStatus.Failed;
-	//	            }
-	//	
-	//	            return (teleportStat == TeleportStatus.Finished);
-	//	        }
-	//	
-	//	        /// <summary>
-	//	        /// Attempt to look up a simulator name and teleport to the discovered
-	//	        /// destination
-	//	        /// </summary>
-	//	        /// <param name="simName">Region name to look up</param>
-	//	        /// <param name="position">Position to teleport to</param>
-	//	        /// <returns>True if the lookup and teleport were successful, otherwise
-	//	        /// false</returns>
-	//	        public boolean Teleport(String simName, Vector3 position)
-	//	        {
-	//	            return Teleport(simName, position, new Vector3(0, 1.0f, 0));
-	//	        }
-	//	
-	//	        /// <summary>
-	//	        /// Attempt to look up a simulator name and teleport to the discovered
-	//	        /// destination
-	//	        /// </summary>
-	//	        /// <param name="simName">Region name to look up</param>
-	//	        /// <param name="position">Position to teleport to</param>
-	//	        /// <param name="lookAt">Target to look at</param>
-	//	        /// <returns>True if the lookup and teleport were successful, otherwise
-	//	        /// false</returns>
-	//	        public boolean Teleport(String simName, Vector3 position, Vector3 lookAt)
-	//	        {
-	//	            if (Client.network.getCurrentSim() == null)
-	//	                return false;
-	//	
-	//	            teleportStat = TeleportStatus.None;
-	//	
-	//	            if (simName != Client.network.getCurrentSim().Name)
-	//	            {
-	//	                // Teleporting to a foreign sim
-	//	                GridRegion region;
-	//	
-	//	                if (Client.grid.GetGridRegion(simName, GridLayerType.Objects, out region))
-	//	                {
-	//	                    return Teleport(region.RegionHandle, position, lookAt);
-	//	                }
-	//	                else
-	//	                {
-	//	                    teleportMessage = "Unable to resolve name: " + simName;
-	//	                    teleportStat = TeleportStatus.Failed;
-	//	                    return false;
-	//	                }
-	//	            }
-	//	            else
-	//	            {
-	//	                // Teleporting to the sim we're already in
-	//	                return Teleport(Client.network.getCurrentSim().Handle, position, lookAt);
-	//	            }
-	//	        }
-	//	
-	//	        /// <summary>
-	//	        /// Teleport agent to another region
-	//	        /// </summary>
-	//	        /// <param name="regionHandle">handle of region to teleport agent to</param>
-	//	        /// <param name="position"><seealso cref="Vector3"/> position in destination sim to teleport to</param>
-	//	        /// <returns>true on success, false on failure</returns>
-	//	        /// <remarks>This call is blocking</remarks>
-	//	        public boolean Teleport(ulong regionHandle, Vector3 position)
-	//	        {
-	//	            return Teleport(regionHandle, position, new Vector3(0.0f, 1.0f, 0.0f));
-	//	        }
-	//	
-	//	        /// <summary>
-	//	        /// Teleport agent to another region
-	//	        /// </summary>
-	//	        /// <param name="regionHandle">handle of region to teleport agent to</param>
-	//	        /// <param name="position"><seealso cref="Vector3"/> position in destination sim to teleport to</param>
-	//	        /// <param name="lookAt"><seealso cref="Vector3"/> direction in destination sim agent will look at</param>
-	//	        /// <returns>true on success, false on failure</returns>
-	//	        /// <remarks>This call is blocking</remarks>
-	//	        public boolean Teleport(ulong regionHandle, Vector3 position, Vector3 lookAt)
-	//	        {
-	//	            if (Client.network.getCurrentSim() == null ||
-	//	                Client.network.getCurrentSim().Caps == null ||
-	//	                !Client.network.getCurrentSim().Caps.IsEventQueueRunning)
-	//	            {
-	//	                // Wait a bit to see if the event queue comes online
-	//	                AutoResetEvent queueEvent = new AutoResetEvent(false);
-	//	                EventHandler<EventQueueRunningEventArgs> queueCallback =
-	//	                    delegate(object sender, EventQueueRunningEventArgs e)
-	//	                    {
-	//	                        if (e.Simulator == Client.network.getCurrentSim())
-	//	                            queueEvent.Set();
-	//	                    };
-	//	
-	//	                Client.network.EventQueueRunning += queueCallback;
-	//	                queueEvent.WaitOne(10 * 1000, false);
-	//	                Client.network.EventQueueRunning -= queueCallback;
-	//	            }
-	//	
-	//	            teleportStat = TeleportStatus.None;
-	//	            teleportEvent.reset();
-	//	
-	//	            RequestTeleport(regionHandle, position, lookAt);
-	//	
-	//	            teleportEvent.WaitOne(Client.settings.TELEPORT_TIMEOUT, false);
-	//	
-	//	            if (teleportStat == TeleportStatus.None ||
-	//	                teleportStat == TeleportStatus.Start ||
-	//	                teleportStat == TeleportStatus.Progress)
-	//	            {
-	//	                teleportMessage = "Teleport timed out.";
-	//	                teleportStat = TeleportStatus.Failed;
-	//	            }
-	//	
-	//	            return (teleportStat == TeleportStatus.Finished);
-	//	        }
-	//	
-	//        /// <summary>
-	//        /// Request teleport to a another simulator
-	//        /// </summary>
-	//        /// <param name="regionHandle">handle of region to teleport agent to</param>
-	//        /// <param name="position"><seealso cref="Vector3"/> position in destination sim to teleport to</param>
-	//        public void RequestTeleport(ulong regionHandle, Vector3 position)
-	//        {
-	//            RequestTeleport(regionHandle, position, new Vector3(0.0f, 1.0f, 0.0f));
-	//        }
-	//
-	//        /// <summary>
-	//        /// Request teleport to a another simulator
-	//        /// </summary>
-	//        /// <param name="regionHandle">handle of region to teleport agent to</param>
-	//        /// <param name="position"><seealso cref="Vector3"/> position in destination sim to teleport to</param>
-	//        /// <param name="lookAt"><seealso cref="Vector3"/> direction in destination sim agent will look at</param>
-	//        public void RequestTeleport(ulong regionHandle, Vector3 position, Vector3 lookAt)
-	//        {
-	//            if (Client.network.getCurrentSim() != null &&
-	//                Client.network.getCurrentSim().Caps != null &&
-	//                Client.network.getCurrentSim().Caps.IsEventQueueRunning)
-	//            {
-	//                TeleportLocationRequestPacket teleport = new TeleportLocationRequestPacket();
-	//                teleport.AgentData.AgentID = Client.self.getAgentID();
-	//                teleport.AgentData.SessionID = Client.self.getSessionID();
-	//                teleport.Info.LookAt = lookAt;
-	//                teleport.Info.Position = position;
-	//                teleport.Info.RegionHandle = regionHandle;
-	//
-	//                Logger.Log("Requesting teleport to region handle " + regionHandle.ToString(), Helpers.LogLevel.Info, Client);
-	//
-	//                Client.network.SendPacket(teleport);
-	//            }
-	//            else
-	//            {
-	//                teleportMessage = "CAPS event queue is not running";
-	//                teleportEvent.Set();
-	//                teleportStat = TeleportStatus.Failed;
-	//            }
-	//        }
-	//
-	//        /// <summary>
-	//        /// Teleport agent to a landmark
-	//        /// </summary>
-	//        /// <param name="landmark"><seealso cref="UUID"/> of the landmark to teleport agent to</param>
-	//        public void RequestTeleport(UUID landmark)
-	//        {
-	//            TeleportLandmarkRequestPacket p = new TeleportLandmarkRequestPacket();
-	//            p.Info = new TeleportLandmarkRequestPacket.InfoBlock();
-	//            p.Info.AgentID = Client.self.getAgentID();
-	//            p.Info.SessionID = Client.self.getSessionID();
-	//            p.Info.LandmarkID = landmark;
-	//            Client.network.SendPacket(p);
-	//        }
-	//
-	//        /// <summary>
-	//        /// Send a teleport lure to another avatar with default "Join me in ..." invitation message
-	//        /// </summary>
-	//        /// <param name="targetID">target avatars <seealso cref="UUID"/> to lure</param>
-	//        public void SendTeleportLure(UUID targetID)
-	//        {
-	//            SendTeleportLure(targetID, "Join me in " + Client.network.getCurrentSim().Name + "!");
-	//        }
-	//
-	//        /// <summary>
-	//        /// Send a teleport lure to another avatar with custom invitation message
-	//        /// </summary>
-	//        /// <param name="targetID">target avatars <seealso cref="UUID"/> to lure</param>
-	//        /// <param name="message">custom message to send with invitation</param>
-	//        public void SendTeleportLure(UUID targetID, String message)
-	//        {
-	//            StartLurePacket p = new StartLurePacket();
-	//            p.AgentData.AgentID = Client.Self.id;
-	//            p.AgentData.SessionID = Client.self.getSessionID();
-	//            p.Info.LureType = 0;
-	//            p.Info.Message = Utils.stringToBytes(message);
-	//            p.TargetData = new StartLurePacket.TargetDataBlock[] { new StartLurePacket.TargetDataBlock() };
-	//            p.TargetData[0].TargetID = targetID;
-	//            Client.network.SendPacket(p);
-	//        }
-	//
-	//        /// <summary>
-	//        /// Respond to a teleport lure by either accepting it and initiating 
-	//        /// the teleport, or denying it
-	//        /// </summary>
-	//        /// <param name="requesterID"><seealso cref="UUID"/> of the avatar sending the lure</param>
-	//        /// <param name="sessionID">IM session <seealso cref="UUID"/> of the incoming lure request</param>
-	//        /// <param name="accept">true to accept the lure, false to decline it</param>
-	//        public void TeleportLureRespond(UUID requesterID, UUID sessionID, boolean accept)
-	//        {
-	//            if (accept)
-	//            {
-	//                TeleportLureRequestPacket lure = new TeleportLureRequestPacket();
-	//
-	//                lure.Info.AgentID = Client.self.getAgentID();
-	//                lure.Info.SessionID = Client.self.getSessionID();
-	//                lure.Info.LureID = sessionID;
-	//                lure.Info.TeleportFlags = (uint)TeleportFlags.ViaLure;
-	//
-	//                Client.network.SendPacket(lure);
-	//            }
-	//            else
-	//            {
-	//                InstantMessage(Name, requesterID, "", sessionID,
-	//                    accept ? InstantMessageDialog.AcceptTeleport : InstantMessageDialog.DenyTeleport,
-	//                    InstantMessageOnline.Offline, this.getSimPosition(), UUID.Zero, Utils.EmptyBytes);
-	//            }
-	//        }
-	//
-	//        //endregion Teleporting
-	//
-	//        //region Misc
-	//
-	//        /// <summary>
-	//        /// Update agent profile
-	//        /// </summary>
-	//        /// <param name="profile"><seealso cref="OpenMetaverse.Avatar.AvatarProperties"/> struct containing updated 
-	//        /// profile information</param>
-	//        public void UpdateProfile(Avatar.AvatarProperties profile)
-	//        {
-	//            AvatarPropertiesUpdatePacket apup = new AvatarPropertiesUpdatePacket();
-	//            apup.AgentData.AgentID = id;
-	//            apup.AgentData.SessionID = sessionID;
-	//            apup.PropertiesData.AboutText = Utils.stringToBytes(profile.AboutText);
-	//            apup.PropertiesData.AllowPublish = profile.AllowPublish;
-	//            apup.PropertiesData.FLAboutText = Utils.stringToBytes(profile.FirstLifeText);
-	//            apup.PropertiesData.FLImageID = profile.FirstLifeImage;
-	//            apup.PropertiesData.ImageID = profile.ProfileImage;
-	//            apup.PropertiesData.MaturePublish = profile.MaturePublish;
-	//            apup.PropertiesData.ProfileURL = Utils.stringToBytes(profile.ProfileURL);
-	//
-	//            Client.network.SendPacket(apup);
-	//        }
-	//
-	//        /// <summary>
-	//        /// Update agents profile interests
-	//        /// </summary>
-	//        /// <param name="interests">selection of interests from <seealso cref="T:OpenMetaverse.Avatar.Interests"/> struct</param>
-	//        public void UpdateInterests(Avatar.Interests interests)
-	//        {
-	//            AvatarInterestsUpdatePacket aiup = new AvatarInterestsUpdatePacket();
-	//            aiup.AgentData.AgentID = id;
-	//            aiup.AgentData.SessionID = sessionID;
-	//            aiup.PropertiesData.LanguagesText = Utils.stringToBytes(interests.LanguagesText);
-	//            aiup.PropertiesData.SkillsMask = interests.SkillsMask;
-	//            aiup.PropertiesData.SkillsText = Utils.stringToBytes(interests.SkillsText);
-	//            aiup.PropertiesData.WantToMask = interests.WantToMask;
-	//            aiup.PropertiesData.WantToText = Utils.stringToBytes(interests.WantToText);
-	//
-	//            Client.network.SendPacket(aiup);
-	//        }
-	//
-	//        /// <summary>
-	//        /// Set the height and the width of the client window. This is used
-	//        /// by the server to build a virtual camera frustum for our avatar
-	//        /// </summary>
-	//        /// <param name="height">New height of the viewer window</param>
-	//        /// <param name="width">New width of the viewer window</param>
-	//        public void SetHeightWidth(ushort height, ushort width)
-	//        {
-	//            AgentHeightWidthPacket heightwidth = new AgentHeightWidthPacket();
-	//            heightwidth.AgentData.AgentID = Client.self.getAgentID();
-	//            heightwidth.AgentData.SessionID = Client.self.getSessionID();
-	//            heightwidth.AgentData.CircuitCode = Client.network.CircuitCode;
-	//            heightwidth.HeightWidthBlock.Height = height;
-	//            heightwidth.HeightWidthBlock.Width = width;
-	//            heightwidth.HeightWidthBlock.GenCounter = heightWidthGenCounter++;
-	//
-	//            Client.network.SendPacket(heightwidth);
-	//        }
-	//
-	//        /// <summary>
-	//        /// Request the list of muted objects and avatars for this agent
-	//        /// </summary>
-	//        public void RequestMuteList()
-	//        {
-	//            MuteListRequestPacket mute = new MuteListRequestPacket();
-	//            mute.AgentData.AgentID = Client.self.getAgentID();
-	//            mute.AgentData.SessionID = Client.self.getSessionID();
-	//            mute.MuteData.MuteCRC = 0;
-	//
-	//            Client.network.SendPacket(mute);
-	//        }
-	//
-	//        /// <summary>
-	//        /// Mute an object, resident, etc.
-	//        /// </summary>
-	//        /// <param name="type">Mute type</param>
-	//        /// <param name="id">Mute UUID</param>
-	//        /// <param name="name">Mute name</param>
-	//        public void UpdateMuteListEntry(MuteType type, UUID id, String name)
-	//        {
-	//            UpdateMuteListEntry(type, id, name, MuteFlags.Default);
-	//        }
-	//
-	//        /// <summary>
-	//        /// Mute an object, resident, etc.
-	//        /// </summary>
-	//        /// <param name="type">Mute type</param>
-	//        /// <param name="id">Mute UUID</param>
-	//        /// <param name="name">Mute name</param>
-	//        /// <param name="flags">Mute flags</param>
-	//        public void UpdateMuteListEntry(MuteType type, UUID id, String name, MuteFlags flags)
-	//        {
-	//            UpdateMuteListEntryPacket p = new UpdateMuteListEntryPacket();
-	//            p.AgentData.AgentID = Client.self.getAgentID();
-	//            p.AgentData.SessionID = Client.self.getSessionID();
-	//
-	//            p.MuteData.MuteType = (int)type;
-	//            p.MuteData.MuteID = id;
-	//            p.MuteData.MuteName = Utils.stringToBytes(name);
-	//            p.MuteData.MuteFlags = (uint)flags;
-	//
-	//            Client.network.SendPacket(p);
-	//
-	//            MuteEntry me = new MuteEntry();
-	//            me.Type = type;
-	//            me.ID = id;
-	//            me.Name = name;
-	//            me.Flags = flags;
-	//            synchronized (MuteList.getDictionary())
-	//            {
-	//                MuteList[string.Format("{0}|{1}", me.ID, me.Name)] = me;
-	//            }
-	//            OnMuteListUpdated(EventArgs.Empty);
-	//
-	//        }
-	//
-	//        /// <summary>
-	//        /// Unmute an object, resident, etc.
-	//        /// </summary>
-	//        /// <param name="id">Mute UUID</param>
-	//        /// <param name="name">Mute name</param>
-	//        public void RemoveMuteListEntry(UUID id, String name)
-	//        {
-	//            RemoveMuteListEntryPacket p = new RemoveMuteListEntryPacket();
-	//            p.AgentData.AgentID = Client.self.getAgentID();
-	//            p.AgentData.SessionID = Client.self.getSessionID();
-	//
-	//            p.MuteData.MuteID = id;
-	//            p.MuteData.MuteName = Utils.stringToBytes(name);
-	//            
-	//            Client.network.SendPacket(p);
-	//
-	//            String listKey = string.Format("{0}|{1}", id, name);
-	//            if (MuteList.containsKey(listKey))
-	//            {
-	//                synchronized (MuteList.getDictionary())
-	//                {
-	//                    MuteList.Remove(listKey);
-	//                }
-	//                OnMuteListUpdated(EventArgs.Empty);
-	//            }
-	//        }
-	//
-	//        /// <summary>
-	//        /// Sets home location to agents current position
-	//        /// </summary>
-	//        /// <remarks>will fire an AlertMessage (<seealso cref="E:OpenMetaverse.AgentManager.OnAlertMessage"/>) with 
-	//        /// success or failure message</remarks>
-	//        public void SetHome()
-	//        {
-	//            SetStartLocationRequestPacket s = new SetStartLocationRequestPacket();
-	//            s.AgentData = new SetStartLocationRequestPacket.AgentDataBlock();
-	//            s.AgentData.AgentID = Client.self.getAgentID();
-	//            s.AgentData.SessionID = Client.self.getSessionID();
-	//            s.StartLocationData = new SetStartLocationRequestPacket.StartLocationDataBlock();
-	//            s.StartLocationData.LocationPos = Client.self.getSimPosition();
-	//            s.StartLocationData.LocationID = 1;
-	//            s.StartLocationData.SimName = Utils.stringToBytes("");
-	//            s.StartLocationData.LocationLookAt = Movement.Camera.AtAxis;
-	//            Client.network.SendPacket(s);
-	//        }
-	//
+	/// <summary>
+	/// Mark gesture active
+	/// </summary>
+	/// <param name="invID">Inventory <seealso cref="UUID"/> of the gesture</param>
+	/// <param name="assetID">Asset <seealso cref="UUID"/> of the gesture</param>
+	public void ActivateGesture(UUID invID, UUID assetID)
+	{
+		ActivateGesturesPacket p = new ActivateGesturesPacket();
+
+		p.AgentData.AgentID = getAgentID();
+		p.AgentData.SessionID = getSessionID();
+		p.AgentData.Flags = 0x00;
+
+		ActivateGesturesPacket.DataBlock b = new ActivateGesturesPacket.DataBlock();
+		b.ItemID = invID;
+		b.AssetID = assetID;
+		b.GestureFlags = 0x00;
+
+		p.Data = new ActivateGesturesPacket.DataBlock[1];
+		p.Data[0] = b;
+
+		Client.network.SendPacket(p);
+
+	}
+
+	/// <summary>
+	/// Mark gesture inactive
+	/// </summary>
+	/// <param name="invID">Inventory <seealso cref="UUID"/> of the gesture</param>
+	public void DeactivateGesture(UUID invID)
+	{
+		DeactivateGesturesPacket p = new DeactivateGesturesPacket();
+
+		p.AgentData.AgentID = getAgentID();
+		p.AgentData.SessionID = getSessionID();
+		p.AgentData.Flags = 0x00;
+
+		DeactivateGesturesPacket.DataBlock b = new DeactivateGesturesPacket.DataBlock();
+		b.ItemID = invID;
+		b.GestureFlags = 0x00;
+
+		p.Data = new DeactivateGesturesPacket.DataBlock[1];
+		p.Data[0] = b;
+
+		Client.network.SendPacket(p);
+	}
+	//endregion
+
+	//region Animations
+
+	/// <summary>
+	/// Send an AgentAnimation packet that toggles a single animation on
+	/// </summary>
+	/// <param name="animation">The <seealso cref="UUID"/> of the animation to start playing</param>
+	/// <param name="reliable">Whether to ensure delivery of this packet or not</param>
+	public void AnimationStart(UUID animation, boolean reliable)
+	{
+		Map<UUID, Boolean> animations = new HashMap<UUID, Boolean>();
+		animations.put(animation, true);
+
+		Animate(animations, reliable);
+	}
+
+	/// <summary>
+	/// Send an AgentAnimation packet that toggles a single animation off
+	/// </summary>
+	/// <param name="animation">The <seealso cref="UUID"/> of a 
+	/// currently playing animation to stop playing</param>
+	/// <param name="reliable">Whether to ensure delivery of this packet or not</param>
+	public void AnimationStop(UUID animation, boolean reliable)
+	{
+		Map<UUID, Boolean> animations = new HashMap<UUID, Boolean>();
+		animations.put(animation, false);
+
+		Animate(animations, reliable);
+	}
+
+	/// <summary>
+	/// Send an AgentAnimation packet that will toggle animations on or off
+	/// </summary>
+	/// <param name="animations">A list of animation <seealso cref="UUID"/>s, and whether to
+	/// turn that animation on or off</param>
+	/// <param name="reliable">Whether to ensure delivery of this packet or not</param>
+	public void Animate(Map<UUID, Boolean> animations, boolean reliable)
+	{
+		AgentAnimationPacket animate = new AgentAnimationPacket();
+		animate.header.Reliable = reliable;
+
+		animate.AgentData.AgentID = Client.self.getAgentID();
+		animate.AgentData.SessionID = Client.self.getSessionID();
+		animate.AnimationList = new AgentAnimationPacket.AnimationListBlock[animations.size()];
+		int i = 0;
+
+		for (Entry<UUID, Boolean> animation : animations.entrySet())
+		{
+			animate.AnimationList[i] = new AgentAnimationPacket.AnimationListBlock();
+			animate.AnimationList[i].AnimID = animation.getKey();
+			animate.AnimationList[i].StartAnim = animation.getValue();
+
+			i++;
+		}
+
+		// TODO: Implement support for this
+		animate.PhysicalAvatarEventList = new AgentAnimationPacket.PhysicalAvatarEventListBlock[0];
+
+		Client.network.SendPacket(animate);
+	}
+
+	//endregion Animations
+
+	//region Teleporting
+
+	/// <summary>
+	/// Teleports agent to their stored home location
+	/// </summary>
+	/// <returns>true on successful teleport to home location</returns>
+	public boolean GoHome() throws InterruptedException
+	{
+		return Teleport(UUID.Zero);
+	}
+
+	/// <summary>
+	/// Teleport agent to a landmark
+	/// </summary>
+	/// <param name="landmark"><seealso cref="UUID"/> of the landmark to teleport agent to</param>
+	/// <returns>true on success, false on failure</returns>
+	public boolean Teleport(UUID landmark) throws InterruptedException
+	{
+		teleportStat = TeleportStatus.None;
+		teleportEvent.reset();
+		TeleportLandmarkRequestPacket p = new TeleportLandmarkRequestPacket();
+		p.Info = new TeleportLandmarkRequestPacket.InfoBlock();
+		p.Info.AgentID = Client.self.getAgentID();
+		p.Info.SessionID = Client.self.getSessionID();
+		p.Info.LandmarkID = landmark;
+		Client.network.SendPacket(p);
+
+		teleportEvent.waitOne(Client.settings.TELEPORT_TIMEOUT);
+
+		if (teleportStat == TeleportStatus.None ||
+				teleportStat == TeleportStatus.Start ||
+				teleportStat == TeleportStatus.Progress)
+		{
+			teleportMessage = "Teleport timed out.";
+			teleportStat = TeleportStatus.Failed;
+		}
+
+		return (teleportStat == TeleportStatus.Finished);
+	}
+
+	/// <summary>
+	/// Attempt to look up a simulator name and teleport to the discovered
+	/// destination
+	/// </summary>
+	/// <param name="simName">Region name to look up</param>
+	/// <param name="position">Position to teleport to</param>
+	/// <returns>True if the lookup and teleport were successful, otherwise
+	/// false</returns>
+	public boolean Teleport(String simName, Vector3 position) throws InterruptedException
+	{
+		return Teleport(simName, position, new Vector3(0, 1.0f, 0));
+	}
+
+	/// <summary>
+	/// Attempt to look up a simulator name and teleport to the discovered
+	/// destination
+	/// </summary>
+	/// <param name="simName">Region name to look up</param>
+	/// <param name="position">Position to teleport to</param>
+	/// <param name="lookAt">Target to look at</param>
+	/// <returns>True if the lookup and teleport were successful, otherwise
+	/// false</returns>
+	public boolean Teleport(String simName, Vector3 position, Vector3 lookAt) throws InterruptedException
+	{
+		if (Client.network.getCurrentSim() == null)
+			return false;
+
+		teleportStat = TeleportStatus.None;
+
+		if (simName != Client.network.getCurrentSim().Name)
+		{
+			// Teleporting to a foreign sim
+			GridRegion[] region = new GridRegion[1];
+
+			if (Client.grid.GetGridRegion(simName, GridLayerType.Objects, region))
+			{
+				return Teleport(region[0].RegionHandle, position, lookAt);
+			}
+			else
+			{
+				teleportMessage = "Unable to resolve name: " + simName;
+				teleportStat = TeleportStatus.Failed;
+				return false;
+			}
+		}
+		else
+		{
+			// Teleporting to the sim we're already in
+			return Teleport(Client.network.getCurrentSim().Handle, position, lookAt);
+		}
+	}
+
+	/// <summary>
+	/// Teleport agent to another region
+	/// </summary>
+	/// <param name="regionHandle">handle of region to teleport agent to</param>
+	/// <param name="position"><seealso cref="Vector3"/> position in destination sim to teleport to</param>
+	/// <returns>true on success, false on failure</returns>
+	/// <remarks>This call is blocking</remarks>
+	public boolean Teleport(BigInteger regionHandle, Vector3 position) throws InterruptedException
+	{
+		return Teleport(regionHandle, position, new Vector3(0.0f, 1.0f, 0.0f));
+	}
+
+	/// <summary>
+	/// Teleport agent to another region
+	/// </summary>
+	/// <param name="regionHandle">handle of region to teleport agent to</param>
+	/// <param name="position"><seealso cref="Vector3"/> position in destination sim to teleport to</param>
+	/// <param name="lookAt"><seealso cref="Vector3"/> direction in destination sim agent will look at</param>
+	/// <returns>true on success, false on failure</returns>
+	/// <remarks>This call is blocking</remarks>
+	public boolean Teleport(BigInteger regionHandle, Vector3 position, Vector3 lookAt) throws InterruptedException
+	{
+		if (Client.network.getCurrentSim() == null ||
+				Client.network.getCurrentSim().Caps == null ||
+				!Client.network.getCurrentSim().Caps.isEventQueueRunning())
+		{
+			// Wait a bit to see if the event queue comes online
+			final AutoResetEvent queueEvent = new AutoResetEvent(false);
+			//		                EventHandler<EventQueueRunningEventArgs> queueCallback =
+			//		                    delegate(Object sender, EventQueueRunningEventArgs e)
+			//		                    {
+			//		                        if (e.getSimulator() == Client.network.getCurrentSim())
+			//		                            queueEvent.Set();
+			//		                    };
+			//		
+			//		                Client.network.EventQueueRunning += queueCallback;
+			//		                queueEvent.WaitOne(10 * 1000, false);
+			//		                Client.network.EventQueueRunning -= queueCallback;
+
+			EventObserver<EventQueueRunningEventArgs> queueCallback = new EventObserver<EventQueueRunningEventArgs>()
+					{ @Override
+				public void handleEvent(Observable o, EventQueueRunningEventArgs e) 
+					{
+						if (e.getSimulator().equals(Client.network.getCurrentSim()))
+							queueEvent.set();
+					}
+					};
+					Client.network.RegisterOnEventQueueRunningCallback(queueCallback);
+					queueEvent.waitOne(10 * 1000);
+					Client.network.UnregisterOnEventQueueRunningCallback(queueCallback);		                
+		}
+
+		teleportStat = TeleportStatus.None;
+		teleportEvent.reset();
+
+		RequestTeleport(regionHandle, position, lookAt);
+
+		teleportEvent.waitOne(Client.settings.TELEPORT_TIMEOUT);
+
+		if (teleportStat == TeleportStatus.None ||
+				teleportStat == TeleportStatus.Start ||
+				teleportStat == TeleportStatus.Progress)
+		{
+			teleportMessage = "Teleport timed out.";
+			teleportStat = TeleportStatus.Failed;
+		}
+
+		return (teleportStat == TeleportStatus.Finished);
+	}
+
+	/// <summary>
+	/// Request teleport to a another simulator
+	/// </summary>
+	/// <param name="regionHandle">handle of region to teleport agent to</param>
+	/// <param name="position"><seealso cref="Vector3"/> position in destination sim to teleport to</param>
+	public void RequestTeleport(BigInteger regionHandle, Vector3 position)
+	{
+		RequestTeleport(regionHandle, position, new Vector3(0.0f, 1.0f, 0.0f));
+	}
+
+	/// <summary>
+	/// Request teleport to a another simulator
+	/// </summary>
+	/// <param name="regionHandle">handle of region to teleport agent to</param>
+	/// <param name="position"><seealso cref="Vector3"/> position in destination sim to teleport to</param>
+	/// <param name="lookAt"><seealso cref="Vector3"/> direction in destination sim agent will look at</param>
+	public void RequestTeleport(BigInteger regionHandle, Vector3 position, Vector3 lookAt)
+	{
+		if (Client.network.getCurrentSim() != null &&
+				Client.network.getCurrentSim().Caps != null &&
+				Client.network.getCurrentSim().Caps.isEventQueueRunning())
+		{
+			TeleportLocationRequestPacket teleport = new TeleportLocationRequestPacket();
+			teleport.AgentData.AgentID = Client.self.getAgentID();
+			teleport.AgentData.SessionID = Client.self.getSessionID();
+			teleport.Info.LookAt = lookAt;
+			teleport.Info.Position = position;
+			teleport.Info.RegionHandle = regionHandle;
+
+			JLogger.info("Requesting teleport to region handle " + regionHandle.toString());
+
+			Client.network.SendPacket(teleport);
+		}
+		else
+		{
+			teleportMessage = "CAPS event queue is not running";
+			teleportEvent.set();
+			teleportStat = TeleportStatus.Failed;
+		}
+	}
+
+	/// <summary>
+	/// Teleport agent to a landmark
+	/// </summary>
+	/// <param name="landmark"><seealso cref="UUID"/> of the landmark to teleport agent to</param>
+	public void RequestTeleport(UUID landmark)
+	{
+		TeleportLandmarkRequestPacket p = new TeleportLandmarkRequestPacket();
+		p.Info = new TeleportLandmarkRequestPacket.InfoBlock();
+		p.Info.AgentID = Client.self.getAgentID();
+		p.Info.SessionID = Client.self.getSessionID();
+		p.Info.LandmarkID = landmark;
+		Client.network.SendPacket(p);
+	}
+
+	/// <summary>
+	/// Send a teleport lure to another avatar with default "Join me in ..." invitation message
+	/// </summary>
+	/// <param name="targetID">target avatars <seealso cref="UUID"/> to lure</param>
+	public void SendTeleportLure(UUID targetID)
+	{
+		SendTeleportLure(targetID, "Join me in " + Client.network.getCurrentSim().Name + "!");
+	}
+
+	/// <summary>
+	/// Send a teleport lure to another avatar with custom invitation message
+	/// </summary>
+	/// <param name="targetID">target avatars <seealso cref="UUID"/> to lure</param>
+	/// <param name="message">custom message to send with invitation</param>
+	public void SendTeleportLure(UUID targetID, String message)
+	{
+		StartLurePacket p = new StartLurePacket();
+		p.AgentData.AgentID = Client.self.id;
+		p.AgentData.SessionID = Client.self.getSessionID();
+		p.Info.LureType = 0;
+		p.Info.Message = Utils.stringToBytes(message);
+		p.TargetData = new StartLurePacket.TargetDataBlock[] { new StartLurePacket.TargetDataBlock() };
+		p.TargetData[0].TargetID = targetID;
+		Client.network.SendPacket(p);
+	}
+
+	/// <summary>
+	/// Respond to a teleport lure by either accepting it and initiating 
+	/// the teleport, or denying it
+	/// </summary>
+	/// <param name="requesterID"><seealso cref="UUID"/> of the avatar sending the lure</param>
+	/// <param name="sessionID">IM session <seealso cref="UUID"/> of the incoming lure request</param>
+	/// <param name="accept">true to accept the lure, false to decline it</param>
+	public void TeleportLureRespond(UUID requesterID, UUID sessionID, boolean accept)
+	{
+		if (accept)
+		{
+			TeleportLureRequestPacket lure = new TeleportLureRequestPacket();
+
+			lure.Info.AgentID = Client.self.getAgentID();
+			lure.Info.SessionID = Client.self.getSessionID();
+			lure.Info.LureID = sessionID;
+			lure.Info.TeleportFlags = TeleportFlags.ViaLure.getIndex();
+
+			Client.network.SendPacket(lure);
+		}
+		else
+		{
+			InstantMessage(getName(), requesterID, "", sessionID,
+					accept ? InstantMessageDialog.AcceptTeleport : InstantMessageDialog.DenyTeleport,
+							InstantMessageOnline.Offline, this.getSimPosition(), UUID.Zero, Utils.EmptyBytes);
+		}
+	}
+
+	//endregion Teleporting
+
+	//region Misc
+
+	/// <summary>
+	/// Update agent profile
+	/// </summary>
+	/// <param name="profile"><seealso cref="OpenMetaverse.Avatar.AvatarProperties"/> struct containing updated 
+	/// profile information</param>
+	public void UpdateProfile(Avatar.AvatarProperties profile)
+	{
+		AvatarPropertiesUpdatePacket apup = new AvatarPropertiesUpdatePacket();
+		apup.AgentData.AgentID = id;
+		apup.AgentData.SessionID = sessionID;
+		apup.PropertiesData.AboutText = Utils.stringToBytes(profile.AboutText);
+		apup.PropertiesData.AllowPublish = profile.isAllowPublish();
+		apup.PropertiesData.FLAboutText = Utils.stringToBytes(profile.FirstLifeText);
+		apup.PropertiesData.FLImageID = profile.FirstLifeImage;
+		apup.PropertiesData.ImageID = profile.ProfileImage;
+		apup.PropertiesData.MaturePublish = profile.getMaturePublish();
+		apup.PropertiesData.ProfileURL = Utils.stringToBytes(profile.ProfileURL);
+
+		Client.network.SendPacket(apup);
+	}
+
+	/// <summary>
+	/// Update agents profile interests
+	/// </summary>
+	/// <param name="interests">selection of interests from <seealso cref="T:OpenMetaverse.Avatar.Interests"/> struct</param>
+	public void UpdateInterests(Avatar.Interests interests)
+	{
+		AvatarInterestsUpdatePacket aiup = new AvatarInterestsUpdatePacket();
+		aiup.AgentData.AgentID = id;
+		aiup.AgentData.SessionID = sessionID;
+		aiup.PropertiesData.LanguagesText = Utils.stringToBytes(interests.LanguagesText);
+		aiup.PropertiesData.SkillsMask = interests.SkillsMask;
+		aiup.PropertiesData.SkillsText = Utils.stringToBytes(interests.SkillsText);
+		aiup.PropertiesData.WantToMask = interests.WantToMask;
+		aiup.PropertiesData.WantToText = Utils.stringToBytes(interests.WantToText);
+
+		Client.network.SendPacket(aiup);
+	}
+
+	/// <summary>
+	/// Set the height and the width of the client window. This is used
+	/// by the server to build a virtual camera frustum for our avatar
+	/// </summary>
+	/// <param name="height">New height of the viewer window</param>
+	/// <param name="width">New width of the viewer window</param>
+	public void SetHeightWidth(int height, int width)
+	{
+		AgentHeightWidthPacket heightwidth = new AgentHeightWidthPacket();
+		heightwidth.AgentData.AgentID = Client.self.getAgentID();
+		heightwidth.AgentData.SessionID = Client.self.getSessionID();
+		heightwidth.AgentData.CircuitCode = Client.network.getCircuitCode();
+		heightwidth.HeightWidthBlock.Height = height;
+		heightwidth.HeightWidthBlock.Width = width;
+		heightwidth.HeightWidthBlock.GenCounter = heightWidthGenCounter++;
+
+		Client.network.SendPacket(heightwidth);
+	}
+
+	/// <summary>
+	/// Request the list of muted objects and avatars for this agent
+	/// </summary>
+	public void RequestMuteList()
+	{
+		MuteListRequestPacket mute = new MuteListRequestPacket();
+		mute.AgentData.AgentID = Client.self.getAgentID();
+		mute.AgentData.SessionID = Client.self.getSessionID();
+		mute.MuteData.MuteCRC = 0;
+
+		Client.network.SendPacket(mute);
+	}
+
+	/// <summary>
+	/// Mute an object, resident, etc.
+	/// </summary>
+	/// <param name="type">Mute type</param>
+	/// <param name="id">Mute UUID</param>
+	/// <param name="name">Mute name</param>
+	public void UpdateMuteListEntry(MuteType type, UUID id, String name)
+	{
+		UpdateMuteListEntry(type, id, name, MuteFlags.Default);
+	}
+
+	/// <summary>
+	/// Mute an object, resident, etc.
+	/// </summary>
+	/// <param name="type">Mute type</param>
+	/// <param name="id">Mute UUID</param>
+	/// <param name="name">Mute name</param>
+	/// <param name="flags">Mute flags</param>
+	public void UpdateMuteListEntry(MuteType type, UUID id, String name, MuteFlags flags)
+	{
+		UpdateMuteListEntryPacket p = new UpdateMuteListEntryPacket();
+		p.AgentData.AgentID = Client.self.getAgentID();
+		p.AgentData.SessionID = Client.self.getSessionID();
+
+		p.MuteData.MuteType = (int)type.getIndex();
+		p.MuteData.MuteID = id;
+		p.MuteData.MuteName = Utils.stringToBytes(name);
+		p.MuteData.MuteFlags = (long)flags.getIndex();
+
+		Client.network.SendPacket(p);
+
+		MuteEntry me = new MuteEntry();
+		me.Type = type;
+		me.ID = id;
+		me.Name = name;
+		me.Flags = flags;
+		synchronized (MuteList.getDictionary())
+		{
+			MuteList.add(String.format("{0}|{1}", me.ID, me.Name), me);
+		}
+		onMuteListUpdated.raiseEvent(new EventArgs());
+
+	}
+
+	/// <summary>
+	/// Unmute an object, resident, etc.
+	/// </summary>
+	/// <param name="id">Mute UUID</param>
+	/// <param name="name">Mute name</param>
+	public void RemoveMuteListEntry(UUID id, String name)
+	{
+		RemoveMuteListEntryPacket p = new RemoveMuteListEntryPacket();
+		p.AgentData.AgentID = Client.self.getAgentID();
+		p.AgentData.SessionID = Client.self.getSessionID();
+
+		p.MuteData.MuteID = id;
+		p.MuteData.MuteName = Utils.stringToBytes(name);
+
+		Client.network.SendPacket(p);
+
+		String listKey = String.format("%s|%s", id.toString(), name);
+		if (MuteList.containsKey(listKey))
+		{
+			synchronized (MuteList.getDictionary())
+			{
+				MuteList.remove(listKey);
+			}
+			onMuteListUpdated.raiseEvent(new EventArgs());
+		}
+	}
+
+	/// <summary>
+	/// Sets home location to agents current position
+	/// </summary>
+	/// <remarks>will fire an AlertMessage (<seealso cref="E:OpenMetaverse.AgentManager.OnAlertMessage"/>) with 
+	/// success or failure message</remarks>
+	public void SetHome()
+	{
+		SetStartLocationRequestPacket s = new SetStartLocationRequestPacket();
+		s.AgentData = new SetStartLocationRequestPacket.AgentDataBlock();
+		s.AgentData.AgentID = Client.self.getAgentID();
+		s.AgentData.SessionID = Client.self.getSessionID();
+		s.StartLocationData = new SetStartLocationRequestPacket.StartLocationDataBlock();
+		s.StartLocationData.LocationPos = Client.self.getSimPosition();
+		s.StartLocationData.LocationID = 1;
+		s.StartLocationData.SimName = Utils.stringToBytes("");
+		s.StartLocationData.LocationLookAt = Movement.Camera.getAtAxis();
+		Client.network.SendPacket(s);
+	}
+
 	/// <summary>
 	/// Move an agent in to a simulator. This packet is the last packet
 	/// needed to complete the transition in to a new simulator
 	/// </summary>
-	/// <param name="simulator"><seealso cref="T:OpenMetaverse.Simulator"/> Object</param>
+	/// <param name="simulator"><seealso cref="T:OpenMetaverse.getSimulator()"/> Object</param>
 	public void CompleteAgentMovement(Simulator simulator)
 	{
 		CompleteAgentMovementPacket move = new CompleteAgentMovementPacket();
@@ -3803,2851 +4450,1282 @@ public class AgentManager {
 		Client.network.SendPacket(move, simulator);
 	}
 
-	//        /// <summary>
-	//        /// Reply to script permissions request
-	//        /// </summary>
-	//        /// <param name="simulator"><seealso cref="T:OpenMetaverse.Simulator"/> Object</param>
-	//        /// <param name="itemID"><seealso cref="UUID"/> of the itemID requesting permissions</param>
-	//        /// <param name="taskID"><seealso cref="UUID"/> of the taskID requesting permissions</param>
-	//        /// <param name="permissions"><seealso cref="OpenMetaverse.ScriptPermission"/> list of permissions to allow</param>
-	//        public void ScriptQuestionReply(Simulator simulator, UUID itemID, UUID taskID, ScriptPermission permissions)
-	//        {
-	//            ScriptAnswerYesPacket yes = new ScriptAnswerYesPacket();
-	//            yes.AgentData.AgentID = Client.self.getAgentID();
-	//            yes.AgentData.SessionID = Client.self.getSessionID();
-	//            yes.Data.ItemID = itemID;
-	//            yes.Data.TaskID = taskID;
-	//            yes.Data.Questions = (int)permissions;
-	//
-	//            Client.network.SendPacket(yes, simulator);
-	//        }
-	//
-	//        /// <summary>
-	//        /// Respond to a group invitation by either accepting or denying it
-	//        /// </summary>
-	//        /// <param name="groupID">UUID of the group (sent in the AgentID field of the invite message)</param>
-	//        /// <param name="imSessionID">IM Session ID from the group invitation message</param>
-	//        /// <param name="accept">Accept the group invitation or deny it</param>
-	//        public void GroupInviteRespond(UUID groupID, UUID imSessionID, boolean accept)
-	//        {
-	//            InstantMessage(Name, groupID, "", imSessionID,
-	//                accept ? InstantMessageDialog.GroupInvitationAccept : InstantMessageDialog.GroupInvitationDecline,
-	//                InstantMessageOnline.Offline, Vector3.Zero, UUID.Zero, Utils.EmptyBytes);
-	//        }
-	//
-	//        /// <summary>
-	//        /// Requests script detection of objects and avatars
-	//        /// </summary>
-	//        /// <param name="name">name of the object/avatar to search for</param>
-	//        /// <param name="searchID">UUID of the object or avatar to search for</param>
-	//        /// <param name="type">Type of search from ScriptSensorTypeFlags</param>
-	//        /// <param name="range">range of scan (96 max?)</param>
-	//        /// <param name="arc">the arc in radians to search within</param>
-	//        /// <param name="requestID">an user generated ID to correlate replies with</param>
-	//        /// <param name="sim">Simulator to perform search in</param>
-	//        public void RequestScriptSensor(String name, UUID searchID, ScriptSensorTypeFlags type, float range, float arc, UUID requestID, Simulator sim)
-	//        {
-	//            ScriptSensorRequestPacket request = new ScriptSensorRequestPacket();
-	//            request.Requester.Arc = arc;
-	//            request.Requester.Range = range;
-	//            request.Requester.RegionHandle = sim.Handle;
-	//            request.Requester.RequestID = requestID;
-	//            request.Requester.SearchDir = Quaternion.Identity; // TODO: this needs to be tested
-	//            request.Requester.SearchID = searchID;
-	//            request.Requester.SearchName = Utils.stringToBytes(name);
-	//            request.Requester.SearchPos = Vector3.Zero;
-	//            request.Requester.SearchRegions = 0; // TODO: ?
-	//            request.Requester.SourceID = Client.self.getAgentID();
-	//            request.Requester.Type = (int)type;
-	//
-	//            Client.network.SendPacket(request, sim);
-	//        }
-	//
-	//        /// <summary>
-	//        /// Create or update profile pick
-	//        /// </summary>
-	//        /// <param name="pickID">UUID of the pick to update, or random UUID to create a new pick</param>
-	//        /// <param name="topPick">Is this a top pick? (typically false)</param>
-	//        /// <param name="parcelID">UUID of the parcel (UUID.Zero for the current parcel)</param>
-	//        /// <param name="name">Name of the pick</param>
-	//        /// <param name="globalPosition">Global position of the pick landmark</param>
-	//        /// <param name="textureID">UUID of the image displayed with the pick</param>
-	//        /// <param name="description">Long description of the pick</param>
-	//        public void PickInfoUpdate(UUID pickID, boolean topPick, UUID parcelID, String name, Vector3d globalPosition, UUID textureID, String description)
-	//        {
-	//            PickInfoUpdatePacket pick = new PickInfoUpdatePacket();
-	//            pick.AgentData.AgentID = Client.self.getAgentID();
-	//            pick.AgentData.SessionID = Client.self.getSessionID();
-	//            pick.Data.PickID = pickID;
-	//            pick.Data.Desc = Utils.stringToBytes(description);
-	//            pick.Data.CreatorID = Client.self.getAgentID();
-	//            pick.Data.TopPick = topPick;
-	//            pick.Data.ParcelID = parcelID;
-	//            pick.Data.Name = Utils.stringToBytes(name);
-	//            pick.Data.SnapshotID = textureID;
-	//            pick.Data.PosGlobal = globalPosition;
-	//            pick.Data.SortOrder = 0;
-	//            pick.Data.Enabled = false;
-	//
-	//            Client.network.SendPacket(pick);
-	//        }
-	//
-	//        /// <summary>
-	//        /// Delete profile pick
-	//        /// </summary>
-	//        /// <param name="pickID">UUID of the pick to delete</param>
-	//        public void PickDelete(UUID pickID)
-	//        {
-	//            PickDeletePacket delete = new PickDeletePacket();
-	//            delete.AgentData.AgentID = Client.self.getAgentID();
-	//            delete.AgentData.SessionID = Client.Self.sessionID;
-	//            delete.Data.PickID = pickID;
-	//
-	//            Client.network.SendPacket(delete);
-	//        }
-	//
-	//        /// <summary>
-	//        /// Create or update profile Classified
-	//        /// </summary>
-	//        /// <param name="classifiedID">UUID of the classified to update, or random UUID to create a new classified</param>
-	//        /// <param name="category">Defines what catagory the classified is in</param>
-	//        /// <param name="snapshotID">UUID of the image displayed with the classified</param>
-	//        /// <param name="price">Price that the classified will cost to place for a week</param>
-	//        /// <param name="position">Global position of the classified landmark</param>
-	//        /// <param name="name">Name of the classified</param>
-	//        /// <param name="desc">Long description of the classified</param>
-	//        /// <param name="autoRenew">if true, auto renew classified after expiration</param>
-	//        public void UpdateClassifiedInfo(UUID classifiedID, DirectoryManager.ClassifiedCategories category,
-	//            UUID snapshotID, int price, Vector3d position, String name, String desc, boolean autoRenew)
-	//        {
-	//            ClassifiedInfoUpdatePacket classified = new ClassifiedInfoUpdatePacket();
-	//            classified.AgentData.AgentID = Client.self.getAgentID();
-	//            classified.AgentData.SessionID = Client.self.getSessionID();
-	//
-	//            classified.Data.ClassifiedID = classifiedID;
-	//            classified.Data.Category = (uint)category;
-	//
-	//            classified.Data.ParcelID = UUID.Zero;
-	//            // TODO: verify/fix ^
-	//            classified.Data.ParentEstate = 0;
-	//            // TODO: verify/fix ^
-	//
-	//            classified.Data.SnapshotID = snapshotID;
-	//            classified.Data.PosGlobal = position;
-	//
-	//            classified.Data.ClassifiedFlags = autoRenew ? (byte)32 : (byte)0;
-	//            // TODO: verify/fix ^
-	//
-	//            classified.Data.PriceForListing = price;
-	//            classified.Data.Name = Utils.stringToBytes(name);
-	//            classified.Data.Desc = Utils.stringToBytes(desc);
-	//            Client.network.SendPacket(classified);
-	//        }
-	//
-	//        /// <summary>
-	//        /// Create or update profile Classified
-	//        /// </summary>
-	//        /// <param name="classifiedID">UUID of the classified to update, or random UUID to create a new classified</param>
-	//        /// <param name="category">Defines what catagory the classified is in</param>
-	//        /// <param name="snapshotID">UUID of the image displayed with the classified</param>
-	//        /// <param name="price">Price that the classified will cost to place for a week</param>
-	//        /// <param name="name">Name of the classified</param>
-	//        /// <param name="desc">Long description of the classified</param>
-	//        /// <param name="autoRenew">if true, auto renew classified after expiration</param>
-	//        public void UpdateClassifiedInfo(UUID classifiedID, DirectoryManager.ClassifiedCategories category, UUID snapshotID, int price, String name, String desc, boolean autoRenew)
-	//        {
-	//            UpdateClassifiedInfo(classifiedID, category, snapshotID, price, Client.Self.GlobalPosition, name, desc, autoRenew);
-	//        }
-	//
-	//        /// <summary>
-	//        /// Delete a classified ad
-	//        /// </summary>
-	//        /// <param name="classifiedID">The classified ads ID</param>
-	//        public void DeleteClassfied(UUID classifiedID)
-	//        {
-	//            ClassifiedDeletePacket classified = new ClassifiedDeletePacket();
-	//            classified.AgentData.AgentID = Client.self.getAgentID();
-	//            classified.AgentData.SessionID = Client.self.getSessionID();
-	//
-	//            classified.Data.ClassifiedID = classifiedID;
-	//            Client.network.SendPacket(classified);
-	//        }
-	//
-	//        /// <summary>
-	//        /// Fetches resource usage by agents attachmetns
-	//        /// </summary>
-	//        /// <param name="callback">Called when the requested information is collected</param>
-	//        public void GetAttachmentResources(AttachmentResourcesCallback callback)
-	//        {
-	//            try
-	//            {
-	//                URI url = Client.network.getCurrentSim().Caps.CapabilityURI("AttachmentResources");
-	//                CapsHttpClient request = new CapsHttpClient(url);
-	//
-	//                request.OnComplete += delegate(CapsHttpClient client, OSD result, Exception error)
-	//                {
-	//                    try
-	//                    {
-	//                        if (result == null || error != null)
-	//                        {
-	//                            callback(false, null);
-	//                        }
-	//                        AttachmentResourcesMessage info = AttachmentResourcesMessage.FromOSD(result);
-	//                        callback(true, info);
-	//
-	//                    }
-	//                    catch (Exception ex)
-	//                    {
-	//                        Logger.Log("Failed fetching AttachmentResources", Helpers.LogLevel.Error, Client, ex);
-	//                        callback(false, null);
-	//                    }
-	//                };
-	//
-	//                request.BeginGetResponse(Client.settings.CAPS_TIMEOUT);
-	//            }
-	//            catch (Exception ex)
-	//            {
-	//                Logger.Log("Failed fetching AttachmentResources", Helpers.LogLevel.Error, Client, ex);
-	//                callback(false, null);
-	//            }
-	//        }
-	//
-	//        /// <summary>
-	//        /// Initates request to set a new display name
-	//        /// </summary>
-	//        /// <param name="oldName">Previous display name</param>
-	//        /// <param name="newName">Desired new display name</param>
-	//        public void SetDisplayName(String oldName, String newName)
-	//        {
-	//            Uri uri;
-	//
-	//            if (Client.network.getCurrentSim() == null ||
-	//                Client.network.getCurrentSim().Caps == null ||
-	//                (uri = Client.network.getCurrentSim().Caps.CapabilityURI("SetDisplayName")) == null)
-	//            {
-	//                Logger.Log("Unable to invoke SetDisplyName capability at this time", Helpers.LogLevel.Warning, Client);
-	//                return;
-	//            }
-	//
-	//            SetDisplayNameMessage msg = new SetDisplayNameMessage();
-	//            msg.OldDisplayName = oldName;
-	//            msg.NewDisplayName = newName;
-	//
-	//            CapsHttpClient cap = new CapsHttpClient(uri);
-	//            cap.BeginGetResponse(msg.Serialize(), OSDFormat.Xml, Client.settings.CAPS_TIMEOUT);
-	//        }
-	//
-	//        /// <summary>
-	//        /// Tells the sim what UI language is used, and if it's ok to share that with scripts
-	//        /// </summary>
-	//        /// <param name="language">Two letter language code</param>
-	//        /// <param name="isPublic">Share language info with scripts</param>
-	//        public void UpdateAgentLanguage(String language, boolean isPublic)
-	//        {
-	//            try
-	//            {
-	//                UpdateAgentLanguageMessage msg = new UpdateAgentLanguageMessage();
-	//                msg.Language = language;
-	//                msg.LanguagePublic = isPublic;
-	//
-	//                URI url = Client.network.getCurrentSim().Caps.CapabilityURI("UpdateAgentLanguage");
-	//                CapsHttpClient request = new CapsHttpClient(url);
-	//                request.BeginGetResponse(msg.Serialize(), OSDFormat.Xml, Client.settings.CAPS_TIMEOUT);
-	//            }
-	//            catch (Exception ex)
-	//            {
-	//                Logger.Log("Failes to update agent language", Helpers.LogLevel.Error, Client, ex);
-	//            }
-	//        }
-	//        //endregion Misc
-	//
-	//        //region Packet Handlers
-	//
-	//        /// <summary>
-	//        /// Take an incoming ImprovedInstantMessage packet, auto-parse, and if
-	//        /// OnInstantMessage is defined call that with the appropriate arguments
-	//        /// </summary>
-	//        /// <param name="sender">The sender</param>
-	//        /// <param name="e">The EventArgs object containing the packet data</param>
-	//        protected void InstantMessageHandler(object sender, PacketReceivedEventArgs e)
-	//        {
-	//            Packet packet = e.Packet;
-	//            Simulator simulator = e.Simulator;
-	//
-	//            if (packet.Type == PacketType.ImprovedInstantMessage)
-	//            {
-	//                ImprovedInstantMessagePacket im = (ImprovedInstantMessagePacket)packet;
-	//
-	//                if (m_InstantMessage != null)
-	//                {
-	//                    InstantMessage message;
-	//                    message.FromAgentID = im.AgentData.AgentID;
-	//                    message.FromAgentName = Utils.BytesToString(im.MessageBlock.FromAgentName);
-	//                    message.ToAgentID = im.MessageBlock.ToAgentID;
-	//                    message.ParentEstateID = im.MessageBlock.ParentEstateID;
-	//                    message.RegionID = im.MessageBlock.RegionID;
-	//                    message.Position = im.MessageBlock.Position;
-	//                    message.Dialog = (InstantMessageDialog)im.MessageBlock.Dialog;
-	//                    message.GroupIM = im.MessageBlock.FromGroup;
-	//                    message.IMSessionID = im.MessageBlock.ID;
-	//                    message.Timestamp = new Date(im.MessageBlock.Timestamp);
-	//                    message.Message = Utils.BytesToString(im.MessageBlock.Message);
-	//                    message.Offline = (InstantMessageOnline)im.MessageBlock.Offline;
-	//                    message.BinaryBucket = im.MessageBlock.BinaryBucket;
-	//
-	//                    OnInstantMessage(new InstantMessageEventArgs(message, simulator));
-	//                }
-	//            }
-	//        }
-	//
-	//        /// <summary>
-	//        /// Take an incoming Chat packet, auto-parse, and if OnChat is defined call 
-	//        ///   that with the appropriate arguments.
-	//        /// </summary>
-	//        /// <param name="sender">The sender</param>
-	//        /// <param name="e">The EventArgs object containing the packet data</param>
-	//        protected void ChatHandler(object sender, PacketReceivedEventArgs e)
-	//        {
-	//            if (m_Chat != null)
-	//            {
-	//                Packet packet = e.Packet;
-	//
-	//                ChatFromSimulatorPacket chat = (ChatFromSimulatorPacket)packet;
-	//
-	//                OnChat(new ChatEventArgs(e.Simulator, Utils.BytesToString(chat.ChatData.Message),
-	//                    (ChatAudibleLevel)chat.ChatData.Audible,
-	//                    (ChatType)chat.ChatData.ChatType,
-	//                    (ChatSourceType)chat.ChatData.SourceType,
-	//                    Utils.BytesToString(chat.ChatData.FromName),
-	//                    chat.ChatData.SourceID,
-	//                    chat.ChatData.OwnerID,
-	//                    chat.ChatData.Position));
-	//            }
-	//        }
-	//
-	//        /// <summary>
-	//        /// Used for parsing llDialogs
-	//        /// </summary>
-	//        /// <param name="sender">The sender</param>
-	//        /// <param name="e">The EventArgs object containing the packet data</param>
-	//        protected void ScriptDialogHandler(object sender, PacketReceivedEventArgs e)
-	//        {
-	//            if (m_ScriptDialog != null)
-	//            {
-	//                Packet packet = e.Packet;
-	//
-	//                ScriptDialogPacket dialog = (ScriptDialogPacket)packet;
-	//                List<String> buttons = new ArrayList<String>();
-	//
-	//                foreach (ScriptDialogPacket.ButtonsBlock button in dialog.Buttons)
-	//                {
-	//                    buttons.Add(Utils.BytesToString(button.ButtonLabel));
-	//                }
-	//
-	//                UUID ownerID = UUID.Zero;
-	//
-	//                if (dialog.OwnerData != null && dialog.OwnerData.Length > 0)
-	//                {
-	//                    ownerID = dialog.OwnerData[0].OwnerID;
-	//                }
-	//
-	//                OnScriptDialog(new ScriptDialogEventArgs(Utils.BytesToString(dialog.Data.Message),
-	//                    Utils.BytesToString(dialog.Data.ObjectName),
-	//                    dialog.Data.ImageID,
-	//                    dialog.Data.ObjectID,
-	//                    Utils.BytesToString(dialog.Data.FirstName),
-	//                    Utils.BytesToString(dialog.Data.LastName),
-	//                    dialog.Data.ChatChannel,
-	//                    buttons,
-	//                    ownerID));
-	//            }
-	//        }
-	//
-	//        /// <summary>
-	//        /// Used for parsing llRequestPermissions dialogs
-	//        /// </summary>
-	//        /// <param name="sender">The sender</param>
-	//        /// <param name="e">The EventArgs object containing the packet data</param>
-	//        protected void ScriptQuestionHandler(object sender, PacketReceivedEventArgs e)
-	//        {
-	//            if (m_ScriptQuestion != null)
-	//            {
-	//                Packet packet = e.Packet;
-	//                Simulator simulator = e.Simulator;
-	//
-	//                ScriptQuestionPacket question = (ScriptQuestionPacket)packet;
-	//
-	//                OnScriptQuestion(new ScriptQuestionEventArgs(simulator,
-	//                        question.Data.TaskID,
-	//                        question.Data.ItemID,
-	//                        Utils.BytesToString(question.Data.ObjectName),
-	//                        Utils.BytesToString(question.Data.ObjectOwner),
-	//                        (ScriptPermission)question.Data.Questions));
-	//            }
-	//        }
-	//
-	//        /// <summary>
-	//        /// Handles Script Control changes when Script with permissions releases or takes a control
-	//        /// </summary>
-	//        /// <param name="sender">The sender</param>
-	//        /// <param name="e">The EventArgs object containing the packet data</param>
-	//        private void ScriptControlChangeHandler(object sender, PacketReceivedEventArgs e)
-	//        {
-	//            if (m_ScriptControl != null)
-	//            {
-	//                Packet packet = e.Packet;
-	//
-	//                ScriptControlChangePacket change = (ScriptControlChangePacket)packet;
-	//                for (int i = 0; i < change.Data.Length; i++)
-	//                {
-	//                    OnScriptControlChange(new ScriptControlEventArgs((ScriptControlChange)change.Data[i].Controls,
-	//                            change.Data[i].PassToAgent,
-	//                            change.Data[i].TakeControls));
-	//                }
-	//            }
-	//        }
-	//
-	//        /// <summary>
-	//        /// Used for parsing llLoadURL Dialogs
-	//        /// </summary>
-	//        /// <param name="sender">The sender</param>
-	//        /// <param name="e">The EventArgs object containing the packet data</param>
-	//        protected void LoadURLHandler(object sender, PacketReceivedEventArgs e)
-	//        {
-	//
-	//            if (m_LoadURL != null)
-	//            {
-	//                Packet packet = e.Packet;
-	//
-	//                LoadURLPacket loadURL = (LoadURLPacket)packet;
-	//
-	//                OnLoadURL(new LoadUrlEventArgs(
-	//                    Utils.BytesToString(loadURL.Data.ObjectName),
-	//                    loadURL.Data.ObjectID,
-	//                    loadURL.Data.OwnerID,
-	//                    loadURL.Data.OwnerIsGroup,
-	//                    Utils.BytesToString(loadURL.Data.Message),
-	//                    Utils.BytesToString(loadURL.Data.URL)
-	//                ));
-	//            }
-	//        }
-	//
-	//        /// <summary>
-	//        /// Update client's Position, LookAt and region handle from incoming packet
-	//        /// </summary>
-	//        /// <param name="sender">The sender</param>
-	//        /// <param name="e">The EventArgs object containing the packet data</param>
-	//        /// <remarks>This occurs when after an avatar moves into a new sim</remarks>
-	//        private void MovementCompleteHandler(object sender, PacketReceivedEventArgs e)
-	//        {
-	//            Packet packet = e.Packet;
-	//            Simulator simulator = e.Simulator;
-	//
-	//            AgentMovementCompletePacket movement = (AgentMovementCompletePacket)packet;
-	//
-	//            relativePosition = movement.Data.Position;
-	//            Movement.Camera.LookDirection(movement.Data.LookAt);
-	//            simulator.Handle = movement.Data.RegionHandle;
-	//            simulator.SimVersion = Utils.BytesToString(movement.SimData.ChannelVersion);
-	//            simulator.AgentMovementComplete = true;
-	//        }
-	//
-	//        /// <summary>Process an incoming packet and raise the appropriate events</summary>
-	//        /// <param name="sender">The sender</param>
-	//        /// <param name="e">The EventArgs object containing the packet data</param>
-	//        protected void HealthHandler(object sender, PacketReceivedEventArgs e)
-	//        {
-	//            Packet packet = e.Packet;
-	//            health = ((HealthMessagePacket)packet).HealthData.Health;
-	//        }
-	//
-	//        /// <summary>Process an incoming packet and raise the appropriate events</summary>
-	//        /// <param name="sender">The sender</param>
-	//        /// <param name="e">The EventArgs object containing the packet data</param>
-	//        protected void AgentDataUpdateHandler(object sender, PacketReceivedEventArgs e)
-	//        {
-	//            Packet packet = e.Packet;
-	//            Simulator simulator = e.Simulator;
-	//
-	//            AgentDataUpdatePacket p = (AgentDataUpdatePacket)packet;
-	//
-	//            if (p.AgentData.AgentID == simulator.Client.self.getAgentID())
-	//            {
-	//                firstName = Utils.BytesToString(p.AgentData.FirstName);
-	//                lastName = Utils.BytesToString(p.AgentData.LastName);
-	//                activeGroup = p.AgentData.ActiveGroupID;
-	//                activeGroupPowers = (GroupPowers)p.AgentData.GroupPowers;
-	//
-	//                if (m_AgentData != null)
-	//                {
-	//                    String groupTitle = Utils.BytesToString(p.AgentData.GroupTitle);
-	//                    String groupName = Utils.BytesToString(p.AgentData.GroupName);
-	//
-	//                    OnAgentData(new AgentDataReplyEventArgs(firstName, lastName, activeGroup, groupTitle, activeGroupPowers, groupName));
-	//                }
-	//            }
-	//            else
-	//            {
-	//                Logger.Log("Got an AgentDataUpdate packet for avatar " + p.AgentData.AgentID.ToString() +
-	//                    " instead of " + Client.self.getAgentID().ToString() + ", this shouldn't happen", Helpers.LogLevel.Error, Client);
-	//            }
-	//        }
-	//
-	//        /// <summary>Process an incoming packet and raise the appropriate events</summary>
-	//        /// <param name="sender">The sender</param>
-	//        /// <param name="e">The EventArgs object containing the packet data</param>
-	//        protected void MoneyBalanceReplyHandler(object sender, PacketReceivedEventArgs e)
-	//        {
-	//            Packet packet = e.Packet;
-	//
-	//            if (packet.Type == PacketType.MoneyBalanceReply)
-	//            {
-	//                MoneyBalanceReplyPacket reply = (MoneyBalanceReplyPacket)packet;
-	//                this.balance = reply.MoneyData.MoneyBalance;
-	//
-	//                if (m_MoneyBalance != null)
-	//                {
-	//                    TransactionInfo transactionInfo = new TransactionInfo();
-	//                    transactionInfo.TransactionType = reply.TransactionInfo.TransactionType;
-	//                    transactionInfo.SourceID = reply.TransactionInfo.SourceID;
-	//                    transactionInfo.IsSourceGroup = reply.TransactionInfo.IsSourceGroup;
-	//                    transactionInfo.DestID = reply.TransactionInfo.DestID;
-	//                    transactionInfo.IsDestGroup = reply.TransactionInfo.IsDestGroup;
-	//                    transactionInfo.Amount = reply.TransactionInfo.Amount;
-	//                    transactionInfo.ItemDescription =  Utils.BytesToString(reply.TransactionInfo.ItemDescription);
-	//
-	//                    OnMoneyBalanceReply(new MoneyBalanceReplyEventArgs(reply.MoneyData.TransactionID,
-	//                        reply.MoneyData.TransactionSuccess,
-	//                        reply.MoneyData.MoneyBalance,
-	//                        reply.MoneyData.SquareMetersCredit,
-	//                        reply.MoneyData.SquareMetersCommitted,
-	//                        Utils.BytesToString(reply.MoneyData.Description),
-	//                        transactionInfo));
-	//                }
-	//            }
-	//
-	//            if (m_Balance != null)
-	//            {
-	//                OnBalance(new BalanceEventArgs(balance));
-	//            }
-	//        }
-	//
-	//        /// <summary>
-	//        /// EQ Message fired with the result of SetDisplayName request
-	//        /// </summary>
-	//        /// <param name="capsKey">The message key</param>
-	//        /// <param name="message">the IMessage object containing the deserialized data sent from the simulator</param>
-	//        /// <param name="simulator">The <see cref="Simulator"/> which originated the packet</param>
-	//        protected void SetDisplayNameReplyEventHandler(String capsKey, IMessage message, Simulator simulator)
-	//        {
-	//            if (m_SetDisplayNameReply != null)
-	//            {
-	//                SetDisplayNameReplyMessage msg = (SetDisplayNameReplyMessage)message;
-	//                OnSetDisplayNameReply(new SetDisplayNameReplyEventArgs(msg.Status, msg.Reason, msg.DisplayName));
-	//            }
-	//        }
-	//
-	//        protected void EstablishAgentCommunicationEventHandler(String capsKey, IMessage message, Simulator simulator)
-	//        {
-	//            EstablishAgentCommunicationMessage msg = (EstablishAgentCommunicationMessage)message;
-	//
-	//            if (Client.settings.MULTIPLE_SIMS)
-	//            {
-	//
-	//                IPEndPoint endPoint = new IPEndPoint(msg.Address, msg.Port);
-	//                Simulator sim = Client.network.FindSimulator(endPoint);
-	//
-	//                if (sim == null)
-	//                {
-	//                    Logger.Log("Got EstablishAgentCommunication for unknown sim " + msg.Address + ":" + msg.Port,
-	//                        Helpers.LogLevel.Error, Client);
-	//
-	//                    // FIXME: Should we use this opportunity to connect to the simulator?
-	//                }
-	//                else
-	//                {
-	//                    Logger.Log("Got EstablishAgentCommunication for " + sim.ToString(),
-	//                        Helpers.LogLevel.Info, Client);
-	//
-	//                    sim.SetSeedCaps(msg.SeedCapability.ToString());
-	//                }
-	//            }
-	//        }
-	//
-	//        /// <summary>
-	//        /// Process TeleportFailed message sent via EventQueue, informs agent its last teleport has failed and why.
-	//        /// </summary>
-	//        /// <param name="messageKey">The Message Key</param>
-	//        /// <param name="message">An IMessage object Deserialized from the recieved message event</param>
-	//        /// <param name="simulator">The simulator originating the event message</param>
-	//        public void TeleportFailedEventHandler(String messageKey, IMessage message, Simulator simulator)
-	//        {
-	//            TeleportFailedMessage msg = (TeleportFailedMessage)message;
-	//
-	//            TeleportFailedPacket failedPacket = new TeleportFailedPacket();
-	//            failedPacket.Info.AgentID = msg.AgentID;
-	//            failedPacket.Info.Reason = Utils.stringToBytes(msg.Reason);
-	//
-	//            TeleportHandler(this, new PacketReceivedEventArgs(failedPacket, simulator));
-	//        }
-	//
-	//        /// <summary>
-	//        /// Process TeleportFinish from Event Queue and pass it onto our TeleportHandler
-	//        /// </summary>
-	//        /// <param name="capsKey">The message system key for this event</param>
-	//        /// <param name="message">IMessage object containing decoded data from OSD</param>
-	//        /// <param name="simulator">The simulator originating the event message</param>
-	//        private void TeleportFinishEventHandler(String capsKey, IMessage message, Simulator simulator)
-	//        {
-	//            TeleportFinishMessage msg = (TeleportFinishMessage)message;
-	//
-	//            TeleportFinishPacket p = new TeleportFinishPacket();
-	//            p.Info.AgentID = msg.AgentID;
-	//            p.Info.LocationID = (uint)msg.LocationID;
-	//            p.Info.RegionHandle = msg.RegionHandle;
-	//            p.Info.SeedCapability = Utils.stringToBytes(msg.SeedCapability.ToString()); // FIXME: Check This
-	//            p.Info.SimAccess = (byte)msg.SimAccess;
-	//            p.Info.SimIP = Utils.IPToUInt(msg.IP);
-	//            p.Info.SimPort = (ushort)msg.Port;
-	//            p.Info.TeleportFlags = (uint)msg.Flags;
-	//
-	//            // pass the packet onto the teleport handler
-	//            TeleportHandler(this, new PacketReceivedEventArgs(p, simulator));
-	//        }
-	//
-	//        /// <summary>Process an incoming packet and raise the appropriate events</summary>
-	//        /// <param name="sender">The sender</param>
-	//        /// <param name="e">The EventArgs object containing the packet data</param>
-	//        protected void TeleportHandler(object sender, PacketReceivedEventArgs e)
-	//        {
-	//            Packet packet = e.Packet;
-	//            Simulator simulator = e.Simulator;
-	//
-	//            boolean finished = false;
-	//            TeleportFlags flags = TeleportFlags.Default;
-	//
-	//            if (packet.Type == PacketType.TeleportStart)
-	//            {
-	//                TeleportStartPacket start = (TeleportStartPacket)packet;
-	//
-	//                teleportMessage = "Teleport started";
-	//                flags = (TeleportFlags)start.Info.TeleportFlags;
-	//                teleportStat = TeleportStatus.Start;
-	//
-	//                Logger.DebugLog("TeleportStart received, Flags: " + flags.ToString(), Client);
-	//            }
-	//            else if (packet.Type == PacketType.TeleportProgress)
-	//            {
-	//                TeleportProgressPacket progress = (TeleportProgressPacket)packet;
-	//
-	//                teleportMessage = Utils.BytesToString(progress.Info.Message);
-	//                flags = (TeleportFlags)progress.Info.TeleportFlags;
-	//                teleportStat = TeleportStatus.Progress;
-	//
-	//                Logger.DebugLog("TeleportProgress received, Message: " + teleportMessage + ", Flags: " + flags.ToString(), Client);
-	//            }
-	//            else if (packet.Type == PacketType.TeleportFailed)
-	//            {
-	//                TeleportFailedPacket failed = (TeleportFailedPacket)packet;
-	//
-	//                teleportMessage = Utils.BytesToString(failed.Info.Reason);
-	//                teleportStat = TeleportStatus.Failed;
-	//                finished = true;
-	//
-	//                Logger.DebugLog("TeleportFailed received, Reason: " + teleportMessage, Client);
-	//            }
-	//            else if (packet.Type == PacketType.TeleportFinish)
-	//            {
-	//                TeleportFinishPacket finish = (TeleportFinishPacket)packet;
-	//
-	//                flags = (TeleportFlags)finish.Info.TeleportFlags;
-	//                String seedcaps = Utils.BytesToString(finish.Info.SeedCapability);
-	//                finished = true;
-	//
-	//                Logger.DebugLog("TeleportFinish received, Flags: " + flags.ToString(), Client);
-	//
-	//                // Connect to the new sim
-	//                Client.network.getCurrentSim().AgentMovementComplete = false; // we're not there anymore
-	//                Simulator newSimulator = Client.network.Connect(new IPAddress(finish.Info.SimIP),
-	//                    finish.Info.SimPort, finish.Info.RegionHandle, true, seedcaps);
-	//
-	//                if (newSimulator != null)
-	//                {
-	//                    teleportMessage = "Teleport finished";
-	//                    teleportStat = TeleportStatus.Finished;
-	//
-	//                    Logger.Log("Moved to new sim " + newSimulator.ToString(), Helpers.LogLevel.Info, Client);
-	//                }
-	//                else
-	//                {
-	//                    teleportMessage = "Failed to connect to the new sim after a teleport";
-	//                    teleportStat = TeleportStatus.Failed;
-	//
-	//                    // We're going to get disconnected now
-	//                    Logger.Log(teleportMessage, Helpers.LogLevel.Error, Client);
-	//                }
-	//            }
-	//            else if (packet.Type == PacketType.TeleportCancel)
-	//            {
-	//                //TeleportCancelPacket cancel = (TeleportCancelPacket)packet;
-	//
-	//                teleportMessage = "Cancelled";
-	//                teleportStat = TeleportStatus.Cancelled;
-	//                finished = true;
-	//
-	//                Logger.DebugLog("TeleportCancel received from " + simulator.ToString(), Client);
-	//            }
-	//            else if (packet.Type == PacketType.TeleportLocal)
-	//            {
-	//                TeleportLocalPacket local = (TeleportLocalPacket)packet;
-	//
-	//                teleportMessage = "Teleport finished";
-	//                flags = (TeleportFlags)local.Info.TeleportFlags;
-	//                teleportStat = TeleportStatus.Finished;
-	//                relativePosition = local.Info.Position;
-	//                Movement.Camera.LookDirection(local.Info.LookAt);
-	//                // This field is apparently not used for anything
-	//                //local.Info.LocationID;
-	//                finished = true;
-	//
-	//                Logger.DebugLog("TeleportLocal received, Flags: " + flags.ToString(), Client);
-	//            }
-	//
-	//            if (m_Teleport != null)
-	//            {
-	//                OnTeleport(new TeleportEventArgs(teleportMessage, teleportStat, flags));
-	//            }
-	//
-	//            if (finished) teleportEvent.Set();
-	//        }
-	//
-	//        /// <summary>Process an incoming packet and raise the appropriate events</summary>
-	//        /// <param name="sender">The sender</param>
-	//        /// <param name="e">The EventArgs object containing the packet data</param>
-	//        protected void AvatarAnimationHandler(object sender, PacketReceivedEventArgs e)
-	//        {
-	//            Packet packet = e.Packet;
-	//            AvatarAnimationPacket animation = (AvatarAnimationPacket)packet;
-	//
-	//            if (animation.Sender.ID == Client.self.getAgentID())
-	//            {
-	//                synchronized (SignaledAnimations.getDictionary())
-	//                {
-	//                    // Reset the signaled animation list
-	//                    SignaledAnimations.getDictionary().Clear();
-	//
-	//                    for (int i = 0; i < animation.AnimationList.Length; i++)
-	//                    {
-	//                        UUID animID = animation.AnimationList[i].AnimID;
-	//                        int sequenceID = animation.AnimationList[i].AnimSequenceID;
-	//
-	//                        // Add this animation to the list of currently signaled animations
-	//                        SignaledAnimations.getDictionary()[animID] = sequenceID;
-	//
-	//                        if (i < animation.AnimationSourceList.Length)
-	//                        {
-	//                            // FIXME: The server tells us which objects triggered our animations,
-	//                            // we should store this info
-	//
-	//                            //animation.AnimationSourceList[i].ObjectID
-	//                        }
-	//
-	//                        if (i < animation.PhysicalAvatarEventList.Length)
-	//                        {
-	//                            // FIXME: What is this?
-	//                        }
-	//
-	//                        if (Client.settings.SEND_AGENT_UPDATES)
-	//                        {
-	//                            // We have to manually tell the server to stop playing some animations
-	//                            if (animID == Animations.STANDUP ||
-	//                                animID == Animations.PRE_JUMP ||
-	//                                animID == Animations.LAND ||
-	//                                animID == Animations.MEDIUM_LAND)
-	//                            {
-	//                                Movement.setFinishAnim(true);
-	//                                Movement.SendUpdate(true);
-	//                                Movement.setFinishAnim(false);
-	//                            }
-	//                        }
-	//                    }
-	//                }
-	//            }
-	//
-	//            if (m_AnimationsChanged != null)
-	//            {
-	//                ThreadPool.QueueUserWorkItem(delegate(object o)
-	//                { OnAnimationsChanged(new AnimationsChangedEventArgs(this.SignaledAnimations)); });
-	//            }
-	//
-	//        }
-	//
-	//        /// <summary>Process an incoming packet and raise the appropriate events</summary>
-	//        /// <param name="sender">The sender</param>
-	//        /// <param name="e">The EventArgs object containing the packet data</param>
-	//        protected void MeanCollisionAlertHandler(object sender, PacketReceivedEventArgs e)
-	//        {
-	//            if (m_MeanCollision != null)
-	//            {
-	//                Packet packet = e.Packet;
-	//                MeanCollisionAlertPacket collision = (MeanCollisionAlertPacket)packet;
-	//
-	//                for (int i = 0; i < collision.MeanCollision.Length; i++)
-	//                {
-	//                    MeanCollisionAlertPacket.MeanCollisionBlock block = collision.MeanCollision[i];
-	//
-	//                    Date time = Utils.UnixTimeToDateTime(block.Time);
-	//                    MeanCollisionType type = (MeanCollisionType)block.Type;
-	//
-	//                    OnMeanCollision(new MeanCollisionEventArgs(type, block.Perp, block.Victim, block.Mag, time));
-	//                }
-	//            }
-	//        }
-	//
-	        private void Network_OnLoginResponse(boolean loginSuccess, boolean redirect, String message, String reason,
-	            LoginResponseData reply)
-	        {
-	            id = reply.AgentID;
-	            sessionID = reply.SessionID;
-	            secureSessionID = reply.SecureSessionID;
-	            firstName = reply.FirstName;
-	            lastName = reply.LastName;
-	            startLocation = reply.StartLocation;
-	            agentAccess = reply.AgentAccess;
-	            Movement.Camera.LookDirection(reply.LookAt);
-	            homePosition = reply.HomePosition;
-	            homeLookAt = reply.HomeLookAt;
-	        }
-	
-	        private void Network_OnDisconnected(Object sender, DisconnectedEventArgs e)
-	        {
-	            // Null out the cached fullName since it can change after logging
-	            // in again (with a different account name or different login
-	            // server but using the same GridClient object
-	            fullName = null;
-	        }
-	//
-	//        /// <summary>
-	//        /// Crossed region handler for message that comes across the EventQueue. Sent to an agent
-	//        /// when the agent crosses a sim border into a new region.
-	//        /// </summary>
-	//        /// <param name="capsKey">The message key</param>
-	//        /// <param name="message">the IMessage object containing the deserialized data sent from the simulator</param>
-	//        /// <param name="simulator">The <see cref="Simulator"/> which originated the packet</param>
-	//        private void CrossedRegionEventHandler(String capsKey, IMessage message, Simulator simulator)
-	//        {
-	//            CrossedRegionMessage crossed = (CrossedRegionMessage)message;
-	//
-	//            IPEndPoint endPoint = new IPEndPoint(crossed.IP, crossed.Port);
-	//
-	//            Logger.DebugLog("Crossed in to new region area, attempting to connect to " + endPoint.ToString(), Client);
-	//
-	//            Simulator oldSim = Client.network.getCurrentSim();
-	//            Simulator newSim = Client.network.Connect(endPoint, crossed.RegionHandle, true, crossed.SeedCapability.ToString());
-	//
-	//            if (newSim != null)
-	//            {
-	//                Logger.Log("Finished crossing over in to region " + newSim.ToString(), Helpers.LogLevel.Info, Client);
-	//                oldSim.AgentMovementComplete = false; // We're no longer there
-	//                if (m_RegionCrossed != null)
-	//                {
-	//                    OnRegionCrossed(new RegionCrossedEventArgs(oldSim, newSim));
-	//                }
-	//            }
-	//            else
-	//            {
-	//                // The old simulator will (poorly) handle our movement still, so the connection isn't
-	//                // completely shot yet
-	//                Logger.Log("Failed to connect to new region " + endPoint.ToString() + " after crossing over",
-	//                    Helpers.LogLevel.Warning, Client);
-	//            }
-	//        }
-	//
-	//        /// <summary>Process an incoming packet and raise the appropriate events</summary>
-	//        /// <param name="sender">The sender</param>
-	//        /// <param name="e">The EventArgs object containing the packet data</param>
-	//        /// <remarks>This packet is now being sent via the EventQueue</remarks>
-	//        protected void CrossedRegionHandler(object sender, PacketReceivedEventArgs e)
-	//        {
-	//            Packet packet = e.Packet;
-	//            CrossedRegionPacket crossing = (CrossedRegionPacket)packet;
-	//            String seedCap = Utils.BytesToString(crossing.RegionData.SeedCapability);
-	//            IPEndPoint endPoint = new IPEndPoint(crossing.RegionData.SimIP, crossing.RegionData.SimPort);
-	//
-	//            Logger.DebugLog("Crossed in to new region area, attempting to connect to " + endPoint.ToString(), Client);
-	//
-	//            Simulator oldSim = Client.network.getCurrentSim();
-	//            Simulator newSim = Client.network.Connect(endPoint, crossing.RegionData.RegionHandle, true, seedCap);
-	//
-	//            if (newSim != null)
-	//            {
-	//                Logger.Log("Finished crossing over in to region " + newSim.ToString(), Helpers.LogLevel.Info, Client);
-	//
-	//                if (m_RegionCrossed != null)
-	//                {
-	//                    OnRegionCrossed(new RegionCrossedEventArgs(oldSim, newSim));
-	//                }
-	//            }
-	//            else
-	//            {
-	//                // The old simulator will (poorly) handle our movement still, so the connection isn't
-	//                // completely shot yet
-	//                Logger.Log("Failed to connect to new region " + endPoint.ToString() + " after crossing over",
-	//                    Helpers.LogLevel.Warning, Client);
-	//            }
-	//        }
-	//
-	//        /// <summary>
-	//        /// Group Chat event handler
-	//        /// </summary>
-	//        /// <param name="capsKey">The capability Key</param>
-	//        /// <param name="message">IMessage object containing decoded data from OSD</param>
-	//        /// <param name="simulator"></param>
-	//        protected void ChatterBoxSessionEventReplyEventHandler(String capsKey, IMessage message, Simulator simulator)
-	//        {
-	//            ChatterboxSessionEventReplyMessage msg = (ChatterboxSessionEventReplyMessage)message;
-	//
-	//            if (!msg.Success)
-	//            {
-	//                RequestJoinGroupChat(msg.SessionID);
-	//                Logger.Log("Attempt to send group chat to non-existant session for group " + msg.SessionID,
-	//                    Helpers.LogLevel.Info, Client);
-	//            }
-	//        }
-	//
-	//        /// <summary>
-	//        /// Response from request to join a group chat
-	//        /// </summary>
-	//        /// <param name="capsKey"></param>
-	//        /// <param name="message">IMessage object containing decoded data from OSD</param>
-	//        /// <param name="simulator"></param>
-	//        protected void ChatterBoxSessionStartReplyEventHandler(String capsKey, IMessage message, Simulator simulator)
-	//        {
-	//            ChatterBoxSessionStartReplyMessage msg = (ChatterBoxSessionStartReplyMessage)message;
-	//
-	//            if (msg.Success)
-	//            {
-	//                synchronized (GroupChatSessions.getDictionary())
-	//                    if (!GroupChatSessions.containsKey(msg.SessionID))
-	//                        GroupChatSessions.Add(msg.SessionID, new ArrayList<ChatSessionMember>());
-	//            }
-	//
-	//            OnGroupChatJoined(new GroupChatJoinedEventArgs(msg.SessionID, msg.SessionName, msg.TempSessionID, msg.Success));
-	//        }
-	//
-	//        /// <summary>
-	//        /// Someone joined or left group chat
-	//        /// </summary>
-	//        /// <param name="capsKey"></param>
-	//        /// <param name="message">IMessage object containing decoded data from OSD</param>
-	//        /// <param name="simulator"></param>
-	//        private void ChatterBoxSessionAgentListUpdatesEventHandler(String capsKey, IMessage message, Simulator simulator)
-	//        {
-	//            ChatterBoxSessionAgentListUpdatesMessage msg = (ChatterBoxSessionAgentListUpdatesMessage)message;
-	//
-	//            synchronized (GroupChatSessions.getDictionary())
-	//                if (!GroupChatSessions.containsKey(msg.SessionID))
-	//                    GroupChatSessions.Add(msg.SessionID, new ArrayList<ChatSessionMember>());
-	//
-	//            for (int i = 0; i < msg.Updates.Length; i++)
-	//            {
-	//                ChatSessionMember fndMbr;
-	//                synchronized (GroupChatSessions.getDictionary())
-	//                {
-	//                    fndMbr = GroupChatSessions[msg.SessionID].Find(delegate(ChatSessionMember member)
-	//                    {
-	//                        return member.AvatarKey == msg.Updates[i].AgentID;
-	//                    });
-	//                }
-	//
-	//                if (msg.Updates[i].Transition != null)
-	//                {
-	//                    if (msg.Updates[i].Transition.Equals("ENTER"))
-	//                    {
-	//                        if (fndMbr.AvatarKey == UUID.Zero)
-	//                        {
-	//                            fndMbr = new ChatSessionMember();
-	//                            fndMbr.AvatarKey = msg.Updates[i].AgentID;
-	//
-	//                            synchronized (GroupChatSessions.getDictionary())
-	//                                GroupChatSessions[msg.SessionID].Add(fndMbr);
-	//
-	//                            if (m_ChatSessionMemberAdded != null)
-	//                            {
-	//                                OnChatSessionMemberAdded(new ChatSessionMemberAddedEventArgs(msg.SessionID, fndMbr.AvatarKey));
-	//                            }
-	//                        }
-	//                    }
-	//                    else if (msg.Updates[i].Transition.Equals("LEAVE"))
-	//                    {
-	//                        if (fndMbr.AvatarKey != UUID.Zero)
-	//                            synchronized (GroupChatSessions.getDictionary())
-	//                                GroupChatSessions[msg.SessionID].Remove(fndMbr);
-	//
-	//                        if (m_ChatSessionMemberLeft != null)
-	//                        {
-	//                            OnChatSessionMemberLeft(new ChatSessionMemberLeftEventArgs(msg.SessionID, msg.Updates[i].AgentID));
-	//                        }
-	//                    }
-	//                }
-	//
-	//                // handle updates
-	//                ChatSessionMember update_member = GroupChatSessions.getDictionary()[msg.SessionID].Find(delegate(ChatSessionMember m)
-	//                {
-	//                    return m.AvatarKey == msg.Updates[i].AgentID;
-	//                });
-	//
-	//
-	//                update_member.MuteText = msg.Updates[i].MuteText;
-	//                update_member.MuteVoice = msg.Updates[i].MuteVoice;
-	//
-	//                update_member.CanVoiceChat = msg.Updates[i].CanVoiceChat;
-	//                update_member.IsModerator = msg.Updates[i].IsModerator;
-	//
-	//                // replace existing member record
-	//                synchronized (GroupChatSessions.getDictionary())
-	//                {
-	//                    int found = GroupChatSessions.getDictionary()[msg.SessionID].FindIndex(delegate(ChatSessionMember m)
-	//                    {
-	//                        return m.AvatarKey == msg.Updates[i].AgentID;
-	//                    });
-	//
-	//                    if (found >= 0)
-	//                        GroupChatSessions.getDictionary()[msg.SessionID][found] = update_member;
-	//                }
-	//            }
-	//        }
-	//
-	//        /// <summary>
-	//        /// Handle a group chat Invitation
-	//        /// </summary>
-	//        /// <param name="capsKey">Caps Key</param>
-	//        /// <param name="message">IMessage object containing decoded data from OSD</param>
-	//        /// <param name="simulator">Originating Simulator</param>
-	//        private void ChatterBoxInvitationEventHandler(String capsKey, IMessage message, Simulator simulator)
-	//        {
-	//            if (m_InstantMessage != null)
-	//            {
-	//                ChatterBoxInvitationMessage msg = (ChatterBoxInvitationMessage)message;
-	//
-	//                //TODO: do something about invitations to voice group chat/friends conference
-	//                //Skip for now
-	//                if (msg.Voice) return;
-	//
-	//                InstantMessage im = new InstantMessage();
-	//
-	//                im.FromAgentID = msg.FromAgentID;
-	//                im.FromAgentName = msg.FromAgentName;
-	//                im.ToAgentID = msg.ToAgentID;
-	//                im.ParentEstateID = (uint)msg.ParentEstateID;
-	//                im.RegionID = msg.RegionID;
-	//                im.Position = msg.Position;
-	//                im.Dialog = msg.Dialog;
-	//                im.GroupIM = msg.GroupIM;
-	//                im.IMSessionID = msg.IMSessionID;
-	//                im.Timestamp = msg.Timestamp;
-	//                im.Message = msg.Message;
-	//                im.Offline = msg.Offline;
-	//                im.BinaryBucket = msg.BinaryBucket;
-	//                try
-	//                {
-	//                    ChatterBoxAcceptInvite(msg.IMSessionID);
-	//                }
-	//                catch (Exception ex)
-	//                {
-	//                    Logger.Log("Failed joining IM:", Helpers.LogLevel.Warning, Client, ex);
-	//                }
-	//                OnInstantMessage(new InstantMessageEventArgs(im, simulator));
-	//            }
-	//        }
-	//
-	//
-	//        /// <summary>
-	//        /// Moderate a chat session
-	//        /// </summary>
-	//        /// <param name="sessionID">the <see cref="UUID"/> of the session to moderate, for group chats this will be the groups UUID</param>
-	//        /// <param name="memberID">the <see cref="UUID"/> of the avatar to moderate</param>
-	//        /// <param name="key">Either "voice" to moderate users voice, or "text" to moderate users text session</param>
-	//        /// <param name="moderate">true to moderate (silence user), false to allow avatar to speak</param>
-	//        public void ModerateChatSessions(UUID sessionID, UUID memberID, String key, boolean moderate)
-	//        {
-	//            if (Client.network.getCurrentSim() == null || Client.network.getCurrentSim().Caps == null)
-	//                throw new Exception("ChatSessionRequest capability is not currently available");
-	//
-	//            URI url = Client.network.getCurrentSim().Caps.CapabilityURI("ChatSessionRequest");
-	//
-	//            if (url != null)
-	//            {
-	//                ChatSessionRequestMuteUpdate req = new ChatSessionRequestMuteUpdate();
-	//
-	//                req.RequestKey = key;
-	//                req.RequestValue = moderate;
-	//                req.SessionID = sessionID;
-	//                req.AgentID = memberID;
-	//
-	//                CapsHttpClient request = new CapsHttpClient(url);
-	//                request.BeginGetResponse(req.Serialize(), OSDFormat.Xml, Client.settings.CAPS_TIMEOUT);
-	//            }
-	//            else
-	//            {
-	//                throw new Exception("ChatSessionRequest capability is not currently available");
-	//            }
-	//        }
-	//
-	//        /// <summary>Process an incoming packet and raise the appropriate events</summary>
-	//        /// <param name="sender">The sender</param>
-	//        /// <param name="e">The EventArgs object containing the packet data</param>
-	//        protected void AlertMessageHandler(object sender, PacketReceivedEventArgs e)
-	//        {
-	//            if (m_AlertMessage != null)
-	//            {
-	//                Packet packet = e.Packet;
-	//
-	//                AlertMessagePacket alert = (AlertMessagePacket)packet;
-	//
-	//                OnAlertMessage(new AlertMessageEventArgs(Utils.BytesToString(alert.AlertData.Message)));
-	//            }
-	//        }
-	//
-	//        /// <summary>Process an incoming packet and raise the appropriate events</summary>
-	//        /// <param name="sender">The sender</param>
-	//        /// <param name="e">The EventArgs object containing the packet data</param>
-	//        protected void CameraConstraintHandler(object sender, PacketReceivedEventArgs e)
-	//        {
-	//            if (m_CameraConstraint != null)
-	//            {
-	//                Packet packet = e.Packet;
-	//
-	//                CameraConstraintPacket camera = (CameraConstraintPacket)packet;
-	//                OnCameraConstraint(new CameraConstraintEventArgs(camera.CameraCollidePlane.Plane));
-	//            }
-	//        }
-	//
-	//        /// <summary>Process an incoming packet and raise the appropriate events</summary>
-	//        /// <param name="sender">The sender</param>
-	//        /// <param name="e">The EventArgs object containing the packet data</param>
-	//        protected void ScriptSensorReplyHandler(object sender, PacketReceivedEventArgs e)
-	//        {
-	//            if (m_ScriptSensorReply != null)
-	//            {
-	//                Packet packet = e.Packet;
-	//
-	//                ScriptSensorReplyPacket reply = (ScriptSensorReplyPacket)packet;
-	//
-	//                for (int i = 0; i < reply.SensedData.Length; i++)
-	//                {
-	//                    ScriptSensorReplyPacket.SensedDataBlock block = reply.SensedData[i];
-	//                    ScriptSensorReplyPacket.RequesterBlock requestor = reply.Requester;
-	//
-	//                    OnScriptSensorReply(new ScriptSensorReplyEventArgs(requestor.SourceID, block.GroupID, Utils.BytesToString(block.Name),
-	//                      block.ObjectID, block.OwnerID, block.Position, block.Range, block.Rotation, (ScriptSensorTypeFlags)block.Type, block.Velocity));
-	//                }
-	//            }
-	//
-	//        }
-	//
-	//        /// <summary>Process an incoming packet and raise the appropriate events</summary>
-	//        /// <param name="sender">The sender</param>
-	//        /// <param name="e">The EventArgs object containing the packet data</param>
-	//        protected void AvatarSitResponseHandler(object sender, PacketReceivedEventArgs e)
-	//        {
-	//            if (m_AvatarSitResponse != null)
-	//            {
-	//                Packet packet = e.Packet;
-	//
-	//                AvatarSitResponsePacket sit = (AvatarSitResponsePacket)packet;
-	//
-	//                OnAvatarSitResponse(new AvatarSitResponseEventArgs(sit.SitObject.ID, sit.SitTransform.AutoPilot, sit.SitTransform.CameraAtOffset,
-	//                  sit.SitTransform.CameraEyeOffset, sit.SitTransform.ForceMouselook, sit.SitTransform.SitPosition,
-	//                  sit.SitTransform.SitRotation));
-	//            }
-	//        }
-	//
-	//        protected void MuteListUpdateHander(object sender, PacketReceivedEventArgs e)
-	//        {
-	//            MuteListUpdatePacket packet = (MuteListUpdatePacket)e.Packet;
-	//            if (packet.MuteData.AgentID != Client.self.getAgentID())
-	//            {
-	//                return;
-	//            }
-	//
-	//            ThreadPool.QueueUserWorkItem(sync =>
-	//            {
-	//                using (AutoResetEvent gotMuteList = new AutoResetEvent(false))
-	//                {
-	//                    String fileName = Utils.BytesToString(packet.MuteData.Filename);
-	//                    String muteList = string.Empty;
-	//                    ulong xferID = 0;
-	//                    byte[] assetData = null;
-	//
-	//                    EventHandler<XferReceivedEventArgs> xferCallback = (object xsender, XferReceivedEventArgs xe) =>
-	//                    {
-	//                        if (xe.Xfer.XferID == xferID)
-	//                        {
-	//                            assetData = xe.Xfer.AssetData;
-	//                            gotMuteList.Set();
-	//                        }
-	//                    };
-	//
-	//
-	//                    Client.Assets.XferReceived += xferCallback;
-	//                    xferID = Client.Assets.RequestAssetXfer(fileName, true, false, UUID.Zero, AssetType.Unknown, true);
-	//
-	//                    if (gotMuteList.WaitOne(60 * 1000, false))
-	//                    {
-	//                        muteList = Utils.BytesToString(assetData);
-	//
-	//                        synchronized (MuteList.getDictionary())
-	//                        {
-	//                            MuteList.getDictionary().Clear();
-	//                            foreach (var line in muteList.Split('\n'))
-	//                            {
-	//                                if (line.Trim() == string.Empty) continue;
-	//
-	//                                try
-	//                                {
-	//                                    Match m;
-	//                                    if ((m = Regex.Match(line, @"(?<MyteType>\d+)\s+(?<Key>[a-zA-Z0-9-]+)\s+(?<Name>[^|]+)|(?<Flags>.+)", RegexOptions.CultureInvariant)).Success)
-	//                                    {
-	//                                        MuteEntry me = new MuteEntry();
-	//                                        me.Type = (MuteType)int.Parse(m.Groups["MyteType"].Value);
-	//                                        me.ID = new UUID(m.Groups["Key"].Value);
-	//                                        me.Name = m.Groups["Name"].Value;
-	//                                        int flags = 0;
-	//                                        int.TryParse(m.Groups["Flags"].Value, out flags);
-	//                                        me.Flags = (MuteFlags)flags;
-	//                                        MuteList[string.Format("{0}|{1}", me.ID, me.Name)] = me;
-	//                                    }
-	//                                    else
-	//                                    {
-	//                                        throw new ArgumentException("Invalid mutelist entry line");
-	//                                    }
-	//                                }
-	//                                catch (Exception ex)
-	//                                {
-	//                                    Logger.Log("Failed to parse the mute list line: " + line, Helpers.LogLevel.Warning, Client, ex);
-	//                                }
-	//                            }
-	//                        }
-	//
-	//                        OnMuteListUpdated(EventArgs.Empty);
-	//                    }
-	//                    else
-	//                    {
-	//                        Logger.Log("Timed out waiting for mute list download", Helpers.LogLevel.Warning, Client);
-	//                    }
-	//
-	//                    Client.Assets.XferReceived -= xferCallback;
-	//
-	//                }
-	//            });
-	//        }
-	//
-	//        //endregion Packet Handlers
-	//    }
-	//
-	//region Event Argument Classes
-
 	/// <summary>
-	/// 
+	/// Reply to script permissions request
 	/// </summary>
-	public class ChatEventArgs extends EventArgs
+	/// <param name="simulator"><seealso cref="T:OpenMetaverse.getSimulator()"/> Object</param>
+	/// <param name="itemID"><seealso cref="UUID"/> of the itemID requesting permissions</param>
+	/// <param name="taskID"><seealso cref="UUID"/> of the taskID requesting permissions</param>
+	/// <param name="permissions"><seealso cref="OpenMetaverse.ScriptPermission"/> list of permissions to allow</param>
+	public void ScriptQuestionReply(Simulator simulator, UUID itemID, UUID taskID, ScriptPermission permissions)
 	{
-		private  Simulator m_Simulator;
-		private  String m_Message;
-		private  ChatAudibleLevel m_AudibleLevel;
-		private  ChatType m_Type;
-		private  ChatSourceType m_SourceType;
-		private  String m_FromName;
-		private  UUID m_SourceID;
-		private  UUID m_OwnerID;
-		private  Vector3 m_Position;
+		ScriptAnswerYesPacket yes = new ScriptAnswerYesPacket();
+		yes.AgentData.AgentID = Client.self.getAgentID();
+		yes.AgentData.SessionID = Client.self.getSessionID();
+		yes.Data.ItemID = itemID;
+		yes.Data.TaskID = taskID;
+		yes.Data.Questions = (int)permissions.getIndex();
 
-		/// <summary>Get the simulator sending the message</summary>
-		public Simulator getSimulator() {  return m_Simulator; } 
-		/// <summary>Get the message sent</summary>
-		public String getMessage() { return m_Message; } 
-		/// <summary>Get the audible level of the message</summary>
-		public ChatAudibleLevel getAudibleLevel() {  return m_AudibleLevel; } 
-		/// <summary>Get the type of message sent: whisper, shout, etc</summary>
-		public ChatType getType() { return m_Type; } 
-		/// <summary>Get the source type of the message sender</summary>
-		public ChatSourceType getSourceType() { return m_SourceType; } 
-		/// <summary>Get the name of the agent or object sending the message</summary>
-		public String getFromName() { return m_FromName; } 
-		/// <summary>Get the ID of the agent or object sending the message</summary>
-		public UUID getSourceID() { return m_SourceID; } 
-		/// <summary>Get the ID of the object owner, or the agent ID sending the message</summary>
-		public UUID getOwnerID() { return m_OwnerID; } 
-		/// <summary>Get the position of the agent or object sending the message</summary>
-		public Vector3 getPosition() { return m_Position; } 
-
-		/// <summary>
-		/// Construct a new instance of the ChatEventArgs object
-		/// </summary>
-		/// <param name="simulator">Sim from which the message originates</param>
-		/// <param name="message">The message sent</param>
-		/// <param name="audible">The audible level of the message</param>
-		/// <param name="type">The type of message sent: whisper, shout, etc</param>
-		/// <param name="sourceType">The source type of the message sender</param>
-		/// <param name="fromName">The name of the agent or object sending the message</param>
-		/// <param name="sourceId">The ID of the agent or object sending the message</param>
-		/// <param name="ownerid">The ID of the object owner, or the agent ID sending the message</param>
-		/// <param name="position">The position of the agent or object sending the message</param>
-		public ChatEventArgs(Simulator simulator, String message, ChatAudibleLevel audible, ChatType type,
-				ChatSourceType sourceType, String fromName, UUID sourceId, UUID ownerid, Vector3 position)
-		{
-			this.m_Simulator = simulator;
-			this.m_Message = message;
-			this.m_AudibleLevel = audible;
-			this.m_Type = type;
-			this.m_SourceType = sourceType;
-			this.m_FromName = fromName;
-			this.m_SourceID = sourceId;
-			this.m_Position = position;
-			this.m_OwnerID = ownerid;
-		}
-	}
-
-	/// <summary>Contains the data sent when a primitive opens a dialog with this agent</summary>
-	public class ScriptDialogEventArgs extends EventArgs
-	{
-		private  String m_Message;
-		private  String m_ObjectName;
-		private  UUID m_ImageID;
-		private  UUID m_ObjectID;
-		private  String m_FirstName;
-		private  String m_LastName;
-		private  int m_Channel;
-		private  List<String> m_ButtonLabels;
-		private  UUID m_OwnerID;
-
-		/// <summary>Get the dialog message</summary>
-		public String getMessage() { return m_Message; } 
-		/// <summary>Get the name of the object that sent the dialog request</summary>
-		public String getObjectName() { return m_ObjectName; } 
-		/// <summary>Get the ID of the image to be displayed</summary>
-		public UUID getImageID() { return m_ImageID; } 
-		/// <summary>Get the ID of the primitive sending the dialog</summary>
-		public UUID getObjectID() { return m_ObjectID; } 
-		/// <summary>Get the first name of the senders owner</summary>
-		public String getFirstName() { return m_FirstName; } 
-		/// <summary>Get the last name of the senders owner</summary>
-		public String getLastName() { return m_LastName; } 
-		/// <summary>Get the communication channel the dialog was sent on, responses
-		/// should also send responses on this same channel</summary>
-		public int getChannel() { return m_Channel; } 
-		/// <summary>Get the String labels containing the options presented in this dialog</summary>
-		public List<String> getButtonLabels() { return m_ButtonLabels; } 
-		/// <summary>UUID of the scritped object owner</summary>
-		public UUID getOwnerID() { return m_OwnerID; } 
-
-		/// <summary>
-		/// Construct a new instance of the ScriptDialogEventArgs
-		/// </summary>
-		/// <param name="message">The dialog message</param>
-		/// <param name="objectName">The name of the object that sent the dialog request</param>
-		/// <param name="imageID">The ID of the image to be displayed</param>
-		/// <param name="objectID">The ID of the primitive sending the dialog</param>
-		/// <param name="firstName">The first name of the senders owner</param>
-		/// <param name="lastName">The last name of the senders owner</param>
-		/// <param name="chatChannel">The communication channel the dialog was sent on</param>
-		/// <param name="buttons">The String labels containing the options presented in this dialog</param>
-		/// <param name="ownerID">UUID of the scritped object owner</param>
-		public ScriptDialogEventArgs(String message, String objectName, UUID imageID,
-				UUID objectID, String firstName, String lastName, int chatChannel, List<String> buttons, UUID ownerID)
-		{
-			this.m_Message = message;
-			this.m_ObjectName = objectName;
-			this.m_ImageID = imageID;
-			this.m_ObjectID = objectID;
-			this.m_FirstName = firstName;
-			this.m_LastName = lastName;
-			this.m_Channel = chatChannel;
-			this.m_ButtonLabels = buttons;
-			this.m_OwnerID = ownerID;
-		}
-	}
-
-	/// <summary>Contains the data sent when a primitive requests debit or other permissions
-	/// requesting a YES or NO answer</summary>
-	public class ScriptQuestionEventArgs extends EventArgs
-	{
-		private  Simulator m_Simulator;
-		private  UUID m_TaskID;
-		private  UUID m_ItemID;
-		private  String m_ObjectName;
-		private  String m_ObjectOwnerName;
-		private  ScriptPermission m_Questions;
-
-		/// <summary>Get the simulator containing the object sending the request</summary>
-		public Simulator getSimulator() { return m_Simulator; } 
-		/// <summary>Get the ID of the script making the request</summary>
-		public UUID getTaskID() { return m_TaskID; } 
-		/// <summary>Get the ID of the primitive containing the script making the request</summary>
-		public UUID getItemID() { return m_ItemID; } 
-		/// <summary>Get the name of the primitive making the request</summary>
-		public String getObjectName() { return m_ObjectName; } 
-		/// <summary>Get the name of the owner of the object making the request</summary>
-		public String getObjectOwnerName() {return m_ObjectOwnerName; } 
-		/// <summary>Get the permissions being requested</summary>
-		public ScriptPermission getQuestions() { return m_Questions; } 
-
-		/// <summary>
-		/// Construct a new instance of the ScriptQuestionEventArgs
-		/// </summary>
-		/// <param name="simulator">The simulator containing the object sending the request</param>
-		/// <param name="taskID">The ID of the script making the request</param>
-		/// <param name="itemID">The ID of the primitive containing the script making the request</param>
-		/// <param name="objectName">The name of the primitive making the request</param>
-		/// <param name="objectOwner">The name of the owner of the object making the request</param>
-		/// <param name="questions">The permissions being requested</param>
-		public ScriptQuestionEventArgs(Simulator simulator, UUID taskID, UUID itemID, String objectName, String objectOwner, ScriptPermission questions)
-		{
-			this.m_Simulator = simulator;
-			this.m_TaskID = taskID;
-			this.m_ItemID = itemID;
-			this.m_ObjectName = objectName;
-			this.m_ObjectOwnerName = objectOwner;
-			this.m_Questions = questions;
-		}
-
-	}
-
-	/// <summary>Contains the data sent when a primitive sends a request 
-	/// to an agent to open the specified URL</summary>
-	public class LoadUrlEventArgs extends EventArgs
-	{
-		private  String m_ObjectName;
-		private  UUID m_ObjectID;
-		private  UUID m_OwnerID;
-		private  boolean m_OwnerIsGroup;
-		private  String m_Message;
-		private  String m_URL;
-
-		/// <summary>Get the name of the object sending the request</summary>
-		public String getObjectName() { return m_ObjectName; } 
-		/// <summary>Get the ID of the object sending the request</summary>
-		public UUID getObjectID() { return m_ObjectID; } 
-		/// <summary>Get the ID of the owner of the object sending the request</summary>
-		public UUID getOwnerID() { return m_OwnerID; } 
-		/// <summary>True if the object is owned by a group</summary>
-		public boolean getOwnerIsGroup() { return m_OwnerIsGroup; } 
-		/// <summary>Get the message sent with the request</summary>
-		public String getMessage() { return m_Message; } 
-		/// <summary>Get the URL the object sent</summary>
-		public String getURL() { return m_URL; } 
-
-		/// <summary>
-		/// Construct a new instance of the LoadUrlEventArgs
-		/// </summary>
-		/// <param name="objectName">The name of the object sending the request</param>
-		/// <param name="objectID">The ID of the object sending the request</param>
-		/// <param name="ownerID">The ID of the owner of the object sending the request</param>
-		/// <param name="ownerIsGroup">True if the object is owned by a group</param>
-		/// <param name="message">The message sent with the request</param>
-		/// <param name="URL">The URL the object sent</param>
-		public LoadUrlEventArgs(String objectName, UUID objectID, UUID ownerID, boolean ownerIsGroup, String message, String URL)
-		{
-			this.m_ObjectName = objectName;
-			this.m_ObjectID = objectID;
-			this.m_OwnerID = ownerID;
-			this.m_OwnerIsGroup = ownerIsGroup;
-			this.m_Message = message;
-			this.m_URL = URL;
-		}
-	}
-
-	/// <summary>The date received from an ImprovedInstantMessage</summary>
-	public class InstantMessageEventArgs extends EventArgs
-	{
-		private  InstantMessage m_IM;
-		private  Simulator m_Simulator;
-
-		/// <summary>Get the InstantMessage object</summary>
-		public InstantMessage getIM() { return m_IM; } 
-		/// <summary>Get the simulator where the InstantMessage origniated</summary>
-		public Simulator getSimulator() { return m_Simulator; } 
-
-		/// <summary>
-		/// Construct a new instance of the InstantMessageEventArgs object
-		/// </summary>
-		/// <param name="im">the InstantMessage object</param>
-		/// <param name="simulator">the simulator where the InstantMessage origniated</param>
-		public InstantMessageEventArgs(InstantMessage im, Simulator simulator)
-		{
-			this.m_IM = im;
-			this.m_Simulator = simulator;
-		}
-	}
-
-	/// <summary>Contains the currency balance</summary>
-	public class BalanceEventArgs extends EventArgs
-	{
-		private int m_Balance;
-
-		/// <summary>
-		/// Get the currenct balance
-		/// </summary>
-		public int getBalance() {  return m_Balance; } 
-
-		/// <summary>
-		/// Construct a new BalanceEventArgs object
-		/// </summary>
-		/// <param name="balance">The currenct balance</param>
-		public BalanceEventArgs(int balance)
-		{
-			this.m_Balance = balance;
-		}
-	}
-
-	/// <summary>Contains the transaction summary when an item is purchased, 
-	/// money is given, or land is purchased</summary>
-	public class MoneyBalanceReplyEventArgs extends EventArgs
-	{
-		private  UUID m_TransactionID;
-		private  boolean m_Success;
-		private  int m_Balance;
-		private  int m_MetersCredit;
-		private  int m_MetersCommitted;
-		private  String m_Description;
-		private TransactionInfo m_TransactionInfo;
-
-		/// <summary>Get the ID of the transaction</summary>
-		public UUID getTransactionID() { return m_TransactionID; } 
-		/// <summary>True of the transaction was successful</summary>
-		public boolean getSuccess() { return m_Success; } 
-		/// <summary>Get the remaining currency balance</summary>
-		public int getBalance() { return m_Balance; } 
-		/// <summary>Get the meters credited</summary>
-		public int getMetersCredit() { return m_MetersCredit; } 
-		/// <summary>Get the meters comitted</summary>
-		public int getMetersCommitted() { return m_MetersCommitted; } 
-		/// <summary>Get the description of the transaction</summary>
-		public String getDescription() { return m_Description; } 
-		/// <summary>Detailed transaction information</summary>
-		public TransactionInfo getTransactionInfo() { return m_TransactionInfo; } 
-		/// <summary>
-		/// Construct a new instance of the MoneyBalanceReplyEventArgs object
-		/// </summary>
-		/// <param name="transactionID">The ID of the transaction</param>
-		/// <param name="transactionSuccess">True of the transaction was successful</param>
-		/// <param name="balance">The current currency balance</param>
-		/// <param name="metersCredit">The meters credited</param>
-		/// <param name="metersCommitted">The meters comitted</param>
-		/// <param name="description">A brief description of the transaction</param>
-		public MoneyBalanceReplyEventArgs(UUID transactionID, boolean transactionSuccess, int balance, int metersCredit, int metersCommitted, String description, TransactionInfo transactionInfo)
-		{
-			this.m_TransactionID = transactionID;
-			this.m_Success = transactionSuccess;
-			this.m_Balance = balance;
-			this.m_MetersCredit = metersCredit;
-			this.m_MetersCommitted = metersCommitted;
-			this.m_Description = description;
-			this.m_TransactionInfo = transactionInfo;
-		}
-	}
-
-	// String message, TeleportStatus status, TeleportFlags flags
-	public class TeleportEventArgs extends EventArgs
-	{
-		private  String m_Message;
-		private  TeleportStatus m_Status;
-		private  TeleportFlags m_Flags;
-
-		public String getMessage() {return m_Message;}
-		public TeleportStatus getStatus() {return m_Status;}
-		public TeleportFlags getFlags() {return m_Flags;}
-
-		public TeleportEventArgs(String message, TeleportStatus status, TeleportFlags flags)
-		{
-			this.m_Message = message;
-			this.m_Status = status;
-			this.m_Flags = flags;
-		}
-	}
-
-	/// <summary>Data sent from the simulator containing information about your agent and active group information</summary>
-	public class AgentDataReplyEventArgs extends EventArgs
-	{
-		private  String m_FirstName;
-		private  String m_LastName;
-		private  UUID m_ActiveGroupID;
-		private  String m_GroupTitle;
-		private  GroupPowers m_GroupPowers;
-		private  String m_GroupName;
-
-		/// <summary>Get the agents first name</summary>
-		public String getFirstName() {return m_FirstName;}
-		/// <summary>Get the agents last name</summary>
-		public String getLastName() {return m_LastName;}
-		/// <summary>Get the active group ID of your agent</summary>
-		public UUID getActiveGroupID() {return m_ActiveGroupID;}
-		/// <summary>Get the active groups title of your agent</summary>
-		public String getGroupTitle() {return m_GroupTitle;}
-		/// <summary>Get the combined group powers of your agent</summary>
-		public GroupPowers getGroupPowers() {return m_GroupPowers;}
-		/// <summary>Get the active group name of your agent</summary>
-		public String getGroupName() {return m_GroupName;}
-
-		/// <summary>
-		/// Construct a new instance of the AgentDataReplyEventArgs object
-		/// </summary>
-		/// <param name="firstName">The agents first name</param>
-		/// <param name="lastName">The agents last name</param>
-		/// <param name="activeGroupID">The agents active group ID</param>
-		/// <param name="groupTitle">The group title of the agents active group</param>
-		/// <param name="groupPowers">The combined group powers the agent has in the active group</param>
-		/// <param name="groupName">The name of the group the agent has currently active</param>
-		public AgentDataReplyEventArgs(String firstName, String lastName, UUID activeGroupID,
-				String groupTitle, GroupPowers groupPowers, String groupName)
-		{
-			this.m_FirstName = firstName;
-			this.m_LastName = lastName;
-			this.m_ActiveGroupID = activeGroupID;
-			this.m_GroupTitle = groupTitle;
-			this.m_GroupPowers = groupPowers;
-			this.m_GroupName = groupName;
-		}
-	}
-
-	/// <summary>Data sent by the simulator to indicate the active/changed animations
-	/// applied to your agent</summary>
-	public class AnimationsChangedEventArgs extends EventArgs
-	{
-		private  InternalDictionary<UUID, Integer> m_Animations;
-
-		/// <summary>Get the dictionary that contains the changed animations</summary>
-		public InternalDictionary<UUID, Integer> getAnimations() {return m_Animations;}
-
-		/// <summary>
-		/// Construct a new instance of the AnimationsChangedEventArgs class
-		/// </summary>
-		/// <param name="agentAnimations">The dictionary that contains the changed animations</param>
-		public AnimationsChangedEventArgs(InternalDictionary<UUID, Integer> agentAnimations)
-		{
-			this.m_Animations = agentAnimations;
-		}
-
+		Client.network.SendPacket(yes, simulator);
 	}
 
 	/// <summary>
-	/// Data sent from a simulator indicating a collision with your agent
+	/// Respond to a group invitation by either accepting or denying it
 	/// </summary>
-	public class MeanCollisionEventArgs extends EventArgs
+	/// <param name="groupID">UUID of the group (sent in the AgentID field of the invite message)</param>
+	/// <param name="imSessionID">IM Session ID from the group invitation message</param>
+	/// <param name="accept">Accept the group invitation or deny it</param>
+	public void GroupInviteRespond(UUID groupID, UUID imSessionID, boolean accept)
 	{
-		private  MeanCollisionType m_Type;
-		private  UUID m_Aggressor;
-		private  UUID m_Victim;
-		private  float m_Magnitude;
-		private  Date m_Time;
-
-		/// <summary>Get the Type of collision</summary>
-		public MeanCollisionType getType() {return m_Type;}
-		/// <summary>Get the ID of the agent or object that collided with your agent</summary>
-		public UUID getAggressor() {return m_Aggressor;}
-		/// <summary>Get the ID of the agent that was attacked</summary>
-		public UUID getVictim() {return m_Victim;}
-		/// <summary>A value indicating the strength of the collision</summary>
-		public float getMagnitude() {return m_Magnitude;}
-		/// <summary>Get the time the collision occurred</summary>
-		public Date getTime() {return m_Time;}
-
-		/// <summary>
-		/// Construct a new instance of the MeanCollisionEventArgs class
-		/// </summary>
-		/// <param name="type">The type of collision that occurred</param>
-		/// <param name="perp">The ID of the agent or object that perpetrated the agression</param>
-		/// <param name="victim">The ID of the Victim</param>
-		/// <param name="magnitude">The strength of the collision</param>
-		/// <param name="time">The Time the collision occurred</param>
-		public MeanCollisionEventArgs(MeanCollisionType type, UUID perp, UUID victim,
-				float magnitude, Date time)
-		{
-			this.m_Type = type;
-			this.m_Aggressor = perp;
-			this.m_Victim = victim;
-			this.m_Magnitude = magnitude;
-			this.m_Time = time;
-		}
-	}
-
-	/// <summary>Data sent to your agent when it crosses region boundaries</summary>
-	public class RegionCrossedEventArgs extends EventArgs
-	{
-		private  Simulator m_OldSimulator;
-		private  Simulator m_NewSimulator;
-
-		/// <summary>Get the simulator your agent just left</summary>
-		public Simulator getOldSimulator() {return m_OldSimulator;}
-		/// <summary>Get the simulator your agent is now in</summary>
-		public Simulator getNewSimulator() {return m_NewSimulator;}
-
-		/// <summary>
-		/// Construct a new instance of the RegionCrossedEventArgs class
-		/// </summary>
-		/// <param name="oldSim">The simulator your agent just left</param>
-		/// <param name="newSim">The simulator your agent is now in</param>
-		public RegionCrossedEventArgs(Simulator oldSim, Simulator newSim)
-		{
-			this.m_OldSimulator = oldSim;
-			this.m_NewSimulator = newSim;
-		}
-	}
-
-	/// <summary>Data sent from the simulator when your agent joins a group chat session</summary>
-	public class GroupChatJoinedEventArgs extends EventArgs
-	{
-		private  UUID m_SessionID;
-		private  String m_SessionName;
-		private  UUID m_TmpSessionID;
-		private  boolean m_Success;
-
-		/// <summary>Get the ID of the group chat session</summary>
-		public UUID getSessionID() {return m_SessionID;}
-		/// <summary>Get the name of the session</summary>
-		public String getSessionName() {return m_SessionName;}
-		/// <summary>Get the temporary session ID used for establishing new sessions</summary>
-		public UUID getTmpSessionID() {return m_TmpSessionID;}
-		/// <summary>True if your agent successfully joined the session</summary>
-		public boolean getSuccess() {return m_Success;}
-
-		/// <summary>
-		/// Construct a new instance of the GroupChatJoinedEventArgs class
-		/// </summary>
-		/// <param name="groupChatSessionID">The ID of the session</param>
-		/// <param name="sessionName">The name of the session</param>
-		/// <param name="tmpSessionID">A temporary session id used for establishing new sessions</param>
-		/// <param name="success">True of your agent successfully joined the session</param>
-		public GroupChatJoinedEventArgs(UUID groupChatSessionID, String sessionName, UUID tmpSessionID, boolean success)
-		{
-			this.m_SessionID = groupChatSessionID;
-			this.m_SessionName = sessionName;
-			this.m_TmpSessionID = tmpSessionID;
-			this.m_Success = success;
-		}
-	}
-
-	/// <summary>Data sent by the simulator containing urgent messages</summary>
-	public class AlertMessageEventArgs extends EventArgs
-	{
-		private  String m_Message;
-
-		/// <summary>Get the alert message</summary>
-		public String getMessage() {return m_Message;}
-
-		/// <summary>
-		/// Construct a new instance of the AlertMessageEventArgs class
-		/// </summary>
-		/// <param name="message">The alert message</param>
-		public AlertMessageEventArgs(String message)
-		{
-			this.m_Message = message;
-		}
-	}
-
-	/// <summary>Data sent by a script requesting to take or release specified controls to your agent</summary>
-	public class ScriptControlEventArgs extends EventArgs
-	{
-		private  ScriptControlChange m_Controls;
-		private  boolean m_Pass;
-		private  boolean m_Take;
-
-		/// <summary>Get the controls the script is attempting to take or release to the agent</summary>
-		public ScriptControlChange getControls() {return m_Controls;}
-		/// <summary>True if the script is passing controls back to the agent</summary>
-		public boolean getPass() {return m_Pass;}
-		/// <summary>True if the script is requesting controls be released to the script</summary>
-		public boolean getTake() {return m_Take;}
-
-		/// <summary>
-		/// Construct a new instance of the ScriptControlEventArgs class
-		/// </summary>
-		/// <param name="controls">The controls the script is attempting to take or release to the agent</param>
-		/// <param name="pass">True if the script is passing controls back to the agent</param>
-		/// <param name="take">True if the script is requesting controls be released to the script</param>
-		public ScriptControlEventArgs(ScriptControlChange controls, boolean pass, boolean take)
-		{
-			m_Controls = controls;
-			m_Pass = pass;
-			m_Take = take;
-		}
+		InstantMessage(getName(), groupID, "", imSessionID,
+				accept ? InstantMessageDialog.GroupInvitationAccept : InstantMessageDialog.GroupInvitationDecline,
+						InstantMessageOnline.Offline, Vector3.Zero, UUID.Zero, Utils.EmptyBytes);
 	}
 
 	/// <summary>
-	/// Data sent from the simulator to an agent to indicate its view limits
+	/// Requests script detection of objects and avatars
 	/// </summary>
-	public class CameraConstraintEventArgs extends EventArgs
+	/// <param name="name">name of the object/avatar to search for</param>
+	/// <param name="searchID">UUID of the object or avatar to search for</param>
+	/// <param name="type">Type of search from ScriptSensorTypeFlags</param>
+	/// <param name="range">range of scan (96 max?)</param>
+	/// <param name="arc">the arc in radians to search within</param>
+	/// <param name="requestID">an user generated ID to correlate replies with</param>
+	/// <param name="sim">Simulator to perform search in</param>
+	public void RequestScriptSensor(String name, UUID searchID, ScriptSensorTypeFlags type, float range, float arc, UUID requestID, Simulator sim)
 	{
-		private  Vector4 m_CollidePlane;
+		ScriptSensorRequestPacket request = new ScriptSensorRequestPacket();
+		request.Requester.Arc = arc;
+		request.Requester.Range = range;
+		request.Requester.RegionHandle = sim.Handle;
+		request.Requester.RequestID = requestID;
+		request.Requester.SearchDir = Quaternion.Identity; // TODO: this needs to be tested
+		request.Requester.SearchID = searchID;
+		request.Requester.SearchName = Utils.stringToBytes(name);
+		request.Requester.SearchPos = Vector3.Zero;
+		request.Requester.SearchRegions = 0; // TODO: ?
+		request.Requester.SourceID = Client.self.getAgentID();
+		request.Requester.Type = (int)type.getIndex();
 
-		/// <summary>Get the collision plane</summary>
-		public Vector4 getCollidePlane() {return m_CollidePlane;}
-
-		/// <summary>
-		/// Construct a new instance of the CameraConstraintEventArgs class
-		/// </summary>
-		/// <param name="collidePlane">The collision plane</param>
-		public CameraConstraintEventArgs(Vector4 collidePlane)
-		{
-			m_CollidePlane = collidePlane;
-		}
+		Client.network.SendPacket(request, sim);
 	}
 
 	/// <summary>
-	/// Data containing script sensor requests which allow an agent to know the specific details
-	/// of a primitive sending script sensor requests
+	/// Create or update profile pick
 	/// </summary>
-	public class ScriptSensorReplyEventArgs extends EventArgs
+	/// <param name="pickID">UUID of the pick to update, or random UUID to create a new pick</param>
+	/// <param name="topPick">Is this a top pick? (typically false)</param>
+	/// <param name="parcelID">UUID of the parcel (UUID.Zero for the current parcel)</param>
+	/// <param name="name">Name of the pick</param>
+	/// <param name="globalPosition">Global position of the pick landmark</param>
+	/// <param name="textureID">UUID of the image displayed with the pick</param>
+	/// <param name="description">Long description of the pick</param>
+	public void PickInfoUpdate(UUID pickID, boolean topPick, UUID parcelID, String name, Vector3d globalPosition, UUID textureID, String description)
 	{
-		private  UUID m_RequestorID;
-		private  UUID m_GroupID;
-		private  String m_Name;
-		private  UUID m_ObjectID;
-		private  UUID m_OwnerID;
-		private  Vector3 m_Position;
-		private  float m_Range;
-		private  Quaternion m_Rotation;
-		private  ScriptSensorTypeFlags m_Type;
-		private  Vector3 m_Velocity;
+		PickInfoUpdatePacket pick = new PickInfoUpdatePacket();
+		pick.AgentData.AgentID = Client.self.getAgentID();
+		pick.AgentData.SessionID = Client.self.getSessionID();
+		pick.Data.PickID = pickID;
+		pick.Data.Desc = Utils.stringToBytes(description);
+		pick.Data.CreatorID = Client.self.getAgentID();
+		pick.Data.TopPick = topPick;
+		pick.Data.ParcelID = parcelID;
+		pick.Data.Name = Utils.stringToBytes(name);
+		pick.Data.SnapshotID = textureID;
+		pick.Data.PosGlobal = globalPosition;
+		pick.Data.SortOrder = 0;
+		pick.Data.Enabled = false;
 
-		/// <summary>Get the ID of the primitive sending the sensor</summary>
-		public UUID getRequestorID() {return m_RequestorID;}
-		/// <summary>Get the ID of the group associated with the primitive</summary>
-		public UUID getGroupID() {return m_GroupID;}
-		/// <summary>Get the name of the primitive sending the sensor</summary>
-		public String getName() {return m_Name;}
-		/// <summary>Get the ID of the primitive sending the sensor</summary>
-		public UUID getObjectID() {return m_ObjectID;}
-		/// <summary>Get the ID of the owner of the primitive sending the sensor</summary>
-		public UUID getOwnerID() {return m_OwnerID;}
-		/// <summary>Get the position of the primitive sending the sensor</summary>
-		public Vector3 getPosition() {return m_Position;}
-		/// <summary>Get the range the primitive specified to scan</summary>
-		public float getRange() {return m_Range;}
-		/// <summary>Get the rotation of the primitive sending the sensor</summary>
-		public Quaternion getRotation() {return m_Rotation;}
-		/// <summary>Get the type of sensor the primitive sent</summary>
-		public ScriptSensorTypeFlags getType() {return m_Type;}
-		/// <summary>Get the velocity of the primitive sending the sensor</summary>
-		public Vector3 getVelocity() {return m_Velocity;}
-
-		/// <summary>
-		/// Construct a new instance of the ScriptSensorReplyEventArgs
-		/// </summary>
-		/// <param name="requestorID">The ID of the primitive sending the sensor</param>
-		/// <param name="groupID">The ID of the group associated with the primitive</param>
-		/// <param name="name">The name of the primitive sending the sensor</param>
-		/// <param name="objectID">The ID of the primitive sending the sensor</param>
-		/// <param name="ownerID">The ID of the owner of the primitive sending the sensor</param>
-		/// <param name="position">The position of the primitive sending the sensor</param>
-		/// <param name="range">The range the primitive specified to scan</param>
-		/// <param name="rotation">The rotation of the primitive sending the sensor</param>
-		/// <param name="type">The type of sensor the primitive sent</param>
-		/// <param name="velocity">The velocity of the primitive sending the sensor</param>
-		public ScriptSensorReplyEventArgs(UUID requestorID, UUID groupID, String name,
-				UUID objectID, UUID ownerID, Vector3 position, float range, Quaternion rotation,
-				ScriptSensorTypeFlags type, Vector3 velocity)
-		{
-			this.m_RequestorID = requestorID;
-			this.m_GroupID = groupID;
-			this.m_Name = name;
-			this.m_ObjectID = objectID;
-			this.m_OwnerID = ownerID;
-			this.m_Position = position;
-			this.m_Range = range;
-			this.m_Rotation = rotation;
-			this.m_Type = type;
-			this.m_Velocity = velocity;
-		}
+		Client.network.SendPacket(pick);
 	}
 
-	/// <summary>Contains the response data returned from the simulator in response to a <see cref="RequestSit"/></summary>
-	public class AvatarSitResponseEventArgs extends EventArgs
+	/// <summary>
+	/// Delete profile pick
+	/// </summary>
+	/// <param name="pickID">UUID of the pick to delete</param>
+	public void PickDelete(UUID pickID)
 	{
-		private  UUID m_ObjectID;
-		private  boolean m_Autopilot;
-		private  Vector3 m_CameraAtOffset;
-		private  Vector3 m_CameraEyeOffset;
-		private  boolean m_ForceMouselook;
-		private  Vector3 m_SitPosition;
-		private  Quaternion m_SitRotation;
+		PickDeletePacket delete = new PickDeletePacket();
+		delete.AgentData.AgentID = Client.self.getAgentID();
+		delete.AgentData.SessionID = Client.self.sessionID;
+		delete.Data.PickID = pickID;
 
-		/// <summary>Get the ID of the primitive the agent will be sitting on</summary>
-		public UUID getObjectID() {return m_ObjectID;}
-		/// <summary>True if the simulator Autopilot functions were involved</summary>
-		public boolean getAutopilot() {return m_Autopilot;}
-		/// <summary>Get the camera offset of the agent when seated</summary>
-		public Vector3 getCameraAtOffset() {return m_CameraAtOffset;}
-		/// <summary>Get the camera eye offset of the agent when seated</summary>
-		public Vector3 getCameraEyeOffset() {return m_CameraEyeOffset;}
-		/// <summary>True of the agent will be in mouselook mode when seated</summary>
-		public boolean getForceMouselook() {return m_ForceMouselook;}
-		/// <summary>Get the position of the agent when seated</summary>
-		public Vector3 getSitPosition() {return m_SitPosition;}
-		/// <summary>Get the rotation of the agent when seated</summary>
-		public Quaternion getSitRotation() {return m_SitRotation;}
-
-		/// <summary>Construct a new instance of the AvatarSitResponseEventArgs object</summary>
-		public AvatarSitResponseEventArgs(UUID objectID, boolean autoPilot, Vector3 cameraAtOffset,
-				Vector3 cameraEyeOffset, boolean forceMouselook, Vector3 sitPosition, Quaternion sitRotation)
-		{
-			this.m_ObjectID = objectID;
-			this.m_Autopilot = autoPilot;
-			this.m_CameraAtOffset = cameraAtOffset;
-			this.m_CameraEyeOffset = cameraEyeOffset;
-			this.m_ForceMouselook = forceMouselook;
-			this.m_SitPosition = sitPosition;
-			this.m_SitRotation = sitRotation;
-		}
+		Client.network.SendPacket(delete);
 	}
 
-	/// <summary>Data sent when an agent joins a chat session your agent is currently participating in</summary>
-	public class ChatSessionMemberAddedEventArgs extends EventArgs
+	/// <summary>
+	/// Create or update profile Classified
+	/// </summary>
+	/// <param name="classifiedID">UUID of the classified to update, or random UUID to create a new classified</param>
+	/// <param name="category">Defines what catagory the classified is in</param>
+	/// <param name="snapshotID">UUID of the image displayed with the classified</param>
+	/// <param name="price">Price that the classified will cost to place for a week</param>
+	/// <param name="position">Global position of the classified landmark</param>
+	/// <param name="name">Name of the classified</param>
+	/// <param name="desc">Long description of the classified</param>
+	/// <param name="autoRenew">if true, auto renew classified after expiration</param>
+	public void UpdateClassifiedInfo(UUID classifiedID, DirectoryManager.ClassifiedCategories category,
+			UUID snapshotID, int price, Vector3d position, String name, String desc, boolean autoRenew)
 	{
-		private  UUID m_SessionID;
-		private  UUID m_AgentID;
+		ClassifiedInfoUpdatePacket classified = new ClassifiedInfoUpdatePacket();
+		classified.AgentData.AgentID = Client.self.getAgentID();
+		classified.AgentData.SessionID = Client.self.getSessionID();
 
-		/// <summary>Get the ID of the chat session</summary>
-		public UUID getSessionID() {return m_SessionID;}
-		/// <summary>Get the ID of the agent that joined</summary>
-		public UUID getAgentID() {return m_AgentID;}
+		classified.Data.ClassifiedID = classifiedID;
+		classified.Data.Category = (long)category.getIndex();
 
-		/// <summary>
-		/// Construct a new instance of the ChatSessionMemberAddedEventArgs object
-		/// </summary>
-		/// <param name="sessionID">The ID of the chat session</param>
-		/// <param name="agentID">The ID of the agent joining</param>
-		public ChatSessionMemberAddedEventArgs(UUID sessionID, UUID agentID)
-		{
-			this.m_SessionID = sessionID;
-			this.m_AgentID = agentID;
-		}
+		classified.Data.ParcelID = UUID.Zero;
+		// TODO: verify/fix ^
+		classified.Data.ParentEstate = 0;
+		// TODO: verify/fix ^
+
+		classified.Data.SnapshotID = snapshotID;
+		classified.Data.PosGlobal = position;
+
+		classified.Data.ClassifiedFlags = autoRenew ? (byte)32 : (byte)0;
+		// TODO: verify/fix ^
+
+		classified.Data.PriceForListing = price;
+		classified.Data.Name = Utils.stringToBytes(name);
+		classified.Data.Desc = Utils.stringToBytes(desc);
+		Client.network.SendPacket(classified);
 	}
 
-	/// <summary>Data sent when an agent exits a chat session your agent is currently participating in</summary>
-	public class ChatSessionMemberLeftEventArgs extends EventArgs
+	/// <summary>
+	/// Create or update profile Classified
+	/// </summary>
+	/// <param name="classifiedID">UUID of the classified to update, or random UUID to create a new classified</param>
+	/// <param name="category">Defines what catagory the classified is in</param>
+	/// <param name="snapshotID">UUID of the image displayed with the classified</param>
+	/// <param name="price">Price that the classified will cost to place for a week</param>
+	/// <param name="name">Name of the classified</param>
+	/// <param name="desc">Long description of the classified</param>
+	/// <param name="autoRenew">if true, auto renew classified after expiration</param>
+	public void UpdateClassifiedInfo(UUID classifiedID, DirectoryManager.ClassifiedCategories category, UUID snapshotID, int price, String name, String desc, boolean autoRenew)
 	{
-		private  UUID m_SessionID;
-		private  UUID m_AgentID;
-
-		/// <summary>Get the ID of the chat session</summary>
-		public UUID getSessionID() {return m_SessionID;}
-		/// <summary>Get the ID of the agent that left</summary>
-		public UUID getAgentID() {return m_AgentID;}
-
-		/// <summary>
-		/// Construct a new instance of the ChatSessionMemberLeftEventArgs object
-		/// </summary>
-		/// <param name="sessionID">The ID of the chat session</param>
-		/// <param name="agentID">The ID of the Agent that left</param>
-		public ChatSessionMemberLeftEventArgs(UUID sessionID, UUID agentID)
-		{
-			this.m_SessionID = sessionID;
-			this.m_AgentID = agentID;
-		}
+		UpdateClassifiedInfo(classifiedID, category, snapshotID, price, Client.self.getGlobalPosition(), name, desc, autoRenew);
 	}
 
-	/// <summary>Event arguments with the result of setting display name operation</summary>
-	public class SetDisplayNameReplyEventArgs extends EventArgs
+	/// <summary>
+	/// Delete a classified ad
+	/// </summary>
+	/// <param name="classifiedID">The classified ads ID</param>
+	public void DeleteClassfied(UUID classifiedID)
 	{
-		private  int m_Status;
-		private  String m_Reason;
-		private  AgentDisplayName m_DisplayName;
+		ClassifiedDeletePacket classified = new ClassifiedDeletePacket();
+		classified.AgentData.AgentID = Client.self.getAgentID();
+		classified.AgentData.SessionID = Client.self.getSessionID();
 
-		/// <summary>Status code, 200 indicates settign display name was successful</summary>
-		public int getStatus() {return m_Status;}
-
-		/// <summary>Textual description of the status</summary>
-		public String getReason() {return m_Reason;}
-
-		/// <summary>Details of the newly set display name</summary>
-		public AgentDisplayName getDisplayName() {return m_DisplayName;}
-
-		/// <summary>Default constructor</summary>
-		public SetDisplayNameReplyEventArgs(int status, String reason, AgentDisplayName displayName)
-		{
-			m_Status = status;
-			m_Reason = reason;
-			m_DisplayName = displayName;
-		}
+		classified.Data.ClassifiedID = classifiedID;
+		Client.network.SendPacket(classified);
 	}
 
-	//endregion
-
-
-	public static class AgentMovement
+	/// <summary>
+	/// Fetches resource usage by agents attachmetns
+	/// </summary>
+	/// <param name="callback">Called when the requested information is collected</param>
+	public void GetAttachmentResources(final EventObserver<AttachmentResourcesCallbackArg> callback)
 	{
-		/// <summary>
-		/// Camera controls for the agent, mostly a thin wrapper around
-		/// CoordinateFrame. This class is only responsible for state
-		/// tracking and math, it does not send any packets
-		/// </summary>
-		public static class AgentCamera
+		try
 		{
-			/// <summary></summary>
-			public float Far;
-
-			/// <summary>The camera is a local frame of reference inside of
-			/// the larger grid space. This is where the math happens</summary>
-			private CoordinateFrame Frame;
-
-			/// <summary></summary>
-			public Vector3 getPosition()
+			URI url = Client.network.getCurrentSim().Caps.CapabilityURI("AttachmentResources");
+			CapsHttpClient request = new CapsHttpClient(url);
+			request.addRequestCompleteObserver(new Observer()
 			{
-				return Frame.getOrigin();
-			}
-
-			public void setPosition(Vector3 value)
-			{
-				Frame.setOrigin(value); 
-			}
-
-			/// <summary></summary>
-			public Vector3 getAtAxis()
-			{
-				return Frame.getXAxis();
-			}
-
-			public void setAtAxis(Vector3 value)
-			{
-				Frame.setYAxis(value);
-			}
-
-			/// <summary></summary>
-			public Vector3 getLeftAxis()
-			{
-				return Frame.getXAxis();
-			}
-
-			public void setLeftAxis(Vector3 value)
-			{
-				Frame.setXAxis(value);
-			}
-
-			/// <summary></summary>
-			public Vector3 getUpAxis()
-			{
-				return Frame.getZAxis();
-			}
-
-			public void setUpAxis(Vector3 value)
-			{
-				Frame.setZAxis(value);
-			}
-
-			/// <summary>
-			/// Default constructor
-			/// </summary>
-			public AgentCamera()
-			{
-				Frame = new CoordinateFrame(new Vector3(128f, 128f, 20f));
-				Far = 128f;
-			}
-
-			public void Roll(float angle) throws Exception
-			{
-				Frame.Roll(angle);
-			}
-
-			public void Pitch(float angle) throws Exception
-			{
-				Frame.Pitch(angle);
-			}
-
-			public void Yaw(float angle) throws Exception
-			{
-				Frame.Yaw(angle);
-			}
-
-			public void LookDirection(Vector3 target)
-			{
-				Frame.LookDirection(target);
-			}
-
-			public void LookDirection(Vector3 target, Vector3 upDirection)
-			{
-				Frame.LookDirection(target, upDirection);
-			}
-
-			public void LookDirection(double heading)
-			{
-				Frame.LookDirection(heading);
-			}
-
-			public void LookAt(Vector3 position, Vector3 target)
-			{
-				Frame.LookAt(position, target);
-			}
-
-			public void LookAt(Vector3 position, Vector3 target, Vector3 upDirection)
-			{
-				Frame.LookAt(position, target, upDirection);
-			}
-
-			public void SetPositionOrientation(Vector3 position, float roll, float pitch, float yaw) throws Exception
-			{
-				Frame.origin = position;
-
-				Frame.ResetAxes();
-
-				Frame.Roll(roll);
-				Frame.Pitch(pitch);
-				Frame.Yaw(yaw);
-			}
-		}
-
-
-		/// <summary> 
-		/// Agent movement and camera control
-		/// 
-		/// Agent movement is controlled by setting specific <seealso cref="T:AgentManager.ControlFlags"/>
-		/// After the control flags are set, An AgentUpdate is required to update the simulator of the specified flags
-		/// This is most easily accomplished by setting one or more of the AgentMovement properties
-		/// 
-		/// Movement of an avatar is always based on a compass direction, for example AtPos will move the 
-		/// agent from West to East or forward on the X Axis, AtNeg will of course move agent from 
-		/// East to West or backward on the X Axis, LeftPos will be South to North or forward on the Y Axis
-		/// The Z axis is Up, finer grained control of movements can be done using the Nudge properties
-		/// </summary> 
-
-		//region Properties
-
-		/// <summary>Move agent positive along the X axis</summary>
-		public boolean getAtPos()
-		{
-			return GetControlFlag(AgentManager.ControlFlags.AGENT_CONTROL_AT_POS);
-		}
-
-		public void setAtPos(boolean value)
-		{
-			SetControlFlag(AgentManager.ControlFlags.AGENT_CONTROL_AT_POS, value);
-		}
-
-		/// <summary>Move agent negative along the X axis</summary>
-		public boolean getAtNeg()
-		{
-			return GetControlFlag(AgentManager.ControlFlags.AGENT_CONTROL_AT_NEG);
-		}
-
-		public void setAtNeg(boolean value)
-		{
-			SetControlFlag(AgentManager.ControlFlags.AGENT_CONTROL_AT_NEG, value);
-		}
-
-		/// <summary>Move agent positive along the Y axis</summary>
-		public boolean getLeftPos()
-		{
-			return GetControlFlag(AgentManager.ControlFlags.AGENT_CONTROL_LEFT_POS);
-		}
-
-		public void setLeftPos(boolean value)
-		{
-			SetControlFlag(AgentManager.ControlFlags.AGENT_CONTROL_LEFT_POS, value);
-		}
-		/// <summary>Move agent negative along the Y axis</summary>
-		public boolean getLeftNeg()
-		{
-			return GetControlFlag(AgentManager.ControlFlags.AGENT_CONTROL_LEFT_NEG);
-		}
-
-		public void setLeftNeg(boolean value)
-		{
-			SetControlFlag(AgentManager.ControlFlags.AGENT_CONTROL_LEFT_NEG, value);
-		}
-		/// <summary>Move agent positive along the Z axis</summary>
-		public boolean getUpPos()
-		{
-			return GetControlFlag(AgentManager.ControlFlags.AGENT_CONTROL_UP_POS);
-		}
-
-		public void setUpPos(boolean value)
-		{
-			SetControlFlag(AgentManager.ControlFlags.AGENT_CONTROL_UP_POS, value);
-		}
-		/// <summary>Move agent negative along the Z axis</summary>
-		public boolean getUpNeg()
-		{
-			return GetControlFlag(AgentManager.ControlFlags.AGENT_CONTROL_UP_NEG);
-		}
-
-		public void setUpNeg(boolean value)
-		{
-			SetControlFlag(AgentManager.ControlFlags.AGENT_CONTROL_UP_NEG, value);
-		}
-		/// <summary></summary>
-		public boolean getPitchPos()
-		{
-			return GetControlFlag(AgentManager.ControlFlags.AGENT_CONTROL_PITCH_POS);
-		}
-
-		public void setPitchPos(boolean value)
-		{
-			SetControlFlag(AgentManager.ControlFlags.AGENT_CONTROL_PITCH_POS, value);
-		}
-		/// <summary></summary>
-		public boolean getPitchNeg()
-		{
-			return GetControlFlag(AgentManager.ControlFlags.AGENT_CONTROL_PITCH_NEG);
-		}
-
-		public void setPitchNeg(boolean value)
-		{
-			SetControlFlag(AgentManager.ControlFlags.AGENT_CONTROL_PITCH_NEG, value);
-		}
-		/// <summary></summary>
-		public boolean getYawPos()
-		{
-			return GetControlFlag(AgentManager.ControlFlags.AGENT_CONTROL_YAW_POS);
-		}
-
-		public void setYawPos(boolean value)
-		{
-			SetControlFlag(AgentManager.ControlFlags.AGENT_CONTROL_YAW_POS, value);
-		}
-		/// <summary></summary>
-		public boolean getYawNeg()
-		{
-			return GetControlFlag(AgentManager.ControlFlags.AGENT_CONTROL_YAW_NEG);
-		}
-
-		public void setYawNeg(boolean value)
-		{
-			SetControlFlag(AgentManager.ControlFlags.AGENT_CONTROL_YAW_NEG, value);
-		}
-		/// <summary></summary>
-		public boolean getFastAt()
-		{
-			return GetControlFlag(AgentManager.ControlFlags.AGENT_CONTROL_FAST_AT);
-		}
-
-		public void setFastAt(boolean value)
-		{
-			SetControlFlag(AgentManager.ControlFlags.AGENT_CONTROL_FAST_AT, value);
-		}
-		/// <summary></summary>
-		public boolean getFastLeft()
-		{
-			return GetControlFlag(AgentManager.ControlFlags.AGENT_CONTROL_FAST_LEFT);
-		}
-
-		public void setFastLeft(boolean value)
-		{
-			SetControlFlag(AgentManager.ControlFlags.AGENT_CONTROL_FAST_LEFT, value);
-		}
-		/// <summary></summary>
-		public boolean getFastUp()
-		{
-			return GetControlFlag(AgentManager.ControlFlags.AGENT_CONTROL_FAST_UP);
-		}
-
-		public void setFastUp(boolean value)
-		{
-			SetControlFlag(AgentManager.ControlFlags.AGENT_CONTROL_FAST_UP, value);
-		}
-		/// <summary>Causes simulator to make agent fly</summary>
-		public boolean getFly()
-		{
-			return GetControlFlag(AgentManager.ControlFlags.AGENT_CONTROL_FLY);
-		}
-
-		public void setFly(boolean value)
-		{
-			SetControlFlag(AgentManager.ControlFlags.AGENT_CONTROL_FLY, value);
-		}
-		/// <summary>Stop movement</summary>
-		public boolean getStop()
-		{
-			return GetControlFlag(AgentManager.ControlFlags.AGENT_CONTROL_STOP); 
-		}
-
-		public void setStop(boolean value)
-		{
-			SetControlFlag(AgentManager.ControlFlags.AGENT_CONTROL_STOP, value);
-		}
-		/// <summary>Finish animation</summary>
-		public boolean getFinishAnim()
-		{
-			return GetControlFlag(AgentManager.ControlFlags.AGENT_CONTROL_FINISH_ANIM);
-		}
-
-		public void setFinishAnim(boolean value)
-		{
-			SetControlFlag(AgentManager.ControlFlags.AGENT_CONTROL_FINISH_ANIM, value);
-		}
-		/// <summary>Stand up from a sit</summary>
-		public boolean getStandUp()
-		{
-			return GetControlFlag(AgentManager.ControlFlags.AGENT_CONTROL_STAND_UP);
-		}
-
-		public void setStandUp(boolean value)
-		{
-			SetControlFlag(AgentManager.ControlFlags.AGENT_CONTROL_STAND_UP, value);
-		}
-		/// <summary>Tells simulator to sit agent on ground</summary>
-		public boolean getSitOnGround()
-		{
-			return GetControlFlag(AgentManager.ControlFlags.AGENT_CONTROL_SIT_ON_GROUND);
-		}
-
-		public void setSitOnGround(boolean value)
-		{
-			SetControlFlag(AgentManager.ControlFlags.AGENT_CONTROL_SIT_ON_GROUND, value);
-		}
-		/// <summary>Place agent into mouselook mode</summary>
-		public boolean getMouselook()
-		{
-			return GetControlFlag(AgentManager.ControlFlags.AGENT_CONTROL_MOUSELOOK);
-		}
-
-		public void setMouselook(boolean value)
-		{
-			SetControlFlag(AgentManager.ControlFlags.AGENT_CONTROL_MOUSELOOK, value);
-		}
-		/// <summary>Nudge agent positive along the X axis</summary>
-		public boolean getNudgeAtPos()
-		{
-			return GetControlFlag(AgentManager.ControlFlags.AGENT_CONTROL_NUDGE_AT_POS);
-		}
-
-		public void setNudgeAtPos(boolean value)
-		{
-			SetControlFlag(AgentManager.ControlFlags.AGENT_CONTROL_NUDGE_AT_POS, value);
-		}
-		/// <summary>Nudge agent negative along the X axis</summary>
-		public boolean getNudgeAtNeg()
-		{
-			return GetControlFlag(AgentManager.ControlFlags.AGENT_CONTROL_NUDGE_AT_NEG); 
-		}
-
-		public void setNudgeAtNeg(boolean value)
-		{
-			SetControlFlag(AgentManager.ControlFlags.AGENT_CONTROL_NUDGE_AT_NEG, value);
-		}
-		/// <summary>Nudge agent positive along the Y axis</summary>
-		public boolean getNudgeLeftPos()
-		{
-			return GetControlFlag(AgentManager.ControlFlags.AGENT_CONTROL_NUDGE_LEFT_POS);
-		}
-
-		public void setNudgeLeftPos(boolean value)
-		{
-			SetControlFlag(AgentManager.ControlFlags.AGENT_CONTROL_NUDGE_LEFT_POS, value);
-		}
-		/// <summary>Nudge agent negative along the Y axis</summary>
-		public boolean getNudgeLeftNeg()
-		{
-			return GetControlFlag(AgentManager.ControlFlags.AGENT_CONTROL_NUDGE_LEFT_NEG);
-		}
-
-		public void setNudgeLeftNeg(boolean value)
-		{
-			SetControlFlag(AgentManager.ControlFlags.AGENT_CONTROL_NUDGE_LEFT_NEG, value);
-		}
-		/// <summary>Nudge agent positive along the Z axis</summary>
-		public boolean getNudgeUpPos()
-		{
-			return GetControlFlag(AgentManager.ControlFlags.AGENT_CONTROL_NUDGE_UP_POS);
-		}
-
-		public void setNudgeUpPos(boolean value)
-		{
-			SetControlFlag(AgentManager.ControlFlags.AGENT_CONTROL_NUDGE_UP_POS, value);
-		}
-		/// <summary>Nudge agent negative along the Z axis</summary>
-		public boolean getNudgeUpNeg()
-		{
-			return GetControlFlag(AgentManager.ControlFlags.AGENT_CONTROL_NUDGE_UP_NEG);
-		}
-
-		public void setNudgeUpNeg(boolean value)
-		{
-			SetControlFlag(AgentManager.ControlFlags.AGENT_CONTROL_NUDGE_UP_NEG, value);
-		}
-		/// <summary></summary>
-		public boolean getTurnLeft()
-		{
-			return GetControlFlag(AgentManager.ControlFlags.AGENT_CONTROL_TURN_LEFT);
-		}
-
-		public void setTurnLeft(boolean value)
-		{
-			SetControlFlag(AgentManager.ControlFlags.AGENT_CONTROL_TURN_LEFT, value);
-		}
-		/// <summary></summary>
-		public boolean getTurnRight()
-		{
-			return GetControlFlag(AgentManager.ControlFlags.AGENT_CONTROL_TURN_RIGHT);
-		}
-
-		public void setTurnRight(boolean value)
-		{
-			SetControlFlag(AgentManager.ControlFlags.AGENT_CONTROL_TURN_RIGHT, value);
-		}
-		/// <summary>Tell simulator to mark agent as away</summary>
-		public boolean getAway()
-		{
-			return GetControlFlag(AgentManager.ControlFlags.AGENT_CONTROL_AWAY);
-		}
-
-		public void setAway(boolean value)
-		{
-			SetControlFlag(AgentManager.ControlFlags.AGENT_CONTROL_AWAY, value);
-		}
-		/// <summary></summary>
-		public boolean getLButtonDown()
-		{
-			return GetControlFlag(AgentManager.ControlFlags.AGENT_CONTROL_LBUTTON_DOWN);
-		}
-
-		public void setLButtonDown(boolean value)
-		{
-			SetControlFlag(AgentManager.ControlFlags.AGENT_CONTROL_LBUTTON_DOWN, value);
-		}
-		/// <summary></summary>
-		public boolean getLButtonUp()
-		{
-			return GetControlFlag(AgentManager.ControlFlags.AGENT_CONTROL_LBUTTON_UP);
-		}
-
-		public void setLButtonUp(boolean value)
-		{
-			SetControlFlag(AgentManager.ControlFlags.AGENT_CONTROL_LBUTTON_UP, value);
-		}
-		/// <summary></summary>
-		public boolean getMLButtonDown()
-		{
-			return GetControlFlag(AgentManager.ControlFlags.AGENT_CONTROL_ML_LBUTTON_DOWN);
-		}
-
-		public void setMLButtonDown(boolean value)
-		{
-			SetControlFlag(AgentManager.ControlFlags.AGENT_CONTROL_ML_LBUTTON_DOWN, value);
-		}
-		/// <summary></summary>
-		public boolean getMLButtonUp()
-		{
-			return GetControlFlag(AgentManager.ControlFlags.AGENT_CONTROL_ML_LBUTTON_UP);
-		}
-
-		public void setMLButtonUp(boolean value)
-		{
-			SetControlFlag(AgentManager.ControlFlags.AGENT_CONTROL_ML_LBUTTON_UP, value);
-		}
-		/// <summary>
-		/// Returns "always run" value, or changes it by sending a SetAlwaysRunPacket
-		/// </summary>
-		public boolean getAlwaysRun()
-		{
-			return alwaysRun;
-		}
-
-		public void setAlwaysRun(boolean value)
-		{
-			alwaysRun = value;
-			SetAlwaysRunPacket run = new SetAlwaysRunPacket();
-			run.AgentData.AgentID = Client.self.getAgentID();
-			run.AgentData.SessionID = Client.self.getSessionID();
-			run.AgentData.AlwaysRun = alwaysRun;
-			Client.network.SendPacket(run);
-		}
-
-		/// <summary>The current value of the agent control flags</summary>
-		//uint
-		public long getAgentControls()
-		{
-			return agentControls;
-		}
-
-		/// <summary>Gets or sets the interval in milliseconds at which
-		/// AgentUpdate packets are sent to the current simulator. Setting
-		/// this to a non-zero value will also enable the packet sending if
-		/// it was previously off, and setting it to zero will disable</summary>
-		public int getUpdateInterval()
-		{
-			return updateInterval;
-		}
-
-		public void setUpdateInterval(int value)
-		{
-			if (value > 0)
-			{
-				if (updateTimer != null)
-				{
-					//				updateTimer.Change(value, value);
-					createUpdateTimer(value, value);
-				}
-				updateInterval = value;
-			}
-			else
-			{
-				if (updateTimer != null)
-				{
-					//				updateTimer.Change(Timeout.Infinite, Timeout.Infinite);
-					//				createUpdateTimer();
-					CleanupTimer();
-					updateTimer = new Timer();
-				}
-				updateInterval = 0;
-			}
-		}
-
-		/// <summary>Gets or sets whether AgentUpdate packets are sent to
-		/// the current simulator</summary>
-		public boolean getUpdateEnabled()
-		{
-			return (updateInterval != 0);
-		}
-
-		/// <summary>Reset movement controls every time we send an update</summary>
-		public boolean getAutoResetControls()
-		{
-			return autoResetControls;
-		}
-		public void setAutoResetControls(boolean value)
-		{
-			autoResetControls = value;
-		}
-
-		//endregion Properties
-
-		/// <summary>Agent camera controls</summary>
-		public AgentCamera Camera;
-		/// <summary>Currently only used for hiding your group title</summary>
-		public AgentFlags Flags = AgentFlags.None;
-		/// <summary>Action state of the avatar, which can currently be
-		/// typing and editing</summary>
-		public AgentState State = AgentState.None;
-		/// <summary></summary>
-		public Quaternion BodyRotation = Quaternion.Identity;
-		/// <summary></summary>
-		public Quaternion HeadRotation = Quaternion.Identity;
-
-		//region Change tracking
-		/// <summary></summary>
-		private Quaternion LastBodyRotation;
-		/// <summary></summary>
-		private Quaternion LastHeadRotation;
-		/// <summary></summary>
-		private Vector3 LastCameraCenter;
-		/// <summary></summary>
-		private Vector3 LastCameraXAxis;
-		/// <summary></summary>
-		private Vector3 LastCameraYAxis;
-		/// <summary></summary>
-		private Vector3 LastCameraZAxis;
-		/// <summary></summary>
-		private float LastFar;
-		//endregion Change tracking
-
-		private boolean alwaysRun;
-		private GridClient Client;
-		//uint
-		private long agentControls;
-		private int duplicateCount;
-		private AgentState lastState;
-		/// <summary>Timer for sending AgentUpdate packets</summary>
-		private Timer updateTimer;
-		private int updateInterval;
-		private boolean autoResetControls;
-
-		private class LoginProgressObserver extends EventObserver<LoginProgressEventArgs>
-		{
-			@Override
-			public void handleEvent(Observable o, LoginProgressEventArgs arg) {
-				Network_OnConnected(o, arg);
-			}
-		} 
-
-		private class DisconnectedObserver extends EventObserver<DisconnectedEventArgs>
-		{
-			@Override
-			public void handleEvent(Observable o, DisconnectedEventArgs arg) {
-				Network_OnDisconnected(o, arg);
-			}
-		} 
-
-		/// <summary>Default constructor</summary>
-		public AgentMovement(GridClient client)
-		{
-			Client = client;
-			Camera = new AgentCamera();
-			Client.network.RegisterLoginProgressCallback(new LoginProgressObserver());                
-			Client.network.RegisterOnDisconnectedCallback(new DisconnectedObserver());
-			updateInterval = Settings.DEFAULT_AGENT_UPDATE_INTERVAL;
-		}
-
-		private void CleanupTimer()
-		{
-			if (updateTimer != null)
-			{
-				updateTimer.cancel();
-				updateTimer = null;
-			}
-		}
-
-		private void Network_OnDisconnected(Object sender, DisconnectedEventArgs e)
-		{
-			CleanupTimer();
-		}
-
-		private void Network_OnConnected(Object sender, LoginProgressEventArgs e)
-		{
-			if (e.getStatus() == LoginStatus.Success)
-			{
-				//			CleanupTimer();
-				////			updateTimer = new Timer(new TimerCallback(UpdateTimer_Elapsed), null, updateInterval, updateInterval);
-				//			updateTimer = new Timer();
-				//			updateTimer.schedule(new TimerTask()
-				//			{ @Override
-				//				public void run() {
-				//					UpdateTimer_Elapsed(null);
-				//				}
-				//			}, updateInterval, updateInterval);
-
-				createUpdateTimer(updateInterval, updateInterval);
-			}
-		}
-
-		private void createUpdateTimer(int delay, int period)
-		{
-			CleanupTimer();
-			updateTimer = new Timer();
-			updateTimer.schedule(new TimerTask()
-			{ @Override
-				public void run() {
-				UpdateTimer_Elapsed(null);
-			}
-			}, delay, period);
-		}
-
-		/// <summary>
-		/// Send an AgentUpdate with the camera set at the current agent
-		/// position and pointing towards the heading specified
-		/// </summary>
-		/// <param name="heading">Camera rotation in radians</param>
-		/// <param name="reliable">Whether to send the AgentUpdate reliable
-		/// or not</param>
-		public void UpdateFromHeading(double heading, boolean reliable)
-		{
-			Camera.setPosition(Client.self.getSimPosition());
-			Camera.LookDirection(heading);
-
-			BodyRotation.Z = (float)Math.sin(heading / 2.0d);
-			BodyRotation.W = (float)Math.cos(heading / 2.0d);
-			HeadRotation = BodyRotation;
-
-			SendUpdate(reliable);
-		}
-
-		/// <summary>
-		/// Rotates the avatar body and camera toward a target position.
-		/// This will also anchor the camera position on the avatar
-		/// </summary>
-		/// <param name="target">Region coordinates to turn toward</param>
-		public boolean TurnToward(Vector3 target)
-		{
-			if (Client.settings.SEND_AGENT_UPDATES)
-			{
-				Quaternion parentRot = Quaternion.Identity;
-
-				if (Client.self.getSittingOn() > 0)
-				{
-					if (!Client.network.getCurrentSim().ObjectsPrimitives.containsKey(Client.self.getSittingOn()))
+				public void update(Observable arg0, Object arg1) {
+					//			System.out.println("RequestCompletedObserver called ...");
+					CapsHttpRequestCompletedArg rcha = (CapsHttpRequestCompletedArg) arg1;
+					try
 					{
-						JLogger.warn("Attempted TurnToward but parent prim is not in dictionary");
-						return false;
+						if (rcha.getResult() == null || rcha.getError() != null)
+						{
+							callback.handleEvent(null, new AttachmentResourcesCallbackArg(false, null));
+						}
+						AttachmentResourcesMessage info = AttachmentResourcesMessage.FromOSD(rcha.getResult());
+						callback.handleEvent(null, new AttachmentResourcesCallbackArg(true, info));
+
 					}
-					else parentRot = Client.network.getCurrentSim().ObjectsPrimitives.get(Client.self.getSittingOn()).Rotation;
-				}
-
-				Quaternion between = Vector3.rotationBetween(Vector3.UnitX, Vector3.normalize(Vector3.substract(target, Client.self.getSimPosition())));
-				Quaternion rot = Quaternion.multiply(between, Quaternion.divide(Quaternion.Identity, parentRot));
-
-				BodyRotation = rot;
-				HeadRotation = rot;
-				Camera.LookAt(Client.self.getSimPosition(), target);
-
-				SendUpdate();
-
-				return true;
+					catch (Exception ex)
+					{
+						JLogger.error("Failed fetching AttachmentResources" + Utils.getExceptionStackTraceAsString(ex));
+						callback.handleEvent(null, new AttachmentResourcesCallbackArg(false, null));
+					}
+				}	
 			}
-			else
+					);
+			//			request.OnComplete += delegate(CapsHttpClient client, OSD result, Exception error)
+			//					{
+			//				try
+			//				{
+			//					if (result == null || error != null)
+			//					{
+			//						callback(false, null);
+			//					}
+			//					AttachmentResourcesMessage info = AttachmentResourcesMessage.FromOSD(result);
+			//					callback(true, info);
+			//
+			//				}
+			//				catch (Exception ex)
+			//				{
+			//					JLogger.error("Failed fetching AttachmentResources" + Utils.getExceptionStackTraceAsString(ex));
+			//					callback(false, null);
+			//				}
+			//					};
+
+			request.BeginGetResponse(Client.settings.CAPS_TIMEOUT);
+		}
+		catch (Exception ex)
+		{
+			JLogger.error("Failed fetching AttachmentResources" + Utils.getExceptionStackTraceAsString(ex));
+			callback.handleEvent(null, new AttachmentResourcesCallbackArg(false, null));
+		}
+	}
+
+	/// <summary>
+	/// Initates request to set a new display name
+	/// </summary>
+	/// <param name="oldName">Previous display name</param>
+	/// <param name="newName">Desired new display name</param>
+	public void SetDisplayName(String oldName, String newName) throws Exception
+	{
+		URI uri;
+
+		if (Client.network.getCurrentSim() == null ||
+				Client.network.getCurrentSim().Caps == null ||
+				(uri = Client.network.getCurrentSim().Caps.CapabilityURI("SetDisplayName")) == null)
+		{
+			JLogger.warn("Unable to invoke SetDisplyName capability at this time");
+			return;
+		}
+
+		SetDisplayNameMessage msg = new SetDisplayNameMessage();
+		msg.OldDisplayName = oldName;
+		msg.NewDisplayName = newName;
+
+		CapsHttpClient cap = new CapsHttpClient(uri);
+		cap.BeginGetResponse(msg.Serialize(), OSDFormat.Xml, Client.settings.CAPS_TIMEOUT);
+	}
+
+	/// <summary>
+	/// Tells the sim what UI language is used, and if it's ok to share that with scripts
+	/// </summary>
+	/// <param name="language">Two letter language code</param>
+	/// <param name="isPublic">Share language info with scripts</param>
+	public void UpdateAgentLanguage(String language, boolean isPublic)
+	{
+		try
+		{
+			UpdateAgentLanguageMessage msg = new UpdateAgentLanguageMessage();
+			msg.Language = language;
+			msg.LanguagePublic = isPublic;
+
+			URI url = Client.network.getCurrentSim().Caps.CapabilityURI("UpdateAgentLanguage");
+			CapsHttpClient request = new CapsHttpClient(url);
+			request.BeginGetResponse(msg.Serialize(), OSDFormat.Xml, Client.settings.CAPS_TIMEOUT);
+		}
+		catch (Exception ex)
+		{
+			JLogger.error("Failes to update agent language" + Utils.getExceptionStackTraceAsString(ex));
+		}
+	}
+	//endregion Misc
+
+	//region Packet Handlers
+
+	/// <summary>
+	/// Take an incoming ImprovedInstantMessage packet, auto-parse, and if
+	/// OnInstantMessage is defined call that with the appropriate arguments
+	/// </summary>
+	/// <param name="sender">The sender</param>
+	/// <param name="e">The EventArgs object containing the packet data</param>
+	protected void InstantMessageHandler(Object sender, PacketReceivedEventArgs e) throws UnsupportedEncodingException
+	{
+		Packet packet = e.getPacket();
+		Simulator simulator = e.getSimulator();
+
+		if (packet.Type == PacketType.ImprovedInstantMessage)
+		{
+			ImprovedInstantMessagePacket im = (ImprovedInstantMessagePacket)packet;
+
+			if (onIM != null)
 			{
-				JLogger.warn("Attempted TurnToward but agent updates are disabled");
-				return false;
-			}
-		}
+				InstantMessage message = new InstantMessage();
+				message.FromAgentID = im.AgentData.AgentID;
+				message.FromAgentName = Utils.bytesToString(im.MessageBlock.FromAgentName);
+				message.ToAgentID = im.MessageBlock.ToAgentID;
+				message.ParentEstateID = im.MessageBlock.ParentEstateID;
+				message.RegionID = im.MessageBlock.RegionID;
+				message.Position = im.MessageBlock.Position;
+				message.Dialog = InstantMessageDialog.get(im.MessageBlock.Dialog);
+				message.GroupIM = im.MessageBlock.FromGroup;
+				message.IMSessionID = im.MessageBlock.ID;
+				message.Timestamp = new Date(im.MessageBlock.Timestamp);
+				message.Message = Utils.bytesToString(im.MessageBlock.Message);
+				message.Offline = InstantMessageOnline.get((int)im.MessageBlock.Offline);
+				message.BinaryBucket = im.MessageBlock.BinaryBucket;
 
-		/// <summary>
-		/// Send new AgentUpdate packet to update our current camera 
-		/// position and rotation
-		/// </summary>
-		public void SendUpdate()
-		{
-			SendUpdate(false, Client.network.getCurrentSim());
-		}
-
-		/// <summary>
-		/// Send new AgentUpdate packet to update our current camera 
-		/// position and rotation
-		/// </summary>
-		/// <param name="reliable">Whether to require server acknowledgement
-		/// of this packet</param>
-		public void SendUpdate(boolean reliable)
-		{
-			SendUpdate(reliable, Client.network.getCurrentSim());
-		}
-
-		/// <summary>
-		/// Send new AgentUpdate packet to update our current camera 
-		/// position and rotation
-		/// </summary>
-		/// <param name="reliable">Whether to require server acknowledgement
-		/// of this packet</param>
-		/// <param name="simulator">Simulator to send the update to</param>
-		public void SendUpdate(boolean reliable, Simulator simulator)
-		{
-			// Since version 1.40.4 of the Linden simulator, sending this update
-			// causes corruption of the agent position in the simulator
-			if (simulator != null && (!simulator.AgentMovementComplete))
-				return;
-
-			Vector3 origin = Camera.getPosition();
-			Vector3 xAxis = Camera.getLeftAxis();
-			Vector3 yAxis = Camera.getAtAxis();
-			Vector3 zAxis = Camera.getUpAxis();
-
-			// Attempted to sort these in a rough order of how often they might change
-			if (agentControls == 0 &&
-					yAxis == LastCameraYAxis &&
-					origin == LastCameraCenter &&
-					State == lastState &&
-					HeadRotation == LastHeadRotation &&
-					BodyRotation == LastBodyRotation &&
-					xAxis == LastCameraXAxis &&
-					Camera.Far == LastFar &&
-					zAxis == LastCameraZAxis)
-			{
-				++duplicateCount;
-			}
-			else
-			{
-				duplicateCount = 0;
-			}
-
-			if (Client.settings.DISABLE_AGENT_UPDATE_DUPLICATE_CHECK || duplicateCount < 10)
-			{
-				// Store the current state to do duplicate checking
-				LastHeadRotation = HeadRotation;
-				LastBodyRotation = BodyRotation;
-				LastCameraYAxis = yAxis;
-				LastCameraCenter = origin;
-				LastCameraXAxis = xAxis;
-				LastCameraZAxis = zAxis;
-				LastFar = Camera.Far;
-				lastState = State;
-
-				// Build the AgentUpdate packet and send it
-				AgentUpdatePacket update = new AgentUpdatePacket();
-				update.header.Reliable = reliable;
-
-				update.AgentData.AgentID = Client.self.getAgentID();
-				update.AgentData.SessionID = Client.self.getSessionID();
-				update.AgentData.HeadRotation = HeadRotation;
-				update.AgentData.BodyRotation = BodyRotation;
-				update.AgentData.CameraAtAxis = yAxis;
-				update.AgentData.CameraCenter = origin;
-				update.AgentData.CameraLeftAxis = xAxis;
-				update.AgentData.CameraUpAxis = zAxis;
-				update.AgentData.Far = Camera.Far;
-				update.AgentData.State = (byte)State.getIndex();
-				update.AgentData.ControlFlags = agentControls;
-				update.AgentData.Flags = (byte)Flags.getIndex();
-
-				Client.network.SendPacket(update, simulator);
-
-				if (autoResetControls) {
-					ResetControlFlags();
-				}
-			}
-		}
-
-		/// <summary>
-		/// Builds an AgentUpdate packet entirely from parameters. This
-		/// will not touch the state of Self.Movement or
-		/// Self.Movement.Camera in any way
-		/// </summary>
-		/// <param name="controlFlags"></param>
-		/// <param name="position"></param>
-		/// <param name="forwardAxis"></param>
-		/// <param name="leftAxis"></param>
-		/// <param name="upAxis"></param>
-		/// <param name="bodyRotation"></param>
-		/// <param name="headRotation"></param>
-		/// <param name="farClip"></param>
-		/// <param name="reliable"></param>
-		/// <param name="flags"></param>
-		/// <param name="state"></param>
-		public void SendManualUpdate(AgentManager.ControlFlags controlFlags, Vector3 position, Vector3 forwardAxis,
-				Vector3 leftAxis, Vector3 upAxis, Quaternion bodyRotation, Quaternion headRotation, float farClip,
-				AgentFlags flags, AgentState state, boolean reliable)
-		{
-			// Since version 1.40.4 of the Linden simulator, sending this update
-			// causes corruption of the agent position in the simulator
-			if (Client.network.getCurrentSim() != null && (!Client.network.getCurrentSim().getHandshakeComplete()))
-				return;
-
-			AgentUpdatePacket update = new AgentUpdatePacket();
-
-			update.AgentData.AgentID = Client.self.getAgentID();
-			update.AgentData.SessionID = Client.self.getSessionID();
-			update.AgentData.BodyRotation = bodyRotation;
-			update.AgentData.HeadRotation = headRotation;
-			update.AgentData.CameraCenter = position;
-			update.AgentData.CameraAtAxis = forwardAxis;
-			update.AgentData.CameraLeftAxis = leftAxis;
-			update.AgentData.CameraUpAxis = upAxis;
-			update.AgentData.Far = farClip;
-			update.AgentData.ControlFlags = (long)controlFlags.getIndex();
-			update.AgentData.Flags = (byte)flags.getIndex();
-			update.AgentData.State = (byte)state.getIndex();
-
-			update.header.Reliable = reliable;
-
-			Client.network.SendPacket(update);
-		}
-
-		private boolean GetControlFlag(ControlFlags flag)
-		{
-			return (agentControls & (long)flag.getIndex()) != 0;
-		}
-
-		private void SetControlFlag(ControlFlags flag, boolean value)
-		{
-			if (value) agentControls |= flag.getIndex();
-			else agentControls &= ~(flag.getIndex());
-		}
-
-		private void ResetControlFlags()
-		{
-			// Reset all of the flags except for persistent settings like
-			// away, fly, mouselook, and crouching
-			agentControls &=
-					(long)(ControlFlags.AGENT_CONTROL_AWAY.getIndex() |
-							ControlFlags.AGENT_CONTROL_FLY.getIndex() |
-							ControlFlags.AGENT_CONTROL_MOUSELOOK.getIndex() |
-							ControlFlags.AGENT_CONTROL_UP_NEG.getIndex());
-		}
-
-		private void UpdateTimer_Elapsed(Object obj)
-		{
-			if (Client.network.getConnected() && Client.settings.SEND_AGENT_UPDATES)
-			{
-				//Send an AgentUpdate packet
-				SendUpdate(false, Client.network.getCurrentSim());
+				onIM.raiseEvent((new InstantMessageEventArgs(message, simulator)));
 			}
 		}
 	}
+
+	/// <summary>
+	/// Take an incoming Chat packet, auto-parse, and if OnChat is defined call 
+	///   that with the appropriate arguments.
+	/// </summary>
+	/// <param name="sender">The sender</param>
+	/// <param name="e">The EventArgs object containing the packet data</param>
+	protected void ChatHandler(Object sender, PacketReceivedEventArgs e) throws UnsupportedEncodingException
+	{
+		if (onChatFromSimulator != null)
+		{
+			Packet packet = e.getPacket();
+
+			ChatFromSimulatorPacket chat = (ChatFromSimulatorPacket)packet;
+
+			onChatFromSimulator.raiseEvent(new ChatEventArgs(e.getSimulator(), Utils.bytesToString(chat.ChatData.Message),
+					ChatAudibleLevel.get(chat.ChatData.Audible),
+					ChatType.get(chat.ChatData.ChatType),
+					ChatSourceType.get(chat.ChatData.SourceType),
+					Utils.bytesToString(chat.ChatData.FromName),
+					chat.ChatData.SourceID,
+					chat.ChatData.OwnerID,
+					chat.ChatData.Position));
+		}
+	}
+
+	/// <summary>
+	/// Used for parsing llDialogs
+	/// </summary>
+	/// <param name="sender">The sender</param>
+	/// <param name="e">The EventArgs object containing the packet data</param>
+	protected void ScriptDialogHandler(Object sender, PacketReceivedEventArgs e) throws UnsupportedEncodingException
+	{
+		if (onScriptDialog != null)
+		{
+			Packet packet = e.getPacket();
+
+			ScriptDialogPacket dialog = (ScriptDialogPacket)packet;
+			List<String> buttons = new ArrayList<String>();
+
+			for (ScriptDialogPacket.ButtonsBlock button : dialog.Buttons)
+			{
+				buttons.add(Utils.bytesToString(button.ButtonLabel));
+			}
+
+			UUID ownerID = UUID.Zero;
+
+			if (dialog.OwnerData != null && dialog.OwnerData.length > 0)
+			{
+				ownerID = dialog.OwnerData[0].OwnerID;
+			}
+
+			onScriptDialog.raiseEvent(new ScriptDialogEventArgs(Utils.bytesToString(dialog.Data.Message),
+					Utils.bytesToString(dialog.Data.ObjectName),
+					dialog.Data.ImageID,
+					dialog.Data.ObjectID,
+					Utils.bytesToString(dialog.Data.FirstName),
+					Utils.bytesToString(dialog.Data.LastName),
+					dialog.Data.ChatChannel,
+					buttons,
+					ownerID));
+		}
+	}
+
+	/// <summary>
+	/// Used for parsing llRequestPermissions dialogs
+	/// </summary>
+	/// <param name="sender">The sender</param>
+	/// <param name="e">The EventArgs object containing the packet data</param>
+	protected void ScriptQuestionHandler(Object sender, PacketReceivedEventArgs e) throws UnsupportedEncodingException
+	{
+		if (onScriptQuestion != null)
+		{
+			Packet packet = e.getPacket();
+			Simulator simulator = e.getSimulator();
+
+			ScriptQuestionPacket question = (ScriptQuestionPacket)packet;
+
+			onScriptQuestion.raiseEvent(new ScriptQuestionEventArgs(simulator,
+					question.Data.TaskID,
+					question.Data.ItemID,
+					Utils.bytesToString(question.Data.ObjectName),
+					Utils.bytesToString(question.Data.ObjectOwner),
+					ScriptPermission.get(question.Data.Questions)));
+		}
+	}
+
+	/// <summary>
+	/// Handles Script Control changes when Script with permissions releases or takes a control
+	/// </summary>
+	/// <param name="sender">The sender</param>
+	/// <param name="e">The EventArgs object containing the packet data</param>
+	private void ScriptControlChangeHandler(Object sender, PacketReceivedEventArgs e)
+	{
+		if (onOnScriptControlChange != null)
+		{
+			Packet packet = e.getPacket();
+
+			ScriptControlChangePacket change = (ScriptControlChangePacket)packet;
+			for (int i = 0; i < change.Data.length; i++)
+			{
+				onOnScriptControlChange.raiseEvent(new ScriptControlEventArgs(ScriptControlChange.get(change.Data[i].Controls),
+						change.Data[i].PassToAgent,
+						change.Data[i].TakeControls));
+			}
+		}
+	}
+
+	/// <summary>
+	/// Used for parsing llLoadURL Dialogs
+	/// </summary>
+	/// <param name="sender">The sender</param>
+	/// <param name="e">The EventArgs object containing the packet data</param>
+	protected void LoadURLHandler(Object sender, PacketReceivedEventArgs e) throws UnsupportedEncodingException
+	{
+
+		if (onLoadURL != null)
+		{
+			Packet packet = e.getPacket();
+
+			LoadURLPacket loadURL = (LoadURLPacket)packet;
+
+			onLoadURL.raiseEvent(new LoadUrlEventArgs(
+					Utils.bytesToString(loadURL.Data.ObjectName),
+					loadURL.Data.ObjectID,
+					loadURL.Data.OwnerID,
+					loadURL.Data.OwnerIsGroup,
+					Utils.bytesToString(loadURL.Data.Message),
+					Utils.bytesToString(loadURL.Data.URL)
+					));
+		}
+	}
+
+	/// <summary>
+	/// Update client's Position, LookAt and region handle from incoming packet
+	/// </summary>
+	/// <param name="sender">The sender</param>
+	/// <param name="e">The EventArgs object containing the packet data</param>
+	/// <remarks>This occurs when after an avatar moves into a new sim</remarks>
+	private void MovementCompleteHandler(Object sender, PacketReceivedEventArgs e) throws UnsupportedEncodingException
+	{
+		Packet packet = e.getPacket();
+		Simulator simulator = e.getSimulator();
+
+		AgentMovementCompletePacket movement = (AgentMovementCompletePacket)packet;
+
+		relativePosition = movement.Data.Position;
+		Movement.Camera.LookDirection(movement.Data.LookAt);
+		simulator.Handle = movement.Data.RegionHandle;
+		simulator.SimVersion = Utils.bytesToString(movement.SimData.ChannelVersion);
+		simulator.AgentMovementComplete = true;
+	}
+
+	/// <summary>Process an incoming packet and raise the appropriate events</summary>
+	/// <param name="sender">The sender</param>
+	/// <param name="e">The EventArgs object containing the packet data</param>
+	protected void HealthHandler(Object sender, PacketReceivedEventArgs e)
+	{
+		Packet packet = e.getPacket();
+		health = ((HealthMessagePacket)packet).HealthData.Health;
+	}
+
+	/// <summary>Process an incoming packet and raise the appropriate events</summary>
+	/// <param name="sender">The sender</param>
+	/// <param name="e">The EventArgs object containing the packet data</param>
+	protected void AgentDataUpdateHandler(Object sender, PacketReceivedEventArgs e) throws UnsupportedEncodingException
+	{
+		Packet packet = e.getPacket();
+		Simulator simulator = e.getSimulator();
+
+		AgentDataUpdatePacket p = (AgentDataUpdatePacket)packet;
+
+		if (p.AgentData.AgentID == simulator.Client.self.getAgentID())
+		{
+			firstName = Utils.bytesToString(p.AgentData.FirstName);
+			lastName = Utils.bytesToString(p.AgentData.LastName);
+			activeGroup = p.AgentData.ActiveGroupID;
+			activeGroupPowers = GroupPowers.get(p.AgentData.GroupPowers.longValue());
+
+			if (onAgentDataReply != null)
+			{
+				String groupTitle = Utils.bytesToString(p.AgentData.GroupTitle);
+				String groupName = Utils.bytesToString(p.AgentData.GroupName);
+
+				onAgentDataReply.raiseEvent(new AgentDataReplyEventArgs(firstName, lastName, activeGroup, groupTitle, activeGroupPowers, groupName));
+			}
+		}
+		else
+		{
+			JLogger.error("Got an AgentDataUpdate packet for avatar " + p.AgentData.AgentID.toString() +
+					" instead of " + Client.self.getAgentID().toString() + ", this shouldn't happen");
+		}
+	}
+
+	/// <summary>Process an incoming packet and raise the appropriate events</summary>
+	/// <param name="sender">The sender</param>
+	/// <param name="e">The EventArgs object containing the packet data</param>
+	protected void MoneyBalanceReplyHandler(Object sender, PacketReceivedEventArgs e) throws UnsupportedEncodingException
+	{
+		Packet packet = e.getPacket();
+
+		if (packet.Type == PacketType.MoneyBalanceReply)
+		{
+			MoneyBalanceReplyPacket reply = (MoneyBalanceReplyPacket)packet;
+			this.balance = reply.MoneyData.MoneyBalance;
+
+			if (onMoneyBalanceReply != null)
+			{
+				TransactionInfo transactionInfo = new TransactionInfo();
+				transactionInfo.TransactionType = reply.TransactionInfo.TransactionType;
+				transactionInfo.SourceID = reply.TransactionInfo.SourceID;
+				transactionInfo.IsSourceGroup = reply.TransactionInfo.IsSourceGroup;
+				transactionInfo.DestID = reply.TransactionInfo.DestID;
+				transactionInfo.IsDestGroup = reply.TransactionInfo.IsDestGroup;
+				transactionInfo.Amount = reply.TransactionInfo.Amount;
+				transactionInfo.ItemDescription =  Utils.bytesToString(reply.TransactionInfo.ItemDescription);
+
+				onMoneyBalanceReply.raiseEvent(new MoneyBalanceReplyEventArgs(reply.MoneyData.TransactionID,
+						reply.MoneyData.TransactionSuccess,
+						reply.MoneyData.MoneyBalance,
+						reply.MoneyData.SquareMetersCredit,
+						reply.MoneyData.SquareMetersCommitted,
+						Utils.bytesToString(reply.MoneyData.Description),
+						transactionInfo));
+			}
+		}
+
+		if (onMoneyBalance != null)
+		{
+			onMoneyBalance.raiseEvent(new BalanceEventArgs(balance));
+		}
+	}
+
+	/// <summary>
+	/// EQ Message fired with the result of SetDisplayName request
+	/// </summary>
+	/// <param name="capsKey">The message key</param>
+	/// <param name="message">the IMessage object containing the deserialized data sent from the simulator</param>
+	/// <param name="simulator">The <see cref="Simulator"/> which originated the packet</param>
+	protected void SetDisplayNameReplyEventHandler(String capsKey, IMessage message, Simulator simulator)
+	{
+		if (onSetDisplayNameReply != null)
+		{
+			SetDisplayNameReplyMessage msg = (SetDisplayNameReplyMessage)message;
+			onSetDisplayNameReply.raiseEvent(new SetDisplayNameReplyEventArgs(msg.Status, msg.Reason, msg.DisplayName));
+		}
+	}
+
+	protected void EstablishAgentCommunicationEventHandler(String capsKey, IMessage message, Simulator simulator) throws Exception
+	{
+		EstablishAgentCommunicationMessage msg = (EstablishAgentCommunicationMessage)message;
+
+		if (Client.settings.MULTIPLE_SIMS)
+		{
+
+			InetSocketAddress endPoint = new InetSocketAddress(msg.Address, msg.Port);
+			Simulator sim = Client.network.FindSimulator(endPoint);
+
+			if (sim == null)
+			{
+				JLogger.error("Got EstablishAgentCommunication for unknown sim " + msg.Address + ":" + msg.Port);
+
+				// FIXME: Should we use this opportunity to connect to the simulator?
+			}
+			else
+			{
+				JLogger.info("Got EstablishAgentCommunication for " + sim.toString());
+
+				sim.SetSeedCaps(msg.SeedCapability.toString());
+			}
+		}
+	}
+
+	/// <summary>
+	/// Process TeleportFailed message sent via EventQueue, informs agent its last teleport has failed and why.
+	/// </summary>
+	/// <param name="messageKey">The Message Key</param>
+	/// <param name="message">An IMessage object Deserialized from the recieved message event</param>
+	/// <param name="simulator">The simulator originating the event message</param>
+	public void TeleportFailedEventHandler(String messageKey, IMessage message, Simulator simulator) throws UnknownHostException, Exception
+	{
+		TeleportFailedMessage msg = (TeleportFailedMessage)message;
+
+		TeleportFailedPacket failedPacket = new TeleportFailedPacket();
+		failedPacket.Info.AgentID = msg.AgentID;
+		failedPacket.Info.Reason = Utils.stringToBytes(msg.Reason);
+
+		TeleportHandler(this, new PacketReceivedEventArgs(failedPacket, simulator));
+	}
+
+	/// <summary>
+	/// Process TeleportFinish from Event Queue and pass it onto our TeleportHandler
+	/// </summary>
+	/// <param name="capsKey">The message system key for this event</param>
+	/// <param name="message">IMessage object containing decoded data from OSD</param>
+	/// <param name="simulator">The simulator originating the event message</param>
+	private void TeleportFinishEventHandler(String capsKey, IMessage message, Simulator simulator) throws UnknownHostException, Exception
+	{
+		TeleportFinishMessage msg = (TeleportFinishMessage)message;
+
+		TeleportFinishPacket p = new TeleportFinishPacket();
+		p.Info.AgentID = msg.AgentID;
+		p.Info.LocationID = msg.LocationID;
+		p.Info.RegionHandle = msg.RegionHandle;
+		p.Info.SeedCapability = Utils.stringToBytes(msg.SeedCapability.toString()); // FIXME: Check This
+		p.Info.SimAccess = (byte)msg.SimAccess.getIndex();
+		p.Info.SimIP = Utils.IPToUInt(msg.IP);
+		p.Info.SimPort = msg.Port;
+		p.Info.TeleportFlags = msg.Flags.getIndex();
+
+		// pass the packet onto the teleport handler
+		TeleportHandler(this, new PacketReceivedEventArgs(p, simulator));
+	}
+
+	/// <summary>Process an incoming packet and raise the appropriate events</summary>
+	/// <param name="sender">The sender</param>
+	/// <param name="e">The EventArgs object containing the packet data</param>
+	protected void TeleportHandler(Object sender, PacketReceivedEventArgs e) throws UnknownHostException, Exception
+	{
+		Packet packet = e.getPacket();
+		Simulator simulator = e.getSimulator();
+
+		boolean finished = false;
+		TeleportFlags flags = TeleportFlags.Default;
+
+		if (packet.Type == PacketType.TeleportStart)
+		{
+			TeleportStartPacket start = (TeleportStartPacket)packet;
+
+			teleportMessage = "Teleport started";
+			flags = TeleportFlags.get(start.Info.TeleportFlags);
+			teleportStat = TeleportStatus.Start;
+
+			JLogger.debug("TeleportStart received, Flags: " + flags.toString());
+		}
+		else if (packet.Type == PacketType.TeleportProgress)
+		{
+			TeleportProgressPacket progress = (TeleportProgressPacket)packet;
+
+			teleportMessage = Utils.bytesToString(progress.Info.Message);
+			flags = TeleportFlags.get(progress.Info.TeleportFlags);
+			teleportStat = TeleportStatus.Progress;
+
+			JLogger.debug("TeleportProgress received, Message: " + teleportMessage + ", Flags: " + flags.toString());
+		}
+		else if (packet.Type == PacketType.TeleportFailed)
+		{
+			TeleportFailedPacket failed = (TeleportFailedPacket)packet;
+
+			teleportMessage = Utils.bytesToString(failed.Info.Reason);
+			teleportStat = TeleportStatus.Failed;
+			finished = true;
+
+			JLogger.debug("TeleportFailed received, Reason: " + teleportMessage);
+		}
+		else if (packet.Type == PacketType.TeleportFinish)
+		{
+			TeleportFinishPacket finish = (TeleportFinishPacket)packet;
+
+			flags = TeleportFlags.get(finish.Info.TeleportFlags);
+			String seedcaps = Utils.bytesToString(finish.Info.SeedCapability);
+			finished = true;
+
+			JLogger.debug("TeleportFinish received, Flags: " + flags.toString());
+
+			// Connect to the new sim
+			Client.network.getCurrentSim().AgentMovementComplete = false; // we're not there anymore
+			Simulator newSimulator = Client.network.Connect(Utils.UIntToIP(finish.Info.SimIP),
+					finish.Info.SimPort, finish.Info.RegionHandle, true, seedcaps);
+
+			if (newSimulator != null)
+			{
+				teleportMessage = "Teleport finished";
+				teleportStat = TeleportStatus.Finished;
+
+				JLogger.info("Moved to new sim " + newSimulator.toString());
+			}
+			else
+			{
+				teleportMessage = "Failed to connect to the new sim after a teleport";
+				teleportStat = TeleportStatus.Failed;
+
+				// We're going to get disconnected now
+				JLogger.error(teleportMessage);
+			}
+		}
+		else if (packet.Type == PacketType.TeleportCancel)
+		{
+			//TeleportCancelPacket cancel = (TeleportCancelPacket)packet;
+
+			teleportMessage = "Cancelled";
+			teleportStat = TeleportStatus.Cancelled;
+			finished = true;
+
+			JLogger.debug("TeleportCancel received from " + simulator.toString());
+		}
+		else if (packet.Type == PacketType.TeleportLocal)
+		{
+			TeleportLocalPacket local = (TeleportLocalPacket)packet;
+
+			teleportMessage = "Teleport finished";
+			flags = TeleportFlags.get(local.Info.TeleportFlags);
+			teleportStat = TeleportStatus.Finished;
+			relativePosition = local.Info.Position;
+			Movement.Camera.LookDirection(local.Info.LookAt);
+			// This field is apparently not used for anything
+			//local.Info.LocationID;
+			finished = true;
+
+			JLogger.debug("TeleportLocal received, Flags: " + flags.toString());
+		}
+
+		if (onTeleportProgress != null)
+		{
+			onTeleportProgress.raiseEvent(new TeleportEventArgs(teleportMessage, teleportStat, flags));
+		}
+
+		if (finished) teleportEvent.set();
+	}
+
+	/// <summary>Process an incoming packet and raise the appropriate events</summary>
+	/// <param name="sender">The sender</param>
+	/// <param name="e">The EventArgs object containing the packet data</param>
+	protected void AvatarAnimationHandler(Object sender, PacketReceivedEventArgs e)
+	{
+		Packet packet = e.getPacket();
+		AvatarAnimationPacket animation = (AvatarAnimationPacket)packet;
+
+		if (animation.Sender.ID == Client.self.getAgentID())
+		{
+			synchronized (SignaledAnimations.getDictionary())
+			{
+				// Reset the signaled animation list
+				SignaledAnimations.getDictionary().clear();
+
+				for (int i = 0; i < animation.AnimationList.length; i++)
+				{
+					UUID animID = animation.AnimationList[i].AnimID;
+					int sequenceID = animation.AnimationList[i].AnimSequenceID;
+
+					// Add this animation to the list of currently signaled animations
+					SignaledAnimations.add(animID,  sequenceID);
+
+					if (i < animation.AnimationSourceList.length)
+					{
+						// FIXME: The server tells us which objects triggered our animations,
+						// we should store this info
+
+						//animation.AnimationSourceList[i].ObjectID
+					}
+
+					if (i < animation.PhysicalAvatarEventList.length)
+					{
+						// FIXME: What is this?
+					}
+
+					if (Client.settings.SEND_AGENT_UPDATES)
+					{
+						// We have to manually tell the server to stop playing some animations
+						if (animID == Animations.STANDUP ||
+								animID == Animations.PRE_JUMP ||
+								animID == Animations.LAND ||
+								animID == Animations.MEDIUM_LAND)
+						{
+							Movement.setFinishAnim(true);
+							Movement.SendUpdate(true);
+							Movement.setFinishAnim(false);
+						}
+					}
+				}
+			}
+		}
+
+		if (onAnimationsChanged != null)
+		{
+			//			ThreadPool.QueueUserWorkItem(delegate(object o)
+			//					{ AnimationsChanged.raiseEvent(new AnimationsChangedEventArgs(this.SignaledAnimations)); });
+
+			threadPool.execute(new Runnable(){
+				public void run()
+				{
+					onAnimationsChanged.raiseEvent(new AnimationsChangedEventArgs(SignaledAnimations));
+				}
+			});
+		}
+
+	}
+
+	/// <summary>Process an incoming packet and raise the appropriate events</summary>
+	/// <param name="sender">The sender</param>
+	/// <param name="e">The EventArgs object containing the packet data</param>
+	protected void MeanCollisionAlertHandler(Object sender, PacketReceivedEventArgs e)
+	{
+		if (onMeanCollision != null)
+		{
+			Packet packet = e.getPacket();
+			MeanCollisionAlertPacket collision = (MeanCollisionAlertPacket)packet;
+
+			for (int i = 0; i < collision.MeanCollision.length; i++)
+			{
+				MeanCollisionAlertPacket.MeanCollisionBlock block = collision.MeanCollision[i];
+
+				Date time = Utils.unixTimeToDate(block.Time);
+				MeanCollisionType type = MeanCollisionType.get(block.Type);
+
+				onMeanCollision.raiseEvent(new MeanCollisionEventArgs(type, block.Perp, block.Victim, block.Mag, time));
+			}
+		}
+	}
+
+	private void Network_OnLoginResponse(boolean loginSuccess, boolean redirect, String message, String reason,
+			LoginResponseData reply)
+	{
+		id = reply.AgentID;
+		sessionID = reply.SessionID;
+		secureSessionID = reply.SecureSessionID;
+		firstName = reply.FirstName;
+		lastName = reply.LastName;
+		startLocation = reply.StartLocation;
+		agentAccess = reply.AgentAccess;
+		Movement.Camera.LookDirection(reply.LookAt);
+		homePosition = reply.HomePosition;
+		homeLookAt = reply.HomeLookAt;
+	}
+
+	private void Network_OnDisconnected(Object sender, DisconnectedEventArgs e)
+	{
+		// Null out the cached fullName since it can change after logging
+		// in again (with a different account name or different login
+		// server but using the same GridClient object
+		fullName = null;
+	}
+
+	/// <summary>
+	/// Crossed region handler for message that comes across the EventQueue. Sent to an agent
+	/// when the agent crosses a sim border into a new region.
+	/// </summary>
+	/// <param name="capsKey">The message key</param>
+	/// <param name="message">the IMessage object containing the deserialized data sent from the simulator</param>
+	/// <param name="simulator">The <see cref="Simulator"/> which originated the packet</param>
+	private void CrossedRegionEventHandler(String capsKey, IMessage message, Simulator simulator) throws Exception
+	{
+		CrossedRegionMessage crossed = (CrossedRegionMessage)message;
+
+		InetSocketAddress endPoint = new InetSocketAddress(crossed.IP, crossed.Port);
+
+		JLogger.debug("Crossed in to new region area, attempting to connect to " + endPoint.toString());
+
+		Simulator oldSim = Client.network.getCurrentSim();
+		Simulator newSim = Client.network.Connect(endPoint, crossed.RegionHandle, true, crossed.SeedCapability.toString());
+
+		if (newSim != null)
+		{
+			JLogger.info("Finished crossing over in to region " + newSim.toString());
+			oldSim.AgentMovementComplete = false; // We're no longer there
+			if (onRegionCrossed != null)
+			{
+				onRegionCrossed.raiseEvent(new RegionCrossedEventArgs(oldSim, newSim));
+			}
+		}
+		else
+		{
+			// The old simulator will (poorly) handle our movement still, so the connection isn't
+			// completely shot yet
+			JLogger.warn("Failed to connect to new region " + endPoint.toString() + " after crossing over");
+		}
+	}
+
+	/// <summary>Process an incoming packet and raise the appropriate events</summary>
+	/// <param name="sender">The sender</param>
+	/// <param name="e">The EventArgs object containing the packet data</param>
+	/// <remarks>This packet is now being sent via the EventQueue</remarks>
+	protected void CrossedRegionHandler(Object sender, PacketReceivedEventArgs e) throws Exception
+	{
+		Packet packet = e.getPacket();
+		CrossedRegionPacket crossing = (CrossedRegionPacket)packet;
+		String seedCap = Utils.bytesToString(crossing.RegionData.SeedCapability);
+		InetSocketAddress endPoint = new InetSocketAddress(Utils.UIntToIP(crossing.RegionData.SimIP), crossing.RegionData.SimPort);
+
+		JLogger.debug("Crossed in to new region area, attempting to connect to " + endPoint.toString());
+
+		Simulator oldSim = Client.network.getCurrentSim();
+		Simulator newSim = Client.network.Connect(endPoint, crossing.RegionData.RegionHandle, true, seedCap);
+
+		if (newSim != null)
+		{
+			JLogger.info("Finished crossing over in to region " + newSim.toString());
+
+			if (onRegionCrossed != null)
+			{
+				onRegionCrossed.raiseEvent(new RegionCrossedEventArgs(oldSim, newSim));
+			}
+		}
+		else
+		{
+			// The old simulator will (poorly) handle our movement still, so the connection isn't
+			// completely shot yet
+			JLogger.warn("Failed to connect to new region " + endPoint.toString() + " after crossing over");
+		}
+	}
+
+	/// <summary>
+	/// Group Chat event handler
+	/// </summary>
+	/// <param name="capsKey">The capability Key</param>
+	/// <param name="message">IMessage object containing decoded data from OSD</param>
+	/// <param name="simulator"></param>
+	protected void ChatterBoxSessionEventReplyEventHandler(String capsKey, IMessage message, Simulator simulator)
+	{
+		ChatterboxSessionEventReplyMessage msg = (ChatterboxSessionEventReplyMessage)message;
+
+		if (!msg.Success)
+		{
+			RequestJoinGroupChat(msg.SessionID);
+			JLogger.info("Attempt to send group chat to non-existant session for group " + msg.SessionID);
+		}
+	}
+
+	/// <summary>
+	/// Response from request to join a group chat
+	/// </summary>
+	/// <param name="capsKey"></param>
+	/// <param name="message">IMessage object containing decoded data from OSD</param>
+	/// <param name="simulator"></param>
+	protected void ChatterBoxSessionStartReplyEventHandler(String capsKey, IMessage message, Simulator simulator)
+	{
+		ChatterBoxSessionStartReplyMessage msg = (ChatterBoxSessionStartReplyMessage)message;
+
+		if (msg.Success)
+		{
+			synchronized (GroupChatSessions.getDictionary())
+			{
+				if (!GroupChatSessions.containsKey(msg.SessionID))
+					GroupChatSessions.add(msg.SessionID, new ArrayList<ChatSessionMember>());
+			}
+		}
+
+		onGroupChatJoined.raiseEvent(new GroupChatJoinedEventArgs(msg.SessionID, msg.SessionName, msg.TempSessionID, msg.Success));
+	}
+
+	/// <summary>
+	/// Someone joined or left group chat
+	/// </summary>
+	/// <param name="capsKey"></param>
+	/// <param name="message">IMessage object containing decoded data from OSD</param>
+	/// <param name="simulator"></param>
+	private void ChatterBoxSessionAgentListUpdatesEventHandler(String capsKey, IMessage message, Simulator simulator) throws NotImplementedException
+	{
+		//TODO need to implement
+		throw new NotImplementedException("Need to implement");
+		//		ChatterBoxSessionAgentListUpdatesMessage msg = (ChatterBoxSessionAgentListUpdatesMessage)message;
+		//
+		//		synchronized (GroupChatSessions.getDictionary())
+		//		{
+		//		if (!GroupChatSessions.containsKey(msg.SessionID))
+		//			GroupChatSessions.add(msg.SessionID, new ArrayList<ChatSessionMember>());
+		//		}
+		//
+		//		for (int i = 0; i < msg.Updates.length; i++)
+		//		{
+		//			ChatSessionMember fndMbr;
+		//			synchronized (GroupChatSessions.getDictionary())
+		//			{
+		//				fndMbr = GroupChatSessions[msg.SessionID].Find(delegate(ChatSessionMember member)
+		//						{
+		//					return member.AvatarKey == msg.Updates[i].AgentID;
+		//						});
+		//			}
+		//
+		//			if (msg.Updates[i].Transition != null)
+		//			{
+		//				if (msg.Updates[i].Transition.Equals("ENTER"))
+		//				{
+		//					if (fndMbr.AvatarKey == UUID.Zero)
+		//					{
+		//						fndMbr = new ChatSessionMember();
+		//						fndMbr.AvatarKey = msg.Updates[i].AgentID;
+		//
+		//						synchronized (GroupChatSessions.getDictionary())
+		//						{
+		//						GroupChatSessions[msg.SessionID].Add(fndMbr);
+		//						}
+		//
+		//						if (m_ChatSessionMemberAdded != null)
+		//						{
+		//							OnChatSessionMemberAdded(new ChatSessionMemberAddedEventArgs(msg.SessionID, fndMbr.AvatarKey));
+		//						}
+		//					}
+		//				}
+		//				else if (msg.Updates[i].Transition.Equals("LEAVE"))
+		//				{
+		//					if (fndMbr.AvatarKey != UUID.Zero)
+		//						synchronized (GroupChatSessions.getDictionary())
+		//						{
+		//						GroupChatSessions[msg.SessionID].Remove(fndMbr);
+		//						}
+		//
+		//					if (m_ChatSessionMemberLeft != null)
+		//					{
+		//						OnChatSessionMemberLeft(new ChatSessionMemberLeftEventArgs(msg.SessionID, msg.Updates[i].AgentID));
+		//					}
+		//				}
+		//			}
+		//
+		//			// handle updates
+		//			ChatSessionMember update_member = GroupChatSessions.getDictionary()[msg.SessionID].Find(delegate(ChatSessionMember m)
+		//					{
+		//				return m.AvatarKey == msg.Updates[i].AgentID;
+		//					});
+		//
+		//
+		//			update_member.MuteText = msg.Updates[i].MuteText;
+		//			update_member.MuteVoice = msg.Updates[i].MuteVoice;
+		//
+		//			update_member.CanVoiceChat = msg.Updates[i].CanVoiceChat;
+		//			update_member.IsModerator = msg.Updates[i].IsModerator;
+		//
+		//			// replace existing member record
+		//			synchronized (GroupChatSessions.getDictionary())
+		//			{
+		//				int found = GroupChatSessions.getDictionary()[msg.SessionID].FindIndex(delegate(ChatSessionMember m)
+		//						{
+		//					return m.AvatarKey == msg.Updates[i].AgentID;
+		//						});
+		//
+		//				if (found >= 0)
+		//					GroupChatSessions.getDictionary()[msg.SessionID][found] = update_member;
+		//			}
+		//		}
+	}
+
+	/// <summary>
+	/// Handle a group chat Invitation
+	/// </summary>
+	/// <param name="capsKey">Caps Key</param>
+	/// <param name="message">IMessage object containing decoded data from OSD</param>
+	/// <param name="simulator">Originating Simulator</param>
+	private void ChatterBoxInvitationEventHandler(String capsKey, IMessage message, Simulator simulator)
+	{
+		if (onIM != null)
+		{
+			ChatterBoxInvitationMessage msg = (ChatterBoxInvitationMessage)message;
+
+			//TODO: do something about invitations to voice group chat/friends conference
+			//Skip for now
+			if (msg.Voice) return;
+
+			InstantMessage im = new InstantMessage();
+
+			im.FromAgentID = msg.FromAgentID;
+			im.FromAgentName = msg.FromAgentName;
+			im.ToAgentID = msg.ToAgentID;
+			im.ParentEstateID = msg.ParentEstateID;
+			im.RegionID = msg.RegionID;
+			im.Position = msg.Position;
+			im.Dialog = msg.Dialog;
+			im.GroupIM = msg.GroupIM;
+			im.IMSessionID = msg.IMSessionID;
+			im.Timestamp = msg.Timestamp;
+			im.Message = msg.Message;
+			im.Offline = msg.Offline;
+			im.BinaryBucket = msg.BinaryBucket;
+			try
+			{
+				ChatterBoxAcceptInvite(msg.IMSessionID);
+			}
+			catch (Exception ex)
+			{
+				JLogger.warn("Failed joining IM:" +  Utils.getExceptionStackTraceAsString(ex));
+			}
+			onIM.raiseEvent(new InstantMessageEventArgs(im, simulator));
+		}
+	}
+
+
+	/// <summary>
+	/// Moderate a chat session
+	/// </summary>
+	/// <param name="sessionID">the <see cref="UUID"/> of the session to moderate, for group chats this will be the groups UUID</param>
+	/// <param name="memberID">the <see cref="UUID"/> of the avatar to moderate</param>
+	/// <param name="key">Either "voice" to moderate users voice, or "text" to moderate users text session</param>
+	/// <param name="moderate">true to moderate (silence user), false to allow avatar to speak</param>
+	public void ModerateChatSessions(UUID sessionID, UUID memberID, String key, boolean moderate) throws Exception
+	{
+		if (Client.network.getCurrentSim() == null || Client.network.getCurrentSim().Caps == null)
+			throw new Exception("ChatSessionRequest capability is not currently available");
+
+		URI url = Client.network.getCurrentSim().Caps.CapabilityURI("ChatSessionRequest");
+
+		if (url != null)
+		{
+			ChatSessionRequestMuteUpdate req = new ChatSessionRequestMuteUpdate();
+
+			req.RequestKey = key;
+			req.RequestValue = moderate;
+			req.SessionID = sessionID;
+			req.AgentID = memberID;
+
+			CapsHttpClient request = new CapsHttpClient(url);
+			request.BeginGetResponse(req.Serialize(), OSDFormat.Xml, Client.settings.CAPS_TIMEOUT);
+		}
+		else
+		{
+			throw new Exception("ChatSessionRequest capability is not currently available");
+		}
+	}
+
+	/// <summary>Process an incoming packet and raise the appropriate events</summary>
+	/// <param name="sender">The sender</param>
+	/// <param name="e">The EventArgs object containing the packet data</param>
+	protected void AlertMessageHandler(Object sender, PacketReceivedEventArgs e) throws UnsupportedEncodingException
+	{
+		if (onAlertMessage != null)
+		{
+			Packet packet = e.getPacket();
+
+			AlertMessagePacket alert = (AlertMessagePacket)packet;
+
+			onAlertMessage.raiseEvent(new AlertMessageEventArgs(Utils.bytesToString(alert.AlertData.Message)));
+		}
+	}
+
+	/// <summary>Process an incoming packet and raise the appropriate events</summary>
+	/// <param name="sender">The sender</param>
+	/// <param name="e">The EventArgs object containing the packet data</param>
+	protected void CameraConstraintHandler(Object sender, PacketReceivedEventArgs e)
+	{
+		if (onCameraConstraint != null)
+		{
+			Packet packet = e.getPacket();
+
+			CameraConstraintPacket camera = (CameraConstraintPacket)packet;
+			onCameraConstraint.raiseEvent(new CameraConstraintEventArgs(camera.CameraCollidePlane.Plane));
+		}
+	}
+
+	/// <summary>Process an incoming packet and raise the appropriate events</summary>
+	/// <param name="sender">The sender</param>
+	/// <param name="e">The EventArgs object containing the packet data</param>
+	protected void ScriptSensorReplyHandler(Object sender, PacketReceivedEventArgs e) throws UnsupportedEncodingException
+	{
+		if (onScriptSensorReply != null)
+		{
+			Packet packet = e.getPacket();
+
+			ScriptSensorReplyPacket reply = (ScriptSensorReplyPacket)packet;
+
+			for (int i = 0; i < reply.SensedData.length; i++)
+			{
+				ScriptSensorReplyPacket.SensedDataBlock block = reply.SensedData[i];
+				ScriptSensorReplyPacket.RequesterBlock requestor = reply.Requester;
+
+				onScriptSensorReply.raiseEvent(new ScriptSensorReplyEventArgs(requestor.SourceID, block.GroupID, Utils.bytesToString(block.Name),
+						block.ObjectID, block.OwnerID, block.Position, block.Range, block.Rotation, ScriptSensorTypeFlags.get(block.Type), block.Velocity));
+			}
+		}
+
+	}
+
+	/// <summary>Process an incoming packet and raise the appropriate events</summary>
+	/// <param name="sender">The sender</param>
+	/// <param name="e">The EventArgs object containing the packet data</param>
+	protected void AvatarSitResponseHandler(Object sender, PacketReceivedEventArgs e)
+	{
+		if (onAvatarSitResponse != null)
+		{
+			Packet packet = e.getPacket();
+
+			AvatarSitResponsePacket sit = (AvatarSitResponsePacket)packet;
+
+			onAvatarSitResponse.raiseEvent(new AvatarSitResponseEventArgs(sit.SitObject.ID, sit.SitTransform.AutoPilot, sit.SitTransform.CameraAtOffset,
+					sit.SitTransform.CameraEyeOffset, sit.SitTransform.ForceMouselook, sit.SitTransform.SitPosition,
+					sit.SitTransform.SitRotation));
+		}
+	}
+
+	protected void MuteListUpdateHander(Object sender, PacketReceivedEventArgs e) throws NotImplementedException
+	{
+		//TODO need to implement
+		throw new NotImplementedException("Need to impleement");
+		//		MuteListUpdatePacket packet = (MuteListUpdatePacket)e.getPacket();
+		//		if (packet.MuteData.AgentID != Client.self.getAgentID())
+		//		{
+		//			return;
+		//		}
+		//
+		//		ThreadPool.QueueUserWorkItem(sync =>
+		//		{
+		//			using (AutoResetEvent gotMuteList = new AutoResetEvent(false))
+		//			{
+		//				String fileName = Utils.bytesToString(packet.MuteData.Filename);
+		//				String muteList = string.Empty;
+		//				ulong xferID = 0;
+		//				byte[] assetData = null;
+		//
+		//				EventHandler<XferReceivedEventArgs> xferCallback = (object xsender, XferReceivedEventArgs xe) =>
+		//				{
+		//					if (xe.Xfer.XferID == xferID)
+		//					{
+		//						assetData = xe.Xfer.AssetData;
+		//						gotMuteList.Set();
+		//					}
+		//				};
+		//
+		//
+		//				Client.Assets.XferReceived += xferCallback;
+		//				xferID = Client.Assets.RequestAssetXfer(fileName, true, false, UUID.Zero, AssetType.Unknown, true);
+		//
+		//				if (gotMuteList.WaitOne(60 * 1000, false))
+		//				{
+		//					muteList = Utils.bytesToString(assetData);
+		//
+		//					synchronized (MuteList.getDictionary())
+		//					{
+		//						MuteList.getDictionary().Clear();
+		//						foreach (var line in muteList.Split('\n'))
+		//						{
+		//							if (line.Trim() == string.Empty) continue;
+		//
+		//							try
+		//							{
+		//								Match m;
+		//								if ((m = Regex.Match(line, @"(?<MyteType>\d+)\s+(?<Key>[a-zA-Z0-9-]+)\s+(?<Name>[^|]+)|(?<Flags>.+)", RegexOptions.CultureInvariant)).Success)
+		//								{
+		//									MuteEntry me = new MuteEntry();
+		//									me.Type = (MuteType)int.Parse(m.Groups["MyteType"].Value);
+		//									me.ID = new UUID(m.Groups["Key"].Value);
+		//									me.Name = m.Groups["Name"].Value;
+		//									int flags = 0;
+		//									int.TryParse(m.Groups["Flags"].Value, out flags);
+		//									me.Flags = (MuteFlags)flags;
+		//									MuteList[string.Format("{0}|{1}", me.ID, me.Name)] = me;
+		//								}
+		//								else
+		//								{
+		//									throw new ArgumentException("Invalid mutelist entry line");
+		//								}
+		//							}
+		//							catch (Exception ex)
+		//							{
+		//								Logger.Log("Failed to parse the mute list line: " + line, Helpers.LogLevel.Warning, Client, ex);
+		//							}
+		//						}
+		//					}
+		//
+		//					OnMuteListUpdated(EventArgs.Empty);
+		//				}
+		//				else
+		//				{
+		//					Logger.Log("Timed out waiting for mute list download", Helpers.LogLevel.Warning, Client);
+		//				}
+		//
+		//				Client.Assets.XferReceived -= xferCallback;
+		//
+		//			}
+		//		});
+	}
+
+	//endregion Packet Handlers
 }
+

@@ -491,7 +491,7 @@ public class Simulator extends UDPBase
 
 	//region Internal/Private Members
 	/// <summary>Used internally to track sim disconnections</summary>
-	boolean DisconnectCandidate = false;
+	public boolean DisconnectCandidate = false;
 	/// <summary>Event that is triggered when the simulator successfully
 	/// establishes a connection</summary>
 
@@ -502,9 +502,9 @@ public class Simulator extends UDPBase
 
 	/// <summary>Whether this sim is currently connected or not. Hooked up
 	/// to the property Connected</summary>
-	boolean connected;
+	public boolean connected;
 	/// <summary>Coarse locations of avatars in this simulator</summary>
-	InternalDictionary<UUID, Vector3> avatarPositions = new InternalDictionary<UUID, Vector3>();
+	public InternalDictionary<UUID, Vector3> avatarPositions = new InternalDictionary<UUID, Vector3>();
 	/// <summary>AvatarPositions key representing TrackAgent target</summary>
 	UUID preyID = UUID.Zero;
 	/// <summary>Sequence numbers of packets we've received

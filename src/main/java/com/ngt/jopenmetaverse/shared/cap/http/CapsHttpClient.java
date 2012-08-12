@@ -17,10 +17,8 @@ import com.ngt.jopenmetaverse.shared.structureddata.llsd.JsonLLSDOSDParser;
 import com.ngt.jopenmetaverse.shared.structureddata.llsd.XmlLLSDOSDParser;
 import com.ngt.jopenmetaverse.shared.util.Utils;
 
-
 public class CapsHttpClient
 {
-
 	Logger logger = Logger.getLogger(getClass().toString());
 	final CapsHttpClient capsHttpClient = this;
 
