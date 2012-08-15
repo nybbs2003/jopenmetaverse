@@ -3,418 +3,284 @@ package com.ngt.jopenmetaverse.shared.sim;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
+import com.ngt.jopenmetaverse.shared.sim.AgentManager.TeleportFlags;
+import com.ngt.jopenmetaverse.shared.structureddata.OSD;
+import com.ngt.jopenmetaverse.shared.structureddata.OSDMap;
+import com.ngt.jopenmetaverse.shared.structureddata.OSDParser;
+import com.ngt.jopenmetaverse.shared.structureddata.llsd.XmlLLSDOSDParser;
+import com.ngt.jopenmetaverse.shared.types.Enums;
 import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.types.EnumsPrimitive.PrimFlags;
+import com.ngt.jopenmetaverse.shared.util.Utils;
 
+///// <summary>
+///// Handles all network traffic related to reading and writing group
+///// information
+///// </summary>
 public class GroupManager {
     public GroupManager(GridClient client)
     {
     	//TODO Need to implement
     }
-    
-    public static enum GroupPowers 
-    {
-        /// <summary></summary>
-        None((long) 0),
-
-        // Membership
-        /// <summary>Can send invitations to groups default role</summary>
-        Invite((long) 1 << 1),
-        /// <summary>Can eject members from group</summary>
-        Eject((long) 1 << 2),
-        /// <summary>Can toggle 'Open Enrollment' and change 'Signup fee'</summary>
-        ChangeOptions((long) 1 << 3),
-        /// <summary>Member is visible in the public member list</summary>
-        MemberVisible((long) 1 << 47),
-
-        // Roles
-        /// <summary>Can create new roles</summary>
-        CreateRole((long) 1 << 4),
-        /// <summary>Can delete existing roles</summary>
-        DeleteRole((long) 1 << 5),
-        /// <summary>Can change Role names, titles and descriptions</summary>
-        RoleProperties((long) 1 << 6),
-        /// <summary>Can assign other members to assigners role</summary>
-        AssignMemberLimited((long) 1 << 7),
-        /// <summary>Can assign other members to any role</summary>
-        AssignMember((long) 1 << 8),
-        /// <summary>Can remove members from roles</summary>
-        RemoveMember((long) 1 << 9),
-        /// <summary>Can assign and remove abilities in roles</summary>
-        ChangeActions((long) 1 << 10),
-
-        // Identity
-        /// <summary>Can change group Charter, Insignia, 'Publish on the web' and which
-        /// members are publicly visible in group member listings</summary>
-        ChangeIdentity((long) 1 << 11),
-
-        // Parcel management
-        /// <summary>Can buy land or deed land to group</summary>
-        LandDeed((long) 1 << 12),
-        /// <summary>Can abandon group owned land to Governor Linden on mainland, or Estate owner for
-        /// private estates</summary>
-        LandRelease((long) 1 << 13),
-        /// <summary>Can set land for-sale information on group owned parcels</summary>
-        LandSetSale((long) 1 << 14),
-        /// <summary>Can subdivide and join parcels</summary>
-        LandDivideJoin((long) 1 << 15),
-
-
-        // Chat
-        /// <summary>Can join group chat sessions</summary>
-        JoinChat((long) 1 << 16),
-        /// <summary>Can use voice chat in Group Chat sessions</summary>
-        AllowVoiceChat((long) 1 << 27),
-        /// <summary>Can moderate group chat sessions</summary>
-        ModerateChat((long) 1 << 37),
-
-        // Parcel identity
-        /// <summary>Can toggle "Show in Find Places" and set search category</summary>
-        FindPlaces((long) 1 << 17),
-        /// <summary>Can change parcel name, description, and 'Publish on web' settings</summary>
-        LandChangeIdentity((long) 1 << 18),
-        /// <summary>Can set the landing point and teleport routing on group land</summary>
-        SetLandingPoint((long) 1 << 19),
-
-        // Parcel settings
-        /// <summary>Can change music and media settings</summary>
-        ChangeMedia((long) 1 << 20),
-        /// <summary>Can toggle 'Edit Terrain' option in Land settings</summary>
-        LandEdit((long) 1 << 21),
-        /// <summary>Can toggle various About Land > Options settings</summary>
-        LandOptions((long) 1 << 22),
-
-        // Parcel powers
-        /// <summary>Can always terraform land, even if parcel settings have it turned off</summary>
-        AllowEditLand((long) 1 << 23),
-        /// <summary>Can always fly while over group owned land</summary>
-        AllowFly((long) 1 << 24),
-        /// <summary>Can always rez objects on group owned land</summary>
-        AllowRez((long) 1 << 25),
-        /// <summary>Can always create landmarks for group owned parcels</summary>
-        AllowLandmark((long) 1 << 26),
-        /// <summary>Can set home location on any group owned parcel</summary>
-        AllowSetHome((long) 1 << 28),
-
-
-        // Parcel access
-        /// <summary>Can modify public access settings for group owned parcels</summary>
-        LandManageAllowed((long) 1 << 29),
-        /// <summary>Can manager parcel ban lists on group owned land</summary>
-        LandManageBanned((long) 1 << 30),
-        /// <summary>Can manage pass list sales information</summary>
-        LandManagePasses((long) 1 << 31),
-        /// <summary>Can eject and freeze other avatars on group owned land</summary>
-        LandEjectAndFreeze((long) 1 << 32),
-
-        // Parcel content
-        /// <summary>Can return objects set to group</summary>
-        ReturnGroupSet((long) 1 << 33),
-        /// <summary>Can return non-group owned/set objects</summary>
-        ReturnNonGroup((long) 1 << 34),
-        /// <summary>Can return group owned objects</summary>
-        ReturnGroupOwned((long) 1 << 48),
-
-        /// <summary>Can landscape using Linden plants</summary>
-        LandGardening((long) 1 << 35),
-
-        // Objects
-        /// <summary>Can deed objects to group</summary>
-        DeedObject((long) 1 << 36),
-        /// <summary>Can move group owned objects</summary>
-        ObjectManipulate((long) 1 << 38),
-        /// <summary>Can set group owned objects for-sale</summary>
-        ObjectSetForSale((long) 1 << 39),
-
-        /// <summary>Pay group liabilities and receive group dividends</summary>
-        Accountable((long) 1 << 40),
-
-        // Notices and proposals
-        /// <summary>Can send group notices</summary>
-        SendNotices((long) 1 << 42),
-        /// <summary>Can receive group notices</summary>
-        ReceiveNotices((long) 1 << 43),
-        /// <summary>Can create group proposals</summary>
-        StartProposal((long) 1 << 44),
-        /// <summary>Can vote on group proposals</summary>
-        VoteOnProposal((long) 1 << 45);
         
-       	private long index;
-       	GroupPowers(long index)
-		{
-			this.index = index;
-		}     
+    //region Structs
 
-		public long getIndex()
-		{
-			return index;
-		}
-		
-		private static final Map<Long,GroupPowers> lookup  = new HashMap<Long,GroupPowers>();
-
-		static {
-			for(GroupPowers s : EnumSet.allOf(GroupPowers.class))
-				lookup.put(s.getIndex(), s);
-		}
-
-		public static GroupPowers get(Long index)
-		{
-			return lookup.get(index);
-		}   
+    /// <summary>
+    /// Avatar group management
+    /// </summary>
+    public class GroupMember
+    {
+        /// <summary>Key of Group Member</summary>
+        public UUID ID;
+        /// <summary>Total land contribution</summary>
+        public int Contribution;
+        /// <summary>Online status information</summary>
+        public String OnlineStatus;
+        /// <summary>Abilities that the Group Member has</summary>
+        public GroupPowers Powers;
+        /// <summary>Current group title</summary>
+        public String Title;
+        /// <summary>Is a group owner</summary>
+        public boolean IsOwner;
     }
 
-    
-//    //region Structs
-//
-//    /// <summary>
-//    /// Avatar group management
-//    /// </summary>
-//    public struct GroupMember
-//    {
-//        /// <summary>Key of Group Member</summary>
-//        public UUID ID;
-//        /// <summary>Total land contribution</summary>
-//        public int Contribution;
-//        /// <summary>Online status information</summary>
-//        public string OnlineStatus;
-//        /// <summary>Abilities that the Group Member has</summary>
-//        public GroupPowers Powers;
-//        /// <summary>Current group title</summary>
-//        public string Title;
-//        /// <summary>Is a group owner</summary>
-//        public bool IsOwner;
-//    }
-//
-//    /// <summary>
-//    /// Role manager for a group
-//    /// </summary>
-//    public struct GroupRole
-//    {
-//        /// <summary>Key of the group</summary>
-//        public UUID GroupID;
-//        /// <summary>Key of Role</summary>
-//        public UUID ID;
-//        /// <summary>Name of Role</summary>
-//        public string Name;
-//        /// <summary>Group Title associated with Role</summary>
-//        public string Title;
-//        /// <summary>Description of Role</summary>
-//        public string Description;
-//        /// <summary>Abilities Associated with Role</summary>
-//        public GroupPowers Powers;
-//        /// <summary>Returns the role's title</summary>
-//        /// <returns>The role's title</returns>
-//        public override string ToString()
-//        {
-//            return Name;
-//        }
-//    }
-//
-//    /// <summary>
-//    /// Class to represent Group Title
-//    /// </summary>
-//    public struct GroupTitle
-//    {
-//        /// <summary>Key of the group</summary>
-//        public UUID GroupID;
-//        /// <summary>ID of the role title belongs to</summary>
-//        public UUID RoleID;
-//        /// <summary>Group Title</summary>
-//        public string Title;
-//        /// <summary>Whether title is Active</summary>
-//        public bool Selected;
-//        /// <summary>Returns group title</summary>
-//        public override string ToString()
-//        {
-//            return Title;
-//        }
-//    }
-//
-//    /// <summary>
-//    /// Represents a group on the grid
-//    /// </summary>
-//    public struct Group
-//    {
-//        /// <summary>Key of Group</summary>
-//        public UUID ID;
-//        /// <summary>Key of Group Insignia</summary>
-//        public UUID InsigniaID;
-//        /// <summary>Key of Group Founder</summary>
-//        public UUID FounderID;
-//        /// <summary>Key of Group Role for Owners</summary>
-//        public UUID OwnerRole;
-//        /// <summary>Name of Group</summary>
-//        public string Name;
-//        /// <summary>Text of Group Charter</summary>
-//        public string Charter;
-//        /// <summary>Title of "everyone" role</summary>
-//        public string MemberTitle;
-//        /// <summary>Is the group open for enrolement to everyone</summary>
-//        public bool OpenEnrollment;
-//        /// <summary>Will group show up in search</summary>
-//        public bool ShowInList;
-//        /// <summary></summary>
-//        public GroupPowers Powers;
-//        /// <summary></summary>
-//        public bool AcceptNotices;
-//        /// <summary></summary>
-//        public bool AllowPublish;
-//        /// <summary>Is the group Mature</summary>
-//        public bool MaturePublish;
-//        /// <summary>Cost of group membership</summary>
-//        public int MembershipFee;
-//        /// <summary></summary>
-//        public int Money;
-//        /// <summary></summary>
-//        public int Contribution;
-//        /// <summary>The total number of current members this group has</summary>
-//        public int GroupMembershipCount;
-//        /// <summary>The number of roles this group has configured</summary>
-//        public int GroupRolesCount;
-//        /// <summary>Show this group in agent's profile</summary>
-//        public bool ListInProfile;
-//
-//        /// <summary>Returns the name of the group</summary>
-//        /// <returns>A string containing the name of the group</returns>
-//        public override string ToString()
-//        {
-//            return Name;
-//        }
-//    }
-//
-//    /// <summary>
-//    /// A group Vote
-//    /// </summary>
-//    public struct Vote
-//    {
-//        /// <summary>Key of Avatar who created Vote</summary>
-//        public UUID Candidate;
-//        /// <summary>Text of the Vote proposal</summary>
-//        public string VoteString;
-//        /// <summary>Total number of votes</summary>
-//        public int NumVotes;
-//    }
-//
-//    /// <summary>
-//    /// A group proposal
-//    /// </summary>
-//    public struct GroupProposal
-//    {
-//        /// <summary>The Text of the proposal</summary>
-//        public string VoteText;
-//        /// <summary>The minimum number of members that must vote before proposal passes or failes</summary>
-//        public int Quorum;
-//        /// <summary>The required ration of yes/no votes required for vote to pass</summary>
-//        /// <remarks>The three options are Simple Majority, 2/3 Majority, and Unanimous</remarks>
-//        /// TODO: this should be an enum
-//        public float Majority;
-//        /// <summary>The duration in days votes are accepted</summary>
-//        public int Duration;
-//    }
-//
-//    /// <summary>
-//    /// 
-//    /// </summary>
-//    public struct GroupAccountSummary
-//    {
-//        /// <summary></summary>
-//        public int IntervalDays;
-//        /// <summary></summary>
-//        public int CurrentInterval;
-//        /// <summary></summary>
-//        public string StartDate;
-//        /// <summary></summary>
-//        public int Balance;
-//        /// <summary></summary>
-//        public int TotalCredits;
-//        /// <summary></summary>
-//        public int TotalDebits;
-//        /// <summary></summary>
-//        public int ObjectTaxCurrent;
-//        /// <summary></summary>
-//        public int LightTaxCurrent;
-//        /// <summary></summary>
-//        public int LandTaxCurrent;
-//        /// <summary></summary>
-//        public int GroupTaxCurrent;
-//        /// <summary></summary>
-//        public int ParcelDirFeeCurrent;
-//        /// <summary></summary>
-//        public int ObjectTaxEstimate;
-//        /// <summary></summary>
-//        public int LightTaxEstimate;
-//        /// <summary></summary>
-//        public int LandTaxEstimate;
-//        /// <summary></summary>
-//        public int GroupTaxEstimate;
-//        /// <summary></summary>
-//        public int ParcelDirFeeEstimate;
-//        /// <summary></summary>
-//        public int NonExemptMembers;
-//        /// <summary></summary>
-//        public string LastTaxDate;
-//        /// <summary></summary>
-//        public string TaxDate;
-//    }
-//
-//    /// <summary>
-//    /// Struct representing a group notice
-//    /// </summary>
-//    public struct GroupNotice
-//    {
-//        /// <summary></summary>
-//        public string Subject;
-//        /// <summary></summary>
-//        public string Message;
-//        /// <summary></summary>
-//        public UUID AttachmentID;
-//        /// <summary></summary>
-//        public UUID OwnerID;
-//
-//        /// <summary>
-//        /// 
-//        /// </summary>
-//        /// <returns></returns>
-//        public byte[] SerializeAttachment()
-//        {
-//            if (OwnerID == UUID.Zero || AttachmentID == UUID.Zero)
-//                return Utils.EmptyBytes;
-//
-//            OpenMetaverse.StructuredData.OSDMap att = new OpenMetaverse.StructuredData.OSDMap();
-//            att.Add("item_id", OpenMetaverse.StructuredData.OSD.FromUUID(AttachmentID));
-//            att.Add("owner_id", OpenMetaverse.StructuredData.OSD.FromUUID(OwnerID));
-//
-//            return OpenMetaverse.StructuredData.OSDParser.SerializeLLSDXmlBytes(att);
-//
-//            /*
-//            //I guess this is how this works, no gaurentees
-//            string lsd = "<llsd><item_id>" + AttachmentID.ToString() + "</item_id><owner_id>"
-//                + OwnerID.ToString() + "</owner_id></llsd>";
-//            return Utils.StringToBytes(lsd);
-//             */
-//        }
-//    }
-//
-//    /// <summary>
-//    /// Struct representing a group notice list entry
-//    /// </summary>
-//    public struct GroupNoticesListEntry
-//    {
-//        /// <summary>Notice ID</summary>
-//        public UUID NoticeID;
-//        /// <summary>Creation timestamp of notice</summary>
-//        public uint Timestamp;
-//        /// <summary>Agent name who created notice</summary>
-//        public string FromName;
-//        /// <summary>Notice subject</summary>
-//        public string Subject;
-//        /// <summary>Is there an attachment?</summary>
-//        public bool HasAttachment;
-//        /// <summary>Attachment Type</summary>
-//        public AssetType AssetType;
-//
-//    }
-//
+    /// <summary>
+    /// Role manager for a group
+    /// </summary>
+    public class GroupRole
+    {
+        /// <summary>Key of the group</summary>
+        public UUID GroupID;
+        /// <summary>Key of Role</summary>
+        public UUID ID;
+        /// <summary>Name of Role</summary>
+        public String Name;
+        /// <summary>Group Title associated with Role</summary>
+        public String Title;
+        /// <summary>Description of Role</summary>
+        public String Description;
+        /// <summary>Abilities Associated with Role</summary>
+        public GroupPowers Powers;
+        /// <summary>Returns the role's title</summary>
+        /// <returns>The role's title</returns>
+        @Override
+        public String toString()
+        {
+            return Name;
+        }
+    }
+
+    /// <summary>
+    /// Class to represent Group Title
+    /// </summary>
+    public class GroupTitle
+    {
+        /// <summary>Key of the group</summary>
+        public UUID GroupID;
+        /// <summary>ID of the role title belongs to</summary>
+        public UUID RoleID;
+        /// <summary>Group Title</summary>
+        
+        public String Title;
+        /// <summary>Whether title is Active</summary>
+        public boolean Selected;
+        /// <summary>Returns group title</summary>
+        @Override
+        public String toString()
+        {
+            return Title;
+        }
+    }
+
+    /// <summary>
+    /// Represents a group on the grid
+    /// </summary>
+    public class Group
+    {
+        /// <summary>Key of Group</summary>
+        public UUID ID;
+        /// <summary>Key of Group Insignia</summary>
+        public UUID InsigniaID;
+        /// <summary>Key of Group Founder</summary>
+        public UUID FounderID;
+        /// <summary>Key of Group Role for Owners</summary>
+        public UUID OwnerRole;
+        /// <summary>Name of Group</summary>
+        public String Name;
+        /// <summary>Text of Group Charter</summary>
+        public String Charter;
+        /// <summary>Title of "everyone" role</summary>
+        public String MemberTitle;
+        /// <summary>Is the group open for enrolement to everyone</summary>
+        public boolean OpenEnrollment;
+        /// <summary>Will group show up in search</summary>
+        public boolean ShowInList;
+        /// <summary></summary>
+        public GroupPowers Powers;
+        /// <summary></summary>
+        public boolean AcceptNotices;
+        /// <summary></summary>
+        public boolean AllowPublish;
+        /// <summary>Is the group Mature</summary>
+        public boolean MaturePublish;
+        /// <summary>Cost of group membership</summary>
+        public int MembershipFee;
+        /// <summary></summary>
+        public int Money;
+        /// <summary></summary>
+        public int Contribution;
+        /// <summary>The total number of current members this group has</summary>
+        public int GroupMembershipCount;
+        /// <summary>The number of roles this group has configured</summary>
+        public int GroupRolesCount;
+        /// <summary>Show this group in agent's profile</summary>
+        public boolean ListInProfile;
+
+        /// <summary>Returns the name of the group</summary>
+        /// <returns>A string containing the name of the group</returns>
+        @Override
+        public String toString()
+        {
+            return Name;
+        }
+    }
+
+    /// <summary>
+    /// A group Vote
+    /// </summary>
+    public class Vote
+    {
+        /// <summary>Key of Avatar who created Vote</summary>
+        public UUID Candidate;
+        /// <summary>Text of the Vote proposal</summary>
+        public String VoteString;
+        /// <summary>Total number of votes</summary>
+        public int NumVotes;
+    }
+
+    /// <summary>
+    /// A group proposal
+    /// </summary>
+    public class GroupProposal
+    {
+        /// <summary>The Text of the proposal</summary>
+        public String VoteText;
+        /// <summary>The minimum number of members that must vote before proposal passes or failes</summary>
+        public int Quorum;
+        /// <summary>The required ration of yes/no votes required for vote to pass</summary>
+        /// <remarks>The three options are Simple Majority, 2/3 Majority, and Unanimous</remarks>
+        /// TODO: this should be an enum
+        public float Majority;
+        /// <summary>The duration in days votes are accepted</summary>
+        public int Duration;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public class GroupAccountSummary
+    {
+        /// <summary></summary>
+        public int IntervalDays;
+        /// <summary></summary>
+        public int CurrentInterval;
+        /// <summary></summary>
+        public String StartDate;
+        /// <summary></summary>
+        public int Balance;
+        /// <summary></summary>
+        public int TotalCredits;
+        /// <summary></summary>
+        public int TotalDebits;
+        /// <summary></summary>
+        public int ObjectTaxCurrent;
+        /// <summary></summary>
+        public int LightTaxCurrent;
+        /// <summary></summary>
+        public int LandTaxCurrent;
+        /// <summary></summary>
+        public int GroupTaxCurrent;
+        /// <summary></summary>
+        public int ParcelDirFeeCurrent;
+        /// <summary></summary>
+        public int ObjectTaxEstimate;
+        /// <summary></summary>
+        public int LightTaxEstimate;
+        /// <summary></summary>
+        public int LandTaxEstimate;
+        /// <summary></summary>
+        public int GroupTaxEstimate;
+        /// <summary></summary>
+        public int ParcelDirFeeEstimate;
+        /// <summary></summary>
+        public int NonExemptMembers;
+        /// <summary></summary>
+        public String LastTaxDate;
+        /// <summary></summary>
+        public String TaxDate;
+    }
+
+    /// <summary>
+    /// Struct representing a group notice
+    /// </summary>
+    public class GroupNotice
+    {
+        /// <summary></summary>
+        public String Subject;
+        /// <summary></summary>
+        public String Message;
+        /// <summary></summary>
+        public UUID AttachmentID;
+        /// <summary></summary>
+        public UUID OwnerID;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public byte[] SerializeAttachment() throws Exception
+        {
+            if (OwnerID == UUID.Zero || AttachmentID == UUID.Zero)
+                return Utils.EmptyBytes;
+
+            OSDMap att = new OSDMap();
+            att.put("item_id", OSD.FromUUID(AttachmentID));
+            att.put("owner_id", OSD.FromUUID(OwnerID));
+
+            return XmlLLSDOSDParser.SerializeLLSDXmlBytes(att);
+
+            /*
+            //I guess this is how this works, no gaurentees
+            string lsd = "<llsd><item_id>" + AttachmentID.ToString() + "</item_id><owner_id>"
+                + OwnerID.ToString() + "</owner_id></llsd>";
+            return Utils.StringToBytes(lsd);
+             */
+        }
+    }
+
+    /// <summary>
+    /// Struct representing a group notice list entry
+    /// </summary>
+    public class GroupNoticesListEntry
+    {
+        /// <summary>Notice ID</summary>
+        public UUID NoticeID;
+        /// <summary>Creation timestamp of notice</summary>
+        //uint
+        public long Timestamp;
+        /// <summary>Agent name who created notice</summary>
+        public String FromName;
+        /// <summary>Notice subject</summary>
+        public String Subject;
+        /// <summary>Is there an attachment?</summary>
+        public boolean HasAttachment;
+        /// <summary>Attachment Type</summary>
+        public Enums.AssetType AssetType;
+
+    }
+
     /// <summary>
     /// Struct representing a member of a group chat session and their settings
     /// </summary>
@@ -431,167 +297,224 @@ public class GroupManager {
         /// <summary>True if a moderator has muted this avatars voice</summary>
         public boolean MuteVoice;
     }
-//
-//    //endregion Structs
-//
-//    //region Enums
-//
-//    /// <summary>
-//    /// Role update flags
-//    /// </summary>
-//    public enum GroupRoleUpdate : uint
-//    {
-//        /// <summary></summary>
-//        NoUpdate,
-//        /// <summary></summary>
-//        UpdateData,
-//        /// <summary></summary>
-//        UpdatePowers,
-//        /// <summary></summary>
-//        UpdateAll,
-//        /// <summary></summary>
-//        Create,
-//        /// <summary></summary>
-//        Delete
-//    }
-//
+
+    //endregion Structs
+
+    //region Enums
+
+    /// <summary>
+    /// Role update flags
+    /// </summary>
+    public enum GroupRoleUpdate
+    {
+        /// <summary></summary>
+        NoUpdate((long)0),
+        /// <summary></summary>
+        UpdateData((long)1),
+        /// <summary></summary>
+        UpdatePowers((long)2),
+        /// <summary></summary>
+        UpdateAll((long)3),
+        /// <summary></summary>
+        Create((long)4),
+        /// <summary></summary>
+        Delete((long)5);
+        private long index;
+        GroupRoleUpdate(long index)
+		{
+			this.index = index;
+		}     
+
+		public long getIndex()
+		{
+			return index;
+		}  
+
+		private static final Map<Long,GroupRoleUpdate> lookup  = new HashMap<Long,GroupRoleUpdate>();
+
+		static {
+			for(GroupRoleUpdate s : EnumSet.allOf(GroupRoleUpdate.class))
+				lookup.put(s.getIndex(), s);
+		}
+
+		public static GroupRoleUpdate get(Long index)
+		{
+			return lookup.get(index);
+		}
+    }
+
 //    [Flags]
-//    public enum GroupPowers : ulong
-//    {
-//        /// <summary></summary>
-//        None = 0,
-//
-//        // Membership
-//        /// <summary>Can send invitations to groups default role</summary>
-//        Invite = 1UL << 1,
-//        /// <summary>Can eject members from group</summary>
-//        Eject = 1UL << 2,
-//        /// <summary>Can toggle 'Open Enrollment' and change 'Signup fee'</summary>
-//        ChangeOptions = 1UL << 3,
-//        /// <summary>Member is visible in the public member list</summary>
-//        MemberVisible = 1UL << 47,
-//
-//        // Roles
-//        /// <summary>Can create new roles</summary>
-//        CreateRole = 1UL << 4,
-//        /// <summary>Can delete existing roles</summary>
-//        DeleteRole = 1UL << 5,
-//        /// <summary>Can change Role names, titles and descriptions</summary>
-//        RoleProperties = 1UL << 6,
-//        /// <summary>Can assign other members to assigners role</summary>
-//        AssignMemberLimited = 1UL << 7,
-//        /// <summary>Can assign other members to any role</summary>
-//        AssignMember = 1UL << 8,
-//        /// <summary>Can remove members from roles</summary>
-//        RemoveMember = 1UL << 9,
-//        /// <summary>Can assign and remove abilities in roles</summary>
-//        ChangeActions = 1UL << 10,
-//
-//        // Identity
-//        /// <summary>Can change group Charter, Insignia, 'Publish on the web' and which
-//        /// members are publicly visible in group member listings</summary>
-//        ChangeIdentity = 1UL << 11,
-//
-//        // Parcel management
-//        /// <summary>Can buy land or deed land to group</summary>
-//        LandDeed = 1UL << 12,
-//        /// <summary>Can abandon group owned land to Governor Linden on mainland, or Estate owner for
-//        /// private estates</summary>
-//        LandRelease = 1UL << 13,
-//        /// <summary>Can set land for-sale information on group owned parcels</summary>
-//        LandSetSale = 1UL << 14,
-//        /// <summary>Can subdivide and join parcels</summary>
-//        LandDivideJoin = 1UL << 15,
-//
-//
-//        // Chat
-//        /// <summary>Can join group chat sessions</summary>
-//        JoinChat = 1UL << 16,
-//        /// <summary>Can use voice chat in Group Chat sessions</summary>
-//        AllowVoiceChat = 1UL << 27,
-//        /// <summary>Can moderate group chat sessions</summary>
-//        ModerateChat = 1UL << 37,
-//
-//        // Parcel identity
-//        /// <summary>Can toggle "Show in Find Places" and set search category</summary>
-//        FindPlaces = 1UL << 17,
-//        /// <summary>Can change parcel name, description, and 'Publish on web' settings</summary>
-//        LandChangeIdentity = 1UL << 18,
-//        /// <summary>Can set the landing point and teleport routing on group land</summary>
-//        SetLandingPoint = 1UL << 19,
-//
-//        // Parcel settings
-//        /// <summary>Can change music and media settings</summary>
-//        ChangeMedia = 1UL << 20,
-//        /// <summary>Can toggle 'Edit Terrain' option in Land settings</summary>
-//        LandEdit = 1UL << 21,
-//        /// <summary>Can toggle various About Land > Options settings</summary>
-//        LandOptions = 1UL << 22,
-//
-//        // Parcel powers
-//        /// <summary>Can always terraform land, even if parcel settings have it turned off</summary>
-//        AllowEditLand = 1UL << 23,
-//        /// <summary>Can always fly while over group owned land</summary>
-//        AllowFly = 1UL << 24,
-//        /// <summary>Can always rez objects on group owned land</summary>
-//        AllowRez = 1UL << 25,
-//        /// <summary>Can always create landmarks for group owned parcels</summary>
-//        AllowLandmark = 1UL << 26,
-//        /// <summary>Can set home location on any group owned parcel</summary>
-//        AllowSetHome = 1UL << 28,
-//
-//
-//        // Parcel access
-//        /// <summary>Can modify public access settings for group owned parcels</summary>
-//        LandManageAllowed = 1UL << 29,
-//        /// <summary>Can manager parcel ban lists on group owned land</summary>
-//        LandManageBanned = 1UL << 30,
-//        /// <summary>Can manage pass list sales information</summary>
-//        LandManagePasses = 1UL << 31,
-//        /// <summary>Can eject and freeze other avatars on group owned land</summary>
-//        LandEjectAndFreeze = 1UL << 32,
-//
-//        // Parcel content
-//        /// <summary>Can return objects set to group</summary>
-//        ReturnGroupSet = 1UL << 33,
-//        /// <summary>Can return non-group owned/set objects</summary>
-//        ReturnNonGroup = 1UL << 34,
-//        /// <summary>Can return group owned objects</summary>
-//        ReturnGroupOwned = 1UL << 48,
-//
-//        /// <summary>Can landscape using Linden plants</summary>
-//        LandGardening = 1UL << 35,
-//
-//        // Objects
-//        /// <summary>Can deed objects to group</summary>
-//        DeedObject = 1UL << 36,
-//        /// <summary>Can move group owned objects</summary>
-//        ObjectManipulate = 1UL << 38,
-//        /// <summary>Can set group owned objects for-sale</summary>
-//        ObjectSetForSale = 1UL << 39,
-//
-//        /// <summary>Pay group liabilities and receive group dividends</summary>
-//        Accountable = 1UL << 40,
-//
-//        // Notices and proposals
-//        /// <summary>Can send group notices</summary>
-//        SendNotices = 1UL << 42,
-//        /// <summary>Can receive group notices</summary>
-//        ReceiveNotices = 1UL << 43,
-//        /// <summary>Can create group proposals</summary>
-//        StartProposal = 1UL << 44,
-//        /// <summary>Can vote on group proposals</summary>
-//        VoteOnProposal = 1UL << 45
-//    }
-//
-//    //endregion Enums
-//
-//    /// <summary>
-//    /// Handles all network traffic related to reading and writing group
-//    /// information
-//    /// </summary>
-//    public class GroupManager
-//    {
+    public enum GroupPowers
+    {
+    	//ulong
+        /// <summary></summary>
+        None((long)0),
+
+        // Membership
+        /// <summary>Can send invitations to groups default role</summary>
+        Invite((long)1L << 1),
+        /// <summary>Can eject members from group</summary>
+        Eject((long)1L << 2),
+        /// <summary>Can toggle 'Open Enrollment' and change 'Signup fee'</summary>
+        ChangeOptions((long)1L << 3),
+        /// <summary>Member is visible in the public member list</summary>
+        MemberVisible((long)1L << 47),
+
+        // Roles
+        /// <summary>Can create new roles</summary>
+        CreateRole((long)1L << 4),
+        /// <summary>Can delete existing roles</summary>
+        DeleteRole((long)1L << 5),
+        /// <summary>Can change Role names, titles and descriptions</summary>
+        RoleProperties((long)1L << 6),
+        /// <summary>Can assign other members to assigners role</summary>
+        AssignMemberLimited((long)1L << 7),
+        /// <summary>Can assign other members to any role</summary>
+        AssignMember((long)1L << 8),
+        /// <summary>Can remove members from roles</summary>
+        RemoveMember((long)1L << 9),
+        /// <summary>Can assign and remove abilities in roles</summary>
+        ChangeActions((long)1L << 10),
+
+        // Identity
+        /// <summary>Can change group Charter, Insignia, 'Publish on the web' and which
+        /// members are publicly visible in group member listings</summary>
+        ChangeIdentity((long)1L << 11),
+
+        // Parcel management
+        /// <summary>Can buy land or deed land to group</summary>
+        LandDeed((long)1L << 12),
+        /// <summary>Can abandon group owned land to Governor Linden on mainland, or Estate owner for
+        /// private estates</summary>
+        LandRelease((long)1L << 13),
+        /// <summary>Can set land for-sale information on group owned parcels</summary>
+        LandSetSale((long)1L << 14),
+        /// <summary>Can subdivide and join parcels</summary>
+        LandDivideJoin((long)1L << 15),
+
+
+        // Chat
+        /// <summary>Can join group chat sessions</summary>
+        JoinChat((long)1L << 16),
+        /// <summary>Can use voice chat in Group Chat sessions</summary>
+        AllowVoiceChat((long)1L << 27),
+        /// <summary>Can moderate group chat sessions</summary>
+        ModerateChat((long)1L << 37),
+
+        // Parcel identity
+        /// <summary>Can toggle "Show in Find Places" and set search category</summary>
+        FindPlaces((long)1L << 17),
+        /// <summary>Can change parcel name, description, and 'Publish on web' settings</summary>
+        LandChangeIdentity((long)1L << 18),
+        /// <summary>Can set the landing point and teleport routing on group land</summary>
+        SetLandingPoint((long)1L << 19),
+
+        // Parcel settings
+        /// <summary>Can change music and media settings</summary>
+        ChangeMedia((long)1L << 20),
+        /// <summary>Can toggle 'Edit Terrain' option in Land settings</summary>
+        LandEdit((long)1L << 21),
+        /// <summary>Can toggle various About Land > Options settings</summary>
+        LandOptions((long)1L << 22),
+
+        // Parcel powers
+        /// <summary>Can always terraform land, even if parcel settings have it turned off</summary>
+        AllowEditLand((long)1L << 23),
+        /// <summary>Can always fly while over group owned land</summary>
+        AllowFly((long)1L << 24),
+        /// <summary>Can always rez objects on group owned land</summary>
+        AllowRez((long)1L << 25),
+        /// <summary>Can always create landmarks for group owned parcels</summary>
+        AllowLandmark((long)1L << 26),
+        /// <summary>Can set home location on any group owned parcel</summary>
+        AllowSetHome((long)1L << 28),
+
+
+        // Parcel access
+        /// <summary>Can modify public access settings for group owned parcels</summary>
+        LandManageAllowed((long)1L << 29),
+        /// <summary>Can manager parcel ban lists on group owned land</summary>
+        LandManageBanned((long)1L << 30),
+        /// <summary>Can manage pass list sales information</summary>
+        LandManagePasses((long)1L << 31),
+        /// <summary>Can eject and freeze other avatars on group owned land</summary>
+        LandEjectAndFreeze((long)1L << 32),
+
+        // Parcel content
+        /// <summary>Can return objects set to group</summary>
+        ReturnGroupSet((long)1L << 33),
+        /// <summary>Can return non-group owned/set objects</summary>
+        ReturnNonGroup((long)1L << 34),
+        /// <summary>Can return group owned objects</summary>
+        ReturnGroupOwned((long)1L << 48),
+
+        /// <summary>Can landscape using Linden plants</summary>
+        LandGardening((long)1L << 35),
+
+        // Objects
+        /// <summary>Can deed objects to group</summary>
+        DeedObject((long)1L << 36),
+        /// <summary>Can move group owned objects</summary>
+        ObjectManipulate((long)1L << 38),
+        /// <summary>Can set group owned objects for-sale</summary>
+        ObjectSetForSale((long)1L << 39),
+
+        /// <summary>Pay group liabilities and receive group dividends</summary>
+        Accountable((long)1L << 40),
+
+        // Notices and proposals
+        /// <summary>Can send group notices</summary>
+        SendNotices((long)1L << 42),
+        /// <summary>Can receive group notices</summary>
+        ReceiveNotices((long)1L << 43),
+        /// <summary>Can create group proposals</summary>
+        StartProposal((long)1L << 44),
+        /// <summary>Can vote on group proposals</summary>
+        VoteOnProposal((long)1L << 45);
+    	private long index;
+    	GroupPowers(long index)
+		{
+			this.index = index;
+		}     
+
+		public long getIndex()
+		{
+			return index;
+		}
+		
+		private static final Map<Long,GroupPowers> lookup  = new HashMap<Long,GroupPowers>();
+		
+		static {
+			for(GroupPowers s : EnumSet.allOf(GroupPowers.class))
+				lookup.put(s.getIndex(), s);
+		}
+
+		public static EnumSet<GroupPowers> get(Long index)
+		{
+			EnumSet<GroupPowers> enumsSet = EnumSet.allOf(GroupPowers.class);
+			for(Entry<Long,GroupPowers> entry: lookup.entrySet())
+			{
+				if((entry.getKey().longValue() | index) != index)
+				{
+					enumsSet.remove(entry.getValue());
+				}
+			}
+			return enumsSet;
+		}
+		
+		public static long getIndex(EnumSet<GroupPowers> enumSet)
+		{
+			long ret = 0;
+			for(GroupPowers s: enumSet)
+			{
+				ret |= s.getIndex();
+			}
+			return ret;
+		}
+    }
+
+    //endregion Enums
+
 //        //region Delegates
 //
 //        /// <summary>The event subscribers. null if no subcribers</summary>
@@ -2166,7 +2089,7 @@ public class GroupManager {
 //        /// <summary>Get the ID of the group</summary>
 //        public UUID GroupID { get { return m_GroupID; } }
 //        /// <summary>true of the  group was created successfully</summary>
-//        public bool Success { get { return m_Success; } }
+//        public boolean Success { get { return m_Success; } }
 //        /// <summary>A string containing the message</summary>
 //        public string Message { get { return m_Message; } }
 //
@@ -2191,7 +2114,7 @@ public class GroupManager {
 //        /// <summary>Get the ID of the group</summary>
 //        public UUID GroupID { get { return m_GroupID; } }
 //        /// <summary>true of the request was successful</summary>
-//        public bool Success { get { return m_Success; } }
+//        public boolean Success { get { return m_Success; } }
 //
 //        /// <summary>Construct a new instance of the GroupOperationEventArgs class</summary>
 //        /// <param name="groupID">The ID of the group</param>
@@ -2278,7 +2201,7 @@ public class GroupManager {
 //        public Simulator Simulator { get { return m_Simulator; } }
 //
 //        /// <summary>Set to true to accept invitation, false to decline</summary>
-//        public bool Accept { get; set; }
+//        public boolean Accept { get; set; }
 //
 //        public GroupInvitationEventArgs(Simulator simulator, UUID agentID, string agentName, string message)
 //        {
@@ -2290,6 +2213,5 @@ public class GroupManager {
 //    }
 //
 //    //endregion
-    
     
 }

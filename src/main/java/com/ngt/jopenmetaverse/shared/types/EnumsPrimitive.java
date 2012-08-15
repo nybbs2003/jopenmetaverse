@@ -3,6 +3,7 @@ package com.ngt.jopenmetaverse.shared.types;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.ngt.jopenmetaverse.shared.protocol.primitives.ParticleSystem.ParticleDataFlags;
 
@@ -55,6 +56,7 @@ public class EnumsPrimitive
 
     /// <summary>
     /// Primary parameters for primitives such as Physics Enabled or Phantom
+    ///Flags
     /// </summary>
     public enum PrimFlags
     {
@@ -141,16 +143,35 @@ public class EnumsPrimitive
 		}
 		
 		private static final Map<Long,PrimFlags> lookup  = new HashMap<Long,PrimFlags>();
-
+		
 		static {
 			for(PrimFlags s : EnumSet.allOf(PrimFlags.class))
 				lookup.put(s.getIndex(), s);
 		}
 
-		public static PrimFlags get(Long index)
+		public static EnumSet<PrimFlags> get(Long index)
 		{
-			return lookup.get(index);
+			EnumSet<PrimFlags> enumsSet = EnumSet.allOf(PrimFlags.class);
+			for(Entry<Long,PrimFlags> entry: lookup.entrySet())
+			{
+				if((entry.getKey().longValue() | index) != index)
+				{
+					enumsSet.remove(entry.getValue());
+				}
+			}
+			return enumsSet;
 		}
+		
+		public static long getIndex(EnumSet<PrimFlags> enumSet)
+		{
+			long ret = 0;
+			for(PrimFlags s: enumSet)
+			{
+				ret |= s.getIndex();
+			}
+			return ret;
+		}
+		
     }
 
     /// <summary>

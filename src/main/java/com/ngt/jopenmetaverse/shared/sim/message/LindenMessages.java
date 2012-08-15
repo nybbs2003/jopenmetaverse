@@ -9,6 +9,7 @@ import java.net.URISyntaxException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -1369,7 +1370,7 @@ public class LindenMessages
 			public String  GroupName;
 			/// <summary>The aggregate permissions the agent has in the group for all roles the agent
 			/// is assigned</summary>
-			public GroupPowers GroupPowers;
+			public EnumSet<GroupPowers> GroupPowers;
 		}
 
 		/// <summary>An optional block containing additional agent specific information</summary>
@@ -1414,7 +1415,7 @@ public class LindenMessages
 				group.put("GroupInsigniaID", OSD.FromUUID(GroupDataBlock[i].GroupInsigniaID));
 				group.put("GroupName", OSD.FromString(GroupDataBlock[i].GroupName));
 
-				group.put("GroupPowers", OSD.FromLong(GroupDataBlock[i].GroupPowers.getIndex()));
+				group.put("GroupPowers", OSD.FromLong(GroupPowers.getIndex(GroupDataBlock[i].GroupPowers)));
 				groupDataArray.add(group);
 			}
 

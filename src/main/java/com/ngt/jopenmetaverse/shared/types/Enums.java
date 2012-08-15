@@ -27,7 +27,7 @@ public class Enums
     /// <summary>
     /// The different types of grid assets
     /// </summary>
-    public enum AssetType
+    public static enum AssetType
     {
         /// <summary>Unknown asset type</summary>
         Unknown ((byte)-1),
@@ -115,6 +115,17 @@ public class Enums
         		{
         			return index;
         		}
+          		private static final Map<Byte,AssetType> lookup  = new HashMap<Byte,AssetType>();
+
+        		static {
+        			for(AssetType s : EnumSet.allOf(AssetType.class))
+        				lookup.put(s.getIndex(), s);
+        		}
+
+        		public static AssetType get(Byte index)
+        		{
+        			return lookup.get(index);
+        		}	
         
     }
 
@@ -189,6 +200,17 @@ public class Enums
         		{
         			return index;
         		}
+        		private static final Map<Byte,InventoryType> lookup  = new HashMap<Byte,InventoryType>();
+
+        		static {
+        			for(InventoryType s : EnumSet.allOf(InventoryType.class))
+        				lookup.put(s.getIndex(), s);
+        		}
+
+        		public static InventoryType get(Byte index)
+        		{
+        			return lookup.get(index);
+        		}	
     }
 
     /// <summary>
@@ -280,5 +302,16 @@ public class Enums
             		{
             			return index;
             		}
+            		private static final Map<Byte,WearableType> lookup  = new HashMap<Byte,WearableType>();
+
+            		static {
+            			for(WearableType s : EnumSet.allOf(WearableType.class))
+            				lookup.put(s.getIndex(), s);
+            		}
+
+            		public static WearableType get(Byte index)
+            		{
+            			return lookup.get(index);
+            		}	
     }
 }

@@ -1,6 +1,8 @@
 package com.ngt.jopenmetaverse.shared.protocol.primitives;
 
 import java.math.BigInteger;
+import java.util.EnumSet;
+
 import com.ngt.jopenmetaverse.shared.protocol.NameValue;
 import com.ngt.jopenmetaverse.shared.protocol.primitives.Enums.TextureAnimMode;
 import com.ngt.jopenmetaverse.shared.structureddata.OSD;
@@ -60,7 +62,7 @@ public class Primitive
     /// <summary></summary>
     public BigInteger RegionHandle;
     /// <summary></summary>
-    public PrimFlags Flags;
+    public EnumSet<PrimFlags> Flags;
     /// <summary>Foliage type for this primitive. Only applicable if this
     /// primitive is foliage</summary>
     public Tree TreeSpecies;
@@ -325,14 +327,14 @@ public class Primitive
             prim.put("description", OSD.FromString(""));
         }
         
-        prim.put("phantom", OSD.FromBoolean(((Flags.getIndex() & PrimFlags.Phantom.getIndex()) != 0)));
-        prim.put("physical", OSD.FromBoolean(((Flags.getIndex() & PrimFlags.Physics.getIndex()) != 0)));
+        prim.put("phantom", OSD.FromBoolean(((PrimFlags.getIndex(Flags) & PrimFlags.Phantom.getIndex()) != 0)));
+        prim.put("physical", OSD.FromBoolean(((PrimFlags.getIndex(Flags) & PrimFlags.Physics.getIndex()) != 0)));
         prim.put("position", OSD.FromVector3(Position));
         prim.put("rotation", OSD.FromQuaternion(Rotation));
         prim.put("scale", OSD.FromVector3(Scale));
         prim.put("pcode", OSD.FromInteger((int)PrimData.PCode.getIndex()));
         prim.put("material", OSD.FromInteger((int)PrimData.Material.getIndex()));
-        prim.put("shadows", OSD.FromBoolean(((Flags.getIndex() & PrimFlags.CastShadows.getIndex()) != 0)));
+        prim.put("shadows", OSD.FromBoolean(((PrimFlags.getIndex(Flags) & PrimFlags.CastShadows.getIndex()) != 0)));
         prim.put("state", OSD.FromInteger(PrimData.State));
 
         prim.put("id", OSD.FromUUID(ID));
@@ -399,13 +401,13 @@ public class Primitive
         prim.PrimData = data;
 
         if (map.get("phantom").asBoolean())
-            prim.Flags =  PrimFlags.get(prim.Flags.getIndex() | PrimFlags.Phantom.getIndex());
+            prim.Flags =  PrimFlags.get(PrimFlags.getIndex(prim.Flags) | PrimFlags.Phantom.getIndex());
 
         if (map.get("physical").asBoolean())
-        	prim.Flags =  PrimFlags.get(prim.Flags.getIndex() | PrimFlags.Physics.getIndex());
+        	prim.Flags =  PrimFlags.get(PrimFlags.getIndex(prim.Flags) | PrimFlags.Physics.getIndex());
 
         if (map.get("shadows").asBoolean())
-        	prim.Flags =  PrimFlags.get(prim.Flags.getIndex() | PrimFlags.CastShadows.getIndex());
+        	prim.Flags =  PrimFlags.get(PrimFlags.getIndex(prim.Flags) | PrimFlags.CastShadows.getIndex());
 
         prim.ID = map.get("id").asUUID();
         prim.LocalID = map.get("localid").asLong();
@@ -451,10 +453,10 @@ public class Primitive
 
         for (int k = 0; k < extraParamCount; k++)
         {
-            ExtraParamType type = ExtraParamType.get(Utils.bytesToInt(data, i));
+            ExtraParamType type = ExtraParamType.get(Utils.bytesToIntLit(data, i));
             i += 2;
 
-            long paramlength = Utils.bytesToInt64(data, i);
+            long paramlength = Utils.bytesToInt64Lit(data, i);
             i += 4;
 
             if (type == ExtraParamType.Flexible)
@@ -507,11 +509,11 @@ public class Primitive
         if (flexible != null)
         {
         	//Copying the short bytes
-            System.arraycopy(Utils.intToBytes(ExtraParamType.Flexible.getIndex()), 2, buffer, pos, 2);
+            System.arraycopy(Utils.intToBytesLit(ExtraParamType.Flexible.getIndex()), 2, buffer, pos, 2);
             pos += 2;
 
             //coping the int bytes
-            System.arraycopy(Utils.int64ToBytes((long)flexible.length), 4, buffer, pos, 4);
+            System.arraycopy(Utils.int64ToBytesLit((long)flexible.length), 4, buffer, pos, 4);
             pos += 4;
 
             System.arraycopy(flexible, 0, buffer, pos, flexible.length);
@@ -519,10 +521,10 @@ public class Primitive
         }
         if (light != null)
         {
-            System.arraycopy(Utils.intToBytes(ExtraParamType.Light.getIndex()), 2, buffer, pos, 2);
+            System.arraycopy(Utils.intToBytesLit(ExtraParamType.Light.getIndex()), 2, buffer, pos, 2);
             pos += 2;
 
-            System.arraycopy(Utils.int64ToBytes((long)light.length), 4, buffer, pos, 4);
+            System.arraycopy(Utils.int64ToBytesLit((long)light.length), 4, buffer, pos, 4);
             pos += 4;
 
             System.arraycopy(light, 0, buffer, pos, light.length);
@@ -532,15 +534,15 @@ public class Primitive
         {
             if (Sculpt.getType() == SculptType.Mesh)
             {
-                System.arraycopy(Utils.intToBytes(ExtraParamType.Mesh.getIndex()), 2, buffer, pos, 2);
+                System.arraycopy(Utils.intToBytesLit(ExtraParamType.Mesh.getIndex()), 2, buffer, pos, 2);
             }
             else
             {
-                System.arraycopy(Utils.intToBytes(ExtraParamType.Sculpt.getIndex()), 2, buffer, pos, 2);
+                System.arraycopy(Utils.intToBytesLit(ExtraParamType.Sculpt.getIndex()), 2, buffer, pos, 2);
             }
             pos += 2;
 
-            System.arraycopy(Utils.int64ToBytes((long)sculpt.length), 0, buffer, pos, 4);
+            System.arraycopy(Utils.int64ToBytesLit((long)sculpt.length), 0, buffer, pos, 4);
             pos += 4;
 
             System.arraycopy(sculpt, 0, buffer, pos, sculpt.length);

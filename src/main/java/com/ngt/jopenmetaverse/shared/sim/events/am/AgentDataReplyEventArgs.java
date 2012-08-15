@@ -1,5 +1,7 @@
 package com.ngt.jopenmetaverse.shared.sim.events.am;
 
+import java.util.EnumSet;
+
 import com.ngt.jopenmetaverse.shared.sim.GroupManager.GroupPowers;
 import com.ngt.jopenmetaverse.shared.sim.events.EventArgs;
 import com.ngt.jopenmetaverse.shared.types.UUID;
@@ -11,7 +13,7 @@ import com.ngt.jopenmetaverse.shared.types.UUID;
 		private  String m_LastName;
 		private  UUID m_ActiveGroupID;
 		private  String m_GroupTitle;
-		private  GroupPowers m_GroupPowers;
+		private  EnumSet<GroupPowers> m_GroupPowers;
 		private  String m_GroupName;
 
 		/// <summary>Get the agents first name</summary>
@@ -23,7 +25,7 @@ import com.ngt.jopenmetaverse.shared.types.UUID;
 		/// <summary>Get the active groups title of your agent</summary>
 		public String getGroupTitle() {return m_GroupTitle;}
 		/// <summary>Get the combined group powers of your agent</summary>
-		public GroupPowers getGroupPowers() {return m_GroupPowers;}
+		public EnumSet<GroupPowers> getGroupPowers() {return m_GroupPowers;}
 		/// <summary>Get the active group name of your agent</summary>
 		public String getGroupName() {return m_GroupName;}
 
@@ -36,14 +38,13 @@ import com.ngt.jopenmetaverse.shared.types.UUID;
 		/// <param name="groupTitle">The group title of the agents active group</param>
 		/// <param name="groupPowers">The combined group powers the agent has in the active group</param>
 		/// <param name="groupName">The name of the group the agent has currently active</param>
-		public AgentDataReplyEventArgs(String firstName, String lastName, UUID activeGroupID,
-				String groupTitle, GroupPowers groupPowers, String groupName)
-		{
+		public AgentDataReplyEventArgs(String firstName, String lastName,
+				UUID activeGroupID, String groupTitle,
+				EnumSet<GroupPowers> groupPowers, String groupName) {
 			this.m_FirstName = firstName;
 			this.m_LastName = lastName;
 			this.m_ActiveGroupID = activeGroupID;
 			this.m_GroupTitle = groupTitle;
 			this.m_GroupPowers = groupPowers;
-			this.m_GroupName = groupName;
-		}
+			this.m_GroupName = groupName;		}
 	}

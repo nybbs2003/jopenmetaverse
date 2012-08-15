@@ -2290,7 +2290,7 @@ public class AgentManager {
 	/// <summary>Gets the <seealso cref="UUID"/> of the agents active group.</summary>
 	public UUID getActiveGroup() {return activeGroup;}
 	/// <summary>Gets the Agents powers in the currently active group</summary>
-	public GroupPowers getActiveGroupPowers() {return activeGroupPowers;}
+	public EnumSet<GroupPowers> getActiveGroupPowers() {return activeGroupPowers;}
 	/// <summary>Current status message for teleporting</summary>
 	public String getTeleportMessage() {return teleportMessage;}
 	/// <summary>Current position of the agent as a relative offset from
@@ -2437,7 +2437,7 @@ public class AgentManager {
 	private float health;
 	private int balance;
 	private UUID activeGroup;
-	private GroupPowers activeGroupPowers;
+	private EnumSet<GroupPowers> activeGroupPowers;
 	private Map<UUID, AssetGesture> gestureCache = new HashMap<UUID, AssetGesture>();
 	//endregion Private Members
 

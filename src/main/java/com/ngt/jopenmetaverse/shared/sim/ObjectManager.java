@@ -2214,6 +2214,7 @@ public class ObjectManager {
 	/// <param name="e">The EventArgs object containing the packet data</param>
 	protected void ObjectUpdateHandler(Object sender, PacketReceivedEventArgs e) throws Exception
 	{
+		JLogger.debug("Starting ObjectUpdateHandler ...");
 		Packet packet = e.getPacket();
 		final Simulator simulator = e.getSimulator();
 
@@ -2222,6 +2223,7 @@ public class ObjectManager {
 
 		for (int b = 0; b < update.ObjectData.length; b++)
 		{
+			JLogger.debug("Decoding ObjectData index: " + b);
 			ObjectUpdatePacket.ObjectDataBlock block = update.ObjectData[b];
 
 			ObjectMovementUpdate objectupdate = new ObjectMovementUpdate();
@@ -2246,13 +2248,16 @@ public class ObjectManager {
 				case Tree:
 				case NewTree:
 				case Prim:
+					JLogger.debug("Got a Grass, Tree, NewTree or Prim....");
 					if (onObjectUpdate == null) continue;
 					break;
 				case Avatar:
+					JLogger.debug("Got an Avatar...");
 					// Make an exception for updates about our own agent
 					if (!block.FullID.equals(Client.self.getAgentID()) && onAvatarUpdate == null) continue;
 					break;
 				case ParticleSystem:
+					JLogger.debug("Got an Partical System ... Going to Next Block");
 					continue; // TODO: Do something with these
 				}
 			}
@@ -2262,6 +2267,7 @@ public class ObjectManager {
 			//region NameValue parsing
 
 			String nameValue = Utils.bytesToString(block.NameValue);
+			JLogger.debug("Got NameValue String: " + nameValue);
 			if (nameValue.length() > 0)
 			{
 				String[] lines = nameValue.split("\n");
@@ -2322,7 +2328,8 @@ public class ObjectManager {
 					// Collision normal for avatar
 					objectupdate.CollisionPlane = new Vector4(block.ObjectData, pos);
 					pos += 16;
-
+					
+					//Keep on decoding 
 					i = 60;
 					search = true;
 					break;
@@ -2348,7 +2355,8 @@ public class ObjectManager {
 					// Collision normal for avatar
 					objectupdate.CollisionPlane = new Vector4(block.ObjectData, pos);
 					pos += 16;
-
+					
+					//Keep on decoding
 					i = 32;
 					search = true;
 					break;
@@ -2427,8 +2435,7 @@ public class ObjectManager {
 				default:
 					JLogger.warn("Got an ObjectUpdate block with ObjectUpdate field length of " +
 							block.ObjectData.length);
-					//TODO Need to handle case when there is need to continue
-					//	                        continue;
+					continue;
 				} //switch
 			}
 			//endregion
@@ -2458,14 +2465,14 @@ public class ObjectManager {
 				prim.Flags = PrimFlags.get(block.UpdateFlags);
 				JLogger.debug("Block UpdateFlags: " + block.UpdateFlags + Utils.bytesToHexDebugString(Utils.int64ToBytes(block.UpdateFlags), ""));
 				
-				if ((prim.Flags.getIndex() & PrimFlags.ZlibCompressed.getIndex()) != 0)
+				if ((PrimFlags.getIndex(prim.Flags) & PrimFlags.ZlibCompressed.getIndex()) != 0)
 				{
 					JLogger.warn("Got a ZlibCompressed ObjectUpdate, implement me!");
 					continue;
 				}
 
 				// Automatically request ObjectProperties for prim if it was rezzed selected.
-				if ((prim.Flags.getIndex() & PrimFlags.CreateSelected.getIndex()) != 0)
+				if ((PrimFlags.getIndex(prim.Flags) & PrimFlags.CreateSelected.getIndex()) != 0)
 				{
 					SelectObject(simulator, prim.LocalID);
 				}

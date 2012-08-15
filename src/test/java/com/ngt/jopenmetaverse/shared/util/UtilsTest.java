@@ -31,7 +31,8 @@ public class UtilsTest {
 		long a2 = 4162421037L;
 		byte[] a2bytes = Utils.uintToBytes(a2);
 		System.out.println(" HEX: " + Utils.bytesToHexDebugString(a2bytes, ""));
-		Assert.assertEquals(a2 & 0x0000000000000000ffffffffffffffffL, new BigInteger(a2bytes).longValue());
+		System.out.println(" HEX: " + Utils.bytesToHexDebugString(Utils.uintToBytes(Utils.bytesToUInt(a2bytes)), ""));
+		Assert.assertEquals(a2, Utils.bytesToUInt(a2bytes));
 	}
 
 }

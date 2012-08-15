@@ -23,7 +23,7 @@ public class AgentThrottle {
     	return land; 
     }
     
-    public void getLand(float value)
+    public void setLand(float value)
     {
             if (value > 170000.0f) land = 170000.0f;
             else if (value < 0.0f) land = 0.0f; // We don't have control of these so allow throttling to 0

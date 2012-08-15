@@ -21,6 +21,10 @@ import org.apache.commons.lang.ArrayUtils;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 
+import com.ngt.jopenmetaverse.shared.types.Enums.AssetType;
+import com.ngt.jopenmetaverse.shared.types.Enums.InventoryType;
+import com.ngt.jopenmetaverse.shared.types.Enums.SaleType;
+import com.ngt.jopenmetaverse.shared.types.EnumsPrimitive.AttachmentPoint;
 import com.ngt.jopenmetaverse.shared.types.UUID;
 
 public class Utils
@@ -1511,6 +1515,11 @@ public class Utils
 
 		return bytes;
 	}
+	
+	public static long hexStringToUInt(String value, boolean handleDirty)
+	{
+		return Utils.bytesToUInt(hexStringToBytes(value, handleDirty));
+	}
 
 	/// <summary>
 	/// Returns true is c is a hexadecimal digit (A-F, a-f, 0-9)
@@ -1884,119 +1893,119 @@ public class Utils
 	//        return attribs.length() > 0 ? attribs[0].Text : value.toString();
 	//    }
 	//
-	//    /// <summary>
-	//    /// Takes an AssetType and returns the String representation
-	//    /// </summary>
-	//    /// <param name="type">The source <seealso cref="AssetType"/></param>
-	//    /// <returns>The String version of the AssetType</returns>
-	//    public static String AssetTypeToString(AssetType type)
-	//    {
-	//        return _AssetTypeNames[(int)type];
-	//    }
-	//
-	//    /// <summary>
-	//    /// Translate a String name of an AssetType into the proper Type
-	//    /// </summary>
-	//    /// <param name="type">A String containing the AssetType name</param>
-	//    /// <returns>The AssetType which matches the String name, or AssetType.Unknown if no match was found</returns>
-	//    public static AssetType StringToAssetType(String type)
-	//    {
-	//        for (int i = 0; i < _AssetTypeNames.length(); i++)
-	//        {
-	//            if (_AssetTypeNames[i] == type)
-	//                return (AssetType)i;
-	//        }
-	//
-	//        return AssetType.Unknown;
-	//    }
-	//
-	//    /// <summary>
-	//    /// Convert an InventoryType to a String
-	//    /// </summary>
-	//    /// <param name="type">The <seealso cref="T:InventoryType"/> to convert</param>
-	//    /// <returns>A String representation of the source</returns>
-	//    public static String InventoryTypeToString(InventoryType type)
-	//    {
-	//        return _InventoryTypeNames[(int)type];
-	//    }
-	//
-	//    /// <summary>
-	//    /// Convert a String into a valid InventoryType
-	//    /// </summary>
-	//    /// <param name="type">A String representation of the InventoryType to convert</param>
-	//    /// <returns>A InventoryType object which matched the type</returns>
-	//    public static InventoryType StringToInventoryType(String type)
-	//    {
-	//        for (int i = 0; i < _InventoryTypeNames.length(); i++)
-	//        {
-	//            if (_InventoryTypeNames[i] == type)
-	//                return (InventoryType)i;
-	//        }
-	//
-	//        return InventoryType.Unknown;
-	//    }
-	//
-	//    /// <summary>
-	//    /// Convert a SaleType to a String
-	//    /// </summary>
-	//    /// <param name="type">The <seealso cref="T:SaleType"/> to convert</param>
-	//    /// <returns>A String representation of the source</returns>
-	//    public static String SaleTypeToString(SaleType type)
-	//    {
-	//        return _SaleTypeNames[(int)type];
-	//    }
-	//
-	//    /// <summary>
-	//    /// Convert a String into a valid SaleType
-	//    /// </summary>
-	//    /// <param name="value">A String representation of the SaleType to convert</param>
-	//    /// <returns>A SaleType object which matched the type</returns>
-	//    public static SaleType StringToSaleType(String value)
-	//    {
-	//        for (int i = 0; i < _SaleTypeNames.length(); i++)
-	//        {
-	//            if (value == _SaleTypeNames[i])
-	//                return (SaleType)i;
-	//        }
-	//
-	//        return SaleType.Not;
-	//    }
-	//
-	//    /// <summary>
-	//    /// Converts a String used in LLSD to AttachmentPoint type
-	//    /// </summary>
-	//    /// <param name="value">String representation of AttachmentPoint to convert</param>
-	//    /// <returns>AttachmentPoint enum</returns>
-	//    public static AttachmentPoint StringToAttachmentPoint(String value)
-	//    {
-	//        for (int i = 0; i < _AttachmentPointNames.length(); i++)
-	//        {
-	//            if (value == _AttachmentPointNames[i])
-	//                return (AttachmentPoint)i;
-	//        }
-	//
-	//        return AttachmentPoint.Default;
-	//    }
-	//
-	//    //endregion Enum String Conversion
-	//
-	//    //region Miscellaneous
-	//
-	//    /// <summary>
-	//    /// Copy a byte array
-	//    /// </summary>
-	//    /// <param name="bytes">Byte array to copy</param>
-	//    /// <returns>A copy of the given byte array</returns>
-	//    public static byte[] CopyBytes(byte[] bytes)
-	//    {
-	//        if (bytes == null)
-	//            return null;
-	//
-	//        byte[] newBytes = new byte[bytes.length];
-	//        Buffer.BlockCopy(bytes, 0, newBytes, 0, bytes.length);
-	//        return newBytes;
-	//    }
-	//
+	    /// <summary>
+	    /// Takes an AssetType and returns the String representation
+	    /// </summary>
+	    /// <param name="type">The source <seealso cref="AssetType"/></param>
+	    /// <returns>The String version of the AssetType</returns>
+	    public static String AssetTypeToString(AssetType type)
+	    {
+	        return _AssetTypeNames[(int)type.getIndex()];
+	    }
+	
+	    /// <summary>
+	    /// Translate a String name of an AssetType into the proper Type
+	    /// </summary>
+	    /// <param name="type">A String containing the AssetType name</param>
+	    /// <returns>The AssetType which matches the String name, or AssetType.Unknown if no match was found</returns>
+	    public static AssetType StringToAssetType(String type)
+	    {
+	        for (int i = 0; i < _AssetTypeNames.length; i++)
+	        {
+	            if (_AssetTypeNames[i] == type)
+	                return AssetType.get((byte)i);
+	        }
+	
+	        return AssetType.Unknown;
+	    }
+	
+	    /// <summary>
+	    /// Convert an InventoryType to a String
+	    /// </summary>
+	    /// <param name="type">The <seealso cref="T:InventoryType"/> to convert</param>
+	    /// <returns>A String representation of the source</returns>
+	    public static String InventoryTypeToString(InventoryType type)
+	    {
+	        return _InventoryTypeNames[(int)type.getIndex()];
+	    }
+	
+	    /// <summary>
+	    /// Convert a String into a valid InventoryType
+	    /// </summary>
+	    /// <param name="type">A String representation of the InventoryType to convert</param>
+	    /// <returns>A InventoryType object which matched the type</returns>
+	    public static InventoryType StringToInventoryType(String type)
+	    {
+	        for (int i = 0; i < _InventoryTypeNames.length; i++)
+	        {
+	            if (_InventoryTypeNames[i] == type)
+	                return InventoryType.get((byte)i);
+	        }
+	
+	        return InventoryType.Unknown;
+	    }
+	
+	    /// <summary>
+	    /// Convert a SaleType to a String
+	    /// </summary>
+	    /// <param name="type">The <seealso cref="T:SaleType"/> to convert</param>
+	    /// <returns>A String representation of the source</returns>
+	    public static String SaleTypeToString(SaleType type)
+	    {
+	        return _SaleTypeNames[(int)type.getIndex()];
+	    }
+	
+	    /// <summary>
+	    /// Convert a String into a valid SaleType
+	    /// </summary>
+	    /// <param name="value">A String representation of the SaleType to convert</param>
+	    /// <returns>A SaleType object which matched the type</returns>
+	    public static SaleType StringToSaleType(String value)
+	    {
+	        for (int i = 0; i < _SaleTypeNames.length; i++)
+	        {
+	            if (value == _SaleTypeNames[i])
+	                return SaleType.get((byte)i);
+	        }
+	
+	        return SaleType.Not;
+	    }
+	
+	    /// <summary>
+	    /// Converts a String used in LLSD to AttachmentPoint type
+	    /// </summary>
+	    /// <param name="value">String representation of AttachmentPoint to convert</param>
+	    /// <returns>AttachmentPoint enum</returns>
+	    public static AttachmentPoint StringToAttachmentPoint(String value)
+	    {
+	        for (int i = 0; i < _AttachmentPointNames.length; i++)
+	        {
+	            if (value == _AttachmentPointNames[i])
+	                return AttachmentPoint.get((byte)i);
+	        }
+	
+	        return AttachmentPoint.Default;
+	    }
+	
+	    //endregion Enum String Conversion
+	
+	    //region Miscellaneous
+	
+	    /// <summary>
+	    /// Copy a byte array
+	    /// </summary>
+	    /// <param name="bytes">Byte array to copy</param>
+	    /// <returns>A copy of the given byte array</returns>
+	    public static byte[] CopyBytes(byte[] bytes)
+	    {
+	        if (bytes == null)
+	            return null;
+	
+	        byte[] newBytes = new byte[bytes.length];
+	        Utils.arraycopy(bytes, 0, newBytes, 0, bytes.length);
+	        return newBytes;
+	    }
+	
 	    /// <summary>
 	    /// Packs to 32-bit unsigned integers in to a 64-bit unsigned integer
 	    /// </summary>

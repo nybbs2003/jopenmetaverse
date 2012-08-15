@@ -21,7 +21,7 @@ import com.ngt.jopenmetaverse.shared.types.UUID;
         //region Login/Networking Settings
 
         /// <summary>Main grid login server</summary>
-        public final String AGNI_LOGIN_SERVER = "https://login.agni.lindenlab.com/cgi-bin/login.cgi";
+        public final static String AGNI_LOGIN_SERVER = "https://login.agni.lindenlab.com/cgi-bin/login.cgi";
 
         /// <summary>Beta grid login server</summary>
         public final String ADITI_LOGIN_SERVER = "https://login.aditi.lindenlab.com/cgi-bin/login.cgi";
@@ -138,10 +138,10 @@ import com.ngt.jopenmetaverse.shared.types.UUID;
 
         /// <summary>Enable/disable storing terrain heightmaps in the 
         /// TerrainManager</summary>
-        public boolean STORE_LAND_PATCHES = false;
+        public static boolean STORE_LAND_PATCHES = false;
 
         /// <summary>Enable/disable sending periodic camera updates</summary>
-        public boolean SEND_AGENT_UPDATES = true;
+        public static boolean SEND_AGENT_UPDATES = true;
 
         /// <summary>Enable/disable automatically setting agent appearance at
         /// login and after sim crossing</summary>
@@ -169,11 +169,11 @@ import com.ngt.jopenmetaverse.shared.types.UUID;
         /// decoded. Registering an event handler will force objects for that
         /// type to always be decoded. If this is disabled the object tracking
         /// will have missing or partial prim and avatar information</summary>
-        public boolean ALWAYS_DECODE_OBJECTS = true;
+        public static boolean ALWAYS_DECODE_OBJECTS = true;
 
         /// <summary>If true, when a cached object check is received from the
         /// server the full object info will automatically be requested</summary>
-        public boolean ALWAYS_REQUEST_OBJECTS = true;
+        public static boolean ALWAYS_REQUEST_OBJECTS = true;
 
         /// <summary>Whether to establish connections to HTTP capabilities
         /// servers for simulators</summary>
@@ -246,7 +246,7 @@ import com.ngt.jopenmetaverse.shared.types.UUID;
         /// If true, images, and other assets downloaded from the server 
         /// will be cached in a local directory
         /// </summary>
-        public boolean USE_ASSET_CACHE = true;
+        public static boolean USE_ASSET_CACHE = true;
 
         /// <summary>Path to store cached texture data</summary>
         public String ASSET_CACHE_DIR = RESOURCE_DIR + "/cache";
@@ -316,7 +316,7 @@ import com.ngt.jopenmetaverse.shared.types.UUID;
         public boolean LOG_NAMES = true;
 
         /// <summary>Log packet retransmission info</summary>
-        public boolean LOG_RESENDS = true;
+        public static boolean LOG_RESENDS = true;
 
         //endregion
         //region Private Fields

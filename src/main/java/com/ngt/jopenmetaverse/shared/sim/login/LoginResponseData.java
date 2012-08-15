@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import com.ngt.jopenmetaverse.shared.sim.InventoryFolder;
+import com.ngt.jopenmetaverse.shared.sim.InventoryManager.InventoryFolder;
 import com.ngt.jopenmetaverse.shared.structureddata.OSD;
 import com.ngt.jopenmetaverse.shared.structureddata.OSDArray;
 import com.ngt.jopenmetaverse.shared.structureddata.OSDException;
