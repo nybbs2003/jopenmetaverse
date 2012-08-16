@@ -105,16 +105,18 @@ public class CapsHttpClientTest {
 	
 	@Test
 	public void testPostRequestDefault() throws IOException, URISyntaxException 
-	{
-		
+	{	
 		downloadFileAsync(fileServer.createURI("/files/json/ex1.txt"));
 		downloadFileAsync(fileServer.createURI("/files/json/ex2.txt"));
 		downloadFileAsync(fileServer.createURI("/files/json/ex3.txt"));
-
-		downloadFile(fileServer.createURI("/files/json/ex1.txt"));
-		downloadFile(fileServer.createURI("/files/json/ex2.txt"));
-		downloadFile(fileServer.createURI("/files/json/ex3.txt"));
 		
+		try {
+			downloadFile(fileServer.createURI("/files/json/ex1.txt"));
+			downloadFile(fileServer.createURI("/files/json/ex2.txt"));
+			downloadFile(fileServer.createURI("/files/json/ex3.txt"));
+		} catch (InterruptedException e) {
+			Assert.fail("Filed while downloading from server\n" + Utils.getExceptionStackTraceAsString(e));
+		}
 	}
 	
 	
@@ -134,7 +136,7 @@ public class CapsHttpClientTest {
 		}
 	}
 
-	private void downloadFile(URI url)
+	private void downloadFile(URI url) throws InterruptedException
 	{
 		CapsHttpClient client = new CapsHttpClient(url);
 		RequestCompletedObserver rco = new RequestCompletedObserver();

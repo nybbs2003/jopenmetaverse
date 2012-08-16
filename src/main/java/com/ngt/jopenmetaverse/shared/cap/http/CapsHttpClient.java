@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 
 import org.apache.http.client.methods.HttpRequestBase;
 
+import com.ngt.jopenmetaverse.shared.sim.events.AutoResetEvent;
 import com.ngt.jopenmetaverse.shared.sim.events.EventObservable;
 import com.ngt.jopenmetaverse.shared.structureddata.OSD;
 import com.ngt.jopenmetaverse.shared.structureddata.OSDFormat;
@@ -36,9 +37,7 @@ public class CapsHttpClient
 				try { result = OSDParser.Deserialize(rcha.getResponseData()); }
 				catch (Exception ex) { rcha.setError(ex); }
 			}
-
 			FireCompleteCallback(result, rcha.getError());
-
 		}	
 	}
 
@@ -47,8 +46,8 @@ public class CapsHttpClient
 		CapsHttpRequestCompletedArg r = new CapsHttpRequestCompletedArg(capsHttpClient, result, error);
 		requestCompleteObservable.raiseEvent(r);
 		_Response = result;
+        _ResponseEvent.set();
 	}
-
 
 	public class DownloadProgressObserver implements Observer
 	{
@@ -59,12 +58,11 @@ public class CapsHttpClient
 		}	
 	}		 	
 
+	protected EventObservable<CapsHttpRequestCompletedArg> requestCompleteObservable;
+	protected EventObservable<CapsHttpRequestProgressArg> requestProgressObservable;
 
-	protected EventObservable requestCompleteObservable;
-	protected EventObservable requestProgressObservable;
-
-	protected EventObservable internalRequestCompletedObservable;
-	protected EventObservable internaldownloadProgressObservable;	 	
+	protected EventObservable<HttpBaseRequestCompletedArg> internalRequestCompletedObservable;
+	protected EventObservable<HttpBaseDownloadProgressArg> internaldownloadProgressObservable;	 	
 	protected Object UserData;
 	protected URI _Address;
 	protected byte[] _PostData;
@@ -72,8 +70,8 @@ public class CapsHttpClient
 	protected String _ContentType;
 	protected HttpRequestBase _Request;
 	protected OSD _Response;
-	//        protected AutoResetEvent _ResponseEvent = new AutoResetEvent(false);
-	//
+	protected AutoResetEvent _ResponseEvent = new AutoResetEvent(false);
+
 	public CapsHttpClient(URI capability)
 	{
 		this(capability, null);
@@ -86,12 +84,12 @@ public class CapsHttpClient
 		_Address = capability;
 		_ClientCert = clientCert;
 
-		requestCompleteObservable = new EventObservable();
-		requestProgressObservable = new EventObservable();;
+		requestCompleteObservable = new EventObservable<CapsHttpRequestCompletedArg>();
+		requestProgressObservable = new EventObservable<CapsHttpRequestProgressArg>();;
 
-		internalRequestCompletedObservable = new EventObservable();
+		internalRequestCompletedObservable = new EventObservable<HttpBaseRequestCompletedArg>();
 		internalRequestCompletedObservable.addObserver(new RequestCompletedObserver());
-		internaldownloadProgressObservable = new EventObservable();
+		internaldownloadProgressObservable = new EventObservable<HttpBaseDownloadProgressArg>();
 		internaldownloadProgressObservable.addObserver(new DownloadProgressObserver());
 	}        
 
@@ -181,27 +179,24 @@ public class CapsHttpClient
 					internaldownloadProgressObservable, internalRequestCompletedObservable);
 		}
 	}
-	public OSD GetResponse(int millisecondsTimeout)
+	public OSD GetResponse(int millisecondsTimeout) throws InterruptedException
 	{
 		BeginGetResponse(millisecondsTimeout);
-		//	            _ResponseEvent.WaitOne(millisecondsTimeout, false);
-		waitForRequestCompletion(millisecondsTimeout);
+		_ResponseEvent.waitOne(millisecondsTimeout);
 		return _Response;
 	}
 
 	public OSD GetResponse(OSD data, OSDFormat format, int millisecondsTimeout) throws Exception
 	{
 		BeginGetResponse(data, format, millisecondsTimeout);
-		//	            _ResponseEvent.WaitOne(millisecondsTimeout, false);
-		waitForRequestCompletion(millisecondsTimeout);
+		_ResponseEvent.waitOne(millisecondsTimeout);
 		return _Response;
 	}
 
-	public OSD GetResponse(byte[] postData, String contentType, int millisecondsTimeout)
+	public OSD GetResponse(byte[] postData, String contentType, int millisecondsTimeout) throws InterruptedException
 	{
 		BeginGetResponse(postData, contentType, millisecondsTimeout);
-		//	            _ResponseEvent.WaitOne(millisecondsTimeout, false);
-		waitForRequestCompletion(millisecondsTimeout);
+		_ResponseEvent.waitOne(millisecondsTimeout);
 		return _Response;
 	}
 
@@ -212,25 +207,24 @@ public class CapsHttpClient
 	}
 	
 	
-	private void waitForRequestCompletion(int millisecondsTimeout)
-	{
-		final Thread currentThread = Thread.currentThread();
-		internalRequestCompletedObservable.addObserver(new Observer(){
-			public void update(Observable arg0, Object arg1) {
-				currentThread.interrupt();
-			}
-		});
-		sleep(millisecondsTimeout);
-	}
-
-	private void sleep(int timeout)
-	{
-		try {
-			Thread.sleep(timeout);
-		} catch (InterruptedException e) {
-//			e.printStackTrace();
-			logger.info(e.getMessage());
-		}
-	}
-
+//	private void waitForRequestCompletion(int millisecondsTimeout)
+//	{
+//		final Thread currentThread = Thread.currentThread();
+//		internalRequestCompletedObservable.addObserver(new Observer(){
+//			public void update(Observable arg0, Object arg1) {
+//				currentThread.interrupt();
+//			}
+//		});
+//		sleep(millisecondsTimeout);
+//	}
+//
+//	private void sleep(int timeout)
+//	{
+//		try {
+//			Thread.sleep(timeout);
+//		} catch (InterruptedException e) {
+////			e.printStackTrace();
+//			logger.info(e.getMessage());
+//		}
+//	}
 }

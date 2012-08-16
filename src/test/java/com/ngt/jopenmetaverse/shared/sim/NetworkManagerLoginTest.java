@@ -4,6 +4,8 @@ import java.security.MessageDigest;
 import junit.framework.Assert;
 import org.junit.Test;
 
+import com.ngt.jopenmetaverse.shared.util.JLogger;
+
 public class NetworkManagerLoginTest {
 	
 	@Test
@@ -13,6 +15,7 @@ public class NetworkManagerLoginTest {
 		GridClient client = new GridClient();
 		NetworkManager networkManager = client.network;
 		networkManager.Login("jitendra", "chauhan81", "jchauhan", "Opera", "last", "1.0");
+		sleep(120000);
 		}
 		catch(Exception e)
 		{
@@ -40,4 +43,14 @@ public class NetworkManagerLoginTest {
 	   return result.toString();
 	}
 
+	private static void sleep(int timeout)
+	{
+		try {
+			Thread.sleep(timeout);
+		} catch (InterruptedException e) {
+//			e.printStackTrace();
+			JLogger.info(e.getMessage());
+		}
+	}
+	
 }
