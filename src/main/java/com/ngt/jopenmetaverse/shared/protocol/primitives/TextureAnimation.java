@@ -1,5 +1,7 @@
 package com.ngt.jopenmetaverse.shared.protocol.primitives;
 
+import java.util.EnumSet;
+
 import com.ngt.jopenmetaverse.shared.protocol.primitives.Enums.TextureAnimMode;
 import com.ngt.jopenmetaverse.shared.structureddata.OSD;
 import com.ngt.jopenmetaverse.shared.structureddata.OSDMap;
@@ -13,7 +15,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         public class TextureAnimation
         {
             /// <summary></summary>
-            public TextureAnimMode Flags;
+            public EnumSet<TextureAnimMode> Flags;
             /// <summary></summary>
             public long Face;
             /// <summary></summary>
@@ -73,7 +75,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 byte[] data = new byte[16];
                 int pos = 0;
 
-                data[pos++] = (byte)Flags.getIndex();
+                data[pos++] = (byte)TextureAnimMode.getIndex(Flags);
                 data[pos++] = (byte)Face;
                 data[pos++] = (byte)SizeX;
                 data[pos++] = (byte)SizeY;
@@ -98,7 +100,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 OSDMap map = new OSDMap();
 
                 map.put("face", OSD.FromInteger((int)Face));
-                map.put("flags", OSD.FromInteger((int)Flags.getIndex()));
+                map.put("flags", OSD.FromInteger((int)TextureAnimMode.getIndex(Flags)));
                 map.put("length", OSD.FromReal(Length));
                 map.put("rate", OSD.FromReal(Rate));
                 map.put("size_x", OSD.FromInteger((int)SizeX));

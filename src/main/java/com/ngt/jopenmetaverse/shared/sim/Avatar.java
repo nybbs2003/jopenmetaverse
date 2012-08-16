@@ -5,12 +5,14 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.ngt.jopenmetaverse.shared.protocol.NameValue;
 import com.ngt.jopenmetaverse.shared.protocol.primitives.Primitive;
 import com.ngt.jopenmetaverse.shared.structureddata.OSD;
 import com.ngt.jopenmetaverse.shared.structureddata.OSDArray;
 import com.ngt.jopenmetaverse.shared.structureddata.OSDMap;
+import com.ngt.jopenmetaverse.shared.types.EnumsPrimitive;
 import com.ngt.jopenmetaverse.shared.types.UUID;
 import com.ngt.jopenmetaverse.shared.util.Utils;
 
@@ -51,10 +53,29 @@ public class Avatar extends Primitive
 				lookup.put(s.getIndex(), s);
 		}
 
-		public static ProfileFlags get(Long index)
-		{
-			return lookup.get(index);
-		}
+	      public static EnumSet<ProfileFlags> get(Long index)
+          {
+                  EnumSet<ProfileFlags> enumsSet = EnumSet.allOf(ProfileFlags.class);
+                  for(Entry<Long,ProfileFlags> entry: lookup.entrySet())
+                  {
+                          if((entry.getKey().longValue() | index) != index)
+                          {
+                                  enumsSet.remove(entry.getValue());
+                          }
+                  }
+                  return enumsSet;
+          }
+
+          public static long getIndex(EnumSet<ProfileFlags> enumSet)
+          {
+                  long ret = 0;
+                  for(ProfileFlags s: enumSet)
+                  {
+                          ret |= s.getIndex();
+                  }
+                  return ret;
+          }
+
 	}
 
 	//endregion Enums
@@ -139,7 +160,7 @@ public class Avatar extends Primitive
 		/// <summary>Profile image ID</summary>
 		public UUID ProfileImage;
 		/// <summary>Flags of the profile</summary>
-		public ProfileFlags Flags;
+		public EnumSet<ProfileFlags> Flags;
 		/// <summary>Web URL for this profile</summary>
 		public String ProfileURL;
 
@@ -148,69 +169,69 @@ public class Avatar extends Primitive
 		/// <summary>Should this profile be published on the web</summary>
 		public boolean isAllowPublish()
 		{
-			return ((Flags.getIndex() & ProfileFlags.AllowPublish.getIndex()) != 0);
+			return ((ProfileFlags.getIndex(Flags) & ProfileFlags.AllowPublish.getIndex()) != 0);
 		}
 
 		public void setAllowPublish(boolean value)
 		{
 			if (value == true)
-				Flags  = ProfileFlags.get(Flags.getIndex() | ProfileFlags.AllowPublish.getIndex());
+				Flags  = ProfileFlags.get(ProfileFlags.getIndex(Flags) | ProfileFlags.AllowPublish.getIndex());
 			else
-				Flags  = ProfileFlags.get(Flags.getIndex() & ~ProfileFlags.AllowPublish.getIndex());
+				Flags  = ProfileFlags.get(ProfileFlags.getIndex(Flags) & ~ProfileFlags.AllowPublish.getIndex());
 		}
 
 		/// <summary>Avatar Online Status</summary>
 		public boolean getOnline()
 		{
-			return ((Flags.getIndex() & ProfileFlags.Online.getIndex()) != 0);
+			return ((ProfileFlags.getIndex(Flags) & ProfileFlags.Online.getIndex()) != 0);
 		}
 
 		public void setOnline(boolean value)
 		{
 			if (value == true)
-				Flags  = ProfileFlags.get(Flags.getIndex() | ProfileFlags.Online.getIndex());
+				Flags  = ProfileFlags.get(ProfileFlags.getIndex(Flags) | ProfileFlags.Online.getIndex());
 			else
-				Flags  = ProfileFlags.get(Flags.getIndex() & ~ProfileFlags.Online.getIndex());
+				Flags  = ProfileFlags.get(ProfileFlags.getIndex(Flags) & ~ProfileFlags.Online.getIndex());
 		}
 
 		/// <summary>Is this a mature profile</summary>
 		public boolean getMaturePublish()
 		{
-			return ((Flags.getIndex() & ProfileFlags.MaturePublish.getIndex()) != 0); 
+			return ((ProfileFlags.getIndex(Flags) & ProfileFlags.MaturePublish.getIndex()) != 0); 
 		}
 
 		public void setMaturePublish(boolean value)
 		{	       
 			if (value == true)
-				Flags  = ProfileFlags.get(Flags.getIndex() | ProfileFlags.MaturePublish.getIndex());
+				Flags  = ProfileFlags.get(ProfileFlags.getIndex(Flags) | ProfileFlags.MaturePublish.getIndex());
 			else
-				Flags  = ProfileFlags.get(Flags.getIndex() & ~ProfileFlags.MaturePublish.getIndex());
+				Flags  = ProfileFlags.get(ProfileFlags.getIndex(Flags) & ~ProfileFlags.MaturePublish.getIndex());
 		}
 		/// <summary></summary>
 		public boolean getIdentified()
 		{
-			return ((Flags.getIndex() & ProfileFlags.Identified.getIndex()) != 0);
+			return ((ProfileFlags.getIndex(Flags) & ProfileFlags.Identified.getIndex()) != 0);
 		}
 
 		public void setIdentified(boolean value)
 		{
 			if (value == true)
-				Flags  = ProfileFlags.get(Flags.getIndex() | ProfileFlags.Identified.getIndex());
+				Flags  = ProfileFlags.get(ProfileFlags.getIndex(Flags) | ProfileFlags.Identified.getIndex());
 			else
-				Flags  = ProfileFlags.get(Flags.getIndex() & ~ProfileFlags.Identified.getIndex());
+				Flags  = ProfileFlags.get(ProfileFlags.getIndex(Flags) & ~ProfileFlags.Identified.getIndex());
 		}
 		/// <summary></summary>
 		public boolean getTransacted(boolean value)
 		{
-			return ((Flags.getIndex() & ProfileFlags.Transacted.getIndex()) != 0);
+			return ((ProfileFlags.getIndex(Flags) & ProfileFlags.Transacted.getIndex()) != 0);
 		}
 
 		public void setTransacted(boolean value)
 		{
 			if (value == true)
-				Flags  = ProfileFlags.get(Flags.getIndex() | ProfileFlags.Transacted.getIndex());
+				Flags  = ProfileFlags.get(ProfileFlags.getIndex(Flags) | ProfileFlags.Transacted.getIndex());
 			else
-				Flags  = ProfileFlags.get(Flags.getIndex() & ~ProfileFlags.Transacted.getIndex());
+				Flags  = ProfileFlags.get(ProfileFlags.getIndex(Flags) & ~ProfileFlags.Transacted.getIndex());
 		}
 
 		public OSD GetOSD()
@@ -223,7 +244,7 @@ public class Avatar extends Primitive
 			tex.put("born_on", OSD.FromString(BornOn));
 			tex.put("charter_member", OSD.FromString(CharterMember));
 			tex.put("profile_image", OSD.FromUUID(ProfileImage));
-			tex.put("flags", OSD.FromInteger((short)Flags.getIndex()));
+			tex.put("flags", OSD.FromInteger((short)ProfileFlags.getIndex(Flags)));
 			tex.put("profile_url",  OSD.FromString(ProfileURL));
 			return tex;
 		}
@@ -446,7 +467,7 @@ public class Avatar extends Primitive
 		Avi.put("profile_statistics", ProfileStatistics.GetOSD());
 		Avi.put("profile_properties", ProfileProperties.GetOSD());
 		Avi.put("profile_interest", ProfileInterests.GetOSD());
-		Avi.put("control_flags", OSD.FromInteger((byte)ControlFlags.getIndex()));
+		Avi.put("control_flags", OSD.FromInteger((byte)EnumsPrimitive.PrimFlags.getIndex(Flags)));
 		Avi.put("visual_parameters", vp);
 		Avi.put("first_name", OSD.FromString(getFirstName()));
 		Avi.put("last_name", OSD.FromString(getLastName()));

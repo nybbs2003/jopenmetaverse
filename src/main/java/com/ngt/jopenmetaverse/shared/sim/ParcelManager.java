@@ -7,6 +7,7 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.ngt.jopenmetaverse.shared.cap.http.CapsHttpClient;
 import com.ngt.jopenmetaverse.shared.protocol.ParcelPropertiesUpdatePacket;
@@ -16,6 +17,7 @@ import com.ngt.jopenmetaverse.shared.structureddata.OSDFormat;
 import com.ngt.jopenmetaverse.shared.structureddata.OSDMap;
 import com.ngt.jopenmetaverse.shared.types.UUID;
 import com.ngt.jopenmetaverse.shared.types.Vector3;
+import com.ngt.jopenmetaverse.shared.types.EnumsPrimitive.PrimFlags;
 import com.ngt.jopenmetaverse.shared.util.Utils;
 
 
@@ -334,10 +336,29 @@ public class ParcelManager {
 				lookup.put(s.getIndex(), s);
 		}
 
-		public static ParcelFlags get(Long index)
+		public static EnumSet<ParcelFlags> get(Long index)
 		{
-			return lookup.get(index);
+			EnumSet<ParcelFlags> enumsSet = EnumSet.allOf(ParcelFlags.class);
+			for(Entry<Long,ParcelFlags> entry: lookup.entrySet())
+			{
+				if((entry.getKey().longValue() | index) != index)
+				{
+					enumsSet.remove(entry.getValue());
+				}
+			}
+			return enumsSet;
 		}
+		
+		public static long getIndex(EnumSet<ParcelFlags> enumSet)
+		{
+			long ret = 0;
+			for(ParcelFlags s: enumSet)
+			{
+				ret |= s.getIndex();
+			}
+			return ret;
+		}
+
 	}
 
 	/// <summary>
@@ -669,7 +690,7 @@ public class ParcelManager {
 	        /// <summary>Autoreturn value in minutes for others' objects</summary>
 	        public int OtherCleanTime;
 	        /// <summary></summary>
-	        public ParcelFlags Flags;
+	        public EnumSet<ParcelFlags> Flags;
 	        /// <summary>Sale price of the parcel, only useful if ForSale is set</summary>
 	        /// <remarks>The SalePrice will remain the same after an ownership
 	        /// transfer (sale), so it can be used to see the purchase price after
@@ -819,7 +840,7 @@ public class ParcelManager {
 	                request.ParcelData.MusicURL = Utils.stringToBytes(this.MusicURL.toString());
 	                request.ParcelData.Name = Utils.stringToBytes(this.Name);
 	                if (wantReply) request.ParcelData.Flags = 1;
-	                request.ParcelData.ParcelFlags = this.Flags.getIndex();
+	                request.ParcelData.ParcelFlags = ParcelFlags.getIndex(this.Flags);
 	                request.ParcelData.PassHours = this.PassHours;
 	                request.ParcelData.PassPrice = this.PassPrice;
 	                request.ParcelData.SalePrice = this.SalePrice;

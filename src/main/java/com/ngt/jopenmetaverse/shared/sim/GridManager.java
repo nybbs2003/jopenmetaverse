@@ -160,7 +160,7 @@ public class GridManager {
 		/// <summary></summary>
 		public SimAccess Access;
 		/// <summary>Appears to always be zero (None)</summary>
-		public RegionFlags RegionFlags;
+		public EnumSet<RegionFlags> RegionFlags;
 		/// <summary>Sim's defined Water Height</summary>
 		public byte WaterHeight;
 		/// <summary></summary>

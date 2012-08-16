@@ -299,10 +299,29 @@ public class AgentManager {
 				lookup.put(s.getIndex(), s);
 		}
 
-		public static ControlFlags get(Long index)
-		{
-			return lookup.get(index);
-		}
+        public static EnumSet<ControlFlags> get(Long index)
+        {
+                EnumSet<ControlFlags> enumsSet = EnumSet.allOf(ControlFlags.class);
+                for(Entry<Long,ControlFlags> entry: lookup.entrySet())
+                {
+                        if((entry.getKey().longValue() | index) != index)
+                        {
+                                enumsSet.remove(entry.getValue());
+                        }
+                }
+                return enumsSet;
+        }
+        
+        public static long getIndex(EnumSet<ControlFlags> enumSet)
+        {
+                long ret = 0;
+                for(ControlFlags s: enumSet)
+                {
+                        ret |= s.getIndex();
+                }
+                return ret;
+        }
+
 
 	}
 
@@ -366,10 +385,29 @@ public class AgentManager {
 				lookup.put(s.getIndex(), s);
 		}
 
-		public static ScriptPermission get(Integer index)
-		{
-			return lookup.get(index);
-		}
+		 public static EnumSet<ScriptPermission> get(Integer index)
+         {
+                 EnumSet<ScriptPermission> enumsSet = EnumSet.allOf(ScriptPermission.class);
+                 for(Entry<Integer,ScriptPermission> entry: lookup.entrySet())
+                 {
+                         if((entry.getKey().intValue() | index) != index)
+                         {
+                                 enumsSet.remove(entry.getValue());
+                         }
+                 }
+                 return enumsSet;
+         }
+
+         public static int getIndex(EnumSet<ScriptPermission> enumSet)
+         {
+                 int ret = 0;
+                 for(ScriptPermission s: enumSet)
+                 {
+                         ret |= s.getIndex();
+                 }
+                 return ret;
+         }
+
 	}
 
 
@@ -967,17 +1005,36 @@ public class AgentManager {
 			return index;
 		}
 
-		//			private static final Map<Byte,TransactionFlags> lookup  = new HashMap<Byte,TransactionFlags>();
-		//
-		//			static {
-		//				for(ChatType s : EnumSet.allOf(TransactionFlags.class))
-		//					lookup.put(s.getIndex(), s);
-		//			}
-		//
-		//			public static TransactionFlags get(Byte index)
-		//			{
-		//				return lookup.get(index);
-		//			}
+					private static final Map<Byte,TransactionFlags> lookup  = new HashMap<Byte,TransactionFlags>();
+		
+					static {
+						for(TransactionFlags s : EnumSet.allOf(TransactionFlags.class))
+							lookup.put(s.getIndex(), s);
+					}
+		
+		 public static EnumSet<TransactionFlags> get(Byte index)
+	        {
+	                EnumSet<TransactionFlags> enumsSet = EnumSet.allOf(TransactionFlags.class);
+	                for(Entry<Byte,TransactionFlags> entry: lookup.entrySet())
+	                {
+	                        if((entry.getKey().byteValue() | index) != index)
+	                        {
+	                                enumsSet.remove(entry.getValue());
+	                        }
+	                }
+	                return enumsSet;
+	        }
+
+	        public static byte getIndex(EnumSet<TransactionFlags> enumSet)
+	        {
+	                byte ret = 0;
+	                for(TransactionFlags s: enumSet)
+	                {
+	                        ret |= s.getIndex();
+	                }
+	                return ret;
+	        }
+
 	}
 	/// <summary>
 	/// 
@@ -1067,11 +1124,31 @@ public class AgentManager {
 			for(ScriptControlChange s : EnumSet.allOf(ScriptControlChange.class))
 				lookup.put(s.getIndex(), s);
 		}
+		
+        public static EnumSet<ScriptControlChange> get(Long index)
+        {
+                EnumSet<ScriptControlChange> enumsSet = EnumSet.allOf(ScriptControlChange.class);
+                for(Entry<Long,ScriptControlChange> entry: lookup.entrySet())
+                {
+                        if((entry.getKey().longValue() | index) != index)
+                        {
+                                enumsSet.remove(entry.getValue());
+                        }
+                }
+                return enumsSet;
+        }
 
-		public static ScriptControlChange get(Long index)
-		{
-			return lookup.get(index);
-		}
+        public static long getIndex(EnumSet<ScriptControlChange> enumSet)
+        {
+                long ret = 0;
+                for(ScriptControlChange s: enumSet)
+                {
+                        ret |= s.getIndex();
+                }
+                return ret;
+        }
+
+		
 	}
 
 	/// <summary>
@@ -1093,6 +1170,37 @@ public class AgentManager {
 		{
 			return index;
 		} 
+		
+		private static final Map<Byte,AgentFlags> lookup  = new HashMap<Byte,AgentFlags>();
+
+		static {
+			for(AgentFlags s : EnumSet.allOf(AgentFlags.class))
+				lookup.put(s.getIndex(), s);
+		}
+		
+		 public static EnumSet<AgentFlags> get(Byte index)
+	        {
+	                EnumSet<AgentFlags> enumsSet = EnumSet.allOf(AgentFlags.class);
+	                for(Entry<Byte,AgentFlags> entry: lookup.entrySet())
+	                {
+	                        if((entry.getKey().byteValue() | index) != index)
+	                        {
+	                                enumsSet.remove(entry.getValue());
+	                        }
+	                }
+	                return enumsSet;
+	        }
+
+	        public static byte getIndex(EnumSet<AgentFlags> enumSet)
+	        {
+	                byte ret = 0;
+	                for(AgentFlags s: enumSet)
+	                {
+	                        ret |= s.getIndex();
+	                }
+	                return ret;
+	        }
+
 	}
 
 	/// <summary>
@@ -1119,6 +1227,37 @@ public class AgentManager {
 		{
 			return index;
 		}  
+		
+		private static final Map<Byte,AgentState> lookup  = new HashMap<Byte,AgentState>();
+
+		static {
+			for(AgentState s : EnumSet.allOf(AgentState.class))
+				lookup.put(s.getIndex(), s);
+		}
+		
+		 public static EnumSet<AgentState> get(Byte index)
+	        {
+	                EnumSet<AgentState> enumsSet = EnumSet.allOf(AgentState.class);
+	                for(Entry<Byte,AgentState> entry: lookup.entrySet())
+	                {
+	                        if((entry.getKey().byteValue() | index) != index)
+	                        {
+	                                enumsSet.remove(entry.getValue());
+	                        }
+	                }
+	                return enumsSet;
+	        }
+
+	        public static byte getIndex(EnumSet<AgentState> enumSet)
+	        {
+	                byte ret = 0;
+	                for(AgentState s: enumSet)
+	                {
+	                        ret |= s.getIndex();
+	                }
+	                return ret;
+	        }
+		
 	}
 
 	/// <summary>
@@ -1205,10 +1344,29 @@ public class AgentManager {
 				lookup.put(s.getIndex(), s);
 		}
 
-		public static TeleportFlags get(Long index)
-		{
-			return lookup.get(index);
-		}
+        public static EnumSet<TeleportFlags> get(Long index)
+        {
+                EnumSet<TeleportFlags> enumsSet = EnumSet.allOf(TeleportFlags.class);
+                for(Entry<Long,TeleportFlags> entry: lookup.entrySet())
+                {
+                        if((entry.getKey().longValue() | index) != index)
+                        {
+                                enumsSet.remove(entry.getValue());
+                        }
+                }
+                return enumsSet;
+        }
+
+        public static long getIndex(EnumSet<TeleportFlags> enumSet)
+        {
+                long ret = 0;
+                for(TeleportFlags s: enumSet)
+                {
+                        ret |= s.getIndex();
+                }
+                return ret;
+        }
+
 	}
 
 	/// <summary>
@@ -1234,18 +1392,37 @@ public class AgentManager {
 			return index;
 		}
 
-		//			private static final Map<Integer,TeleportLureFlags> lookup  
-		//			= new HashMap<Integer,TeleportLureFlags>();
-		//
-		//			static {
-		//				for(TeleportLureFlags s : EnumSet.allOf(TeleportLureFlags.class))
-		//					lookup.put(s.getIndex(), s);
-		//			}
-		//
-		//			public static TeleportLureFlags get(Integer index)
-		//			{
-		//				return lookup.get(index);
-		//			}
+					private static final Map<Integer,TeleportLureFlags> lookup  
+					= new HashMap<Integer,TeleportLureFlags>();
+		
+					static {
+						for(TeleportLureFlags s : EnumSet.allOf(TeleportLureFlags.class))
+							lookup.put(s.getIndex(), s);
+					}
+		
+					 public static EnumSet<TeleportLureFlags> get(Integer index)
+			         {
+			                 EnumSet<TeleportLureFlags> enumsSet = EnumSet.allOf(TeleportLureFlags.class);
+			                 for(Entry<Integer,TeleportLureFlags> entry: lookup.entrySet())
+			                 {
+			                         if((entry.getKey().intValue() | index) != index)
+			                         {
+			                                 enumsSet.remove(entry.getValue());
+			                         }
+			                 }
+			                 return enumsSet;
+			         }
+
+			         public static int getIndex(EnumSet<TeleportLureFlags> enumSet)
+			         {
+			                 int ret = 0;
+			                 for(TeleportLureFlags s: enumSet)
+			                 {
+			                         ret |= s.getIndex();
+			                 }
+			                 return ret;
+			         }
+
 	}
 
 	/// <summary>
@@ -1281,10 +1458,30 @@ public class AgentManager {
 				lookup.put(s.getIndex(), s);
 		}
 
-		public static ScriptSensorTypeFlags get(Integer index)
-		{
-			return lookup.get(index);
-		}
+
+		 public static EnumSet<ScriptSensorTypeFlags> get(Integer index)
+		         {
+		                 EnumSet<ScriptSensorTypeFlags> enumsSet = EnumSet.allOf(ScriptSensorTypeFlags.class);
+		                 for(Entry<Integer,ScriptSensorTypeFlags> entry: lookup.entrySet())
+		                 {
+		                         if((entry.getKey().intValue() | index) != index)
+		                         {
+		                                 enumsSet.remove(entry.getValue());
+		                         }
+		                 }
+		                 return enumsSet;
+		         }
+
+		         public static int getIndex(EnumSet<ScriptSensorTypeFlags> enumSet)
+		         {
+		                 int ret = 0;
+		                 for(ScriptSensorTypeFlags s: enumSet)
+		                 {
+		                         ret |= s.getIndex();
+		                 }
+		                 return ret;
+		         }
+
 	}
 
 	/// <summary>
@@ -1313,18 +1510,18 @@ public class AgentManager {
 			return index;
 		}
 
-		//			private static final Map<Integer,MuteType> lookup  
-		//			= new HashMap<Integer,MuteType>();
-		//
-		//			static {
-		//				for(MuteType s : EnumSet.allOf(MuteType.class))
-		//					lookup.put(s.getIndex(), s);
-		//			}
-		//
-		//			public static MuteType get(Integer index)
-		//			{
-		//				return lookup.get(index);
-		//			}
+					private static final Map<Integer,MuteType> lookup  
+					= new HashMap<Integer,MuteType>();
+		
+					static {
+						for(MuteType s : EnumSet.allOf(MuteType.class))
+							lookup.put(s.getIndex(), s);
+					}
+		
+					public static MuteType get(Integer index)
+					{
+						return lookup.get(index);
+					}
 	}
 
 	/// <summary>
@@ -1356,18 +1553,37 @@ public class AgentManager {
 			return index;
 		}
 
-		//			private static final Map<Integer,MuteFlags> lookup  
-		//			= new HashMap<Integer,MuteFlags>();
-		//
-		//			static {
-		//				for(MuteFlags s : EnumSet.allOf(MuteFlags.class))
-		//					lookup.put(s.getIndex(), s);
-		//			}
-		//
-		//			public static MuteFlags get(Integer index)
-		//			{
-		//				return lookup.get(index);
-		//			}
+					private static final Map<Integer,MuteFlags> lookup  
+					= new HashMap<Integer,MuteFlags>();
+		
+					static {
+						for(MuteFlags s : EnumSet.allOf(MuteFlags.class))
+							lookup.put(s.getIndex(), s);
+					}
+		
+					 public static EnumSet<MuteFlags> get(Integer index)
+			         {
+			                 EnumSet<MuteFlags> enumsSet = EnumSet.allOf(MuteFlags.class);
+			                 for(Entry<Integer,MuteFlags> entry: lookup.entrySet())
+			                 {
+			                         if((entry.getKey().intValue() | index) != index)
+			                         {
+			                                 enumsSet.remove(entry.getValue());
+			                         }
+			                 }
+			                 return enumsSet;
+			         }
+
+			         public static int getIndex(EnumSet<MuteFlags> enumSet)
+			         {
+			                 int ret = 0;
+			                 for(MuteFlags s: enumSet)
+			                 {
+			                         ret |= s.getIndex();
+			                 }
+			                 return ret;
+			         }
+
 	}
 	//endregion Enums
 
@@ -5076,7 +5292,7 @@ public class AgentManager {
 		p.Info.SimAccess = (byte)msg.SimAccess.getIndex();
 		p.Info.SimIP = Utils.IPToUInt(msg.IP);
 		p.Info.SimPort = msg.Port;
-		p.Info.TeleportFlags = msg.Flags.getIndex();
+		p.Info.TeleportFlags = TeleportFlags.getIndex(msg.Flags);
 
 		// pass the packet onto the teleport handler
 		TeleportHandler(this, new PacketReceivedEventArgs(p, simulator));
@@ -5091,7 +5307,7 @@ public class AgentManager {
 		Simulator simulator = e.getSimulator();
 
 		boolean finished = false;
-		TeleportFlags flags = TeleportFlags.Default;
+		EnumSet<TeleportFlags> flags = TeleportFlags.get(TeleportFlags.Default.getIndex());
 
 		if (packet.Type == PacketType.TeleportStart)
 		{

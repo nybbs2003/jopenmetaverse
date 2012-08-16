@@ -1,5 +1,7 @@
 package com.ngt.jopenmetaverse.shared.sim.events.am;
 
+import java.util.EnumSet;
+
 import com.ngt.jopenmetaverse.shared.sim.Simulator;
 import com.ngt.jopenmetaverse.shared.sim.AgentManager.ScriptPermission;
 import com.ngt.jopenmetaverse.shared.sim.events.EventArgs;
@@ -14,7 +16,7 @@ import com.ngt.jopenmetaverse.shared.types.UUID;
 		private  UUID m_ItemID;
 		private  String m_ObjectName;
 		private  String m_ObjectOwnerName;
-		private  ScriptPermission m_Questions;
+		private  EnumSet<ScriptPermission> m_Questions;
 
 		/// <summary>Get the simulator containing the object sending the request</summary>
 		public Simulator getSimulator() { return m_Simulator; } 
@@ -27,7 +29,7 @@ import com.ngt.jopenmetaverse.shared.types.UUID;
 		/// <summary>Get the name of the owner of the object making the request</summary>
 		public String getObjectOwnerName() {return m_ObjectOwnerName; } 
 		/// <summary>Get the permissions being requested</summary>
-		public ScriptPermission getQuestions() { return m_Questions; } 
+		public EnumSet<ScriptPermission> getQuestions() { return m_Questions; } 
 
 		/// <summary>
 		/// Construct a new instance of the ScriptQuestionEventArgs
@@ -38,7 +40,7 @@ import com.ngt.jopenmetaverse.shared.types.UUID;
 		/// <param name="objectName">The name of the primitive making the request</param>
 		/// <param name="objectOwner">The name of the owner of the object making the request</param>
 		/// <param name="questions">The permissions being requested</param>
-		public ScriptQuestionEventArgs(Simulator simulator, UUID taskID, UUID itemID, String objectName, String objectOwner, ScriptPermission questions)
+		public ScriptQuestionEventArgs(Simulator simulator, UUID taskID, UUID itemID, String objectName, String objectOwner, EnumSet<ScriptPermission> questions)
 		{
 			this.m_Simulator = simulator;
 			this.m_TaskID = taskID;

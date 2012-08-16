@@ -1,8 +1,13 @@
 package com.ngt.jopenmetaverse.shared.protocol.primitives;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
+import com.ngt.jopenmetaverse.shared.sim.GroupManager.GroupPowers;
 import com.ngt.jopenmetaverse.shared.structureddata.OSD;
 import com.ngt.jopenmetaverse.shared.structureddata.OSDArray;
 import com.ngt.jopenmetaverse.shared.structureddata.OSDMap;
@@ -35,16 +40,44 @@ public class MediaEntry
 		{
 			return index;
 		}
-		public static MediaPermission create(byte index)
-		{
-			MediaPermission[] values = MediaPermission.values();
-			for(int i = 0; i < values.length; i ++)
-			{
-				if(values[i].getIndex() == index)
-					return values[i]; 
-			}
-			return null;
-		}
+		
+		private static final Map<Byte,MediaPermission> lookup  = new HashMap<Byte,MediaPermission>();
+		
+//		public static MediaPermission create(byte index)
+//		{
+//			MediaPermission[] values = MediaPermission.values();
+//			for(int i = 0; i < values.length; i ++)
+//			{
+//				if(values[i].getIndex() == index)
+//					return values[i]; 
+//			}
+//			return null;
+//		}
+		
+        public static EnumSet<MediaPermission> get(Byte index)
+        {
+                EnumSet<MediaPermission> enumsSet = EnumSet.allOf(MediaPermission.class);
+                for(Entry<Byte,MediaPermission> entry: lookup.entrySet())
+                {
+                        if((entry.getKey().byteValue() | index) != index)
+                        {
+                                enumsSet.remove(entry.getValue());
+                        }
+                }
+                return enumsSet;
+        }
+        
+        public static long getIndex(EnumSet<MediaPermission> enumSet)
+        {
+                long ret = 0;
+                for(MediaPermission s: enumSet)
+                {
+                        ret |= s.getIndex();
+                }
+                return ret;
+        }
+
+		
 	}
 
 	/// <summary>
@@ -114,10 +147,10 @@ public class MediaEntry
 	public int Width;
 
 	/// <summary>Who can controls the media</summary>
-	public MediaPermission ControlPermissions;
+	public EnumSet<MediaPermission> ControlPermissions;
 
 	/// <summary>Who can interact with the media</summary>
-	public MediaPermission InteractPermissions;
+	public EnumSet<MediaPermission> InteractPermissions;
 
 	/// <summary>Is URL whitelist enabled</summary>
 	public boolean EnableWhiteList;
@@ -143,8 +176,8 @@ public class MediaEntry
 		map.put("first_click_interact", OSD.FromBoolean(InteractOnFirstClick));
 		map.put("height_pixels", OSD.FromInteger(Height));
 		map.put("home_url", OSD.FromString(HomeURL));
-		map.put("perms_control", OSD.FromInteger(ControlPermissions.getIndex()));
-		map.put("perms_interact", OSD.FromInteger(InteractPermissions.getIndex()));
+		map.put("perms_control", OSD.FromInteger((int)MediaPermission.getIndex(ControlPermissions)));
+		map.put("perms_interact", OSD.FromInteger((int)MediaPermission.getIndex(InteractPermissions)));
 
 		List<OSD> wl = new ArrayList<OSD>();
 		if (WhiteList != null && WhiteList.length > 0)
@@ -180,8 +213,8 @@ public class MediaEntry
 		m.InteractOnFirstClick = map.get("first_click_interact").asBoolean();
 		m.Height = map.get("height_pixels").asInteger();
 		m.HomeURL = map.get("home_url").asString();
-		m.ControlPermissions = MediaPermission.create((byte)(map.get("perms_control").asInteger()));
-		m.InteractPermissions = MediaPermission.create((byte)map.get("perms_interact").asInteger());
+		m.ControlPermissions = MediaPermission.get((byte)(map.get("perms_control").asInteger()));
+		m.InteractPermissions = MediaPermission.get((byte)map.get("perms_interact").asInteger());
 
 		if (map.get("whitelist").getType() == OSDType.Array)
 		{

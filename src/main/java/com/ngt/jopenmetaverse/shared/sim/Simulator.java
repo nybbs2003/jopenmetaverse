@@ -10,6 +10,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Queue;
 import java.util.Set;
 import java.util.SortedMap;
@@ -136,10 +137,29 @@ public class Simulator extends UDPBase
 				lookup.put(s.getIndex(), s);
 		}
 
-		public static RegionFlags get(Integer index)
-		{
-			return lookup.get(index);
-		}	
+		public static EnumSet<RegionFlags> get(Integer index)
+        {
+                EnumSet<RegionFlags> enumsSet = EnumSet.allOf(RegionFlags.class);
+                for(Entry<Integer,RegionFlags> entry: lookup.entrySet())
+                {
+                        if((entry.getKey().longValue() | index) != index)
+                        {
+                                enumsSet.remove(entry.getValue());
+                        }
+                }
+                return enumsSet;
+        }
+        
+        public static int getIndex(EnumSet<RegionFlags> enumSet)
+        {
+                int ret = 0;
+                for(RegionFlags s: enumSet)
+                {
+                        ret |= s.getIndex();
+                }
+                return ret;
+        }
+	
 
 	}
 
@@ -349,7 +369,7 @@ public class Simulator extends UDPBase
 	/// <summary>true if your agent has Estate Manager rights on this region</summary>
 	public boolean IsEstateManager;
 	/// <summary></summary>
-	public RegionFlags Flags;
+	public EnumSet<RegionFlags> Flags;
 	/// <summary></summary>
 	public SimAccess Access;
 	/// <summary></summary>
@@ -1352,13 +1372,17 @@ public class Simulator extends UDPBase
 
 	private void AckTimer_Elapsed(Object obj)
 	{
+		try
+		{
 		SendAcks();
 		ResendUnacked();
+		}
+		catch(Exception e) { JLogger.warn(Utils.getExceptionStackTraceAsString(e));}
 
 		// Start the ACK handling functions again after NETWORK_TICK_INTERVAL milliseconds
 		if (null == AckTimer) return;
 		try { reScheduleAckTimer(Settings.NETWORK_TICK_INTERVAL); }
-		catch (Exception e) { }
+		catch (Exception e) { JLogger.warn(Utils.getExceptionStackTraceAsString(e));}
 	}
 
 	private void StatsTimer_Elapsed(Object obj)

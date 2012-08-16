@@ -4,7 +4,6 @@ import java.math.BigInteger;
 import java.util.EnumSet;
 
 import com.ngt.jopenmetaverse.shared.protocol.NameValue;
-import com.ngt.jopenmetaverse.shared.protocol.primitives.Enums.TextureAnimMode;
 import com.ngt.jopenmetaverse.shared.structureddata.OSD;
 import com.ngt.jopenmetaverse.shared.structureddata.OSDArray;
 import com.ngt.jopenmetaverse.shared.structureddata.OSDMap;
@@ -96,7 +95,7 @@ public class Primitive
     /// active</summary>
     public UUID OwnerID;
     /// <summary></summary>
-    public SoundFlags SoundFlags;
+    public EnumSet<SoundFlags> SoundFlags;
     /// <summary></summary>
     public float SoundGain;
     /// <summary></summary>
@@ -116,11 +115,11 @@ public class Primitive
     /// <summary></summary>
     public NameValue[] NameValues;
     /// <summary></summary>
-    public ConstructionData PrimData;
+    public ConstructionData PrimData = new ConstructionData();
     /// <summary></summary>
-    public ObjectProperties Properties;
+    public ObjectProperties Properties = new ObjectProperties();
     /// <summary>Objects physics engine propertis</summary>
-    public PhysicsProperties PhysicsProps;
+    public PhysicsProperties PhysicsProps = new PhysicsProperties();
     /// <summary>Extra data about primitive</summary>
     public Object Tag;
     /// <summary>Indicates if prim is attached to an avatar</summary>
@@ -453,17 +452,17 @@ public class Primitive
 
         for (int k = 0; k < extraParamCount; k++)
         {
-            ExtraParamType type = ExtraParamType.get(Utils.bytesToIntLit(data, i));
+            EnumSet<ExtraParamType> type = ExtraParamType.get(Utils.bytesToIntLit(data, i));
             i += 2;
 
             long paramlength = Utils.bytesToInt64Lit(data, i);
             i += 4;
 
-            if (type == ExtraParamType.Flexible)
+            if (ExtraParamType.getIndex(type) == ExtraParamType.Flexible.getIndex())
                 Flexible = new FlexibleData(data, i);
-            else if (type == ExtraParamType.Light)
+            else if (ExtraParamType.getIndex(type) == ExtraParamType.Light.getIndex())
                 Light = new LightData(data, i);
-            else if (type == ExtraParamType.Sculpt || type == ExtraParamType.Mesh)
+            else if (ExtraParamType.getIndex(type) == ExtraParamType.Sculpt.getIndex() || ExtraParamType.getIndex(type) == ExtraParamType.Mesh.getIndex())
                 Sculpt = new SculptData(data, i);
 
             i += (int)paramlength;

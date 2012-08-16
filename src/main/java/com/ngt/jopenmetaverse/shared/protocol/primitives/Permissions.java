@@ -3,6 +3,7 @@ package com.ngt.jopenmetaverse.shared.protocol.primitives;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.ngt.jopenmetaverse.shared.structureddata.OSD;
 import com.ngt.jopenmetaverse.shared.structureddata.OSDMap;
@@ -13,11 +14,11 @@ import com.ngt.jopenmetaverse.shared.structureddata.OSDMap;
 //[Serializable()]
 public class Permissions
 {
-	public PermissionMask BaseMask;
-	public PermissionMask EveryoneMask;
-	public PermissionMask GroupMask;
-	public PermissionMask NextOwnerMask;
-	public PermissionMask OwnerMask;
+	public EnumSet<PermissionMask> BaseMask;
+	public EnumSet<PermissionMask> EveryoneMask;
+	public EnumSet<PermissionMask> GroupMask;
+	public EnumSet<PermissionMask> NextOwnerMask;
+	public EnumSet<PermissionMask> OwnerMask;
 
 	/// <summary>
 	/// 
@@ -30,7 +31,7 @@ public class Permissions
 		Modify      ((long)1 << 14),
 		Copy        ((long)1 << 15),
 		//[Obsolete]
-				//EnterParcel = 1 << 16,
+		//EnterParcel = 1 << 16,
 		//[Obsolete]
 		//Terraform   = 1 << 17,
 		//[Obsolete]
@@ -42,16 +43,7 @@ public class Permissions
 		private long index;
 		private static final Map<Long,PermissionMask> lookup  = new HashMap<Long,PermissionMask>();
 
-		static {
-			for(PermissionMask s : EnumSet.allOf(PermissionMask.class))
-				lookup.put(s.getIndex(), s);
-		}
 
-		public static PermissionMask get(long index)
-		{
-			return lookup.get(index);
-		}
-		
 		PermissionMask(long index)
 		{
 			this.index = index;
@@ -61,6 +53,35 @@ public class Permissions
 		{
 			return index;
 		}
+
+		static {
+			for(PermissionMask s : EnumSet.allOf(PermissionMask.class))
+				lookup.put(s.getIndex(), s);
+		}
+
+		public static EnumSet<PermissionMask> get(Long index)
+		{
+			EnumSet<PermissionMask> enumsSet = EnumSet.allOf(PermissionMask.class);
+			for(Entry<Long,PermissionMask> entry: lookup.entrySet())
+			{
+				if((entry.getKey().longValue() | index) != index)
+				{
+					enumsSet.remove(entry.getValue());
+				}
+			}
+			return enumsSet;
+		}
+
+		public static long getIndex(EnumSet<PermissionMask> enumSet)
+		{
+			long ret = 0;
+			for(PermissionMask s: enumSet)
+			{
+				ret |= s.getIndex();
+			}
+			return ret;
+		}
+
 	}
 
 	/// <summary>
@@ -83,27 +104,47 @@ public class Permissions
 		All ((byte)0x1F);
 
 		private byte index;
-		private static final Map<Byte,PermissionWho> lookup  = new HashMap<Byte,PermissionWho>();
-
-		static {
-			for(PermissionWho s : EnumSet.allOf(PermissionWho.class))
-				lookup.put(s.getIndex(), s);
-		}
-
-		PermissionWho(byte index)
-		{
-			this.index = index;
-		}     
 
 		public byte getIndex()
 		{
 			return index;
 		}
 
-		public static PermissionWho get(byte index)
+		PermissionWho(byte index)
 		{
-			return lookup.get(index);
+			this.index = index;
+		}  
+
+		private static final Map<Byte,PermissionWho> lookup  = new HashMap<Byte,PermissionWho>();
+
+		static {
+			for(PermissionWho s : EnumSet.allOf(PermissionWho.class))
+				lookup.put(s.getIndex(), s);
+		} 
+
+		public static EnumSet<PermissionWho> get(Byte index)
+		{
+			EnumSet<PermissionWho> enumsSet = EnumSet.allOf(PermissionWho.class);
+			for(Entry<Byte,PermissionWho> entry: lookup.entrySet())
+			{
+				if((entry.getKey().byteValue() | index) != index)
+				{
+					enumsSet.remove(entry.getValue());
+				}
+			}
+			return enumsSet;
 		}
+
+		public static byte getIndex(EnumSet<PermissionWho> enumSet)
+		{
+			byte ret = 0;
+			for(PermissionWho s: enumSet)
+			{
+				ret |= s.getIndex();
+			}
+			return ret;
+		}
+
 	}
 
 
@@ -111,7 +152,7 @@ public class Permissions
 	{
 		this(0,0,0,0,0);
 	}
-	
+
 	public Permissions(long baseMask, long everyoneMask, long groupMask, long nextOwnerMask, long ownerMask)
 	{
 		BaseMask = PermissionMask.get(baseMask);
@@ -123,25 +164,25 @@ public class Permissions
 
 	public Permissions GetNextPermissions()
 	{
-		long nextMask = (long)NextOwnerMask.getIndex();
+		long nextMask = PermissionMask.getIndex(NextOwnerMask);
 
 		return new Permissions(
-				(long)BaseMask.getIndex() & nextMask,
-				(long)EveryoneMask.getIndex() & nextMask,
-				(long)GroupMask.getIndex() & nextMask,
-				(long)NextOwnerMask.getIndex(),
-				(long)OwnerMask.getIndex() & nextMask
+				PermissionMask.getIndex(BaseMask) & nextMask,
+				PermissionMask.getIndex(EveryoneMask) & nextMask,
+				PermissionMask.getIndex(GroupMask) & nextMask,
+				PermissionMask.getIndex(NextOwnerMask),
+				PermissionMask.getIndex(OwnerMask) & nextMask
 				);
 	}
 
 	public OSD GetOSD()
 	{
 		OSDMap permissions = new OSDMap(5);
-		permissions.put("base_mask", OSD.FromLong((long)BaseMask.getIndex()));
-		permissions.put("everyone_mask", OSD.FromLong((long)EveryoneMask.getIndex()));
-		permissions.put("group_mask", OSD.FromLong((long)GroupMask.getIndex()));
-		permissions.put("next_owner_mask", OSD.FromLong((long)NextOwnerMask.getIndex()));
-		permissions.put("owner_mask", OSD.FromLong((long)OwnerMask.getIndex()));
+		permissions.put("base_mask", OSD.FromLong(PermissionMask.getIndex(BaseMask)));
+		permissions.put("everyone_mask", OSD.FromLong(PermissionMask.getIndex(EveryoneMask)));
+		permissions.put("group_mask", OSD.FromLong(PermissionMask.getIndex(GroupMask)));
+		permissions.put("next_owner_mask", OSD.FromLong(PermissionMask.getIndex(NextOwnerMask)));
+		permissions.put("owner_mask", OSD.FromLong(PermissionMask.getIndex(OwnerMask)));
 		return permissions;
 	}
 
@@ -185,16 +226,18 @@ public class Permissions
 	}
 
 	public static boolean equals(Permissions lhs, Permissions rhs)
-			{
-		return (lhs.BaseMask == rhs.BaseMask) && (lhs.EveryoneMask == rhs.EveryoneMask) &&
-				(lhs.GroupMask == rhs.GroupMask) && (lhs.NextOwnerMask == rhs.NextOwnerMask) &&
-				(lhs.OwnerMask == rhs.OwnerMask);
-			}
+	{
+		return (PermissionMask.getIndex(lhs.BaseMask) == PermissionMask.getIndex(rhs.BaseMask)) 
+				&& (PermissionMask.getIndex(lhs.EveryoneMask) == PermissionMask.getIndex((rhs.EveryoneMask)) &&
+				(PermissionMask.getIndex(lhs.GroupMask) == PermissionMask.getIndex(rhs.GroupMask)) 
+				&& (PermissionMask.getIndex(lhs.NextOwnerMask) == PermissionMask.getIndex(rhs.NextOwnerMask)) &&
+				(PermissionMask.getIndex(lhs.OwnerMask) == PermissionMask.getIndex(rhs.OwnerMask)));
+	}
 
 	public static boolean notEquals(Permissions lhs, Permissions rhs)
-			{
+	{
 		return !equals(lhs, rhs);
-			}
+	}
 
 	public static boolean hasPermissions(PermissionMask perms, PermissionMask checkPerms)
 	{

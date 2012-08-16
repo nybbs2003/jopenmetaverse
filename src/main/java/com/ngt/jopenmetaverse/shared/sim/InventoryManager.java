@@ -2104,9 +2104,9 @@ public class InventoryManager {
 				InventoryType invType, UUID folderID, ItemCreatedFromAssetCallbackArg callback) throws Exception
 		{
 			Permissions permissions = new Permissions();
-			permissions.EveryoneMask = PermissionMask.None;
-			permissions.GroupMask = PermissionMask.None;
-			permissions.NextOwnerMask = PermissionMask.All;
+			permissions.EveryoneMask = PermissionMask.get(PermissionMask.None.getIndex());
+			permissions.GroupMask = PermissionMask.get(PermissionMask.None.getIndex());
+			permissions.NextOwnerMask = PermissionMask.get(PermissionMask.All.getIndex());
 	
 			RequestCreateItemFromAsset(data, name, description, assetType, invType, folderID, permissions, callback);
 		}
@@ -2139,9 +2139,9 @@ public class InventoryManager {
 				query.put("inventory_type", OSD.FromString(Utils.InventoryTypeToString(invType)));
 				query.put("name", OSD.FromString(name));
 				query.put("description", OSD.FromString(description));
-				query.put("everyone_mask", OSD.FromInteger((int)permissions.EveryoneMask.getIndex()));
-				query.put("group_mask", OSD.FromInteger((int)permissions.GroupMask.getIndex()));
-				query.put("next_owner_mask", OSD.FromInteger((int)permissions.NextOwnerMask.getIndex()));
+				query.put("everyone_mask", OSD.FromInteger((int)PermissionMask.getIndex(permissions.EveryoneMask)));
+				query.put("group_mask", OSD.FromInteger((int)PermissionMask.getIndex(permissions.GroupMask)));
+				query.put("next_owner_mask", OSD.FromInteger((int)PermissionMask.getIndex(permissions.NextOwnerMask)));
 				query.put("expected_upload_cost", OSD.FromInteger(Client.settings.UPLOAD_COST()));
 	
 				// Make the request
@@ -2411,24 +2411,24 @@ public class InventoryManager {
 				InventoryItem item = items.get(i);
 	
 				UpdateInventoryItemPacket.InventoryDataBlock block = new UpdateInventoryItemPacket.InventoryDataBlock();
-				block.BaseMask = (long)item.Permissions.BaseMask.getIndex();
+				block.BaseMask = (long)PermissionMask.getIndex(item.Permissions.BaseMask);
 				block.CRC = ItemCRC(item);
 				//TODO need to check if the data should be in Integer
 				block.CreationDate = (int)Utils.dateToUnixTime(item.CreationDate);
 				block.CreatorID = item.CreatorID;
 				block.Description = Utils.stringToBytes(item.Description);
-				block.EveryoneMask = (long)item.Permissions.EveryoneMask.getIndex();
+				block.EveryoneMask = (long)PermissionMask.getIndex(item.Permissions.EveryoneMask);
 				block.Flags = (long)item.Flags;
 				block.FolderID = item.ParentUUID;
 				block.GroupID = item.GroupID;
-				block.GroupMask = (long)item.Permissions.GroupMask.getIndex();
+				block.GroupMask = (long)PermissionMask.getIndex(item.Permissions.GroupMask);
 				block.GroupOwned = item.GroupOwned;
 				block.InvType = (byte)item.InventoryType.getIndex();
 				block.ItemID = item.UUID;
 				block.Name = Utils.stringToBytes(item.Name);
-				block.NextOwnerMask = (long)item.Permissions.NextOwnerMask.getIndex();
+				block.NextOwnerMask = (long)PermissionMask.getIndex(item.Permissions.NextOwnerMask);
 				block.OwnerID = item.OwnerID;
-				block.OwnerMask = (long)item.Permissions.OwnerMask.getIndex();
+				block.OwnerMask = (long)PermissionMask.getIndex(item.Permissions.OwnerMask);
 				block.SalePrice = item.SalePrice;
 				block.SaleType = (byte)item.SaleType.getIndex();
 				block.TransactionID = item.TransactionID;
@@ -2716,20 +2716,20 @@ public class InventoryManager {
 			add.RezData.RezSelected = rezSelected;
 			add.RezData.RemoveItem = false;
 			add.RezData.ItemFlags = (long)item.Flags;
-			add.RezData.GroupMask = (long)item.Permissions.GroupMask.getIndex();
-			add.RezData.EveryoneMask = (long)item.Permissions.EveryoneMask.getIndex();
-			add.RezData.NextOwnerMask = (long)item.Permissions.NextOwnerMask.getIndex();
+			add.RezData.GroupMask = (long)PermissionMask.getIndex(item.Permissions.GroupMask);
+			add.RezData.EveryoneMask = (long)PermissionMask.getIndex(item.Permissions.EveryoneMask);
+			add.RezData.NextOwnerMask = (long)PermissionMask.getIndex(item.Permissions.NextOwnerMask);
 	
 			add.InventoryData.ItemID = item.UUID;
 			add.InventoryData.FolderID = item.ParentUUID;
 			add.InventoryData.CreatorID = item.CreatorID;
 			add.InventoryData.OwnerID = item.OwnerID;
 			add.InventoryData.GroupID = item.GroupID;
-			add.InventoryData.BaseMask = (long)item.Permissions.BaseMask.getIndex();
-			add.InventoryData.OwnerMask = (long)item.Permissions.OwnerMask.getIndex();
-			add.InventoryData.GroupMask = (long)item.Permissions.GroupMask.getIndex();
-			add.InventoryData.EveryoneMask = (long)item.Permissions.EveryoneMask.getIndex();
-			add.InventoryData.NextOwnerMask = (long)item.Permissions.NextOwnerMask.getIndex();
+			add.InventoryData.BaseMask = (long)PermissionMask.getIndex(item.Permissions.BaseMask);
+			add.InventoryData.OwnerMask = (long)PermissionMask.getIndex(item.Permissions.OwnerMask);
+			add.InventoryData.GroupMask = (long)PermissionMask.getIndex(item.Permissions.GroupMask);
+			add.InventoryData.EveryoneMask = (long)PermissionMask.getIndex(item.Permissions.EveryoneMask);
+			add.InventoryData.NextOwnerMask = (long)PermissionMask.getIndex(item.Permissions.NextOwnerMask);
 			add.InventoryData.GroupOwned = item.GroupOwned;
 			add.InventoryData.TransactionID = queryID;
 			add.InventoryData.Type = (byte)item.InventoryType.getIndex();
@@ -2747,7 +2747,7 @@ public class InventoryManager {
 			if (_Store.Items.containsKey(item.UUID) && _Store.get(item.UUID) instanceof InventoryItem)
 			{
 				InventoryItem invItem = (InventoryItem)_Store.get(item.UUID);
-				if ((invItem.Permissions.OwnerMask.getIndex() & PermissionMask.Copy.getIndex()) == PermissionMask.None.getIndex())
+				if ((PermissionMask.getIndex(invItem.Permissions.OwnerMask) & PermissionMask.Copy.getIndex()) == PermissionMask.None.getIndex())
 				{
 					_Store.RemoveNodeFor(invItem);
 				}
@@ -2817,11 +2817,11 @@ public class InventoryManager {
 			add.InventoryData.CreatorID = item.CreatorID;
 			add.InventoryData.OwnerID = item.OwnerID;
 			add.InventoryData.GroupID = item.GroupID;
-			add.InventoryData.BaseMask = (long)item.Permissions.BaseMask.getIndex();
-			add.InventoryData.OwnerMask = (long)item.Permissions.OwnerMask.getIndex();
-			add.InventoryData.GroupMask = (long)item.Permissions.GroupMask.getIndex();
-			add.InventoryData.EveryoneMask = (long)item.Permissions.EveryoneMask.getIndex();
-			add.InventoryData.NextOwnerMask = (long)item.Permissions.NextOwnerMask.getIndex();
+			add.InventoryData.BaseMask = (long)PermissionMask.getIndex(item.Permissions.BaseMask);
+			add.InventoryData.OwnerMask = (long)PermissionMask.getIndex(item.Permissions.OwnerMask);
+			add.InventoryData.GroupMask = (long)PermissionMask.getIndex(item.Permissions.GroupMask);
+			add.InventoryData.EveryoneMask = (long)PermissionMask.getIndex(item.Permissions.EveryoneMask);
+			add.InventoryData.NextOwnerMask = (long)PermissionMask.getIndex(item.Permissions.NextOwnerMask);
 			add.InventoryData.GroupOwned = item.GroupOwned;
 			add.InventoryData.TransactionID = queryID;
 			add.InventoryData.Type = (byte)item.InventoryType.getIndex();
@@ -2877,7 +2877,7 @@ public class InventoryManager {
 			if (_Store.Items.containsKey(itemID) && _Store.get(itemID) instanceof InventoryItem)
 			{
 				InventoryItem invItem = (InventoryItem)_Store.get(itemID);
-				if ((invItem.Permissions.OwnerMask.getIndex() & PermissionMask.Copy.getIndex()) == PermissionMask.None.getIndex())
+				if ((PermissionMask.getIndex(invItem.Permissions.OwnerMask) & PermissionMask.Copy.getIndex()) == PermissionMask.None.getIndex())
 				{
 					_Store.RemoveNodeFor(invItem);
 				}
@@ -2944,7 +2944,7 @@ public class InventoryManager {
 						&& _Store.get(folderContents.get(i).UUID) instanceof InventoryItem)
 				{
 					InventoryItem invItem = (InventoryItem)_Store.get(folderContents.get(i).UUID);
-					if ((invItem.Permissions.OwnerMask.getIndex() & PermissionMask.Copy.getIndex()) == PermissionMask.None.getIndex())
+					if ((PermissionMask.getIndex(invItem.Permissions.OwnerMask) & PermissionMask.Copy.getIndex()) == PermissionMask.None.getIndex())
 					{
 						_Store.RemoveNodeFor(invItem);
 					}
@@ -2981,11 +2981,11 @@ public class InventoryManager {
 			update.InventoryData.CreatorID = item.CreatorID;
 			update.InventoryData.OwnerID = item.OwnerID;
 			update.InventoryData.GroupID = item.GroupID;
-			update.InventoryData.BaseMask = (long)item.Permissions.BaseMask.getIndex();
-			update.InventoryData.OwnerMask = (long)item.Permissions.OwnerMask.getIndex();
-			update.InventoryData.GroupMask = (long)item.Permissions.GroupMask.getIndex();
-			update.InventoryData.EveryoneMask = (long)item.Permissions.EveryoneMask.getIndex();
-			update.InventoryData.NextOwnerMask = (long)item.Permissions.NextOwnerMask.getIndex();
+			update.InventoryData.BaseMask = (long)PermissionMask.getIndex(item.Permissions.BaseMask);
+			update.InventoryData.OwnerMask = (long)PermissionMask.getIndex(item.Permissions.OwnerMask);
+			update.InventoryData.GroupMask = (long)PermissionMask.getIndex(item.Permissions.GroupMask);
+			update.InventoryData.EveryoneMask = (long)PermissionMask.getIndex(item.Permissions.EveryoneMask);
+			update.InventoryData.NextOwnerMask = (long)PermissionMask.getIndex(item.Permissions.NextOwnerMask);
 			update.InventoryData.GroupOwned = item.GroupOwned;
 			update.InventoryData.TransactionID = transactionID;
 			update.InventoryData.Type = (byte)item.AssetType.getIndex();
@@ -3201,11 +3201,11 @@ public class InventoryManager {
 			ScriptPacket.InventoryBlock.CreatorID = item.CreatorID;
 			ScriptPacket.InventoryBlock.OwnerID = item.OwnerID;
 			ScriptPacket.InventoryBlock.GroupID = item.GroupID;
-			ScriptPacket.InventoryBlock.BaseMask = (long)item.Permissions.BaseMask.getIndex();
-			ScriptPacket.InventoryBlock.OwnerMask = (long)item.Permissions.OwnerMask.getIndex();
-			ScriptPacket.InventoryBlock.GroupMask = (long)item.Permissions.GroupMask.getIndex();
-			ScriptPacket.InventoryBlock.EveryoneMask = (long)item.Permissions.EveryoneMask.getIndex();
-			ScriptPacket.InventoryBlock.NextOwnerMask = (long)item.Permissions.NextOwnerMask.getIndex();
+			ScriptPacket.InventoryBlock.BaseMask = (long)PermissionMask.getIndex(item.Permissions.BaseMask);
+			ScriptPacket.InventoryBlock.OwnerMask = (long)PermissionMask.getIndex(item.Permissions.OwnerMask);
+			ScriptPacket.InventoryBlock.GroupMask = (long)PermissionMask.getIndex(item.Permissions.GroupMask);
+			ScriptPacket.InventoryBlock.EveryoneMask = (long)PermissionMask.getIndex(item.Permissions.EveryoneMask);
+			ScriptPacket.InventoryBlock.NextOwnerMask = (long)PermissionMask.getIndex(item.Permissions.NextOwnerMask);
 			ScriptPacket.InventoryBlock.GroupOwned = item.GroupOwned;
 			ScriptPacket.InventoryBlock.TransactionID = transactionID;
 			ScriptPacket.InventoryBlock.Type = (byte)item.AssetType.getIndex();
@@ -3321,10 +3321,10 @@ public class InventoryManager {
 			CRC += iitem.GroupID.CRC(); // GroupID
 	
 			// CRC += another 4 words which always seem to be zero -- unclear if this is a UUID or what
-			CRC += (long)iitem.Permissions.OwnerMask.getIndex(); //owner_mask;      // Either owner_mask or next_owner_mask may need to be
-			CRC += (long)iitem.Permissions.NextOwnerMask.getIndex(); //next_owner_mask; // switched with base_mask -- 2 values go here and in my
-			CRC += (long)iitem.Permissions.EveryoneMask.getIndex(); //everyone_mask;   // study item, the three were identical.
-			CRC += (long)iitem.Permissions.GroupMask.getIndex(); //group_mask;
+			CRC += (long)PermissionMask.getIndex(iitem.Permissions.OwnerMask); //owner_mask;      // Either owner_mask or next_owner_mask may need to be
+			CRC += (long)PermissionMask.getIndex(iitem.Permissions.NextOwnerMask); //next_owner_mask; // switched with base_mask -- 2 values go here and in my
+			CRC += (long)PermissionMask.getIndex(iitem.Permissions.EveryoneMask); //everyone_mask;   // study item, the three were identical.
+			CRC += (long)PermissionMask.getIndex(iitem.Permissions.GroupMask); //group_mask;
 	
 			// The rest of the CRC fields
 			CRC += (long)iitem.Flags; // Flags

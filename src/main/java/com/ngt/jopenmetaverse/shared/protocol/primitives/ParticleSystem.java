@@ -3,6 +3,7 @@ package com.ngt.jopenmetaverse.shared.protocol.primitives;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.ngt.jopenmetaverse.shared.protocol.BitPack;
 import com.ngt.jopenmetaverse.shared.structureddata.OSD;
@@ -105,10 +106,29 @@ import com.ngt.jopenmetaverse.shared.types.Vector3;
         				lookup.put(s.getIndex(), s);
         		}
 
-        		public static ParticleDataFlags get(Long index)
-        		{
-        			return lookup.get(index);
-        		}
+                public static EnumSet<ParticleDataFlags> get(Long index)
+                {
+                        EnumSet<ParticleDataFlags> enumsSet = EnumSet.allOf(ParticleDataFlags.class);
+                        for(Entry<Long,ParticleDataFlags> entry: lookup.entrySet())
+                        {
+                                if((entry.getKey().longValue() | index) != index)
+                                {
+                                        enumsSet.remove(entry.getValue());
+                                }
+                        }
+                        return enumsSet;
+                }
+                
+                public static long getIndex(EnumSet<ParticleDataFlags> enumSet)
+                {
+                        long ret = 0;
+                        for(ParticleDataFlags s: enumSet)
+                        {
+                                ret |= s.getIndex();
+                        }
+                        return ret;
+                }
+
             }
 
             /// <summary>
@@ -143,10 +163,29 @@ import com.ngt.jopenmetaverse.shared.types.Vector3;
         				lookup.put(s.getIndex(), s);
         		}
 
-        		public static ParticleFlags get(Long index)
-        		{
-        			return lookup.get(index);
-        		}
+                public static EnumSet<ParticleFlags> get(Long index)
+                {
+                        EnumSet<ParticleFlags> enumsSet = EnumSet.allOf(ParticleFlags.class);
+                        for(Entry<Long,ParticleFlags> entry: lookup.entrySet())
+                        {
+                                if((entry.getKey().longValue() | index) != index)
+                                {
+                                        enumsSet.remove(entry.getValue());
+                                }
+                        }
+                        return enumsSet;
+                }
+                
+                public static long getIndex(EnumSet<ParticleFlags> enumSet)
+                {
+                        long ret = 0;
+                        for(ParticleFlags s: enumSet)
+                        {
+                                ret |= s.getIndex();
+                        }
+                        return ret;
+                }
+
             }
 
 
@@ -192,7 +231,7 @@ import com.ngt.jopenmetaverse.shared.types.Vector3;
             /// <summary>The <see cref="T:UUID"/> Key of the specified target object or avatar particles will follow</summary>
             public UUID Target;
             /// <summary>Flags of particle from <seealso cref="T:ParticleDataFlags"/></summary>
-            public ParticleDataFlags PartDataFlags;
+            public EnumSet<ParticleDataFlags> PartDataFlags;
             /// <summary>Max Age particle system will emit particles for</summary>
             public float PartMaxAge;
             /// <summary>The <see cref="T:Color4"/> the particle has at the beginning of its lifecycle</summary>
@@ -279,7 +318,7 @@ import com.ngt.jopenmetaverse.shared.types.Vector3;
                     BurstPartCount = 0;
                     AngularVelocity = PartAcceleration = Vector3.Zero;
                     Texture = Target = UUID.Zero;
-                    PartDataFlags = ParticleDataFlags.None;
+                    PartDataFlags = ParticleDataFlags.get(ParticleDataFlags.None.getIndex());
                     PartMaxAge = 0.0f;
                     PartStartColor = PartEndColor = Color4.Black;
                     PartStartScaleX = PartStartScaleY = PartEndScaleX = PartEndScaleY = 0.0f;
@@ -316,7 +355,7 @@ import com.ngt.jopenmetaverse.shared.types.Vector3;
                 pack.PackUUID(Texture);
                 pack.PackUUID(Target);
 
-                pack.PackBits(PartDataFlags.getIndex(), 32);
+                pack.PackBits(ParticleDataFlags.getIndex(PartDataFlags), 32);
                 pack.PackFixed(PartMaxAge, false, 8, 8);
                 pack.PackColor(PartStartColor);
                 pack.PackColor(PartEndColor);

@@ -34,5 +34,15 @@ public class UtilsTest {
 		System.out.println(" HEX: " + Utils.bytesToHexDebugString(Utils.uintToBytes(Utils.bytesToUInt(a2bytes)), ""));
 		Assert.assertEquals(a2, Utils.bytesToUInt(a2bytes));
 	}
+	
+	
+	@Test 
+	public void ubyteToIntTests()
+	{
+		byte a1 = -5;
+		int i1 = Utils.ubyteToInt(a1);
+		System.out.println(Utils.bytesToHexDebugString(new byte[]{a1}, ""));
+		Assert.assertEquals(132, i1);
+	}
 
 }

@@ -1,5 +1,7 @@
 package com.ngt.jopenmetaverse.shared.sim.events.am;
 
+import java.util.EnumSet;
+
 import com.ngt.jopenmetaverse.shared.sim.AgentManager.TeleportFlags;
 import com.ngt.jopenmetaverse.shared.sim.AgentManager.TeleportStatus;
 import com.ngt.jopenmetaverse.shared.sim.events.EventArgs;
@@ -10,13 +12,13 @@ public class TeleportEventArgs extends EventArgs
 {
 	private  String m_Message;
 	private  TeleportStatus m_Status;
-	private  TeleportFlags m_Flags;
+	private  EnumSet<TeleportFlags> m_Flags;
 
 	public String getMessage() {return m_Message;}
 	public TeleportStatus getStatus() {return m_Status;}
-	public TeleportFlags getFlags() {return m_Flags;}
+	public EnumSet<TeleportFlags> getFlags() {return m_Flags;}
 
-	public TeleportEventArgs(String message, TeleportStatus status, TeleportFlags flags)
+	public TeleportEventArgs(String message, TeleportStatus status, EnumSet<TeleportFlags> flags)
 	{
 		this.m_Message = message;
 		this.m_Status = status;

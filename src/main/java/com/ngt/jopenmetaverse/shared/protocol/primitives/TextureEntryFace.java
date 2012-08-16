@@ -1,5 +1,7 @@
 package com.ngt.jopenmetaverse.shared.protocol.primitives;
 
+import java.util.EnumSet;
+
 import com.ngt.jopenmetaverse.shared.protocol.primitives.Enums.Bumpiness;
 import com.ngt.jopenmetaverse.shared.protocol.primitives.Enums.MappingType;
 import com.ngt.jopenmetaverse.shared.protocol.primitives.Enums.Shininess;
@@ -41,7 +43,7 @@ import com.ngt.jopenmetaverse.shared.types.UUID;
             private float glow;
             private byte materialb;
             private byte mediab;
-            private TextureAttributes hasAttribute;
+            private EnumSet<TextureAttributes> hasAttribute;
             private UUID textureID;
             private TextureEntryFace DefaultTexture;
 
@@ -51,7 +53,7 @@ import com.ngt.jopenmetaverse.shared.types.UUID;
             /// <summary></summary>
             public byte getMaterial()
             {
-                    if ((hasAttribute.getIndex() & TextureAttributes.Material.getIndex()) != 0)
+                    if ((TextureAttributes.getIndex(hasAttribute) & TextureAttributes.Material.getIndex()) != 0)
                         return materialb;
                     else
                         return DefaultTexture.getMaterial();
@@ -61,13 +63,13 @@ import com.ngt.jopenmetaverse.shared.types.UUID;
             public void setMaterial(byte value)
             {
                     materialb = value;
-                    hasAttribute = TextureAttributes.get(hasAttribute.getIndex() | TextureAttributes.Material.getIndex());
+                    hasAttribute = TextureAttributes.get(TextureAttributes.getIndex(hasAttribute) | TextureAttributes.Material.getIndex());
             }
             
             /// <summary></summary>
             public byte getMedia()
             {
-                    if ((hasAttribute.getIndex() & TextureAttributes.Media.getIndex()) != 0)
+                    if ((TextureAttributes.getIndex(hasAttribute) & TextureAttributes.Media.getIndex()) != 0)
                         return mediab;
                     else
                         return DefaultTexture.getMedia();
@@ -76,14 +78,14 @@ import com.ngt.jopenmetaverse.shared.types.UUID;
             public void setMedia(byte value)
             {
                     mediab = value;
-                    hasAttribute = TextureAttributes.get(hasAttribute.getIndex() | TextureAttributes.Media.getIndex());
+                    hasAttribute = TextureAttributes.get(TextureAttributes.getIndex(hasAttribute) | TextureAttributes.Media.getIndex());
             }
             
             
             /// <summary></summary>
             public Color4 getRGBA()
             {
-                    if ((hasAttribute.getIndex() & TextureAttributes.RGBA.getIndex()) != 0)
+                    if ((TextureAttributes.getIndex(hasAttribute) & TextureAttributes.RGBA.getIndex()) != 0)
                         return rgba;
                     else
                         return DefaultTexture.getRGBA();
@@ -92,13 +94,13 @@ import com.ngt.jopenmetaverse.shared.types.UUID;
             public void setRGBA(Color4 value)
             {
                     rgba = value;
-                    hasAttribute =TextureAttributes.get(hasAttribute.getIndex() | TextureAttributes.RGBA.getIndex());
+                    hasAttribute =TextureAttributes.get(TextureAttributes.getIndex(hasAttribute) | TextureAttributes.RGBA.getIndex());
             }
             
             /// <summary></summary>
             public float getRepeatU()
             {
-                    if ((hasAttribute.getIndex() & TextureAttributes.RepeatU.getIndex()) != 0)
+                    if ((TextureAttributes.getIndex(hasAttribute) & TextureAttributes.RepeatU.getIndex()) != 0)
                         return repeatU;
                     else
                         return DefaultTexture.repeatU;
@@ -109,13 +111,13 @@ import com.ngt.jopenmetaverse.shared.types.UUID;
             public void setRepeatU(float value)
             {
                     repeatU = value;
-                    hasAttribute =TextureAttributes.get(hasAttribute.getIndex() | TextureAttributes.RepeatU.getIndex());
+                    hasAttribute =TextureAttributes.get(TextureAttributes.getIndex(hasAttribute) | TextureAttributes.RepeatU.getIndex());
             }
             
             /// <summary></summary>
             public float getRepeatV()
             {
-                    if ((hasAttribute.getIndex() & TextureAttributes.RepeatV.getIndex()) != 0)
+                    if ((TextureAttributes.getIndex(hasAttribute) & TextureAttributes.RepeatV.getIndex()) != 0)
                         return repeatV;
                     else
                         return DefaultTexture.repeatV;
@@ -125,13 +127,13 @@ import com.ngt.jopenmetaverse.shared.types.UUID;
             public void setRepeatV(float value)
             {
                     repeatV = value;
-                    hasAttribute =TextureAttributes.get(hasAttribute.getIndex() | TextureAttributes.RepeatV.getIndex());
+                    hasAttribute =TextureAttributes.get(TextureAttributes.getIndex(hasAttribute) | TextureAttributes.RepeatV.getIndex());
             }
             
             /// <summary></summary>
             public float getOffsetU()
             {
-                    if ((hasAttribute.getIndex() & TextureAttributes.OffsetU.getIndex()) != 0)
+                    if ((TextureAttributes.getIndex(hasAttribute) & TextureAttributes.OffsetU.getIndex()) != 0)
                         return offsetU;
                     else
                         return DefaultTexture.offsetU;
@@ -141,13 +143,13 @@ import com.ngt.jopenmetaverse.shared.types.UUID;
             public void setOffsetU(float value)
             {
                     offsetU = value;
-                    hasAttribute =TextureAttributes.get(hasAttribute.getIndex() | TextureAttributes.OffsetU.getIndex());
+                    hasAttribute =TextureAttributes.get(TextureAttributes.getIndex(hasAttribute) | TextureAttributes.OffsetU.getIndex());
             }
             
             /// <summary></summary>
             public float getOffsetV()
             {
-                    if ((hasAttribute.getIndex() & TextureAttributes.OffsetV.getIndex()) != 0)
+                    if ((TextureAttributes.getIndex(hasAttribute) & TextureAttributes.OffsetV.getIndex()) != 0)
                         return offsetV;
                     else
                         return DefaultTexture.offsetV;
@@ -157,13 +159,13 @@ import com.ngt.jopenmetaverse.shared.types.UUID;
             public void setOffsetV(float value)
             {
                     offsetV = value;
-                    hasAttribute =TextureAttributes.get(hasAttribute.getIndex() | TextureAttributes.OffsetV.getIndex());
+                    hasAttribute =TextureAttributes.get(TextureAttributes.getIndex(hasAttribute) | TextureAttributes.OffsetV.getIndex());
             }
             
             /// <summary></summary>
             public float getRotation()
             {
-                    if ((hasAttribute.getIndex() & TextureAttributes.Rotation.getIndex()) != 0)
+                    if ((TextureAttributes.getIndex(hasAttribute) & TextureAttributes.Rotation.getIndex()) != 0)
                         return rotation;
                     else
                         return DefaultTexture.rotation;
@@ -172,13 +174,13 @@ import com.ngt.jopenmetaverse.shared.types.UUID;
             public void setRotation(float value)
             {
                     rotation = value;
-                    hasAttribute =TextureAttributes.get(hasAttribute.getIndex() | TextureAttributes.Rotation.getIndex());
+                    hasAttribute =TextureAttributes.get(TextureAttributes.getIndex(hasAttribute) | TextureAttributes.Rotation.getIndex());
             }
             
             /// <summary></summary>
             public float getGlow()
             {
-                    if ((hasAttribute.getIndex() & TextureAttributes.Glow.getIndex()) != 0)
+                    if ((TextureAttributes.getIndex(hasAttribute) & TextureAttributes.Glow.getIndex()) != 0)
                         return glow;
                     else
                         return DefaultTexture.glow;
@@ -187,13 +189,13 @@ import com.ngt.jopenmetaverse.shared.types.UUID;
             public void setGlow(float value)
             {
                     glow = value;
-                    hasAttribute =TextureAttributes.get(hasAttribute.getIndex() | TextureAttributes.Glow.getIndex());
+                    hasAttribute =TextureAttributes.get(TextureAttributes.getIndex(hasAttribute) | TextureAttributes.Glow.getIndex());
             }
             
             /// <summary></summary>
             public Bumpiness getBump()
             {
-                    if ((hasAttribute.getIndex() & TextureAttributes.Material.getIndex()) != 0)
+                    if ((TextureAttributes.getIndex(hasAttribute) & TextureAttributes.Material.getIndex()) != 0)
                         return Bumpiness.get((byte)(getMaterial() & BUMP_MASK));
                     else
                         return DefaultTexture.getBump();
@@ -204,13 +206,13 @@ import com.ngt.jopenmetaverse.shared.types.UUID;
                     // Clear out the old material value
                     setMaterial((byte)(getMaterial() & 0xE0));
                     // Put the new bump value in the material byte
-                    setMaterial((byte)(hasAttribute.getIndex() | value.getIndex()));
-                    hasAttribute =TextureAttributes.get(hasAttribute.getIndex() | TextureAttributes.Material.getIndex());
+                    setMaterial((byte)(TextureAttributes.getIndex(hasAttribute) | value.getIndex()));
+                    hasAttribute =TextureAttributes.get(TextureAttributes.getIndex(hasAttribute) | TextureAttributes.Material.getIndex());
             }
             
             public Shininess getShiny()
             {
-                    if ((hasAttribute.getIndex() & TextureAttributes.Material.getIndex()) != 0)
+                    if ((TextureAttributes.getIndex(hasAttribute) & TextureAttributes.Material.getIndex()) != 0)
                         return Shininess.get((byte)(getMaterial() & SHINY_MASK));
                     else
                         return DefaultTexture.getShiny();
@@ -222,13 +224,13 @@ import com.ngt.jopenmetaverse.shared.types.UUID;
                     // Clear out the old shiny value
                     setMaterial((byte)(getMaterial() & 0x3F));
                     // Put the new shiny value in the material byte
-                    setMaterial( (byte) (hasAttribute.getIndex() | (byte)value.getIndex()) );
-                    hasAttribute =TextureAttributes.get(hasAttribute.getIndex() | TextureAttributes.Material.getIndex());
+                    setMaterial( (byte) (TextureAttributes.getIndex(hasAttribute) | (byte)value.getIndex()) );
+                    hasAttribute =TextureAttributes.get(TextureAttributes.getIndex(hasAttribute) | TextureAttributes.Material.getIndex());
             }
 
             public boolean getFullbright()
             {
-                    if ((hasAttribute.getIndex() & TextureAttributes.Material.getIndex()) != 0)
+                    if ((TextureAttributes.getIndex(hasAttribute) & TextureAttributes.Material.getIndex()) != 0)
                         return (getMaterial() & FULLBRIGHT_MASK) != 0;
                     else
                         return DefaultTexture.getFullbright();
@@ -240,8 +242,8 @@ import com.ngt.jopenmetaverse.shared.types.UUID;
             	 setMaterial((byte)(getMaterial() & 0xDF));
                     if (value)
                     {
-                    	 setMaterial( (byte)(hasAttribute.getIndex() | 0x20));
-                        hasAttribute =TextureAttributes.get(hasAttribute.getIndex() | TextureAttributes.Material.getIndex());
+                    	 setMaterial( (byte)(TextureAttributes.getIndex(hasAttribute) | 0x20));
+                        hasAttribute =TextureAttributes.get(TextureAttributes.getIndex(hasAttribute) | TextureAttributes.Material.getIndex());
                     }
             }
 
@@ -249,7 +251,7 @@ import com.ngt.jopenmetaverse.shared.types.UUID;
             /// attached to this face</summary>
             public boolean getMediaFlags()
             {
-                    if ((hasAttribute.getIndex() & TextureAttributes.Media.getIndex()) != 0)
+                    if ((TextureAttributes.getIndex(hasAttribute) & TextureAttributes.Media.getIndex()) != 0)
                         return (getMedia() & MEDIA_MASK) != 0;
                     else
                         return DefaultTexture.getMediaFlags();
@@ -261,14 +263,14 @@ import com.ngt.jopenmetaverse.shared.types.UUID;
                     setMedia((byte)(getMedia() & 0xFE));
                     if (value)
                     {
-                        setMedia((byte)(hasAttribute.getIndex() | 0x01));
-                        hasAttribute =TextureAttributes.get(hasAttribute.getIndex() | TextureAttributes.Media.getIndex());
+                        setMedia((byte)(TextureAttributes.getIndex(hasAttribute) | 0x01));
+                        hasAttribute =TextureAttributes.get(TextureAttributes.getIndex(hasAttribute) | TextureAttributes.Media.getIndex());
                     }
             }
             
             public MappingType getTexMapType()
             {
-                    if ((hasAttribute.getIndex() & TextureAttributes.Media.getIndex()) != 0)
+                    if ((TextureAttributes.getIndex(hasAttribute) & TextureAttributes.Media.getIndex()) != 0)
                         return MappingType.get((byte)(getMedia() & TEX_MAP_MASK));
                     else
                         return DefaultTexture.getTexMapType();
@@ -279,14 +281,14 @@ import com.ngt.jopenmetaverse.shared.types.UUID;
                     // Clear out the old texmap value
             		setMedia((byte)(getMedia() & 0xF9));
                     // Put the new texmap value in the media byte
-                    setMedia((byte)(hasAttribute.getIndex() | (byte)value.getIndex()));
-                    hasAttribute =TextureAttributes.get(hasAttribute.getIndex() | TextureAttributes.Media.getIndex());
+                    setMedia((byte)(TextureAttributes.getIndex(hasAttribute) | (byte)value.getIndex()));
+                    hasAttribute =TextureAttributes.get(TextureAttributes.getIndex(hasAttribute) | TextureAttributes.Media.getIndex());
             }
             
             /// <summary></summary>
             public UUID getTextureID()
             {
-                    if ((hasAttribute.getIndex() & TextureAttributes.TextureID.getIndex()) != 0)
+                    if ((TextureAttributes.getIndex(hasAttribute) & TextureAttributes.TextureID.getIndex()) != 0)
                         return textureID;
                     else
                         return DefaultTexture.textureID;
@@ -295,7 +297,7 @@ import com.ngt.jopenmetaverse.shared.types.UUID;
             public void setTextureID(UUID value)
             {
                     textureID = value;
-                    hasAttribute =TextureAttributes.get(hasAttribute.getIndex() | TextureAttributes.TextureID.getIndex());
+                    hasAttribute =TextureAttributes.get(TextureAttributes.getIndex(hasAttribute) | TextureAttributes.TextureID.getIndex());
             }
             
             //endregion Properties
@@ -312,9 +314,9 @@ import com.ngt.jopenmetaverse.shared.types.UUID;
 
                 DefaultTexture = defaultTexture;
                 if (DefaultTexture == null)
-                    hasAttribute = TextureAttributes.All;
+                    hasAttribute = TextureAttributes.get(TextureAttributes.All.getIndex());
                 else
-                    hasAttribute = TextureAttributes.None;
+                    hasAttribute = TextureAttributes.get(TextureAttributes.None.getIndex());
             }
 
             public OSD GetOSD(int faceNumber)

@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Date;
+import java.util.Map.Entry;
 import java.util.Observable;
 
 import com.ngt.jopenmetaverse.shared.protocol.DirClassifiedQueryPacket;
@@ -236,10 +237,29 @@ public class DirectoryManager {
 				lookup.put(s.getIndex(), s);
 		}
 
-		public static DirFindFlags get(Integer index)
-		{
-			return lookup.get(index);
-		}
+		   public static EnumSet<DirFindFlags> get(Integer index)
+           {
+                   EnumSet<DirFindFlags> enumsSet = EnumSet.allOf(DirFindFlags.class);
+                   for(Entry<Integer,DirFindFlags> entry: lookup.entrySet())
+                   {
+                           if((entry.getKey().longValue() | index) != index)
+                           {
+                                   enumsSet.remove(entry.getValue());
+                           }
+                   }
+                   return enumsSet;
+           }
+           
+           public static int getIndex(EnumSet<DirFindFlags> enumSet)
+           {
+                   int ret = 0;
+                   for(DirFindFlags s: enumSet)
+                   {
+                           ret |= s.getIndex();
+                   }
+                   return ret;
+           }
+
 	}
 
 	/// <summary>
@@ -282,6 +302,30 @@ public class DirectoryManager {
 		{
 			return lookup.get(index);
 		}
+		
+		 public static EnumSet<SearchTypeFlags> get(Long index)
+         {
+                 EnumSet<SearchTypeFlags> enumsSet = EnumSet.allOf(SearchTypeFlags.class);
+                 for(Entry<Integer,SearchTypeFlags> entry: lookup.entrySet())
+                 {
+                         if((entry.getKey().longValue() | index) != index)
+                         {
+                                 enumsSet.remove(entry.getValue());
+                         }
+                 }
+                 return enumsSet;
+         }
+         
+         public static int getIndex(EnumSet<SearchTypeFlags> enumSet)
+         {
+                 int ret = 0;
+                 for(SearchTypeFlags s: enumSet)
+                 {
+                         ret |= s.getIndex();
+                 }
+                 return ret;
+         }
+
 	}
 
 	/// <summary>
@@ -357,10 +401,29 @@ public class DirectoryManager {
 				lookup.put(s.getIndex(), s);
 		}
 
-		public static ClassifiedFlags get(Byte index)
-		{
-			return lookup.get(index);
-		}
+        public static EnumSet<ClassifiedFlags> get(Byte index)
+        {
+                EnumSet<ClassifiedFlags> enumsSet = EnumSet.allOf(ClassifiedFlags.class);
+                for(Entry<Byte,ClassifiedFlags> entry: lookup.entrySet())
+                {
+                        if((entry.getKey().byteValue() | index) != index)
+                        {
+                                enumsSet.remove(entry.getValue());
+                        }
+                }
+                return enumsSet;
+        }
+        
+        public static byte getIndex(EnumSet<ClassifiedFlags> enumSet)
+        {
+                byte ret = 0;
+                for(ClassifiedFlags s: enumSet)
+                {
+                        ret |= s.getIndex();
+                }
+                return ret;
+        }
+
 	}
 
 	/// <summary>
@@ -397,10 +460,29 @@ public class DirectoryManager {
 				lookup.put(s.getIndex(), s);
 		}
 
-		public static ClassifiedQueryFlags get(Integer index)
-		{
-			return lookup.get(index);
-		}
+		 public static EnumSet<ClassifiedQueryFlags> get(Long index)
+         {
+                 EnumSet<ClassifiedQueryFlags> enumsSet = EnumSet.allOf(ClassifiedQueryFlags.class);
+                 for(Entry<Integer,ClassifiedQueryFlags> entry: lookup.entrySet())
+                 {
+                         if((entry.getKey().intValue() | index) != index)
+                         {
+                                 enumsSet.remove(entry.getValue());
+                         }
+                 }
+                 return enumsSet;
+         }
+
+         public static int getIndex(EnumSet<ClassifiedQueryFlags> enumSet)
+         {
+                 int ret = 0;
+                 for(ClassifiedQueryFlags s: enumSet)
+                 {
+                         ret |= s.getIndex();
+                 }
+                 return ret;
+         }
+
 	}
 
 	/// <summary>
@@ -449,7 +531,7 @@ public class DirectoryManager {
 		/// <summary>The title of this classified ad</summary>
 		public String Name;
 		/// <summary>Flags that show certain options applied to the classified</summary>
-		public ClassifiedFlags Flags;
+		public EnumSet<ClassifiedFlags> Flags;
 		/// <summary>Creation date of the ad</summary>
 		public Date CreationDate;
 		/// <summary>Expiration date of the ad</summary>
@@ -1052,7 +1134,7 @@ public class DirectoryManager {
 	/// <remarks>        
 	/// Additional information on the results can be obtained by using the ParcelManager.InfoRequest method
 	/// </remarks>
-	public UUID StartDirPlacesSearch(String searchText, DirFindFlags queryFlags, ParcelCategory category, int queryStart)
+	public UUID StartDirPlacesSearch(String searchText, EnumSet<DirFindFlags> queryFlags, ParcelCategory category, int queryStart)
 	{
 		DirPlacesQueryPacket query = new DirPlacesQueryPacket();
 
@@ -1062,7 +1144,7 @@ public class DirectoryManager {
 		query.AgentData.SessionID = Client.self.getSessionID();
 
 		query.QueryData.Category = (byte)category.getIndex();
-		query.QueryData.QueryFlags = (long)queryFlags.getIndex();
+		query.QueryData.QueryFlags = (long)DirFindFlags.getIndex(queryFlags);
 
 		query.QueryData.QueryID = queryID;
 		query.QueryData.QueryText = Utils.stringToBytes(searchText);
@@ -1087,7 +1169,7 @@ public class DirectoryManager {
 	/// results will be returned, or how many times the callback will be 
 	/// fired other than you won't get more than 100 total parcels from 
 	/// each query.</remarks>
-	public void StartLandSearch(SearchTypeFlags typeFlags)
+	public void StartLandSearch(EnumSet<SearchTypeFlags> typeFlags)
 	{
 		StartLandSearch(DirFindFlags.get(DirFindFlags.SortAsc.getIndex() | DirFindFlags.PerMeterSort.getIndex()), typeFlags, 0, 0, 0);
 	}
@@ -1109,7 +1191,7 @@ public class DirectoryManager {
 	/// results will be returned, or how many times the callback will be 
 	/// fired other than you won't get more than 100 total parcels from 
 	/// each query.</remarks>
-	public void StartLandSearch(SearchTypeFlags typeFlags, int priceLimit, int areaLimit, int queryStart)
+	public void StartLandSearch(EnumSet<SearchTypeFlags> typeFlags, int priceLimit, int areaLimit, int queryStart)
 	{
 		StartLandSearch(DirFindFlags.get(DirFindFlags.SortAsc.getIndex() | DirFindFlags.PerMeterSort.getIndex() | DirFindFlags.LimitByPrice.getIndex() |
 				DirFindFlags.LimitByArea.getIndex()), typeFlags, priceLimit, areaLimit, queryStart);
@@ -1160,7 +1242,7 @@ public class DirectoryManager {
 	/// // request all mainland, any maturity rating that is larger than 512 sq.m
 	/// StartLandSearch(DirFindFlags.SortAsc | DirFindFlags.PerMeterSort | DirFindFlags.LimitByArea | DirFindFlags.IncludePG | DirFindFlags.IncludeMature | DirFindFlags.IncludeAdult, SearchTypeFlags.Mainland, 0, 512, 0);
 	/// </code></example>
-	public void StartLandSearch(DirFindFlags findFlags, SearchTypeFlags typeFlags, int priceLimit,
+	public void StartLandSearch(EnumSet<DirFindFlags> findFlags, EnumSet<SearchTypeFlags> typeFlags, int priceLimit,
 			int areaLimit, int queryStart)
 	{
 		DirLandQueryPacket query = new DirLandQueryPacket();
@@ -1169,8 +1251,8 @@ public class DirectoryManager {
 		query.QueryData.Area = areaLimit;
 		query.QueryData.Price = priceLimit;
 		query.QueryData.QueryStart = queryStart;
-		query.QueryData.SearchType = (int)typeFlags.getIndex();
-		query.QueryData.QueryFlags = (int)findFlags.getIndex();
+		query.QueryData.SearchType = (int)SearchTypeFlags.getIndex(typeFlags);
+		query.QueryData.QueryFlags = (int)DirFindFlags.getIndex(findFlags);
 		query.QueryData.QueryID = UUID.Random();
 
 		Client.network.SendPacket(query);            
@@ -1195,12 +1277,12 @@ public class DirectoryManager {
 	/// <param name="queryStart">Start from the match number</param>
 	/// <param name="flags">Search flags</param>
 	/// <returns></returns>
-	public UUID StartGroupSearch(String searchText, int queryStart, DirFindFlags flags)
+	public UUID StartGroupSearch(String searchText, int queryStart, EnumSet<DirFindFlags> flags)
 	{
 		DirFindQueryPacket find = new DirFindQueryPacket();
 		find.AgentData.AgentID = Client.self.getAgentID();
 		find.AgentData.SessionID = Client.self.getSessionID();
-		find.QueryData.QueryFlags = flags.getIndex();
+		find.QueryData.QueryFlags = DirFindFlags.getIndex(flags);
 		find.QueryData.QueryText = Utils.stringToBytes(searchText);
 		find.QueryData.QueryID = UUID.Random();
 		find.QueryData.QueryStart = queryStart;
@@ -1236,7 +1318,7 @@ public class DirectoryManager {
 	/// </summary>
 	public UUID StartPlacesSearch()
 	{
-		return StartPlacesSearch(DirFindFlags.AgentOwned, ParcelCategory.Any, "", "",
+		return StartPlacesSearch(DirFindFlags.get(DirFindFlags.AgentOwned.getIndex()), ParcelCategory.Any, "", "",
 				UUID.Zero, UUID.Random());
 	}
 
@@ -1247,7 +1329,7 @@ public class DirectoryManager {
 	/// <returns>Transaction (Query) ID which can be associated with results from your request.</returns>
 	public UUID StartPlacesSearch(UUID groupID)
 	{
-		return StartPlacesSearch(DirFindFlags.GroupOwned, ParcelCategory.Any, "", "", 
+		return StartPlacesSearch(DirFindFlags.get(DirFindFlags.GroupOwned.getIndex()), ParcelCategory.Any, "", "", 
 				groupID, UUID.Random());
 	}
 
@@ -1275,7 +1357,7 @@ public class DirectoryManager {
 	/// <param name="groupID">LLUID of group you want to recieve results for</param>
 	/// <param name="transactionID">Transaction (Query) ID which can be associated with results from your request.</param>
 	/// <returns>Transaction (Query) ID which can be associated with results from your request.</returns>
-	public UUID StartPlacesSearch(DirFindFlags findFlags, ParcelCategory searchCategory, String searchText, String simulatorName, 
+	public UUID StartPlacesSearch(EnumSet<DirFindFlags> findFlags, ParcelCategory searchCategory, String searchText, String simulatorName, 
 			UUID groupID, UUID transactionID)
 	{
 		PlacesQueryPacket find = new PlacesQueryPacket();
@@ -1286,7 +1368,7 @@ public class DirectoryManager {
 		find.TransactionData.TransactionID = transactionID;
 
 		find.QueryData.QueryText = Utils.stringToBytes(searchText);
-		find.QueryData.QueryFlags = findFlags.getIndex();
+		find.QueryData.QueryFlags = DirFindFlags.getIndex(findFlags);
 		find.QueryData.Category = searchCategory.getIndex();
 		find.QueryData.SimName = Utils.stringToBytes(simulatorName);
 
@@ -1326,7 +1408,7 @@ public class DirectoryManager {
 	/// from 100-199 use 100, 200-299 use 200, etc.</param>
 	/// <param name="category">EventCategory event is listed under.</param>
 	/// <returns>UUID of query to correlate results in callback.</returns>
-	public UUID StartEventsSearch(String searchText, DirFindFlags queryFlags, String eventDay, long queryStart, EventCategories category)
+	public UUID StartEventsSearch(String searchText, EnumSet<DirFindFlags> queryFlags, String eventDay, long queryStart, EventCategories category)
 	{
 		DirFindQueryPacket find = new DirFindQueryPacket();
 		find.AgentData.AgentID = Client.self.getAgentID();
@@ -1336,7 +1418,7 @@ public class DirectoryManager {
 
 		find.QueryData.QueryID = queryID;
 		find.QueryData.QueryText = Utils.stringToBytes(eventDay + "|" + (int)category.getIndex() + "|" + searchText);
-		find.QueryData.QueryFlags = (long)queryFlags.getIndex();
+		find.QueryData.QueryFlags = (long)DirFindFlags.getIndex(queryFlags);
 		find.QueryData.QueryStart = (int)queryStart;
 
 		Client.network.SendPacket(find);

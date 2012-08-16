@@ -210,11 +210,29 @@ public class EnumsPrimitive
 			for(SoundFlags s : EnumSet.allOf(SoundFlags.class))
 				lookup.put(s.getIndex(), s);
 		}
+		
+		 public static EnumSet<SoundFlags> get(Byte index)
+	        {
+	                EnumSet<SoundFlags> enumsSet = EnumSet.allOf(SoundFlags.class);
+	                for(Entry<Byte,SoundFlags> entry: lookup.entrySet())
+	                {
+	                        if((entry.getKey().byteValue() | index) != index)
+	                        {
+	                                enumsSet.remove(entry.getValue());
+	                        }
+	                }
+	                return enumsSet;
+	        }
 
-		public static SoundFlags get(Byte index)
-		{
-			return lookup.get(index);
-		}
+	        public static byte getIndex(EnumSet<SoundFlags> enumSet)
+	        {
+	                byte ret = 0;
+	                for(SoundFlags s: enumSet)
+	                {
+	                        ret |= s.getIndex();
+	                }
+	                return ret;
+	        }		
     }
 
     public enum ProfileCurve
@@ -416,10 +434,29 @@ public class EnumsPrimitive
 				lookup.put(s.getIndex(), s);
 		}
 
-		public static ExtraParamType get(Integer index)
-		{
-			return lookup.get(index);
-		}
+        public static EnumSet<ExtraParamType> get(Integer index)
+        {
+                EnumSet<ExtraParamType> enumsSet = EnumSet.allOf(ExtraParamType.class);
+                for(Entry<Integer,ExtraParamType> entry: lookup.entrySet())
+                {
+                        if((entry.getKey().intValue() | index) != index)
+                        {
+                                enumsSet.remove(entry.getValue());
+                        }
+                }
+                return enumsSet;
+        }
+
+        public static int getIndex(EnumSet<ExtraParamType> enumSet)
+        {
+                int ret = 0;
+                for(ExtraParamType s: enumSet)
+                {
+                        ret |= s.getIndex();
+                }
+                return ret;
+        }
+
 		
     }
 

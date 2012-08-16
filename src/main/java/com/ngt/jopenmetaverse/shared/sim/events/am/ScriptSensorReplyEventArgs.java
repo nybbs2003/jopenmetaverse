@@ -1,5 +1,7 @@
 package com.ngt.jopenmetaverse.shared.sim.events.am;
 
+import java.util.EnumSet;
+
 import com.ngt.jopenmetaverse.shared.sim.AgentManager.ScriptSensorTypeFlags;
 import com.ngt.jopenmetaverse.shared.sim.events.EventArgs;
 import com.ngt.jopenmetaverse.shared.types.Quaternion;
@@ -20,7 +22,7 @@ public class ScriptSensorReplyEventArgs extends EventArgs
 	private  Vector3 m_Position;
 	private  float m_Range;
 	private  Quaternion m_Rotation;
-	private  ScriptSensorTypeFlags m_Type;
+	private  EnumSet<ScriptSensorTypeFlags> m_Type;
 	private  Vector3 m_Velocity;
 
 	/// <summary>Get the ID of the primitive sending the sensor</summary>
@@ -40,7 +42,7 @@ public class ScriptSensorReplyEventArgs extends EventArgs
 	/// <summary>Get the rotation of the primitive sending the sensor</summary>
 	public Quaternion getRotation() {return m_Rotation;}
 	/// <summary>Get the type of sensor the primitive sent</summary>
-	public ScriptSensorTypeFlags getType() {return m_Type;}
+	public EnumSet<ScriptSensorTypeFlags> getType() {return m_Type;}
 	/// <summary>Get the velocity of the primitive sending the sensor</summary>
 	public Vector3 getVelocity() {return m_Velocity;}
 
@@ -59,7 +61,7 @@ public class ScriptSensorReplyEventArgs extends EventArgs
 	/// <param name="velocity">The velocity of the primitive sending the sensor</param>
 	public ScriptSensorReplyEventArgs(UUID requestorID, UUID groupID, String name,
 			UUID objectID, UUID ownerID, Vector3 position, float range, Quaternion rotation,
-			ScriptSensorTypeFlags type, Vector3 velocity)
+			EnumSet<ScriptSensorTypeFlags> type, Vector3 velocity)
 	{
 		this.m_RequestorID = requestorID;
 		this.m_GroupID = groupID;

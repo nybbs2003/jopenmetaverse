@@ -3,6 +3,7 @@ package com.ngt.jopenmetaverse.shared.protocol.primitives;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 
 
@@ -202,10 +203,29 @@ public class Enums
 				lookup.put(s.getIndex(), s);
 		}
 
-		public static TextureAttributes get(Long index)
-		{
-			return lookup.get(index);
-		}   
+        public static EnumSet<TextureAttributes> get(Long index)
+        {
+                EnumSet<TextureAttributes> enumsSet = EnumSet.allOf(TextureAttributes.class);
+                for(Entry<Long,TextureAttributes> entry: lookup.entrySet())
+                {
+                        if((entry.getKey().longValue() | index) != index)
+                        {
+                                enumsSet.remove(entry.getValue());
+                        }
+                }
+                return enumsSet;
+        }
+        
+        public static long getIndex(EnumSet<TextureAttributes> enumSet)
+        {
+                long ret = 0;
+                for(TextureAttributes s: enumSet)
+                {
+                        ret |= s.getIndex();
+                }
+                return ret;
+        }
+  
     }
     
     /// <summary>
@@ -249,10 +269,29 @@ public class Enums
 				lookup.put(s.getIndex(), s);
 		}
 
-		public static TextureAnimMode get(Long index)
-		{
-			return lookup.get(index);
-		}   
+        public static EnumSet<TextureAnimMode> get(Long index)
+        {
+                EnumSet<TextureAnimMode> enumsSet = EnumSet.allOf(TextureAnimMode.class);
+                for(Entry<Long,TextureAnimMode> entry: lookup.entrySet())
+                {
+                        if((entry.getKey().longValue() | index) != index)
+                        {
+                                enumsSet.remove(entry.getValue());
+                        }
+                }
+                return enumsSet;
+        }
+        
+        public static long getIndex(EnumSet<TextureAnimMode> enumSet)
+        {
+                long ret = 0;
+                for(TextureAnimMode s: enumSet)
+                {
+                        ret |= s.getIndex();
+                }
+                return ret;
+        }
+ 
         
     }
     

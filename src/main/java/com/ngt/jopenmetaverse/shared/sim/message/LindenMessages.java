@@ -36,6 +36,7 @@ import com.ngt.jopenmetaverse.shared.sim.AgentManager.InstantMessageOnline;
 import com.ngt.jopenmetaverse.shared.sim.AgentManager.TeleportFlags;
 import com.ngt.jopenmetaverse.shared.sim.AvatarManager.AgentDisplayName;
 import com.ngt.jopenmetaverse.shared.sim.ParcelManager.ParcelCategory;
+import com.ngt.jopenmetaverse.shared.sim.ParcelManager.ParcelFlags;
 import com.ngt.jopenmetaverse.shared.sim.Simulator;
 import com.ngt.jopenmetaverse.shared.sim.interfaces.IMessage;
 import com.ngt.jopenmetaverse.shared.structureddata.OSD;
@@ -74,7 +75,7 @@ public class LindenMessages
 		/// <summary>The UDP Port the simulator will listen for UDP traffic on</summary>
 		public int Port;
 		/// <summary>Status flags indicating the state of the Agent upon arrival, Flying, etc.</summary>
-		public TeleportFlags Flags;
+		public EnumSet<TeleportFlags> Flags;
 
 		/// <summary>
 		/// Serialize the object
@@ -94,7 +95,7 @@ public class LindenMessages
 			info.put("SimAccess", OSD.FromInteger(SimAccess.getIndex()));
 			info.put("SimIP", MessageUtils.FromIP(IP));
 			info.put("SimPort", OSD.FromInteger(Port));
-			info.put("TeleportFlags", OSD.FromUInteger(Flags.getIndex()));
+			info.put("TeleportFlags", OSD.FromUInteger(TeleportFlags.getIndex(Flags)));
 
 			infoArray.add(info);
 
@@ -606,7 +607,7 @@ public class LindenMessages
 		/// <summary>Parcel Description</summary>
 		public String  Desc;
 		/// <summary></summary>
-		public ParcelFlags parcelFlags;
+		public EnumSet<ParcelFlags> parcelFlags;
 		/// <summary></summary>
 		public UUID GroupID;
 		/// <summary>Total number of primitives owned by the parcel group on 
@@ -734,7 +735,7 @@ public class LindenMessages
 			parcelDataMap.put("ClaimDate", OSD.FromDate(ClaimDate));
 			parcelDataMap.put("ClaimPrice", OSD.FromInteger(ClaimPrice));
 			parcelDataMap.put("Desc", OSD.FromString(Desc));
-			parcelDataMap.put("ParcelFlags", OSD.FromUInteger(parcelFlags.getIndex()));
+			parcelDataMap.put("ParcelFlags", OSD.FromUInteger(ParcelFlags.getIndex(parcelFlags)));
 			parcelDataMap.put("GroupID", OSD.FromUUID(GroupID));
 			parcelDataMap.put("GroupPrims", OSD.FromInteger(GroupPrims));
 			parcelDataMap.put("IsGroupOwned", OSD.FromBoolean(IsGroupOwned));
@@ -930,7 +931,7 @@ public class LindenMessages
 		/// <summary></summary>
 		public boolean ObscureMusic;
 		/// <summary></summary>
-		public ParcelFlags parcelFlags;
+		public EnumSet<ParcelFlags> parcelFlags;
 		/// <summary></summary>
 		public float PassHours;
 		/// <summary></summary>
@@ -1008,7 +1009,7 @@ public class LindenMessages
 			map.put("name", OSD.FromString(Name));
 			map.put("obscure_media", OSD.FromBoolean(ObscureMedia));
 			map.put("obscure_music", OSD.FromBoolean(ObscureMusic));
-			map.put("parcel_flags", OSD.FromUInteger(parcelFlags.getIndex()));
+			map.put("parcel_flags", OSD.FromUInteger(ParcelFlags.getIndex(parcelFlags)));
 			map.put("pass_hours", OSD.FromReal(PassHours));
 			map.put("privacy", OSD.FromBoolean(Privacy));
 			map.put("pass_price", OSD.FromInteger((int)PassPrice));
@@ -1153,9 +1154,9 @@ public class LindenMessages
 		public InventoryType inventoryType;
 		public String  Name;
 		public String  Description;
-		public PermissionMask EveryoneMask;
-		public PermissionMask GroupMask;
-		public PermissionMask NextOwnerMask;
+		public EnumSet<PermissionMask> EveryoneMask;
+		public EnumSet<PermissionMask> GroupMask;
+		public EnumSet<PermissionMask> NextOwnerMask;
 
 		/// <summary>
 		/// Serialize the object
@@ -1171,9 +1172,9 @@ public class LindenMessages
 			map.put("inventory_type", OSD.FromString(inventoryType.toString()));
 			map.put("name", OSD.FromString(Name));
 			map.put("description", OSD.FromString(Description));
-			map.put("everyone_mask", OSD.FromInteger((int)EveryoneMask.getIndex()));
-			map.put("group_mask", OSD.FromInteger((int)GroupMask.getIndex()));
-			map.put("next_owner_mask", OSD.FromInteger((int)NextOwnerMask.getIndex()));
+			map.put("everyone_mask", OSD.FromInteger((int)PermissionMask.getIndex(EveryoneMask)));
+			map.put("group_mask", OSD.FromInteger((int)PermissionMask.getIndex(GroupMask)));
+			map.put("next_owner_mask", OSD.FromInteger((int)PermissionMask.getIndex(NextOwnerMask)));
 
 			return map;
 		}
@@ -1228,9 +1229,9 @@ public class LindenMessages
 		public InventoryType inventoryType;
 		public String  Name;
 		public String  Description;
-		public PermissionMask EveryoneMask;
-		public PermissionMask GroupMask;
-		public PermissionMask NextOwnerMask;
+		public EnumSet<PermissionMask> EveryoneMask;
+		public EnumSet<PermissionMask> GroupMask;
+		public EnumSet<PermissionMask> NextOwnerMask;
 		// TODOextends Asset_resources?
 
 				/// <summary>
@@ -1245,9 +1246,9 @@ public class LindenMessages
 			map.put("inventory_type", OSD.FromString(inventoryType.toString()));
 			map.put("name", OSD.FromString(Name));
 			map.put("description", OSD.FromString(Description));
-			map.put("everyone_mask", OSD.FromInteger((int)EveryoneMask.getIndex()));
-			map.put("group_mask", OSD.FromInteger((int)GroupMask.getIndex()));
-			map.put("next_owner_mask", OSD.FromInteger((int)NextOwnerMask.getIndex()));
+			map.put("everyone_mask", OSD.FromInteger((int)PermissionMask.getIndex(EveryoneMask)));
+			map.put("group_mask", OSD.FromInteger((int)PermissionMask.getIndex(GroupMask)));
+			map.put("next_owner_mask", OSD.FromInteger((int)PermissionMask.getIndex(NextOwnerMask)));
 
 			return map;
 		}
@@ -1306,10 +1307,10 @@ public class LindenMessages
 		public UUID NewInventoryItem;
 		public UUID NewAsset;
 		public String  State;
-		public PermissionMask NewBaseMask;
-		public PermissionMask NewEveryoneMask;
-		public PermissionMask NewOwnerMask;
-		public PermissionMask NewNextOwnerMask;
+		public EnumSet<PermissionMask> NewBaseMask;
+		public EnumSet<PermissionMask> NewEveryoneMask;
+		public EnumSet<PermissionMask> NewOwnerMask;
+		public EnumSet<PermissionMask> NewNextOwnerMask;
 
 		public NewFileAgentInventoryUploadReplyMessage()
 		{
@@ -1322,10 +1323,10 @@ public class LindenMessages
 			map.put("new_inventory_item", OSD.FromUUID(NewInventoryItem));
 			map.put("new_asset", OSD.FromUUID(NewAsset));
 			map.put("state", OSD.FromString(State));
-			map.put("new_base_mask", OSD.FromInteger((int)NewBaseMask.getIndex()));
-			map.put("new_everyone_mask", OSD.FromInteger((int)NewEveryoneMask.getIndex()));
-			map.put("new_owner_mask", OSD.FromInteger((int)NewOwnerMask.getIndex()));
-			map.put("new_next_owner_mask", OSD.FromInteger((int)NewNextOwnerMask.getIndex()));
+			map.put("new_base_mask", OSD.FromInteger((int)PermissionMask.getIndex(NewBaseMask)));
+			map.put("new_everyone_mask", OSD.FromInteger((int)PermissionMask.getIndex(NewEveryoneMask)));
+			map.put("new_owner_mask", OSD.FromInteger((int)PermissionMask.getIndex(NewOwnerMask)));
+			map.put("new_next_owner_mask", OSD.FromInteger((int)PermissionMask.getIndex(NewNextOwnerMask)));
 
 			return map;
 		}
@@ -3970,13 +3971,13 @@ public class LindenMessages
 
 			public static class ExtraParam
 			{
-				public ExtraParamType Type;
+				public EnumSet<ExtraParamType> Type;
 				public byte[] ExtraParamData;
 
 				public OSDMap Serialize()
 				{
 					OSDMap map = new OSDMap();
-					map.put("extra_parameter", OSD.FromInteger((int)Type.getIndex()));
+					map.put("extra_parameter", OSD.FromInteger((int)ExtraParamType.getIndex(Type)));
 					map.put("param_data", OSD.FromBinary(ExtraParamData));
 
 					return map;

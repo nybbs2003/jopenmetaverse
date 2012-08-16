@@ -121,7 +121,7 @@ public class Header implements Serializable
 					header.ID = Utils.ubyteToInt(bytes[pos[0] + 10]);
 				else
 					//                        header.ID = (int)((bytes[pos[0] + 8] << 8) + bytes[pos[0] + 9]);
-					header.ID = (int) Utils.bytesToInt16(bytes, pos[0] + 8);
+					header.ID = (int) Utils.bytesToUInt16(bytes, pos[0] + 8);
 
 				pos[0] += 10;
 			}

@@ -215,10 +215,28 @@ public class ObjectManager {
 				lookup.put(s.getIndex(), s);
 		}
 
-		public static CompressedFlags get(Long index)
-		{
-			return lookup.get(index);
-		}
+        public static EnumSet<CompressedFlags> get(Long index)
+        {
+                EnumSet<CompressedFlags> enumsSet = EnumSet.allOf(CompressedFlags.class);
+                for(Entry<Long,CompressedFlags> entry: lookup.entrySet())
+                {
+                        if((entry.getKey().longValue() | index) != index)
+                        {
+                                enumsSet.remove(entry.getValue());
+                        }
+                }
+                return enumsSet;
+        }
+
+        public static long getIndex(EnumSet<CompressedFlags> enumSet)
+        {
+                long ret = 0;
+                for(CompressedFlags s: enumSet)
+                {
+                        ret |= s.getIndex();
+                }
+                return ret;
+        }
 	}
 
 	/// <summary>
@@ -258,10 +276,29 @@ public class ObjectManager {
 				lookup.put(s.getIndex(), s);
 		}
 
-		public static UpdateType get(Long index)
-		{
-			return lookup.get(index);
-		}
+        public static EnumSet<UpdateType> get(Long index)
+        {
+                EnumSet<UpdateType> enumsSet = EnumSet.allOf(UpdateType.class);
+                for(Entry<Long,UpdateType> entry: lookup.entrySet())
+                {
+                        if((entry.getKey().longValue() | index) != index)
+                        {
+                                enumsSet.remove(entry.getValue());
+                        }
+                }
+                return enumsSet;
+        }
+
+        public static long getIndex(EnumSet<UpdateType> enumSet)
+        {
+                long ret = 0;
+                for(UpdateType s: enumSet)
+                {
+                        ret |= s.getIndex();
+                }
+                return ret;
+        }
+
 	}
 
 	/// <summary>
@@ -1529,7 +1566,7 @@ public class ObjectManager {
 	/// <param name="simulator">A reference to the <seealso cref="OpenMetaverse.Simulator"/> object where the object resides</param>
 	/// <param name="localID">The objects ID which is local to the simulator the object is in</param>
 	/// <param name="type">The extra parameters to set</param>
-	public void SetExtraParamOff(Simulator simulator, long localID, ExtraParamType type)
+	public void SetExtraParamOff(Simulator simulator, long localID, EnumSet<ExtraParamType> type)
 	{
 		ObjectExtraParamsPacket extra = new ObjectExtraParamsPacket();
 
@@ -1538,7 +1575,7 @@ public class ObjectManager {
 		extra.ObjectData = new ObjectExtraParamsPacket.ObjectDataBlock[1];
 		extra.ObjectData[0] = new ObjectExtraParamsPacket.ObjectDataBlock();
 		extra.ObjectData[0].ObjectLocalID = localID;
-		extra.ObjectData[0].ParamType = type.getIndex();
+		extra.ObjectData[0].ParamType = ExtraParamType.getIndex(type);
 		extra.ObjectData[0].ParamInUse = false;
 		extra.ObjectData[0].ParamData = Utils.EmptyBytes;
 		extra.ObjectData[0].ParamSize = 0;
@@ -1772,10 +1809,10 @@ public class ObjectManager {
 	/// <param name="childOnly">if true, will change position of (this) child prim only, not entire linkset</param>
 	public void SetPosition(Simulator simulator, long localID, Vector3 position, boolean childOnly)
 	{
-		UpdateType type = UpdateType.Position;
+		EnumSet<UpdateType> type = UpdateType.get(UpdateType.Position.getIndex());
 
 		if (!childOnly)
-			type = UpdateType.get(type.getIndex() | UpdateType.Linked.getIndex());
+			type = UpdateType.get(UpdateType.getIndex(type) | UpdateType.Linked.getIndex());
 
 		UpdateObject(simulator, localID, position, type);
 	}
@@ -1790,13 +1827,13 @@ public class ObjectManager {
 	/// <param name="uniform">True to resize prims uniformly</param>
 	public void SetScale(Simulator simulator, long localID, Vector3 scale, boolean childOnly, boolean uniform)
 	{
-		UpdateType type = UpdateType.Scale;
+		EnumSet<UpdateType> type = UpdateType.get(UpdateType.Scale.getIndex());
 
 		if (!childOnly)
-			type = UpdateType.get(type.getIndex() | UpdateType.Linked.getIndex());
+			type = UpdateType.get(UpdateType.getIndex(type) | UpdateType.Linked.getIndex());
 
 		if (uniform)
-			type = UpdateType.get(type.getIndex() | UpdateType.Uniform.getIndex());
+			type = UpdateType.get(UpdateType.getIndex(type) | UpdateType.Uniform.getIndex());
 
 		UpdateObject(simulator, localID, scale, type);
 	}
@@ -1810,10 +1847,10 @@ public class ObjectManager {
 	/// <param name="childOnly">If true, will change rotation of this prim only, not entire linkset</param>
 	public void SetRotation(Simulator simulator, long localID, Quaternion quat, boolean childOnly)
 	{
-		UpdateType type = UpdateType.Rotation;
+		EnumSet<UpdateType> type = UpdateType.get(UpdateType.Rotation.getIndex());
 
 		if (!childOnly)
-			type = UpdateType.get(type.getIndex() | UpdateType.Linked.getIndex());
+			type = UpdateType.get(UpdateType.getIndex(type) | UpdateType.Linked.getIndex());
 
 		MultipleObjectUpdatePacket multiObjectUpdate = new MultipleObjectUpdatePacket();
 		multiObjectUpdate.AgentData.AgentID = Client.self.getAgentID();
@@ -1822,7 +1859,7 @@ public class ObjectManager {
 		multiObjectUpdate.ObjectData = new MultipleObjectUpdatePacket.ObjectDataBlock[1];
 
 		multiObjectUpdate.ObjectData[0] = new MultipleObjectUpdatePacket.ObjectDataBlock();
-		multiObjectUpdate.ObjectData[0].Type = (byte)type.getIndex();
+		multiObjectUpdate.ObjectData[0].Type = (byte)UpdateType.getIndex(type);
 		multiObjectUpdate.ObjectData[0].ObjectLocalID = localID;
 		multiObjectUpdate.ObjectData[0].Data = quat.getBytes();
 
@@ -1836,7 +1873,7 @@ public class ObjectManager {
 	/// <param name="localID">The objects ID which is local to the simulator the object is in</param>
 	/// <param name="data">The new rotation, size, or position of the target object</param>
 	/// <param name="type">The flags from the <seealso cref="UpdateType"/> Enum</param>
-	public void UpdateObject(Simulator simulator, long localID, Vector3 data, UpdateType type)
+	public void UpdateObject(Simulator simulator, long localID, Vector3 data, EnumSet<UpdateType> type)
 	{
 		MultipleObjectUpdatePacket multiObjectUpdate = new MultipleObjectUpdatePacket();
 		multiObjectUpdate.AgentData.AgentID = Client.self.getAgentID();
@@ -1845,7 +1882,7 @@ public class ObjectManager {
 		multiObjectUpdate.ObjectData = new MultipleObjectUpdatePacket.ObjectDataBlock[1];
 
 		multiObjectUpdate.ObjectData[0] = new MultipleObjectUpdatePacket.ObjectDataBlock();
-		multiObjectUpdate.ObjectData[0].Type = (byte)type.getIndex();
+		multiObjectUpdate.ObjectData[0].Type = (byte)UpdateType.getIndex(type);
 		multiObjectUpdate.ObjectData[0].ObjectLocalID = localID;
 		multiObjectUpdate.ObjectData[0].Data = data.getBytes();
 
@@ -2892,21 +2929,21 @@ public class ObjectManager {
 				prim.Rotation = new Quaternion(block.Data, i, true);
 				i += 12;
 				// Compressed flags
-				CompressedFlags flags = CompressedFlags.get(Utils.bytesToUInt(block.Data, i));
+				EnumSet<CompressedFlags> flags = CompressedFlags.get(Utils.bytesToUInt(block.Data, i));
 				i += 4;
 
 				prim.OwnerID = new UUID(block.Data, i);
 				i += 16;
 
 				// Angular velocity
-				if ((flags.getIndex() & CompressedFlags.HasAngularVelocity.getIndex()) != 0)
+				if ((CompressedFlags.getIndex(flags) & CompressedFlags.HasAngularVelocity.getIndex()) != 0)
 				{
 					prim.AngularVelocity = new Vector3(block.Data, i);
 					i += 12;
 				}
 
 				// Parent ID
-				if ((flags.getIndex() & CompressedFlags.HasParent.getIndex()) != 0)
+				if ((CompressedFlags.getIndex(flags) & CompressedFlags.HasParent.getIndex()) != 0)
 				{
 					//		                        prim.ParentID = (uint)(block.Data[i++] + (block.Data[i++] << 8) +
 					//		                        (block.Data[i++] << 16) + (block.Data[i++] << 24));
@@ -2918,13 +2955,13 @@ public class ObjectManager {
 				}
 
 				// Tree data
-				if ((flags.getIndex() & CompressedFlags.Tree.getIndex()) != 0)
+				if ((CompressedFlags.getIndex(flags) & CompressedFlags.Tree.getIndex()) != 0)
 				{
 					prim.TreeSpecies = Tree.get(block.Data[i++]);
 					//prim.ScratchPad = Utils.EmptyBytes;
 				}
 				// Scratch pad
-				else if ((flags.getIndex() & CompressedFlags.ScratchPad.getIndex()) != 0)
+				else if ((CompressedFlags.getIndex(flags) & CompressedFlags.ScratchPad.getIndex()) != 0)
 				{
 					prim.TreeSpecies = Tree.get((byte)0);
 
@@ -2936,7 +2973,7 @@ public class ObjectManager {
 				prim.ScratchPad = Utils.EmptyBytes;
 
 				// Floating text
-				if ((flags.getIndex() & CompressedFlags.HasText.getIndex())  != 0)
+				if ((CompressedFlags.getIndex(flags) & CompressedFlags.HasText.getIndex())  != 0)
 				{
 					String text = "";
 					while (block.Data[i] != 0)
@@ -2959,7 +2996,7 @@ public class ObjectManager {
 				}
 
 				// Media URL
-				if ((flags.getIndex() & CompressedFlags.MediaURL.getIndex())  != 0)
+				if ((CompressedFlags.getIndex(flags) & CompressedFlags.MediaURL.getIndex())  != 0)
 				{
 					String text = "";
 					while (block.Data[i] != 0)
@@ -2973,7 +3010,7 @@ public class ObjectManager {
 				}
 
 				// Particle system
-				if ((flags.getIndex() & CompressedFlags.HasParticles.getIndex())  != 0)
+				if ((CompressedFlags.getIndex(flags) & CompressedFlags.HasParticles.getIndex())  != 0)
 				{
 					prim.ParticleSys = new ParticleSystem(block.Data, i);
 					i += 86;
@@ -2983,7 +3020,7 @@ public class ObjectManager {
 				i += prim.SetExtraParamsFromBytes(block.Data, i);
 
 				//Sound data
-				if ((flags.getIndex() & CompressedFlags.HasSound.getIndex())  != 0)
+				if ((CompressedFlags.getIndex(flags) & CompressedFlags.HasSound.getIndex())  != 0)
 				{
 					prim.Sound = new UUID(block.Data, i);
 					i += 16;
@@ -2996,7 +3033,7 @@ public class ObjectManager {
 				}
 
 				// Name values
-				if ((flags.getIndex() & CompressedFlags.HasNameValues.getIndex())  != 0)
+				if ((CompressedFlags.getIndex(flags) & CompressedFlags.HasNameValues.getIndex())  != 0)
 				{
 					String text = "";
 					while (block.Data[i] != 0)
@@ -3055,7 +3092,7 @@ public class ObjectManager {
 				i += textureEntryLength;
 
 				// Texture animation
-				if ((flags.getIndex() & CompressedFlags.TextureAnimation.getIndex())  != 0)
+				if ((CompressedFlags.getIndex(flags) & CompressedFlags.TextureAnimation.getIndex())  != 0)
 				{
 					//int textureAnimLength = (int)Utils.BytesToUIntBig(block.Data, i);
 					i += 4;
@@ -3064,7 +3101,7 @@ public class ObjectManager {
 
 				//endregion
 
-				prim.IsAttachment = (flags.getIndex() & CompressedFlags.HasNameValues.getIndex())  != 0 && prim.ParentID != 0;
+				prim.IsAttachment = (CompressedFlags.getIndex(flags) & CompressedFlags.HasNameValues.getIndex())  != 0 && prim.ParentID != 0;
 
 				//region Raise Events
 
