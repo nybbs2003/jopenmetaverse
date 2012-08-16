@@ -49,8 +49,8 @@ public class HttpBaseClient {
 	public static HttpRequestBase UploadDataAsync(URI _Address,
 			java.security.cert.X509Certificate _ClientCert, String contentType,
 			byte[] postData, int millisecondsTimeout, Object object,
-			final EventObservable downloadProgressObservable,
-			final EventObservable requestCompletedObservable) 
+			final EventObservable<HttpBaseDownloadProgressArg> downloadProgressObservable,
+			final EventObservable<HttpBaseRequestCompletedArg> requestCompletedObservable) 
 	{
 		   HttpPost httppost = new HttpPost(_Address);
 		   
@@ -68,8 +68,8 @@ public class HttpBaseClient {
 	public static HttpRequestBase DownloadStringAsync(URI _Address, 
 			java.security.cert.X509Certificate _ClientCert,
 			final int millisecondsTimeout,
-			final EventObservable downloadProgressObservable,
-			final EventObservable requestCompletedObservable)
+			final EventObservable<HttpBaseDownloadProgressArg> downloadProgressObservable,
+			final EventObservable<HttpBaseRequestCompletedArg> requestCompletedObservable)
 			{
 		// Prepare a request object
 		final HttpGet httpget = new HttpGet(_Address);
@@ -82,8 +82,8 @@ public class HttpBaseClient {
 			}
 	
 	private static void HttpRequestStringThreadPoolTaskAsyc(final HttpRequestBase httprequest, final int millisecondsTimeout,
-			final EventObservable downloadProgressObservable,
-			final EventObservable requestCompletedObservable)
+			final EventObservable<HttpBaseDownloadProgressArg> downloadProgressObservable,
+			final EventObservable<HttpBaseRequestCompletedArg> requestCompletedObservable)
 	{
 		threadPool.execute(new Runnable(){
 			public void run()
@@ -95,8 +95,8 @@ public class HttpBaseClient {
 	}
 	
 	private static void HttpRequestStringThreadPoolTask(HttpRequestBase httpget, int millisecondsTimeout,
-			final EventObservable downloadProgressObservable,
-			final EventObservable requestCompletedObservable)
+			final EventObservable<HttpBaseDownloadProgressArg> downloadProgressObservable,
+			final EventObservable<HttpBaseRequestCompletedArg> requestCompletedObservable)
 	{
 		// Execute the request
 		HttpResponse response = null;
@@ -117,7 +117,8 @@ public class HttpBaseClient {
 
 					byte[] bytes = readBytes(httpget, response, instream, downloadProgressObservable);
 					HttpBaseRequestCompletedArg r = new HttpBaseRequestCompletedArg(httpget, response, bytes, null);
-					requestCompletedObservable.raiseEvent(r);
+					if(requestCompletedObservable !=null)
+						raiseRequestCompletedEvent(requestCompletedObservable, r);
 				} catch (IOException ex) {
 
 					// In case of an IOException the connection will be released
@@ -141,18 +142,18 @@ public class HttpBaseClient {
 			else
 			{
 				HttpBaseRequestCompletedArg r = new HttpBaseRequestCompletedArg(httpget, response, new byte[0], null);
-				requestCompletedObservable.raiseEvent(r);
+				raiseRequestCompletedEvent(requestCompletedObservable, r);
 			}
 		} 
 		catch (Exception e) {
 			HttpBaseRequestCompletedArg r = new HttpBaseRequestCompletedArg(httpget, null, null, e);
-			requestCompletedObservable.raiseEvent(r);
+			raiseRequestCompletedEvent(requestCompletedObservable, r);
 		}
 	}
 	
 	
 	private static byte[] readBytes(HttpRequestBase request, HttpResponse response, InputStream input, 
-			final EventObservable downloadProgressObservable) throws IOException
+			final EventObservable<HttpBaseDownloadProgressArg> downloadProgressObservable) throws IOException
 	{
 		int totalBytesRead = 0;
 		int bytesRead = 0;
@@ -169,13 +170,25 @@ public class HttpBaseClient {
 				totalBytesRead = totalBytesRead + bytesRead;
 				byteBuffer.write(bytes, 0, bytesRead);
 //				System.out.println("Read: " + bytesRead);
-				HttpBaseDownloadProgressArg r = new HttpBaseDownloadProgressArg(request, response, bytesRead, totalBytesRead);
-				downloadProgressObservable.raiseEvent(r);
+				HttpBaseDownloadProgressArg r = new HttpBaseDownloadProgressArg(request, response, bytesRead, totalBytesRead); 
+				raiseDownloadProgressEvent(downloadProgressObservable, r);
 			}
 		}
 		return byteBuffer.toByteArray();
 	}
 
-
+	private static void raiseRequestCompletedEvent(EventObservable<HttpBaseRequestCompletedArg> requestCompletedObservable, HttpBaseRequestCompletedArg r)
+	{
+		if(requestCompletedObservable != null)
+		requestCompletedObservable.raiseEvent(r);
+	}
+	
+	private static void raiseDownloadProgressEvent(EventObservable<HttpBaseDownloadProgressArg> downloadProgressObservable, HttpBaseDownloadProgressArg r)
+	{
+		if(downloadProgressObservable != null)
+			downloadProgressObservable.raiseEvent(r);
+	}	
+	
+	
 }
 

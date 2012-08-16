@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
 import com.ngt.jopenmetaverse.shared.cap.http.CapsHttpClient;
 import com.ngt.jopenmetaverse.shared.protocol.ParcelPropertiesUpdatePacket;
 import com.ngt.jopenmetaverse.shared.protocol.ParcelSetOtherCleanTimePacket;
@@ -17,7 +16,6 @@ import com.ngt.jopenmetaverse.shared.structureddata.OSDFormat;
 import com.ngt.jopenmetaverse.shared.structureddata.OSDMap;
 import com.ngt.jopenmetaverse.shared.types.UUID;
 import com.ngt.jopenmetaverse.shared.types.Vector3;
-import com.ngt.jopenmetaverse.shared.types.EnumsPrimitive.PrimFlags;
 import com.ngt.jopenmetaverse.shared.util.Utils;
 
 

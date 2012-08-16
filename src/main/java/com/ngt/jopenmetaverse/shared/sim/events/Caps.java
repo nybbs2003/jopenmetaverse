@@ -199,8 +199,9 @@ public class Caps
 		req.add(OSD.FromString("ViewerStats"));
 
 		_SeedRequest = new CapsHttpClient(new URI(_SeedCapsURI));
-		_SeedRequest.addRequestCompleteObserver(new Observer(){
-			public void update(Observable arg0, Object arg1) {
+		_SeedRequest.addRequestCompleteObserver(new EventObserver<CapsHttpRequestCompletedArg>()
+				{
+			public void handleEvent(Observable arg0, CapsHttpRequestCompletedArg arg1) {
 				CapsHttpRequestCompletedArg obj1= (CapsHttpRequestCompletedArg) arg1;
 				SeedRequestCompleteHandler(_SeedRequest, obj1.getResult(), obj1.getError());
 			}

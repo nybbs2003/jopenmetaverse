@@ -26,6 +26,7 @@ import com.ngt.jopenmetaverse.shared.sim.events.PacketReceivedEventArgs;
 import com.ngt.jopenmetaverse.shared.sim.events.am.InstantMessageEventArgs;
 import com.ngt.jopenmetaverse.shared.sim.events.asm.XferReceivedEventArgs;
 import com.ngt.jopenmetaverse.shared.sim.events.im.*;
+import com.ngt.jopenmetaverse.shared.sim.events.CapsEventObservableArg;
 import com.ngt.jopenmetaverse.shared.sim.interfaces.IMessage;
 import com.ngt.jopenmetaverse.shared.sim.inventory.Inventory;
 import com.ngt.jopenmetaverse.shared.sim.inventory.InventoryBase;
@@ -34,6 +35,7 @@ import com.ngt.jopenmetaverse.shared.sim.inventory.InventoryItem;
 import com.ngt.jopenmetaverse.shared.sim.inventory.InventoryObject;
 import com.ngt.jopenmetaverse.shared.sim.inventory.InventorySound;
 import com.ngt.jopenmetaverse.shared.sim.inventory.InventoryTexture;
+import com.ngt.jopenmetaverse.shared.sim.login.LoginResponseCallbackArg;
 import com.ngt.jopenmetaverse.shared.sim.login.LoginResponseData;
 import com.ngt.jopenmetaverse.shared.sim.message.LindenMessages.CopyInventoryFromNotecardMessage;
 import com.ngt.jopenmetaverse.shared.sim.message.LindenMessages.ScriptRunningReplyMessage;
@@ -76,6 +78,7 @@ import com.ngt.jopenmetaverse.shared.protocol.MoveInventoryFolderPacket;
 import com.ngt.jopenmetaverse.shared.protocol.MoveInventoryItemPacket;
 import com.ngt.jopenmetaverse.shared.protocol.MoveTaskInventoryPacket;
 import com.ngt.jopenmetaverse.shared.protocol.Packet;
+import com.ngt.jopenmetaverse.shared.protocol.PacketType;
 import com.ngt.jopenmetaverse.shared.protocol.PurgeInventoryDescendentsPacket;
 import com.ngt.jopenmetaverse.shared.protocol.RemoveInventoryObjectsPacket;
 import com.ngt.jopenmetaverse.shared.protocol.RemoveTaskInventoryPacket;
@@ -698,7 +701,6 @@ public class InventoryManager {
 		public int Level;
 	}
 
-	//TODO need to implement
 	//	//region Delegates
 	
 	private EventObservable<ItemReceivedEventArgs> onItemReceived = new EventObservable<ItemReceivedEventArgs>();
@@ -1076,27 +1078,116 @@ public class InventoryManager {
 		Client = client;
 
 		//TODO need to implement
-//		Client.network.RegisterCallback(PacketType.UpdateCreateInventoryItem, UpdateCreateInventoryItemHandler);
-//		Client.network.RegisterCallback(PacketType.SaveAssetIntoInventory, SaveAssetIntoInventoryHandler);
-//		Client.network.RegisterCallback(PacketType.BulkUpdateInventory, BulkUpdateInventoryHandler);
-//		Client.network.RegisterCallback(PacketType.MoveInventoryItem, MoveInventoryItemHandler);
-//		Client.network.RegisterCallback(PacketType.InventoryDescendents, InventoryDescendentsHandler);
-//		Client.network.RegisterCallback(PacketType.FetchInventoryReply, FetchInventoryReplyHandler);
-//		Client.network.RegisterCallback(PacketType.ReplyTaskInventory, ReplyTaskInventoryHandler);
-//		Client.network.RegisterEventCallback("ScriptRunningReply", new Caps.EventQueueCallback(ScriptRunningReplyMessageHandler));
-//
-//		// Watch for inventory given to us through instant message            
-//		Client.self.IM += Self_IM;
-//
-//		// Register extra parameters with login and parse the inventory data that comes back
-//		Client.network.RegisterLoginResponseCallback(
-//				new NetworkManager.LoginResponseCallback(Network_OnLoginResponse),
-//				newString[] {
-//					"inventory-root", "inventory-skeleton", "inventory-lib-root",
-//					"inventory-lib-owner", "inventory-skel-lib"});
+		// Client.network.RegisterCallback(PacketType.UpdateCreateInventoryItem, UpdateCreateInventoryItemHandler);
+
+		Client.network.RegisterCallback(PacketType.UpdateCreateInventoryItem, new EventObserver<PacketReceivedEventArgs>()
+				{ 
+			@Override
+			public void handleEvent(Observable o,PacketReceivedEventArgs arg) {
+				try{ UpdateCreateInventoryItemHandler(o, arg);}
+				catch(Exception e) {JLogger.warn(Utils.getExceptionStackTraceAsString(e));}
+			}}
+				);
+		// Client.network.RegisterCallback(PacketType.SaveAssetIntoInventory, SaveAssetIntoInventoryHandler);
+
+		Client.network.RegisterCallback(PacketType.SaveAssetIntoInventory, new EventObserver<PacketReceivedEventArgs>()
+				{ 
+			@Override
+			public void handleEvent(Observable o,PacketReceivedEventArgs arg) {
+				try{ SaveAssetIntoInventoryHandler(o, arg);}
+				catch(Exception e) {JLogger.warn(Utils.getExceptionStackTraceAsString(e));}
+			}}
+				);
+		// Client.network.RegisterCallback(PacketType.BulkUpdateInventory, BulkUpdateInventoryHandler);
+
+		Client.network.RegisterCallback(PacketType.BulkUpdateInventory, new EventObserver<PacketReceivedEventArgs>()
+				{ 
+			@Override
+			public void handleEvent(Observable o,PacketReceivedEventArgs arg) {
+				try{ BulkUpdateInventoryHandler(o, arg);}
+				catch(Exception e) {JLogger.warn(Utils.getExceptionStackTraceAsString(e));}
+			}}
+				);
+		// Client.network.RegisterCallback(PacketType.MoveInventoryItem, MoveInventoryItemHandler);
+
+		Client.network.RegisterCallback(PacketType.MoveInventoryItem, new EventObserver<PacketReceivedEventArgs>()
+				{ 
+			@Override
+			public void handleEvent(Observable o,PacketReceivedEventArgs arg) {
+				try{ MoveInventoryItemHandler(o, arg);}
+				catch(Exception e) {JLogger.warn(Utils.getExceptionStackTraceAsString(e));}
+			}}
+				);
+		// Client.network.RegisterCallback(PacketType.InventoryDescendents, InventoryDescendentsHandler);
+
+		Client.network.RegisterCallback(PacketType.InventoryDescendents, new EventObserver<PacketReceivedEventArgs>()
+				{ 
+			@Override
+			public void handleEvent(Observable o,PacketReceivedEventArgs arg) {
+				try{ InventoryDescendentsHandler(o, arg);}
+				catch(Exception e) {JLogger.warn(Utils.getExceptionStackTraceAsString(e));}
+			}}
+				);
+		// Client.network.RegisterCallback(PacketType.FetchInventoryReply, FetchInventoryReplyHandler);
+
+		Client.network.RegisterCallback(PacketType.FetchInventoryReply, new EventObserver<PacketReceivedEventArgs>()
+				{ 
+			@Override
+			public void handleEvent(Observable o,PacketReceivedEventArgs arg) {
+				try{ FetchInventoryReplyHandler(o, arg);}
+				catch(Exception e) {JLogger.warn(Utils.getExceptionStackTraceAsString(e));}
+			}}
+				);
+		// Client.network.RegisterCallback(PacketType.ReplyTaskInventory, ReplyTaskInventoryHandler);
+
+		Client.network.RegisterCallback(PacketType.ReplyTaskInventory, new EventObserver<PacketReceivedEventArgs>()
+				{ 
+			@Override
+			public void handleEvent(Observable o,PacketReceivedEventArgs arg) {
+				try{ ReplyTaskInventoryHandler(o, arg);}
+				catch(Exception e) {JLogger.warn(Utils.getExceptionStackTraceAsString(e));}
+			}}
+				);
+		
+		// Client.network.RegisterEventCallback("ScriptRunningReply", new Caps.EventQueueCallback(ScriptRunningReplyMessageHandler);
+		Client.network.RegisterEventCallback("ScriptRunningReply", new EventObserver<CapsEventObservableArg>()
+				{ 
+					@Override
+					public void handleEvent(Observable o,CapsEventObservableArg arg) {
+						try{ ScriptRunningReplyMessageHandler(arg.getCapsKey(), arg.getMessage(), arg.getSimulator());}
+						catch(Exception e) {JLogger.warn(Utils.getExceptionStackTraceAsString(e));}
+					}}
+				);
+
+				// Watch for inventory given to us through instant message            
+//				Client.self.IM += Self_IM;
+		Client.self.registerIM(new EventObserver<InstantMessageEventArgs>()
+				{
+					@Override
+					public void handleEvent(Observable o,
+							InstantMessageEventArgs arg) {
+						try {
+							Self_IM(o, arg);
+						} catch (InventoryException e) {
+							JLogger.warn(Utils.getExceptionStackTraceAsString(e));
+						}
+					}
+				});
+		
+				// Register extra parameters with login and parse the inventory data that comes back
+				String[] options = new String[] {
+						"inventory-root", "inventory-skeleton", "inventory-lib-root",
+						"inventory-lib-owner", "inventory-skel-lib"};
+				
+				Client.network.RegisterLoginResponseCallback(new EventObserver<LoginResponseCallbackArg>()
+						{
+						@Override
+						public void handleEvent(Observable o, LoginResponseCallbackArg arg) {
+							Network_OnLoginResponse(arg.isLoginSuccess(), arg.isRedirect(), arg.getMessage(),
+									arg.getReason(), arg.getReplyData());
+						}
+						}, options);
 	}
-
-
 	//	//region Fetch
 	
 		/// <summary>
@@ -3922,14 +4013,13 @@ public class InventoryManager {
 			}
 		}
 	
-	
 		private void Network_OnLoginResponse(boolean loginSuccess, 
 				boolean redirect, String message, String reason, LoginResponseData replyData)
 		{
 			if (loginSuccess)
 			{
 				// Initialize the store here so we know who owns it:
-				_Store = new Inventory(Client, this, Client.self.getAgentID());
+				_Store = new Inventory(Client, this, replyData.AgentID);
 				JLogger.debug("Setting InventoryRoot to " + replyData.InventoryRoot.toString());
 				InventoryFolder rootFolder = new InventoryFolder(replyData.InventoryRoot);
 				rootFolder.Name = "";

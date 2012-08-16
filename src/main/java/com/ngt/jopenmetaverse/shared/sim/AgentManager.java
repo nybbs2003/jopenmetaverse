@@ -2,7 +2,6 @@ package com.ngt.jopenmetaverse.shared.sim;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
-import java.net.Inet4Address;
 import java.net.InetSocketAddress;
 import java.net.URI;
 import java.net.UnknownHostException;
@@ -15,8 +14,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.Timer;
-import java.util.TimerTask;
 import com.ngt.jopenmetaverse.shared.cap.http.CapsHttpClient;
 import com.ngt.jopenmetaverse.shared.cap.http.CapsHttpRequestCompletedArg;
 import com.ngt.jopenmetaverse.shared.exception.NotImplementedException;
@@ -27,7 +24,6 @@ import com.ngt.jopenmetaverse.shared.protocol.AgentHeightWidthPacket;
 import com.ngt.jopenmetaverse.shared.protocol.AgentMovementCompletePacket;
 import com.ngt.jopenmetaverse.shared.protocol.AgentRequestSitPacket;
 import com.ngt.jopenmetaverse.shared.protocol.AgentSitPacket;
-import com.ngt.jopenmetaverse.shared.protocol.AgentUpdatePacket;
 import com.ngt.jopenmetaverse.shared.protocol.AlertMessagePacket;
 import com.ngt.jopenmetaverse.shared.protocol.AvatarAnimationPacket;
 import com.ngt.jopenmetaverse.shared.protocol.AvatarInterestsUpdatePacket;
@@ -51,7 +47,6 @@ import com.ngt.jopenmetaverse.shared.protocol.MoneyBalanceReplyPacket;
 import com.ngt.jopenmetaverse.shared.protocol.MoneyBalanceRequestPacket;
 import com.ngt.jopenmetaverse.shared.protocol.MoneyTransferRequestPacket;
 import com.ngt.jopenmetaverse.shared.protocol.MuteListRequestPacket;
-import com.ngt.jopenmetaverse.shared.protocol.MuteListUpdatePacket;
 import com.ngt.jopenmetaverse.shared.protocol.ObjectDeGrabPacket;
 import com.ngt.jopenmetaverse.shared.protocol.ObjectGrabPacket;
 import com.ngt.jopenmetaverse.shared.protocol.ObjectGrabUpdatePacket;
@@ -68,7 +63,6 @@ import com.ngt.jopenmetaverse.shared.protocol.ScriptDialogReplyPacket;
 import com.ngt.jopenmetaverse.shared.protocol.ScriptQuestionPacket;
 import com.ngt.jopenmetaverse.shared.protocol.ScriptSensorReplyPacket;
 import com.ngt.jopenmetaverse.shared.protocol.ScriptSensorRequestPacket;
-import com.ngt.jopenmetaverse.shared.protocol.SetAlwaysRunPacket;
 import com.ngt.jopenmetaverse.shared.protocol.SetStartLocationRequestPacket;
 import com.ngt.jopenmetaverse.shared.protocol.StartLurePacket;
 import com.ngt.jopenmetaverse.shared.protocol.TeleportFailedPacket;
@@ -82,13 +76,10 @@ import com.ngt.jopenmetaverse.shared.protocol.TeleportStartPacket;
 import com.ngt.jopenmetaverse.shared.protocol.UpdateMuteListEntryPacket;
 import com.ngt.jopenmetaverse.shared.protocol.ViewerEffectPacket;
 import com.ngt.jopenmetaverse.shared.protocol.primitives.Primitive;
-import com.ngt.jopenmetaverse.shared.sim.Avatar.ProfileFlags;
-import com.ngt.jopenmetaverse.shared.sim.AvatarManager.AgentDisplayName;
 import com.ngt.jopenmetaverse.shared.sim.GridManager.GridLayerType;
 import com.ngt.jopenmetaverse.shared.sim.GridManager.GridRegion;
 import com.ngt.jopenmetaverse.shared.sim.GroupManager.ChatSessionMember;
 import com.ngt.jopenmetaverse.shared.sim.GroupManager.GroupPowers;
-import com.ngt.jopenmetaverse.shared.sim.ParcelManager.LandingType;
 import com.ngt.jopenmetaverse.shared.sim.agent.AgentMovement;
 import com.ngt.jopenmetaverse.shared.sim.asset.AssetGesture;
 import com.ngt.jopenmetaverse.shared.sim.events.AutoResetEvent;
@@ -122,22 +113,16 @@ import com.ngt.jopenmetaverse.shared.sim.events.am.ScriptQuestionEventArgs;
 import com.ngt.jopenmetaverse.shared.sim.events.am.ScriptSensorReplyEventArgs;
 import com.ngt.jopenmetaverse.shared.sim.events.am.SetDisplayNameReplyEventArgs;
 import com.ngt.jopenmetaverse.shared.sim.events.am.TeleportEventArgs;
-import com.ngt.jopenmetaverse.shared.sim.events.gm.CoarseLocationUpdateEventArgs;
-import com.ngt.jopenmetaverse.shared.sim.events.gm.GridRegionEventArgs;
 import com.ngt.jopenmetaverse.shared.sim.events.nm.DisconnectedEventArgs;
 import com.ngt.jopenmetaverse.shared.sim.events.nm.EventQueueRunningEventArgs;
-import com.ngt.jopenmetaverse.shared.sim.events.nm.SimDisconnectedEventArgs;
 import com.ngt.jopenmetaverse.shared.sim.interfaces.IMessage;
-import com.ngt.jopenmetaverse.shared.sim.login.LoginProgressEventArgs;
 import com.ngt.jopenmetaverse.shared.sim.login.LoginResponseCallbackArg;
 import com.ngt.jopenmetaverse.shared.sim.login.LoginResponseData;
-import com.ngt.jopenmetaverse.shared.sim.login.LoginStatus;
 import com.ngt.jopenmetaverse.shared.sim.message.LindenMessages.AttachmentResourcesMessage;
 import com.ngt.jopenmetaverse.shared.sim.message.LindenMessages.ChatSessionAcceptInvitation;
 import com.ngt.jopenmetaverse.shared.sim.message.LindenMessages.ChatSessionRequestMuteUpdate;
 import com.ngt.jopenmetaverse.shared.sim.message.LindenMessages.ChatSessionRequestStartConference;
 import com.ngt.jopenmetaverse.shared.sim.message.LindenMessages.ChatterBoxInvitationMessage;
-import com.ngt.jopenmetaverse.shared.sim.message.LindenMessages.ChatterBoxSessionAgentListUpdatesMessage;
 import com.ngt.jopenmetaverse.shared.sim.message.LindenMessages.ChatterBoxSessionStartReplyMessage;
 import com.ngt.jopenmetaverse.shared.sim.message.LindenMessages.ChatterboxSessionEventReplyMessage;
 import com.ngt.jopenmetaverse.shared.sim.message.LindenMessages.CrossedRegionMessage;
@@ -147,10 +132,8 @@ import com.ngt.jopenmetaverse.shared.sim.message.LindenMessages.SetDisplayNameRe
 import com.ngt.jopenmetaverse.shared.sim.message.LindenMessages.TeleportFailedMessage;
 import com.ngt.jopenmetaverse.shared.sim.message.LindenMessages.TeleportFinishMessage;
 import com.ngt.jopenmetaverse.shared.sim.message.LindenMessages.UpdateAgentLanguageMessage;
-import com.ngt.jopenmetaverse.shared.structureddata.OSD;
 import com.ngt.jopenmetaverse.shared.structureddata.OSDFormat;
 import com.ngt.jopenmetaverse.shared.types.Color4;
-import com.ngt.jopenmetaverse.shared.types.Enums.SaleType;
 import com.ngt.jopenmetaverse.shared.types.Quaternion;
 import com.ngt.jopenmetaverse.shared.types.UUID;
 import com.ngt.jopenmetaverse.shared.types.Vector3;
@@ -795,17 +778,17 @@ public class AgentManager {
 			return index;
 		}
 
-		//			private static final Map<Byte,LookAtType> lookup  = new HashMap<Byte,LookAtType>();
-		//
-		//			static {
-		//				for(ChatType s : EnumSet.allOf(LookAtType.class))
-		//					lookup.put(s.getIndex(), s);
-		//			}
-		//
-		//			public static LookAtType get(Byte index)
-		//			{
-		//				return lookup.get(index);
-		//			}
+					private static final Map<Byte,LookAtType> lookup  = new HashMap<Byte,LookAtType>();
+		
+					static {
+						for(LookAtType s : EnumSet.allOf(LookAtType.class))
+							lookup.put(s.getIndex(), s);
+					}
+		
+					public static LookAtType get(Byte index)
+					{
+						return lookup.get(index);
+					}
 	}
 
 	/// <summary>
@@ -833,17 +816,17 @@ public class AgentManager {
 			return index;
 		}
 
-		//			private static final Map<Byte,PointAtType> lookup  = new HashMap<Byte,PointAtType>();
-		//
-		//			static {
-		//				for(ChatType s : EnumSet.allOf(PointAtType.class))
-		//					lookup.put(s.getIndex(), s);
-		//			}
-		//
-		//			public static PointAtType get(Byte index)
-		//			{
-		//				return lookup.get(index);
-		//			}
+					private static final Map<Byte,PointAtType> lookup  = new HashMap<Byte,PointAtType>();
+		
+					static {
+						for(PointAtType s : EnumSet.allOf(PointAtType.class))
+							lookup.put(s.getIndex(), s);
+					}
+		
+					public static PointAtType get(Byte index)
+					{
+						return lookup.get(index);
+					}
 	}
 
 	/// <summary>
@@ -1681,7 +1664,7 @@ public class AgentManager {
 	}
 	public void unregisterChatFromSimulator(EventObserver<ChatEventArgs> o)
 	{
-		onChatFromSimulator.addObserver(o);
+		onChatFromSimulator.deleteObserver(o);
 	}
 	public void registerScriptDialog(EventObserver<ScriptDialogEventArgs> o)
 	{
@@ -1690,7 +1673,7 @@ public class AgentManager {
 
 	public void unregisterScriptDialog(EventObserver<ScriptDialogEventArgs> o)
 	{
-		onScriptDialog.addObserver(o);
+		onScriptDialog.deleteObserver(o);
 	}
 
 	public void registerScriptQuestion(EventObserver<ScriptQuestionEventArgs> o)
@@ -1699,7 +1682,7 @@ public class AgentManager {
 	}
 	public void unregisterScriptQuestion(EventObserver<ScriptQuestionEventArgs> o)
 	{
-		onScriptQuestion.addObserver(o);
+		onScriptQuestion.deleteObserver(o);
 	}
 
 	private EventObservable<LoadUrlEventArgs> onLoadURL = new EventObservable<LoadUrlEventArgs>();
@@ -1709,7 +1692,7 @@ public class AgentManager {
 	}
 	public void unregisterLoadURL(EventObserver<LoadUrlEventArgs> o)
 	{
-		onLoadURL.addObserver(o);
+		onLoadURL.deleteObserver(o);
 	}	
 
 	private EventObservable<BalanceEventArgs> onMoneyBalance = new EventObservable<BalanceEventArgs>();
@@ -1719,7 +1702,7 @@ public class AgentManager {
 	}
 	public void unregisterMoneyBalance(EventObserver<BalanceEventArgs> o)
 	{
-		onMoneyBalance.addObserver(o);
+		onMoneyBalance.deleteObserver(o);
 	}
 
 	private EventObservable<MoneyBalanceReplyEventArgs> onMoneyBalanceReply = new EventObservable<MoneyBalanceReplyEventArgs>();
@@ -1729,7 +1712,7 @@ public class AgentManager {
 	}
 	public void unregisterMoneyBalanceReply(EventObserver<MoneyBalanceReplyEventArgs> o)
 	{
-		onMoneyBalanceReply.addObserver(o);
+		onMoneyBalanceReply.deleteObserver(o);
 	}	
 
 	private EventObservable<InstantMessageEventArgs> onIM = new EventObservable<InstantMessageEventArgs>();
@@ -1739,7 +1722,7 @@ public class AgentManager {
 	}
 	public void unregisterIM(EventObserver<InstantMessageEventArgs> o)
 	{
-		onIM.addObserver(o);
+		onIM.deleteObserver(o);
 	}	
 
 	private EventObservable<TeleportEventArgs> onTeleportProgress = new EventObservable<TeleportEventArgs>();
@@ -1749,7 +1732,7 @@ public class AgentManager {
 	}
 	public void unregisterTeleportProgress(EventObserver<TeleportEventArgs> o)
 	{
-		onTeleportProgress.addObserver(o);
+		onTeleportProgress.deleteObserver(o);
 	}
 
 	private EventObservable<AgentDataReplyEventArgs> onAgentDataReply = new EventObservable<AgentDataReplyEventArgs>();
@@ -1759,7 +1742,7 @@ public class AgentManager {
 	}
 	public void unregisterAgentDataReply(EventObserver<AgentDataReplyEventArgs> o)
 	{
-		onAgentDataReply.addObserver(o);
+		onAgentDataReply.deleteObserver(o);
 	}	
 
 	private EventObservable<AnimationsChangedEventArgs> onAnimationsChanged = new EventObservable<AnimationsChangedEventArgs>();
@@ -1769,7 +1752,7 @@ public class AgentManager {
 	}
 	public void unregisterAnimationsChanged(EventObserver<AnimationsChangedEventArgs> o)
 	{
-		onAnimationsChanged.addObserver(o);
+		onAnimationsChanged.deleteObserver(o);
 	}
 
 	private EventObservable<MeanCollisionEventArgs> onMeanCollision = new EventObservable<MeanCollisionEventArgs>();
@@ -1779,7 +1762,7 @@ public class AgentManager {
 	}
 	public void unregisterMeanCollision(EventObserver<MeanCollisionEventArgs> o)
 	{
-		onMeanCollision.addObserver(o);
+		onMeanCollision.deleteObserver(o);
 	}
 
 	private EventObservable<RegionCrossedEventArgs> onRegionCrossed = new EventObservable<RegionCrossedEventArgs>();
@@ -1789,7 +1772,7 @@ public class AgentManager {
 	}
 	public void unregisterRegionCrossed(EventObserver<RegionCrossedEventArgs> o)
 	{
-		onRegionCrossed.addObserver(o);
+		onRegionCrossed.deleteObserver(o);
 	}
 
 	private EventObservable<GroupChatJoinedEventArgs> onGroupChatJoined = new EventObservable<GroupChatJoinedEventArgs>();
@@ -1799,7 +1782,7 @@ public class AgentManager {
 	}
 	public void unregisterGroupChatJoined(EventObserver<GroupChatJoinedEventArgs> o)
 	{
-		onGroupChatJoined.addObserver(o);
+		onGroupChatJoined.deleteObserver(o);
 	}
 
 	private EventObservable<AlertMessageEventArgs> onAlertMessage = new EventObservable<AlertMessageEventArgs>();
@@ -1809,7 +1792,7 @@ public class AgentManager {
 	}
 	public void unregisterAlertMessage(EventObserver<AlertMessageEventArgs> o)
 	{
-		onAlertMessage.addObserver(o);
+		onAlertMessage.deleteObserver(o);
 	}
 
 	private EventObservable<ScriptControlEventArgs> onOnScriptControlChange = new EventObservable<ScriptControlEventArgs>();
@@ -1819,7 +1802,7 @@ public class AgentManager {
 	}
 	public void unregisterOnScriptControlChange(EventObserver<ScriptControlEventArgs> o)
 	{
-		onOnScriptControlChange.addObserver(o);
+		onOnScriptControlChange.deleteObserver(o);
 	}	
 
 	private EventObservable<CameraConstraintEventArgs> onCameraConstraint = new EventObservable<CameraConstraintEventArgs>();
@@ -1829,7 +1812,7 @@ public class AgentManager {
 	}
 	public void unregisterCameraConstraint(EventObserver<CameraConstraintEventArgs> o)
 	{
-		onCameraConstraint.addObserver(o);
+		onCameraConstraint.deleteObserver(o);
 	}	
 	private EventObservable<AvatarSitResponseEventArgs> onAvatarSitResponse = new EventObservable<AvatarSitResponseEventArgs>();
 	public void registerAvatarSitResponse(EventObserver<AvatarSitResponseEventArgs> o)
@@ -1838,7 +1821,7 @@ public class AgentManager {
 	}
 	public void unregisterAvatarSitResponse(EventObserver<AvatarSitResponseEventArgs> o)
 	{
-		onAvatarSitResponse.addObserver(o);
+		onAvatarSitResponse.deleteObserver(o);
 	}
 
 	private EventObservable<ScriptSensorReplyEventArgs> onScriptSensorReply = new EventObservable<ScriptSensorReplyEventArgs>();
@@ -1848,7 +1831,7 @@ public class AgentManager {
 	}
 	public void unregisterScriptSensorReply(EventObserver<ScriptSensorReplyEventArgs> o)
 	{
-		onScriptSensorReply.addObserver(o);
+		onScriptSensorReply.deleteObserver(o);
 	}
 
 	private EventObservable<ChatSessionMemberAddedEventArgs> onChatSessionMemberAdded = new EventObservable<ChatSessionMemberAddedEventArgs>();
@@ -1858,7 +1841,7 @@ public class AgentManager {
 	}
 	public void unregisterChatSessionMemberAdded(EventObserver<ChatSessionMemberAddedEventArgs> o)
 	{
-		onChatSessionMemberAdded.addObserver(o);
+		onChatSessionMemberAdded.deleteObserver(o);
 	}	
 
 	private EventObservable<ChatSessionMemberLeftEventArgs> onChatSessionMemberLeft = new EventObservable<ChatSessionMemberLeftEventArgs>();
@@ -1878,7 +1861,7 @@ public class AgentManager {
 	}
 	public void unregisterSetDisplayNameReply(EventObserver<SetDisplayNameReplyEventArgs> o)
 	{
-		onSetDisplayNameReply.addObserver(o);
+		onSetDisplayNameReply.deleteObserver(o);
 	}
 
 	private EventObservable<EventArgs> onMuteListUpdated = new EventObservable<EventArgs>();
@@ -1888,10 +1871,8 @@ public class AgentManager {
 	}
 	public void unregisterMuteListUpdated(EventObserver<EventArgs> o)
 	{
-		onMuteListUpdated.addObserver(o);
+		onMuteListUpdated.deleteObserver(o);
 	}
-
-	//TODO Need to implement following 
 
 	//	        //region Delegates
 	//	        /// <summary>
@@ -2957,9 +2938,9 @@ public class AgentManager {
 			}}
 				);
 		// Login
-		Client.network.RegisterLoginResponseCallback(new Observer()
+		Client.network.RegisterLoginResponseCallback(new EventObserver<LoginResponseCallbackArg>()
 		{
-			public void update(Observable arg0, Object arg1) {
+			public void handleEvent(Observable arg0, LoginResponseCallbackArg arg1) {
 				LoginResponseCallbackArg obj = (LoginResponseCallbackArg)arg1;
 				Network_OnLoginResponse(obj.isLoginSuccess(), obj.isRedirect(), 
 						obj.getMessage(), obj.getReason(), obj.getReplyData());
@@ -3032,7 +3013,6 @@ public class AgentManager {
 				);
 	}
 
-	//TODO Need to implement
 	//region Chat and instant messages
 
 	/// <summary>
@@ -4846,9 +4826,9 @@ public class AgentManager {
 		{
 			URI url = Client.network.getCurrentSim().Caps.CapabilityURI("AttachmentResources");
 			CapsHttpClient request = new CapsHttpClient(url);
-			request.addRequestCompleteObserver(new Observer()
+			request.addRequestCompleteObserver(new EventObserver<CapsHttpRequestCompletedArg>()
 			{
-				public void update(Observable arg0, Object arg1) {
+				public void handleEvent(Observable arg0, CapsHttpRequestCompletedArg arg1) {
 					//			System.out.println("RequestCompletedObserver called ...");
 					CapsHttpRequestCompletedArg rcha = (CapsHttpRequestCompletedArg) arg1;
 					try
@@ -5156,7 +5136,7 @@ public class AgentManager {
 
 		AgentDataUpdatePacket p = (AgentDataUpdatePacket)packet;
 
-		if (p.AgentData.AgentID == simulator.Client.self.getAgentID())
+		if (p.AgentData.AgentID.equals(simulator.Client.self.getAgentID()))
 		{
 			firstName = Utils.bytesToString(p.AgentData.FirstName);
 			lastName = Utils.bytesToString(p.AgentData.LastName);
@@ -5412,7 +5392,7 @@ public class AgentManager {
 		Packet packet = e.getPacket();
 		AvatarAnimationPacket animation = (AvatarAnimationPacket)packet;
 
-		if (animation.Sender.ID == Client.self.getAgentID())
+		if (animation.Sender.ID.equals(Client.self.getAgentID()))
 		{
 			synchronized (SignaledAnimations.getDictionary())
 			{
@@ -5497,6 +5477,7 @@ public class AgentManager {
 	private void Network_OnLoginResponse(boolean loginSuccess, boolean redirect, String message, String reason,
 			LoginResponseData reply)
 	{
+		JLogger.debug("AgentManager: Network_OnLoginResponse: " + reply.AgentID + " : " + reply.SessionID);
 		id = reply.AgentID;
 		sessionID = reply.SessionID;
 		secureSessionID = reply.SecureSessionID;

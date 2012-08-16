@@ -89,4 +89,13 @@ public class PlatformUtils {
 
 	}
 
+	public static void sleep(int timeout)
+	{
+		try {
+			Thread.sleep(timeout);
+		} catch (InterruptedException e) {
+			JLogger.info(e.getMessage());
+		}
+	}
+	
 }

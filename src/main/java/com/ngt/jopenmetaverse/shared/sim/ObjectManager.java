@@ -759,7 +759,6 @@ public class ObjectManager {
 	{
 		Client = client;
 
-		//TODO Implement
 		//			            Client.network.RegisterCallback(PacketType.ObjectUpdate, ObjectUpdateHandler, false);
 		Client.network.RegisterCallback(PacketType.ObjectUpdate, new EventObserver<PacketReceivedEventArgs>()
 				{ 
@@ -2050,9 +2049,9 @@ public class ObjectManager {
 
 			CapsHttpClient request = new CapsHttpClient(url);
 
-			request.addRequestCompleteObserver(new Observer()
+			request.addRequestCompleteObserver(new EventObserver<CapsHttpRequestCompletedArg>()
 			{
-				public void update(Observable arg0, Object arg1) {
+				public void handleEvent(Observable arg0, CapsHttpRequestCompletedArg arg1) {
 					//			System.out.println("RequestCompletedObserver called ...");
 					CapsHttpRequestCompletedArg rcha = (CapsHttpRequestCompletedArg) arg1;
 					if (rcha.getError() != null)
@@ -2103,9 +2102,9 @@ public class ObjectManager {
 			//	                            JLogger.error("ObjectMediaUpdate: " + error.Message);
 			//	                        }
 			//	                    };
-			request.addRequestCompleteObserver(new Observer()
+			request.addRequestCompleteObserver(new EventObserver<CapsHttpRequestCompletedArg>()
 			{
-				public void update(Observable arg0, Object arg1) {
+				public void handleEvent(Observable arg0, CapsHttpRequestCompletedArg arg1) {
 					//			System.out.println("RequestCompletedObserver called ...");
 					CapsHttpRequestCompletedArg rcha = (CapsHttpRequestCompletedArg) arg1;
 					if (rcha.getError() != null)
@@ -2140,9 +2139,9 @@ public class ObjectManager {
 
 			CapsHttpClient request = new CapsHttpClient(url);
 
-			request.addRequestCompleteObserver(new Observer()
+			request.addRequestCompleteObserver(new EventObserver<CapsHttpRequestCompletedArg>()
 			{
-				public void update(Observable arg0, Object arg1) {
+				public void handleEvent(Observable arg0, CapsHttpRequestCompletedArg arg1) {
 					//			System.out.println("RequestCompletedObserver called ...");
 					CapsHttpRequestCompletedArg rcha = (CapsHttpRequestCompletedArg) arg1;
 					if (rcha.getResult() == null)

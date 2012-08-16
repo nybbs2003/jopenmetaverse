@@ -42,7 +42,7 @@ public class UtilsTest {
 		byte a1 = -5;
 		int i1 = Utils.ubyteToInt(a1);
 		System.out.println(Utils.bytesToHexDebugString(new byte[]{a1}, ""));
-		Assert.assertEquals(132, i1);
+		Assert.assertEquals(251, i1);
 	}
 
 }

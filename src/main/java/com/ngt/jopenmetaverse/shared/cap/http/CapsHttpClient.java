@@ -10,6 +10,7 @@ import org.apache.http.client.methods.HttpRequestBase;
 
 import com.ngt.jopenmetaverse.shared.sim.events.AutoResetEvent;
 import com.ngt.jopenmetaverse.shared.sim.events.EventObservable;
+import com.ngt.jopenmetaverse.shared.sim.events.EventObserver;
 import com.ngt.jopenmetaverse.shared.structureddata.OSD;
 import com.ngt.jopenmetaverse.shared.structureddata.OSDFormat;
 import com.ngt.jopenmetaverse.shared.structureddata.OSDParser;
@@ -93,12 +94,12 @@ public class CapsHttpClient
 		internaldownloadProgressObservable.addObserver(new DownloadProgressObserver());
 	}        
 
-	public void addRequestCompleteObserver(Observer o)
+	public void addRequestCompleteObserver(EventObserver<CapsHttpRequestCompletedArg> o)
 	{
 		requestCompleteObservable.addObserver(o);
 	}
 
-	public void addRequestProgressObservable(Observer o)
+	public void addRequestProgressObservable(EventObserver<CapsHttpRequestProgressArg> o)
 	{
 		requestProgressObservable.addObserver(o);
 	}

@@ -160,6 +160,8 @@ public class EventQueueClient {
 		{
 			//TODO Handle the case when the request is aborted or there is some client side error
 
+			if(response !=null)
+			{
 			//region Error handling
 			int code = response.getStatusLine().getStatusCode();
 
@@ -192,11 +194,16 @@ public class EventQueueClient {
 							_Address, error.getMessage()));
 				}				
 			}
+			}
+			else
+			{
+				++_errorCount;
+				logger.warning("Some client Side Error" + Utils.getExceptionStackTraceAsString(error));
+			}
 		}
 		else
 		{
 			++_errorCount;
-
 			logger.warning("No response from the event queue but no reported error either");
 		}	
 

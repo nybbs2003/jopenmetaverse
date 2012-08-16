@@ -1,17 +1,70 @@
 package com.ngt.jopenmetaverse.shared.sim;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Observable;
+import java.util.Map.Entry;
 
+import com.ngt.jopenmetaverse.shared.cap.http.CapsHttpClient;
+import com.ngt.jopenmetaverse.shared.cap.http.CapsHttpRequestCompletedArg;
+import com.ngt.jopenmetaverse.shared.protocol.AvatarAnimationPacket;
+import com.ngt.jopenmetaverse.shared.protocol.AvatarAppearancePacket;
+import com.ngt.jopenmetaverse.shared.protocol.AvatarClassifiedReplyPacket;
+import com.ngt.jopenmetaverse.shared.protocol.AvatarGroupsReplyPacket;
+import com.ngt.jopenmetaverse.shared.protocol.AvatarInterestsReplyPacket;
+import com.ngt.jopenmetaverse.shared.protocol.AvatarPickerReplyPacket;
+import com.ngt.jopenmetaverse.shared.protocol.AvatarPickerRequestPacket;
+import com.ngt.jopenmetaverse.shared.protocol.AvatarPicksReplyPacket;
+import com.ngt.jopenmetaverse.shared.protocol.AvatarPropertiesReplyPacket;
+import com.ngt.jopenmetaverse.shared.protocol.AvatarPropertiesRequestPacket;
+import com.ngt.jopenmetaverse.shared.protocol.ClassifiedInfoReplyPacket;
+import com.ngt.jopenmetaverse.shared.protocol.GenericMessagePacket;
+import com.ngt.jopenmetaverse.shared.protocol.Helpers;
+import com.ngt.jopenmetaverse.shared.protocol.Packet;
+import com.ngt.jopenmetaverse.shared.protocol.PacketType;
+import com.ngt.jopenmetaverse.shared.protocol.PickInfoReplyPacket;
+import com.ngt.jopenmetaverse.shared.protocol.TrackAgentPacket;
+import com.ngt.jopenmetaverse.shared.protocol.UUIDNameReplyPacket;
+import com.ngt.jopenmetaverse.shared.protocol.UUIDNameRequestPacket;
+import com.ngt.jopenmetaverse.shared.protocol.ViewerEffectPacket;
+import com.ngt.jopenmetaverse.shared.protocol.primitives.Primitive;
+import com.ngt.jopenmetaverse.shared.protocol.primitives.TextureEntry;
+import com.ngt.jopenmetaverse.shared.protocol.primitives.TextureEntryFace;
 import com.ngt.jopenmetaverse.shared.structureddata.OSD;
 import com.ngt.jopenmetaverse.shared.structureddata.OSDMap;
+import com.ngt.jopenmetaverse.shared.types.Action;
 import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.types.Vector3d;
+import com.ngt.jopenmetaverse.shared.util.JLogger;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+import com.ngt.jopenmetaverse.shared.sim.AgentManager.EffectType;
+import com.ngt.jopenmetaverse.shared.sim.AgentManager.LookAtType;
+import com.ngt.jopenmetaverse.shared.sim.AgentManager.PointAtType;
+import com.ngt.jopenmetaverse.shared.sim.Avatar.ProfileFlags;
+import com.ngt.jopenmetaverse.shared.sim.GroupManager.GroupPowers;
+import com.ngt.jopenmetaverse.shared.sim.events.CapsEventObservableArg;
+import com.ngt.jopenmetaverse.shared.sim.events.EventArgs;
+import com.ngt.jopenmetaverse.shared.sim.events.EventObservable;
+import com.ngt.jopenmetaverse.shared.sim.events.EventObserver;
+import com.ngt.jopenmetaverse.shared.sim.events.PacketReceivedEventArgs;
+import com.ngt.jopenmetaverse.shared.sim.events.avm.*;
+import com.ngt.jopenmetaverse.shared.sim.interfaces.IMessage;
+import com.ngt.jopenmetaverse.shared.sim.message.LindenMessages.AgentGroupDataUpdateMessage;
+import com.ngt.jopenmetaverse.shared.sim.message.LindenMessages.DisplayNameUpdateMessage;
+import com.ngt.jopenmetaverse.shared.sim.message.LindenMessages.GetDisplayNamesMessage;
 
+///// <summary>
+///// Retrieve friend status notifications, and retrieve avatar names and
+///// profiles
+///// </summary>
 public class AvatarManager {
-    public AvatarManager(GridClient client)
-    {
-    	//TODO Need to implement
-    }
-    
     //region Structs
     /// <summary> Information about agents display name </summary>
     public static class AgentDisplayName
@@ -76,9 +129,12 @@ public class AvatarManager {
         @Override
         public String toString()
         {
-        	//TODO Implement in a better way
-        	return toString();
-//            return Helpers.StructToString(this);
+            try {
+				return Helpers.StructToString(this);
+			} catch (Exception e){ 
+				JLogger.warn(Utils.getExceptionStackTraceAsString(e));
+				return e.getMessage();
+			}
             //StringBuilder result = new StringBuilder();
             //result.AppendLine();
             //result.AppendFormat("{0, 30}: {1,-40} [{2}]" + Environment.NewLine, "ID", ID, "UUID");
@@ -92,85 +148,219 @@ public class AvatarManager {
         }
     }
 
-//    /// <summary>
-//    /// Holds group information for Avatars such as those you might find in a profile
-//    /// </summary>
-//    public struct AvatarGroup
-//    {
-//        /// <summary>true of Avatar accepts group notices</summary>
-//        public bool AcceptNotices;
-//        /// <summary>Groups Key</summary>
-//        public UUID GroupID;
-//        /// <summary>Texture Key for groups insignia</summary>
-//        public UUID GroupInsigniaID;
-//        /// <summary>Name of the group</summary>
-//        public String GroupName;
-//        /// <summary>Powers avatar has in the group</summary>
-//        public GroupPowers GroupPowers;
-//        /// <summary>Avatars Currently selected title</summary>
-//        public String GroupTitle;
-//        /// <summary>true of Avatar has chosen to list this in their profile</summary>
-//        public bool ListInProfile;
-//    }
-//
-//    /// <summary>
-//    /// Contains an animation currently being played by an agent
-//    /// </summary>
-//    public struct Animation
-//    {
-//        /// <summary>The ID of the animation asset</summary>
-//        public UUID AnimationID;
-//        /// <summary>A number to indicate start order of currently playing animations</summary>
-//        /// <remarks>On Linden Grids this number is unique per region, with OpenSim it is per client</remarks>
-//        public int AnimationSequence;
-//        /// <summary></summary>
-//        public UUID AnimationSourceObjectID;
-//    }
-//
-//    /// <summary>
-//    /// Holds group information on an individual profile pick
-//    /// </summary>
-//    public struct ProfilePick
-//    {
-//        public UUID PickID;
-//        public UUID CreatorID;
-//        public bool TopPick;
-//        public UUID ParcelID;
-//        public String Name;
-//        public String Desc;
-//        public UUID SnapshotID;
-//        public String User;
-//        public String OriginalName;
-//        public String SimName;
-//        public Vector3d PosGlobal;
-//        public int SortOrder;
-//        public bool Enabled;
-//    }
-//
-//    public struct ClassifiedAd
-//    {
-//        public UUID ClassifiedID;
-//        public uint Catagory;
-//        public UUID ParcelID;
-//        public uint ParentEstate;
-//        public UUID SnapShotID;
-//        public Vector3d Position;
-//        public byte ClassifiedFlags;
-//        public int Price;
-//        public String Name;
-//        public String Desc;
-//    }
-//    //endregion
-//
-//    /// <summary>
-//    /// Retrieve friend status notifications, and retrieve avatar names and
-//    /// profiles
-//    /// </summary>
-//    public class AvatarManager
-//    {
-//        const int MAX_UUIDS_PER_PACKET = 100;
-//
-//        //region Events
+    /// <summary>
+    /// Holds group information for Avatars such as those you might find in a profile
+    /// </summary>
+    public class AvatarGroup
+    {
+        /// <summary>true of Avatar accepts group notices</summary>
+        public boolean AcceptNotices;
+        /// <summary>Groups Key</summary>
+        public UUID GroupID;
+        /// <summary>Texture Key for groups insignia</summary>
+        public UUID GroupInsigniaID;
+        /// <summary>Name of the group</summary>
+        public String GroupName;
+        /// <summary>Powers avatar has in the group</summary>
+        public EnumSet<com.ngt.jopenmetaverse.shared.sim.GroupManager.GroupPowers> GroupPowers;
+        /// <summary>Avatars Currently selected title</summary>
+        public String GroupTitle;
+        /// <summary>true of Avatar has chosen to list this in their profile</summary>
+        public boolean ListInProfile;
+    }
+
+    /// <summary>
+    /// Contains an animation currently being played by an agent
+    /// </summary>
+    public class Animation
+    {
+        /// <summary>The ID of the animation asset</summary>
+        public UUID AnimationID;
+        /// <summary>A number to indicate start order of currently playing animations</summary>
+        /// <remarks>On Linden Grids this number is unique per region, with OpenSim it is per client</remarks>
+        public int AnimationSequence;
+        /// <summary></summary>
+        public UUID AnimationSourceObjectID;
+    }
+
+    /// <summary>
+    /// Holds group information on an individual profile pick
+    /// </summary>
+    public class ProfilePick
+    {
+        public UUID PickID;
+        public UUID CreatorID;
+        public boolean TopPick;
+        public UUID ParcelID;
+        public String Name;
+        public String Desc;
+        public UUID SnapshotID;
+        public String User;
+        public String OriginalName;
+        public String SimName;
+        public Vector3d PosGlobal;
+        public int SortOrder;
+        public boolean Enabled;
+    }
+
+    public class ClassifiedAd
+    {
+        public UUID ClassifiedID;
+        //uint
+        public long Catagory;
+        public UUID ParcelID;
+        //uint
+        public long ParentEstate;
+        public UUID SnapShotID;
+        public Vector3d Position;
+        public byte ClassifiedFlags;
+        public int Price;
+        public String Name;
+        public String Desc;
+    }
+    //endregion
+
+    public final int MAX_UUIDS_PER_PACKET = 100;
+
+    //region Events
+
+    private EventObservable<AvatarAnimationEventArgs> onAvatarAnimation = new EventObservable<AvatarAnimationEventArgs>();
+    public void registerOnAvatarAnimation(EventObserver<AvatarAnimationEventArgs> o)
+    {
+    	onAvatarAnimation.addObserver(o);
+    }
+    public void unregisterOnAvatarAnimation(EventObserver<AvatarAnimationEventArgs> o) 
+    {
+    	onAvatarAnimation.deleteObserver(o);
+    }
+
+    private EventObservable<AvatarAppearanceEventArgs> onAvatarAppearance = new EventObservable<AvatarAppearanceEventArgs>();
+    public void registerOnAvatarAppearance(EventObserver<AvatarAppearanceEventArgs> o)
+    {
+    	onAvatarAppearance.addObserver(o);
+    }
+    public void unregisterOnAvatarAppearance(EventObserver<AvatarAppearanceEventArgs> o) 
+    {
+    	onAvatarAppearance.deleteObserver(o);
+    }
+    private EventObservable<UUIDNameReplyEventArgs> onUUIDNameReply = new EventObservable<UUIDNameReplyEventArgs>();
+    public void registerOnUUIDNameReply(EventObserver<UUIDNameReplyEventArgs> o)
+    {
+    	onUUIDNameReply.addObserver(o);
+    }
+    public void unregisterOnUUIDNameReply(EventObserver<UUIDNameReplyEventArgs> o) 
+    {
+    	onUUIDNameReply.deleteObserver(o);
+    }
+    private EventObservable<AvatarInterestsReplyEventArgs> onAvatarInterestsReply = new EventObservable<AvatarInterestsReplyEventArgs>();
+    public void registerOnAvatarInterestsReply(EventObserver<AvatarInterestsReplyEventArgs> o)
+    {
+    	onAvatarInterestsReply.addObserver(o);
+    }
+    public void unregisterOnAvatarInterestsReply(EventObserver<AvatarInterestsReplyEventArgs> o) 
+    {
+    	onAvatarInterestsReply.deleteObserver(o);
+    }
+    private EventObservable<AvatarPropertiesReplyEventArgs> onAvatarPropertiesReply = new EventObservable<AvatarPropertiesReplyEventArgs>();
+    public void registerOnAvatarPropertiesReply(EventObserver<AvatarPropertiesReplyEventArgs> o)
+    {
+    	onAvatarPropertiesReply.addObserver(o);
+    }
+    public void unregisterOnAvatarPropertiesReply(EventObserver<AvatarPropertiesReplyEventArgs> o) 
+    {
+    	onAvatarPropertiesReply.deleteObserver(o);
+    }
+    private EventObservable<AvatarGroupsReplyEventArgs> onAvatarGroupsReply = new EventObservable<AvatarGroupsReplyEventArgs>();
+    public void registerOnAvatarGroupsReply(EventObserver<AvatarGroupsReplyEventArgs> o)
+    {
+    	onAvatarGroupsReply.addObserver(o);
+    }
+    public void unregisterOnAvatarGroupsReply(EventObserver<AvatarGroupsReplyEventArgs> o) 
+    {
+    	onAvatarGroupsReply.deleteObserver(o);
+    }
+    private EventObservable<AvatarPickerReplyEventArgs> onAvatarPickerReply = new EventObservable<AvatarPickerReplyEventArgs>();
+    public void registerOnAvatarPickerReply(EventObserver<AvatarPickerReplyEventArgs> o)
+    {
+    	onAvatarPickerReply.addObserver(o);
+    }
+    public void unregisterOnAvatarPickerReply(EventObserver<AvatarPickerReplyEventArgs> o) 
+    {
+    	onAvatarPickerReply.deleteObserver(o);
+    }
+    private EventObservable<ViewerEffectPointAtEventArgs> onViewerEffectPointAt = new EventObservable<ViewerEffectPointAtEventArgs>();
+    public void registerOnViewerEffectPointAt(EventObserver<ViewerEffectPointAtEventArgs> o)
+    {
+    	onViewerEffectPointAt.addObserver(o);
+    }
+    public void unregisterOnViewerEffectPointAt(EventObserver<ViewerEffectPointAtEventArgs> o) 
+    {
+    	onViewerEffectPointAt.deleteObserver(o);
+    }
+    private EventObservable<ViewerEffectLookAtEventArgs> onViewerEffectLookAt = new EventObservable<ViewerEffectLookAtEventArgs>();
+    public void registerOnViewerEffectLookAt(EventObserver<ViewerEffectLookAtEventArgs> o)
+    {
+    	onViewerEffectLookAt.addObserver(o);
+    }
+    public void unregisterOnViewerEffectLookAt(EventObserver<ViewerEffectLookAtEventArgs> o) 
+    {
+    	onViewerEffectLookAt.deleteObserver(o);
+    }
+    private EventObservable<ViewerEffectEventArgs> onViewerEffect = new EventObservable<ViewerEffectEventArgs>();
+    public void registerOnViewerEffect(EventObserver<ViewerEffectEventArgs> o)
+    {
+    	onViewerEffect.addObserver(o);
+    }
+    public void unregisterOnViewerEffect(EventObserver<ViewerEffectEventArgs> o) 
+    {
+    	onViewerEffect.deleteObserver(o);
+    }
+    private EventObservable<AvatarPicksReplyEventArgs> onAvatarPicksReply = new EventObservable<AvatarPicksReplyEventArgs>();
+    public void registerOnAvatarPicksReply(EventObserver<AvatarPicksReplyEventArgs> o)
+    {
+    	onAvatarPicksReply.addObserver(o);
+    }
+    public void unregisterOnAvatarPicksReply(EventObserver<AvatarPicksReplyEventArgs> o) 
+    {
+    	onAvatarPicksReply.deleteObserver(o);
+    }
+    private EventObservable<PickInfoReplyEventArgs> onPickInfoReply = new EventObservable<PickInfoReplyEventArgs>();
+    public void registerOnPickInfoReply(EventObserver<PickInfoReplyEventArgs> o)
+    {
+    	onPickInfoReply.addObserver(o);
+    }
+    public void unregisterOnPickInfoReply(EventObserver<PickInfoReplyEventArgs> o) 
+    {
+    	onPickInfoReply.deleteObserver(o);
+    }
+    private EventObservable<AvatarClassifiedReplyEventArgs> onAvatarClassifiedReply = new EventObservable<AvatarClassifiedReplyEventArgs>();
+    public void registerOnAvatarClassifiedReply(EventObserver<AvatarClassifiedReplyEventArgs> o)
+    {
+    	onAvatarClassifiedReply.addObserver(o);
+    }
+    public void unregisterOnAvatarClassifiedReply(EventObserver<AvatarClassifiedReplyEventArgs> o) 
+    {
+    	onAvatarClassifiedReply.deleteObserver(o);
+    }
+    private EventObservable<ClassifiedInfoReplyEventArgs> onClassifiedInfoReply = new EventObservable<ClassifiedInfoReplyEventArgs>();
+    public void registerOnClassifiedInfoReply(EventObserver<ClassifiedInfoReplyEventArgs> o)
+    {
+    	onClassifiedInfoReply.addObserver(o);
+    }
+    public void unregisterOnClassifiedInfoReply(EventObserver<ClassifiedInfoReplyEventArgs> o) 
+    {
+    	onClassifiedInfoReply.deleteObserver(o);
+    }
+    private EventObservable<DisplayNameUpdateEventArgs> onDisplayNameUpdate = new EventObservable<DisplayNameUpdateEventArgs>();
+    public void registerOnDisplayNameUpdate(EventObserver<DisplayNameUpdateEventArgs> o)
+    {
+    	onDisplayNameUpdate.addObserver(o);
+    }
+    public void unregisterOnDisplayNameUpdate(EventObserver<DisplayNameUpdateEventArgs> o) 
+    {
+    	onDisplayNameUpdate.deleteObserver(o);
+    }
+        
 //        /// <summary>The event subscribers, null of no subscribers</summary>
 //        private EventHandler<AvatarAnimationEventArgs> m_AvatarAnimation;
 //
@@ -189,7 +379,7 @@ public class AvatarManager {
 //
 //        /// <summary>Raised when the simulator sends us data containing
 //        /// an agents animation playlist</summary>
-//        public event EventHandler<AvatarAnimationEventArgs> AvatarAnimation
+//        public event EventHandler<AvatarAnimationEventArgs> AvatarAnimation 
 //        {
 //            add { lock (m_AvatarAnimationLock) { m_AvatarAnimation += value; } }
 //            remove { lock (m_AvatarAnimationLock) { m_AvatarAnimation -= value; } }
@@ -213,7 +403,7 @@ public class AvatarManager {
 //
 //        /// <summary>Raised when the simulator sends us data containing
 //        /// the appearance information for an agent</summary>
-//        public event EventHandler<AvatarAppearanceEventArgs> AvatarAppearance
+//        public event EventHandler<AvatarAppearanceEventArgs> AvatarAppearance 
 //        {
 //            add { lock (m_AvatarAppearanceLock) { m_AvatarAppearance += value; } }
 //            remove { lock (m_AvatarAppearanceLock) { m_AvatarAppearance -= value; } }
@@ -237,7 +427,7 @@ public class AvatarManager {
 //
 //        /// <summary>Raised when the simulator sends us data containing
 //        /// agent names/id values</summary>
-//        public event EventHandler<UUIDNameReplyEventArgs> UUIDNameReply
+//        public event EventHandler<UUIDNameReplyEventArgs> UUIDNameReply 
 //        {
 //            add { lock (m_UUIDNameReplyLock) { m_UUIDNameReply += value; } }
 //            remove { lock (m_UUIDNameReplyLock) { m_UUIDNameReply -= value; } }
@@ -261,7 +451,7 @@ public class AvatarManager {
 //
 //        /// <summary>Raised when the simulator sends us data containing
 //        /// the interests listed in an agents profile</summary>
-//        public event EventHandler<AvatarInterestsReplyEventArgs> AvatarInterestsReply
+//        public event EventHandler<AvatarInterestsReplyEventArgs> AvatarInterestsReply 
 //        {
 //            add { lock (m_AvatarInterestsReplyLock) { m_AvatarInterestsReply += value; } }
 //            remove { lock (m_AvatarInterestsReplyLock) { m_AvatarInterestsReply -= value; } }
@@ -285,7 +475,7 @@ public class AvatarManager {
 //
 //        /// <summary>Raised when the simulator sends us data containing
 //        /// profile property information for an agent</summary>
-//        public event EventHandler<AvatarPropertiesReplyEventArgs> AvatarPropertiesReply
+//        public event EventHandler<AvatarPropertiesReplyEventArgs> AvatarPropertiesReply 
 //        {
 //            add { lock (m_AvatarPropertiesReplyLock) { m_AvatarPropertiesReply += value; } }
 //            remove { lock (m_AvatarPropertiesReplyLock) { m_AvatarPropertiesReply -= value; } }
@@ -309,7 +499,7 @@ public class AvatarManager {
 //
 //        /// <summary>Raised when the simulator sends us data containing
 //        /// the group membership an agent is a member of</summary>
-//        public event EventHandler<AvatarGroupsReplyEventArgs> AvatarGroupsReply
+//        public event EventHandler<AvatarGroupsReplyEventArgs> AvatarGroupsReply 
 //        {
 //            add { lock (m_AvatarGroupsReplyLock) { m_AvatarGroupsReply += value; } }
 //            remove { lock (m_AvatarGroupsReplyLock) { m_AvatarGroupsReply -= value; } }
@@ -333,7 +523,7 @@ public class AvatarManager {
 //
 //        /// <summary>Raised when the simulator sends us data containing
 //        /// name/id pair</summary>
-//        public event EventHandler<AvatarPickerReplyEventArgs> AvatarPickerReply
+//        public event EventHandler<AvatarPickerReplyEventArgs> AvatarPickerReply 
 //        {
 //            add { lock (m_AvatarPickerReplyLock) { m_AvatarPickerReply += value; } }
 //            remove { lock (m_AvatarPickerReplyLock) { m_AvatarPickerReply -= value; } }
@@ -357,7 +547,7 @@ public class AvatarManager {
 //
 //        /// <summary>Raised when the simulator sends us data containing
 //        /// the objects and effect when an agent is pointing at</summary>
-//        public event EventHandler<ViewerEffectPointAtEventArgs> ViewerEffectPointAt
+//        public event EventHandler<ViewerEffectPointAtEventArgs> ViewerEffectPointAt 
 //        {
 //            add { lock (m_ViewerEffectPointAtLock) { m_ViewerEffectPointAt += value; } }
 //            remove { lock (m_ViewerEffectPointAtLock) { m_ViewerEffectPointAt -= value; } }
@@ -381,7 +571,7 @@ public class AvatarManager {
 //
 //        /// <summary>Raised when the simulator sends us data containing
 //        /// the objects and effect when an agent is looking at</summary>
-//        public event EventHandler<ViewerEffectLookAtEventArgs> ViewerEffectLookAt
+//        public event EventHandler<ViewerEffectLookAtEventArgs> ViewerEffectLookAt 
 //        {
 //            add { lock (m_ViewerEffectLookAtLock) { m_ViewerEffectLookAt += value; } }
 //            remove { lock (m_ViewerEffectLookAtLock) { m_ViewerEffectLookAt -= value; } }
@@ -405,7 +595,7 @@ public class AvatarManager {
 //
 //        /// <summary>Raised when the simulator sends us data containing
 //        /// an agents viewer effect information</summary>
-//        public event EventHandler<ViewerEffectEventArgs> ViewerEffect
+//        public event EventHandler<ViewerEffectEventArgs> ViewerEffect 
 //        {
 //            add { lock (m_ViewerEffectLock) { m_ViewerEffect += value; } }
 //            remove { lock (m_ViewerEffectLock) { m_ViewerEffect -= value; } }
@@ -429,7 +619,7 @@ public class AvatarManager {
 //
 //        /// <summary>Raised when the simulator sends us data containing
 //        /// the top picks from an agents profile</summary>
-//        public event EventHandler<AvatarPicksReplyEventArgs> AvatarPicksReply
+//        public event EventHandler<AvatarPicksReplyEventArgs> AvatarPicksReply 
 //        {
 //            add { lock (m_AvatarPicksReplyLock) { m_AvatarPicksReply += value; } }
 //            remove { lock (m_AvatarPicksReplyLock) { m_AvatarPicksReply -= value; } }
@@ -453,7 +643,7 @@ public class AvatarManager {
 //
 //        /// <summary>Raised when the simulator sends us data containing
 //        /// the Pick details</summary>
-//        public event EventHandler<PickInfoReplyEventArgs> PickInfoReply
+//        public event EventHandler<PickInfoReplyEventArgs> PickInfoReply 
 //        {
 //            add { lock (m_PickInfoReplyLock) { m_PickInfoReply += value; } }
 //            remove { lock (m_PickInfoReplyLock) { m_PickInfoReply -= value; } }
@@ -477,7 +667,7 @@ public class AvatarManager {
 //
 //        /// <summary>Raised when the simulator sends us data containing
 //        /// the classified ads an agent has placed</summary>
-//        public event EventHandler<AvatarClassifiedReplyEventArgs> AvatarClassifiedReply
+//        public event EventHandler<AvatarClassifiedReplyEventArgs> AvatarClassifiedReply 
 //        {
 //            add { lock (m_AvatarClassifiedReplyLock) { m_AvatarClassifiedReply += value; } }
 //            remove { lock (m_AvatarClassifiedReplyLock) { m_AvatarClassifiedReply -= value; } }
@@ -501,7 +691,7 @@ public class AvatarManager {
 //
 //        /// <summary>Raised when the simulator sends us data containing
 //        /// the details of a classified ad</summary>
-//        public event EventHandler<ClassifiedInfoReplyEventArgs> ClassifiedInfoReply
+//        public event EventHandler<ClassifiedInfoReplyEventArgs> ClassifiedInfoReply 
 //        {
 //            add { lock (m_ClassifiedInfoReplyLock) { m_ClassifiedInfoReply += value; } }
 //            remove { lock (m_ClassifiedInfoReplyLock) { m_ClassifiedInfoReply -= value; } }
@@ -525,168 +715,340 @@ public class AvatarManager {
 //
 //        /// <summary>Raised when the simulator sends us data containing
 //        /// the details of display name change</summary>
-//        public event EventHandler<DisplayNameUpdateEventArgs> DisplayNameUpdate
+//        public event EventHandler<DisplayNameUpdateEventArgs> DisplayNameUpdate 
 //        {
 //            add { lock (m_DisplayNameUpdateLock) { m_DisplayNameUpdate += value; } }
 //            remove { lock (m_DisplayNameUpdateLock) { m_DisplayNameUpdate -= value; } }
 //        }
 //
-//        //endregion Events
-//
-//        //region Delegates
-//        /// <summary>
-//        /// Callback giving results when fetching display names
-//        /// </summary>
-//        /// <param name="success">If the request was successful</param>
-//        /// <param name="names">Array of display names</param>
-//        /// <param name="badIDs">Array of UUIDs that could not be fetched</param>
+        //endregion Events
+
+    
+    
+        //region Delegates
+        /// <summary>
+        /// Callback giving results when fetching display names
+        /// </summary>
+        /// <param name="success">If the request was successful</param>
+        /// <param name="names">Array of display names</param>
+        /// <param name="badIDs">Array of UUIDs that could not be fetched</param>
+    //TODO need to implement
 //        public delegate void DisplayNamesCallback(bool success, AgentDisplayName[] names, UUID[] badIDs);
-//        //endregion Delegates
-//
-//        private GridClient Client;
-//
-//        /// <summary>
-//        /// Represents other avatars
-//        /// </summary>
-//        /// <param name="client"></param>
-//        public AvatarManager(GridClient client)
-//        {
-//            Client = client;
-//
-//            // Avatar appearance callback
-//            Client.Network.RegisterCallback(PacketType.AvatarAppearance, AvatarAppearanceHandler);
-//
-//            // Avatar profile callbacks
-//            Client.Network.RegisterCallback(PacketType.AvatarPropertiesReply, AvatarPropertiesHandler);
-//            // Client.Network.RegisterCallback(PacketType.AvatarStatisticsReply, AvatarStatisticsHandler);
-//            Client.Network.RegisterCallback(PacketType.AvatarInterestsReply, AvatarInterestsHandler);
-//
-//            // Avatar group callback
-//            Client.Network.RegisterCallback(PacketType.AvatarGroupsReply, AvatarGroupsReplyHandler);
-//            Client.Network.RegisterEventCallback("AgentGroupDataUpdate", AvatarGroupsReplyMessageHandler);
-//            Client.Network.RegisterEventCallback("AvatarGroupsReply", AvatarGroupsReplyMessageHandler);
-//
-//            // Viewer effect callback
-//            Client.Network.RegisterCallback(PacketType.ViewerEffect, ViewerEffectHandler);
-//
-//            // Other callbacks
-//            Client.Network.RegisterCallback(PacketType.UUIDNameReply, UUIDNameReplyHandler);
-//            Client.Network.RegisterCallback(PacketType.AvatarPickerReply, AvatarPickerReplyHandler);
-//            Client.Network.RegisterCallback(PacketType.AvatarAnimation, AvatarAnimationHandler);
-//
-//            // Picks callbacks
-//            Client.Network.RegisterCallback(PacketType.AvatarPicksReply, AvatarPicksReplyHandler);
-//            Client.Network.RegisterCallback(PacketType.PickInfoReply, PickInfoReplyHandler);
-//
-//            // Classifieds callbacks
-//            Client.Network.RegisterCallback(PacketType.AvatarClassifiedReply, AvatarClassifiedReplyHandler);
-//            Client.Network.RegisterCallback(PacketType.ClassifiedInfoReply, ClassifiedInfoReplyHandler);
-//
-//            Client.Network.RegisterEventCallback("DisplayNameUpdate", DisplayNameUpdateMessageHandler);
-//        }
-//
-//        /// <summary>Tracks the specified avatar on your map</summary>
-//        /// <param name="preyID">Avatar ID to track</param>
-//        public void RequestTrackAgent(UUID preyID)
-//        {
-//            TrackAgentPacket p = new TrackAgentPacket();
-//            p.AgentData.AgentID = Client.Self.AgentID;
-//            p.AgentData.SessionID = Client.Self.SessionID;
-//            p.TargetData.PreyID = preyID;
-//            Client.Network.SendPacket(p);
-//        }
-//
-//        /// <summary>
-//        /// Request a single avatar name
-//        /// </summary>
-//        /// <param name="id">The avatar key to retrieve a name for</param>
-//        public void RequestAvatarName(UUID id)
-//        {
-//            UUIDNameRequestPacket request = new UUIDNameRequestPacket();
-//            request.UUIDNameBlock = new UUIDNameRequestPacket.UUIDNameBlockBlock[1];
-//            request.UUIDNameBlock[0] = new UUIDNameRequestPacket.UUIDNameBlockBlock();
-//            request.UUIDNameBlock[0].ID = id;
-//
-//            Client.Network.SendPacket(request);
-//        }
-//
-//        /// <summary>
-//        /// Request a list of avatar names
-//        /// </summary>
-//        /// <param name="ids">The avatar keys to retrieve names for</param>
-//        public void RequestAvatarNames(List<UUID> ids)
-//        {
-//            int m = MAX_UUIDS_PER_PACKET;
-//            int n = ids.Count / m; // Number of full requests to make
-//            int i = 0;
-//
-//            UUIDNameRequestPacket request;
-//
-//            for (int j = 0; j < n; j++)
-//            {
-//                request = new UUIDNameRequestPacket();
-//                request.UUIDNameBlock = new UUIDNameRequestPacket.UUIDNameBlockBlock[m];
-//
-//                for (; i < (j + 1) * m; i++)
-//                {
-//                    request.UUIDNameBlock[i % m] = new UUIDNameRequestPacket.UUIDNameBlockBlock();
-//                    request.UUIDNameBlock[i % m].ID = ids[i];
-//                }
-//
-//                Client.Network.SendPacket(request);
-//            }
-//
-//            // Get any remaining names after left after the full requests
-//            if (ids.Count > n * m)
-//            {
-//                request = new UUIDNameRequestPacket();
-//                request.UUIDNameBlock = new UUIDNameRequestPacket.UUIDNameBlockBlock[ids.Count - n * m];
-//
-//                for (; i < ids.Count; i++)
-//                {
-//                    request.UUIDNameBlock[i % m] = new UUIDNameRequestPacket.UUIDNameBlockBlock();
-//                    request.UUIDNameBlock[i % m].ID = ids[i];
-//                }
-//
-//                Client.Network.SendPacket(request);
-//            }
-//        }
-//
-//        /// <summary>
-//        /// Check if Display Names functionality is available
-//        /// </summary>
-//        /// <returns>True if Display name functionality is available</returns>
-//        public bool DisplayNamesAvailable()
-//        {
-//            return (Client.Network.CurrentSim != null && Client.Network.CurrentSim.Caps != null) && Client.Network.CurrentSim.Caps.CapabilityURI("GetDisplayNames") != null;
-//        }
-//
-//        /// <summary>
-//        /// Request retrieval of display names (max 90 names per request)
-//        /// </summary>
-//        /// <param name="ids">List of UUIDs to lookup</param>
-//        /// <param name="callback">Callback to report result of the operation</param>
-//        public void GetDisplayNames(List<UUID> ids, DisplayNamesCallback callback)
-//        {
-//            if (!DisplayNamesAvailable() || ids.Count == 0)
-//            {
-//                callback(false, null, null);
-//            }
-//
-//            StringBuilder query = new StringBuilder();
-//            for (int i = 0; i < ids.Count && i < 90; i++)
-//            {
-//                query.AppendFormat("ids={0}", ids[i]);
-//                if (i < ids.Count - 1)
-//                {
-//                    query.Append("&");
-//                }
-//            }
-//
-//            Uri uri = new Uri(Client.Network.CurrentSim.Caps.CapabilityURI("GetDisplayNames").AbsoluteUri + "/?" + query);
-//
-//            CapsClient cap = new CapsClient(uri);
-//            cap.OnComplete += (CapsClient client, OSD result, Exception error) =>
+        //endregion Delegates
+
+    private GridClient Client;
+
+    /// <summary>
+    /// Represents other avatars
+    /// </summary>
+    /// <param name="client"></param>
+    public AvatarManager(GridClient client)
+    {
+    	Client = client;
+    	//TODO need to implement
+    	// Avatar appearance callback
+    	// Client.network.RegisterCallback(PacketType.AvatarAppearance, AvatarAppearanceHandler);
+
+    	Client.network.RegisterCallback(PacketType.AvatarAppearance, new EventObserver<PacketReceivedEventArgs>()
+    			{ 
+    		@Override
+    		public void handleEvent(Observable o,PacketReceivedEventArgs arg) {
+    			try{ AvatarAppearanceHandler(o, arg);}
+    			catch(Exception e) {JLogger.warn(Utils.getExceptionStackTraceAsString(e));}
+    		}}
+    			);
+    	//
+    	// Avatar profile callbacks
+    	// Client.network.RegisterCallback(PacketType.AvatarPropertiesReply, AvatarPropertiesHandler);
+
+    	Client.network.RegisterCallback(PacketType.AvatarPropertiesReply, new EventObserver<PacketReceivedEventArgs>()
+    			{ 
+    		@Override
+    		public void handleEvent(Observable o,PacketReceivedEventArgs arg) {
+    			try{ AvatarPropertiesHandler(o, arg);}
+    			catch(Exception e) {JLogger.warn(Utils.getExceptionStackTraceAsString(e));}
+    		}}
+    			);
+    	
+    	// // Client.network.RegisterCallback(PacketType.AvatarStatisticsReply, AvatarStatisticsHandler);
+
+//    	Client.network.RegisterCallback(PacketType.AvatarStatisticsReply, new EventObserver<PacketReceivedEventArgs>()
+//    			{ 
+//    		@Override
+//    		public void handleEvent(Observable o,PacketReceivedEventArgs arg) {
+//    			try{ AvatarStatisticsHandler(o, arg);}
+//    			catch(Exception e) {JLogger.warn(Utils.getExceptionStackTraceAsString(e));}
+//    		}}
+//    			);
+    	
+    	// Client.network.RegisterCallback(PacketType.AvatarInterestsReply, AvatarInterestsHandler);
+
+    	Client.network.RegisterCallback(PacketType.AvatarInterestsReply, new EventObserver<PacketReceivedEventArgs>()
+    			{ 
+    		@Override
+    		public void handleEvent(Observable o,PacketReceivedEventArgs arg) {
+    			try{ AvatarInterestsHandler(o, arg);}
+    			catch(Exception e) {JLogger.warn(Utils.getExceptionStackTraceAsString(e));}
+    		}}
+    			);
+    	//
+    	// Avatar group callback
+    	// Client.network.RegisterCallback(PacketType.AvatarGroupsReply, AvatarGroupsReplyHandler);
+
+    	Client.network.RegisterCallback(PacketType.AvatarGroupsReply, new EventObserver<PacketReceivedEventArgs>()
+    			{ 
+    		@Override
+    		public void handleEvent(Observable o,PacketReceivedEventArgs arg) {
+    			try{ AvatarGroupsReplyHandler(o, arg);}
+    			catch(Exception e) {JLogger.warn(Utils.getExceptionStackTraceAsString(e));}
+    		}}
+    			);
+    	// Client.network.RegisterEventCallback("AgentGroupDataUpdate", new Caps.EventQueueCallback(AvatarGroupsReplyMessageHandler);
+
+    	Client.network.RegisterEventCallback("AgentGroupDataUpdate", new EventObserver<CapsEventObservableArg>()
+    			{ 
+    		@Override
+    		public void handleEvent(Observable o,CapsEventObservableArg arg) {
+    			try{ AvatarGroupsReplyMessageHandler(arg.getCapsKey(), arg.getMessage(), arg.getSimulator());}
+    			catch(Exception e) {JLogger.warn(Utils.getExceptionStackTraceAsString(e));}
+    		}}
+    			);
+    	// Client.network.RegisterEventCallback("AvatarGroupsReply", new Caps.EventQueueCallback(AvatarGroupsReplyMessageHandler);
+
+    	Client.network.RegisterEventCallback("AvatarGroupsReply", new EventObserver<CapsEventObservableArg>()
+    			{ 
+    		@Override
+    		public void handleEvent(Observable o,CapsEventObservableArg arg) {
+    			try{ AvatarGroupsReplyMessageHandler(arg.getCapsKey(), arg.getMessage(), arg.getSimulator());}
+    			catch(Exception e) {JLogger.warn(Utils.getExceptionStackTraceAsString(e));}
+    		}}
+    			);
+    	//
+    	// Viewer effect callback
+    	// Client.network.RegisterCallback(PacketType.ViewerEffect, ViewerEffectHandler);
+
+    	Client.network.RegisterCallback(PacketType.ViewerEffect, new EventObserver<PacketReceivedEventArgs>()
+    			{ 
+    		@Override
+    		public void handleEvent(Observable o,PacketReceivedEventArgs arg) {
+    			try{ ViewerEffectHandler(o, arg);}
+    			catch(Exception e) {JLogger.warn(Utils.getExceptionStackTraceAsString(e));}
+    		}}
+    			);
+    	//
+    	// Other callbacks
+    	// Client.network.RegisterCallback(PacketType.UUIDNameReply, UUIDNameReplyHandler);
+
+    	Client.network.RegisterCallback(PacketType.UUIDNameReply, new EventObserver<PacketReceivedEventArgs>()
+    			{ 
+    		@Override
+    		public void handleEvent(Observable o,PacketReceivedEventArgs arg) {
+    			try{ UUIDNameReplyHandler(o, arg);}
+    			catch(Exception e) {JLogger.warn(Utils.getExceptionStackTraceAsString(e));}
+    		}}
+    			);
+    	// Client.network.RegisterCallback(PacketType.AvatarPickerReply, AvatarPickerReplyHandler);
+
+    	Client.network.RegisterCallback(PacketType.AvatarPickerReply, new EventObserver<PacketReceivedEventArgs>()
+    			{ 
+    		@Override
+    		public void handleEvent(Observable o,PacketReceivedEventArgs arg) {
+    			try{ AvatarPickerReplyHandler(o, arg);}
+    			catch(Exception e) {JLogger.warn(Utils.getExceptionStackTraceAsString(e));}
+    		}}
+    			);
+    	// Client.network.RegisterCallback(PacketType.AvatarAnimation, AvatarAnimationHandler);
+
+    	Client.network.RegisterCallback(PacketType.AvatarAnimation, new EventObserver<PacketReceivedEventArgs>()
+    			{ 
+    		@Override
+    		public void handleEvent(Observable o,PacketReceivedEventArgs arg) {
+    			try{ AvatarAnimationHandler(o, arg);}
+    			catch(Exception e) {JLogger.warn(Utils.getExceptionStackTraceAsString(e));}
+    		}}
+    			);
+    	//
+    	// Picks callbacks
+    	// Client.network.RegisterCallback(PacketType.AvatarPicksReply, AvatarPicksReplyHandler);
+
+    	Client.network.RegisterCallback(PacketType.AvatarPicksReply, new EventObserver<PacketReceivedEventArgs>()
+    			{ 
+    		@Override
+    		public void handleEvent(Observable o,PacketReceivedEventArgs arg) {
+    			try{ AvatarPicksReplyHandler(o, arg);}
+    			catch(Exception e) {JLogger.warn(Utils.getExceptionStackTraceAsString(e));}
+    		}}
+    			);
+    	// Client.network.RegisterCallback(PacketType.PickInfoReply, PickInfoReplyHandler);
+
+    	Client.network.RegisterCallback(PacketType.PickInfoReply, new EventObserver<PacketReceivedEventArgs>()
+    			{ 
+    		@Override
+    		public void handleEvent(Observable o,PacketReceivedEventArgs arg) {
+    			try{ PickInfoReplyHandler(o, arg);}
+    			catch(Exception e) {JLogger.warn(Utils.getExceptionStackTraceAsString(e));}
+    		}}
+    			);
+    	//
+    	// Classifieds callbacks
+    	// Client.network.RegisterCallback(PacketType.AvatarClassifiedReply, AvatarClassifiedReplyHandler);
+
+    	Client.network.RegisterCallback(PacketType.AvatarClassifiedReply, new EventObserver<PacketReceivedEventArgs>()
+    			{ 
+    		@Override
+    		public void handleEvent(Observable o,PacketReceivedEventArgs arg) {
+    			try{ AvatarClassifiedReplyHandler(o, arg);}
+    			catch(Exception e) {JLogger.warn(Utils.getExceptionStackTraceAsString(e));}
+    		}}
+    			);
+    	// Client.network.RegisterCallback(PacketType.ClassifiedInfoReply, ClassifiedInfoReplyHandler);
+
+    	Client.network.RegisterCallback(PacketType.ClassifiedInfoReply, new EventObserver<PacketReceivedEventArgs>()
+    			{ 
+    		@Override
+    		public void handleEvent(Observable o,PacketReceivedEventArgs arg) {
+    			try{ ClassifiedInfoReplyHandler(o, arg);}
+    			catch(Exception e) {JLogger.warn(Utils.getExceptionStackTraceAsString(e));}
+    		}}
+    			);
+    	//
+    	// Client.network.RegisterEventCallback("DisplayNameUpdate", new Caps.EventQueueCallback(DisplayNameUpdateMessageHandler);
+    	Client.network.RegisterEventCallback("DisplayNameUpdate", new EventObserver<CapsEventObservableArg>()
+    			{ 
+    		@Override
+    		public void handleEvent(Observable o,CapsEventObservableArg arg) {
+    			try{ DisplayNameUpdateMessageHandler(arg.getCapsKey(), arg.getMessage(), arg.getSimulator());}
+    			catch(Exception e) {JLogger.warn(Utils.getExceptionStackTraceAsString(e));}
+    		}}
+    			);
+    }
+
+        /// <summary>Tracks the specified avatar on your map</summary>
+        /// <param name="preyID">Avatar ID to track</param>
+        public void RequestTrackAgent(UUID preyID)
+        {
+            TrackAgentPacket p = new TrackAgentPacket();
+            p.AgentData.AgentID = Client.self.getAgentID();
+            p.AgentData.SessionID = Client.self.getSessionID();
+            p.TargetData.PreyID = preyID;
+            Client.network.SendPacket(p);
+        }
+
+        /// <summary>
+        /// Request a single avatar name
+        /// </summary>
+        /// <param name="id">The avatar key to retrieve a name for</param>
+        public void RequestAvatarName(UUID id)
+        {
+            UUIDNameRequestPacket request = new UUIDNameRequestPacket();
+            request.UUIDNameBlock = new UUIDNameRequestPacket.UUIDNameBlockBlock[1];
+            request.UUIDNameBlock[0] = new UUIDNameRequestPacket.UUIDNameBlockBlock();
+            request.UUIDNameBlock[0].ID = id;
+
+            Client.network.SendPacket(request);
+        }
+
+        /// <summary>
+        /// Request a list of avatar names
+        /// </summary>
+        /// <param name="ids">The avatar keys to retrieve names for</param>
+        public void RequestAvatarNames(List<UUID> ids)
+        {
+            int m = MAX_UUIDS_PER_PACKET;
+            int n = ids.size() / m; // Number of full requests to make
+            int i = 0;
+
+            UUIDNameRequestPacket request;
+
+            for (int j = 0; j < n; j++)
+            {
+                request = new UUIDNameRequestPacket();
+                request.UUIDNameBlock = new UUIDNameRequestPacket.UUIDNameBlockBlock[m];
+
+                for (; i < (j + 1) * m; i++)
+                {
+                    request.UUIDNameBlock[i % m] = new UUIDNameRequestPacket.UUIDNameBlockBlock();
+                    request.UUIDNameBlock[i % m].ID = ids.get(i);
+                }
+
+                Client.network.SendPacket(request);
+            }
+
+            // Get any remaining names after left after the full requests
+            if (ids.size() > n * m)
+            {
+                request = new UUIDNameRequestPacket();
+                request.UUIDNameBlock = new UUIDNameRequestPacket.UUIDNameBlockBlock[ids.size() - n * m];
+
+                for (; i < ids.size(); i++)
+                {
+                    request.UUIDNameBlock[i % m] = new UUIDNameRequestPacket.UUIDNameBlockBlock();
+                    request.UUIDNameBlock[i % m].ID = ids.get(i);
+                }
+
+                Client.network.SendPacket(request);
+            }
+        }
+
+        /// <summary>
+        /// Check if Display Names functionality is available
+        /// </summary>
+        /// <returns>True if Display name functionality is available</returns>
+        public boolean DisplayNamesAvailable()
+        {
+            return (Client.network.getCurrentSim() != null && Client.network.getCurrentSim().Caps != null) && Client.network.getCurrentSim().Caps.CapabilityURI("GetDisplayNames") != null;
+        }
+
+        /// <summary>
+        /// Request retrieval of display names (max 90 names per request)
+        /// </summary>
+        /// <param name="ids">List of UUIDs to lookup</param>
+        /// <param name="callback">Callback to report result of the operation</param>
+        public void GetDisplayNames(final List<UUID> ids, final EventObserver<DisplayNamesCallbackArgs> callback) throws URISyntaxException
+        {
+            if (!DisplayNamesAvailable() || ids.size() == 0)
+            {
+                callback.handleEvent(null, new DisplayNamesCallbackArgs(false, null, null));
+            }
+
+            StringBuilder query = new StringBuilder();
+            for (int i = 0; i < ids.size() && i < 90; i++)
+            {
+                query.append(String.format("ids=%s", ids.get(i)));
+                if (i < ids.size() - 1)
+                {
+                    query.append("&");
+                }
+            }
+
+            URI uri = new URI(Client.network.getCurrentSim().Caps.CapabilityURI("GetDisplayNames").toString() + "/?" + query);
+
+            CapsHttpClient cap = new CapsHttpClient(uri);
+            
+            cap.addRequestCompleteObserver(new EventObserver<CapsHttpRequestCompletedArg>(){
+				@Override
+				public void handleEvent(Observable o, CapsHttpRequestCompletedArg arg) {
+					// TODO Auto-generated method stub
+					CapsHttpClient client = arg.getClient();
+					OSD result = arg.getResult();
+					Exception error = arg.getError();
+					 try
+                     {
+                         if (error != null)
+                             throw error;
+                         GetDisplayNamesMessage msg = new GetDisplayNamesMessage();
+                         msg.Deserialize((OSDMap) result);
+                         callback.handleEvent(null, new DisplayNamesCallbackArgs(true, msg.Agents, msg.BadIDs));
+                     }
+                     catch (Exception ex)
+                     {
+                         JLogger.warn("Failed to call GetDisplayNames capability: " + Utils.getExceptionStackTraceAsString(ex));
+//                         callback(false, null, null);
+                         callback.handleEvent(null, new DisplayNamesCallbackArgs(false, null, null));
+                     }
+				}
+            });
+//            cap.OnComplete += (CapsHttpClient client, OSD result, Exception error) =>
 //                                  {
 //                                      try
 //                                      {
@@ -703,958 +1065,596 @@ public class AvatarManager {
 //                                          callback(false, null, null);
 //                                      }
 //                                  };
-//            cap.BeginGetResponse(null, String.Empty, Client.Settings.CAPS_TIMEOUT);
-//        }
-//
-//        /// <summary>
-//        /// Start a request for Avatar Properties
-//        /// </summary>
-//        /// <param name="avatarid"></param>
-//        public void RequestAvatarProperties(UUID avatarid)
-//        {
-//            AvatarPropertiesRequestPacket aprp = new AvatarPropertiesRequestPacket();
-//
-//            aprp.AgentData.AgentID = Client.Self.AgentID;
-//            aprp.AgentData.SessionID = Client.Self.SessionID;
-//            aprp.AgentData.AvatarID = avatarid;
-//
-//            Client.Network.SendPacket(aprp);
-//        }
-//
-//        /// <summary>
-//        /// Search for an avatar (first name, last name)
-//        /// </summary>
-//        /// <param name="name">The name to search for</param>
-//        /// <param name="queryID">An ID to associate with this query</param>
-//        public void RequestAvatarNameSearch(string name, UUID queryID)
-//        {
-//            AvatarPickerRequestPacket aprp = new AvatarPickerRequestPacket();
-//
-//            aprp.AgentData.AgentID = Client.Self.AgentID;
-//            aprp.AgentData.SessionID = Client.Self.SessionID;
-//            aprp.AgentData.QueryID = queryID;
-//            aprp.Data.Name = Utils.StringToBytes(name);
-//
-//            Client.Network.SendPacket(aprp);
-//        }
-//
-//        /// <summary>
-//        /// Start a request for Avatar Picks
-//        /// </summary>
-//        /// <param name="avatarid">UUID of the avatar</param>
-//        public void RequestAvatarPicks(UUID avatarid)
-//        {
-//            GenericMessagePacket gmp = new GenericMessagePacket();
-//
-//            gmp.AgentData.AgentID = Client.Self.AgentID;
-//            gmp.AgentData.SessionID = Client.Self.SessionID;
-//            gmp.AgentData.TransactionID = UUID.Zero;
-//
-//            gmp.MethodData.Method = Utils.StringToBytes("avatarpicksrequest");
-//            gmp.MethodData.Invoice = UUID.Zero;
-//            gmp.ParamList = new GenericMessagePacket.ParamListBlock[1];
-//            gmp.ParamList[0] = new GenericMessagePacket.ParamListBlock();
-//            gmp.ParamList[0].Parameter = Utils.StringToBytes(avatarid.ToString());
-//
-//            Client.Network.SendPacket(gmp);
-//        }
-//
-//        /// <summary>
-//        /// Start a request for Avatar Classifieds
-//        /// </summary>
-//        /// <param name="avatarid">UUID of the avatar</param>
-//        public void RequestAvatarClassified(UUID avatarid)
-//        {
-//            GenericMessagePacket gmp = new GenericMessagePacket();
-//
-//            gmp.AgentData.AgentID = Client.Self.AgentID;
-//            gmp.AgentData.SessionID = Client.Self.SessionID;
-//            gmp.AgentData.TransactionID = UUID.Zero;
-//
-//            gmp.MethodData.Method = Utils.StringToBytes("avatarclassifiedsrequest");
-//            gmp.MethodData.Invoice = UUID.Zero;
-//            gmp.ParamList = new GenericMessagePacket.ParamListBlock[1];
-//            gmp.ParamList[0] = new GenericMessagePacket.ParamListBlock();
-//            gmp.ParamList[0].Parameter = Utils.StringToBytes(avatarid.ToString());
-//
-//            Client.Network.SendPacket(gmp);
-//        }
-//
-//        /// <summary>
-//        /// Start a request for details of a specific profile pick
-//        /// </summary>
-//        /// <param name="avatarid">UUID of the avatar</param>
-//        /// <param name="pickid">UUID of the profile pick</param>
-//        public void RequestPickInfo(UUID avatarid, UUID pickid)
-//        {
-//            GenericMessagePacket gmp = new GenericMessagePacket();
-//
-//            gmp.AgentData.AgentID = Client.Self.AgentID;
-//            gmp.AgentData.SessionID = Client.Self.SessionID;
-//            gmp.AgentData.TransactionID = UUID.Zero;
-//
-//            gmp.MethodData.Method = Utils.StringToBytes("pickinforequest");
-//            gmp.MethodData.Invoice = UUID.Zero;
-//            gmp.ParamList = new GenericMessagePacket.ParamListBlock[2];
-//            gmp.ParamList[0] = new GenericMessagePacket.ParamListBlock();
-//            gmp.ParamList[0].Parameter = Utils.StringToBytes(avatarid.ToString());
-//            gmp.ParamList[1] = new GenericMessagePacket.ParamListBlock();
-//            gmp.ParamList[1].Parameter = Utils.StringToBytes(pickid.ToString());
-//
-//            Client.Network.SendPacket(gmp);
-//        }
-//
-//        /// <summary>
-//        /// Start a request for details of a specific profile classified
-//        /// </summary>
-//        /// <param name="avatarid">UUID of the avatar</param>
-//        /// <param name="classifiedid">UUID of the profile classified</param>
-//        public void RequestClassifiedInfo(UUID avatarid, UUID classifiedid)
-//        {
-//            GenericMessagePacket gmp = new GenericMessagePacket();
-//
-//            gmp.AgentData.AgentID = Client.Self.AgentID;
-//            gmp.AgentData.SessionID = Client.Self.SessionID;
-//            gmp.AgentData.TransactionID = UUID.Zero;
-//
-//            gmp.MethodData.Method = Utils.StringToBytes("classifiedinforequest");
-//            gmp.MethodData.Invoice = UUID.Zero;
-//            gmp.ParamList = new GenericMessagePacket.ParamListBlock[2];
-//            gmp.ParamList[0] = new GenericMessagePacket.ParamListBlock();
-//            gmp.ParamList[0].Parameter = Utils.StringToBytes(avatarid.ToString());
-//            gmp.ParamList[1] = new GenericMessagePacket.ParamListBlock();
-//            gmp.ParamList[1].Parameter = Utils.StringToBytes(classifiedid.ToString());
-//
-//            Client.Network.SendPacket(gmp);
-//        }
-//
-//        //region Packet Handlers
-//
-//        /// <summary>Process an incoming packet and raise the appropriate events</summary>
-//        /// <param name="sender">The sender</param>
-//        /// <param name="e">The EventArgs object containing the packet data</param>
-//        protected void UUIDNameReplyHandler(object sender, PacketReceivedEventArgs e)
-//        {
-//            if (m_UUIDNameReply != null)
-//            {
-//                Packet packet = e.Packet;
-//                Dictionary<UUID, string> names = new Dictionary<UUID, string>();
-//                UUIDNameReplyPacket reply = (UUIDNameReplyPacket)packet;
-//
-//                foreach (UUIDNameReplyPacket.UUIDNameBlockBlock block in reply.UUIDNameBlock)
-//                {
-//                    names[block.ID] = Utils.BytesToString(block.FirstName) +
-//                        " " + Utils.BytesToString(block.LastName);
-//                }
-//
-//                OnUUIDNameReply(new UUIDNameReplyEventArgs(names));
-//            }
-//        }
-//
-//        /// <summary>Process an incoming packet and raise the appropriate events</summary>
-//        /// <param name="sender">The sender</param>
-//        /// <param name="e">The EventArgs object containing the packet data</param>
-//        protected void AvatarAnimationHandler(object sender, PacketReceivedEventArgs e)
-//        {
-//            Packet packet = e.Packet;
-//
-//            if (m_AvatarAnimation != null)
-//            {
-//                AvatarAnimationPacket data = (AvatarAnimationPacket)packet;
-//
-//                List<Animation> signaledAnimations = new List<Animation>(data.AnimationList.Length);
-//
-//                for (int i = 0; i < data.AnimationList.Length; i++)
-//                {
-//                    Animation animation = new Animation();
-//                    animation.AnimationID = data.AnimationList[i].AnimID;
-//                    animation.AnimationSequence = data.AnimationList[i].AnimSequenceID;
-//                    if (i < data.AnimationSourceList.Length)
-//                    {
-//                        animation.AnimationSourceObjectID = data.AnimationSourceList[i].ObjectID;
-//                    }
-//
-//                    signaledAnimations.Add(animation);
-//                }
-//
-//                OnAvatarAnimation(new AvatarAnimationEventArgs(data.Sender.ID, signaledAnimations));
-//            }
-//        }
-//
-//        /// <summary>Process an incoming packet and raise the appropriate events</summary>
-//        /// <param name="sender">The sender</param>
-//        /// <param name="e">The EventArgs object containing the packet data</param>
-//        protected void AvatarAppearanceHandler(object sender, PacketReceivedEventArgs e)
-//        {
-//            if (m_AvatarAppearance != null || Client.Settings.AVATAR_TRACKING)
-//            {
-//                Packet packet = e.Packet;
-//                Simulator simulator = e.Simulator;
-//
-//                AvatarAppearancePacket appearance = (AvatarAppearancePacket)packet;
-//
-//                List<byte> visualParams = new List<byte>();
-//                foreach (AvatarAppearancePacket.VisualParamBlock block in appearance.VisualParam)
-//                {
-//                    visualParams.Add(block.ParamValue);
-//                }
-//
-//                Primitive.TextureEntry textureEntry = new Primitive.TextureEntry(appearance.ObjectData.TextureEntry, 0,
-//                        appearance.ObjectData.TextureEntry.Length);
-//
-//                Primitive.TextureEntryFace defaultTexture = textureEntry.DefaultTexture;
-//                Primitive.TextureEntryFace[] faceTextures = textureEntry.FaceTextures;
-//
-//                Avatar av = simulator.ObjectsAvatars.Find((Avatar a) => { return a.ID == appearance.Sender.ID; });
-//                if (av != null)
-//                {
-//                    av.Textures = textureEntry;
-//                    av.VisualParameters = visualParams.ToArray();
-//                }
-//
-//                OnAvatarAppearance(new AvatarAppearanceEventArgs(simulator, appearance.Sender.ID, appearance.Sender.IsTrial,
-//                    defaultTexture, faceTextures, visualParams));
-//            }
-//        }
-//
-//        /// <summary>Process an incoming packet and raise the appropriate events</summary>
-//        /// <param name="sender">The sender</param>
-//        /// <param name="e">The EventArgs object containing the packet data</param>
-//        protected void AvatarPropertiesHandler(object sender, PacketReceivedEventArgs e)
-//        {
-//            if (m_AvatarPropertiesReply != null)
-//            {
-//                Packet packet = e.Packet;
-//                AvatarPropertiesReplyPacket reply = (AvatarPropertiesReplyPacket)packet;
-//                Avatar.AvatarProperties properties = new Avatar.AvatarProperties();
-//
-//                properties.ProfileImage = reply.PropertiesData.ImageID;
-//                properties.FirstLifeImage = reply.PropertiesData.FLImageID;
-//                properties.Partner = reply.PropertiesData.PartnerID;
-//                properties.AboutText = Utils.BytesToString(reply.PropertiesData.AboutText);
-//                properties.FirstLifeText = Utils.BytesToString(reply.PropertiesData.FLAboutText);
-//                properties.BornOn = Utils.BytesToString(reply.PropertiesData.BornOn);
-//                //properties.CharterMember = Utils.BytesToString(reply.PropertiesData.CharterMember);
-//                uint charter = Utils.BytesToUInt(reply.PropertiesData.CharterMember);
-//                if (charter == 0)
-//                {
-//                    properties.CharterMember = "Resident";
-//                }
-//                else if (charter == 2)
-//                {
-//                    properties.CharterMember = "Charter";
-//                }
-//                else if (charter == 3)
-//                {
-//                    properties.CharterMember = "Linden";
-//                }
-//                else
-//                {
-//                    properties.CharterMember = Utils.BytesToString(reply.PropertiesData.CharterMember);
-//                }
-//                properties.Flags = (ProfileFlags)reply.PropertiesData.Flags;
-//                properties.ProfileURL = Utils.BytesToString(reply.PropertiesData.ProfileURL);
-//
-//                OnAvatarPropertiesReply(new AvatarPropertiesReplyEventArgs(reply.AgentData.AvatarID, properties));
-//            }
-//        }
-//
-//        /// <summary>Process an incoming packet and raise the appropriate events</summary>
-//        /// <param name="sender">The sender</param>
-//        /// <param name="e">The EventArgs object containing the packet data</param>
-//        protected void AvatarInterestsHandler(object sender, PacketReceivedEventArgs e)
-//        {
-//            if (m_AvatarInterestsReply != null)
-//            {
-//                Packet packet = e.Packet;
-//
-//                AvatarInterestsReplyPacket airp = (AvatarInterestsReplyPacket)packet;
-//                Avatar.Interests interests = new Avatar.Interests();
-//
-//                interests.WantToMask = airp.PropertiesData.WantToMask;
-//                interests.WantToText = Utils.BytesToString(airp.PropertiesData.WantToText);
-//                interests.SkillsMask = airp.PropertiesData.SkillsMask;
-//                interests.SkillsText = Utils.BytesToString(airp.PropertiesData.SkillsText);
-//                interests.LanguagesText = Utils.BytesToString(airp.PropertiesData.LanguagesText);
-//
-//                OnAvatarInterestsReply(new AvatarInterestsReplyEventArgs(airp.AgentData.AvatarID, interests));
-//            }
-//        }
-//
-//        /// <summary>
-//        /// EQ Message fired when someone nearby changes their display name
-//        /// </summary>
-//        /// <param name="capsKey">The message key</param>
-//        /// <param name="message">the IMessage object containing the deserialized data sent from the simulator</param>
-//        /// <param name="simulator">The <see cref="Simulator"/> which originated the packet</param>
-//        protected void DisplayNameUpdateMessageHandler(string capsKey, IMessage message, Simulator simulator)
-//        {
-//            if (m_DisplayNameUpdate != null)
-//            {
-//                DisplayNameUpdateMessage msg = (DisplayNameUpdateMessage) message;
-//                OnDisplayNameUpdate(new DisplayNameUpdateEventArgs(msg.OldDisplayName, msg.DisplayName));
-//            }
-//        }
-//
-//        /// <summary>
-//        /// Crossed region handler for message that comes across the EventQueue. Sent to an agent
-//        /// when the agent crosses a sim border into a new region.
-//        /// </summary>
-//        /// <param name="capsKey">The message key</param>
-//        /// <param name="message">the IMessage object containing the deserialized data sent from the simulator</param>
-//        /// <param name="simulator">The <see cref="Simulator"/> which originated the packet</param>
-//        protected void AvatarGroupsReplyMessageHandler(string capsKey, IMessage message, Simulator simulator)
-//        {
-//            AgentGroupDataUpdateMessage msg = (AgentGroupDataUpdateMessage)message;
-//            List<AvatarGroup> avatarGroups = new List<AvatarGroup>(msg.GroupDataBlock.Length);
-//            for (int i = 0; i < msg.GroupDataBlock.Length; i++)
-//            {
-//                AvatarGroup avatarGroup = new AvatarGroup();
-//                avatarGroup.AcceptNotices = msg.GroupDataBlock[i].AcceptNotices;
-//                avatarGroup.GroupID = msg.GroupDataBlock[i].GroupID;
-//                avatarGroup.GroupInsigniaID = msg.GroupDataBlock[i].GroupInsigniaID;
-//                avatarGroup.GroupName = msg.GroupDataBlock[i].GroupName;
-//                avatarGroup.GroupPowers = msg.GroupDataBlock[i].GroupPowers;
-//                avatarGroup.ListInProfile = msg.NewGroupDataBlock[i].ListInProfile;
-//
-//                avatarGroups.Add(avatarGroup);
-//            }
-//
-//            OnAvatarGroupsReply(new AvatarGroupsReplyEventArgs(msg.AgentID, avatarGroups));
-//        }
-//
-//        /// <summary>Process an incoming packet and raise the appropriate events</summary>
-//        /// <param name="sender">The sender</param>
-//        /// <param name="e">The EventArgs object containing the packet data</param>
-//        protected void AvatarGroupsReplyHandler(object sender, PacketReceivedEventArgs e)
-//        {
-//            if (m_AvatarGroupsReply != null)
-//            {
-//                Packet packet = e.Packet;
-//                AvatarGroupsReplyPacket groups = (AvatarGroupsReplyPacket)packet;
-//                List<AvatarGroup> avatarGroups = new List<AvatarGroup>(groups.GroupData.Length);
-//
-//                for (int i = 0; i < groups.GroupData.Length; i++)
-//                {
-//                    AvatarGroup avatarGroup = new AvatarGroup();
-//
-//                    avatarGroup.AcceptNotices = groups.GroupData[i].AcceptNotices;
-//                    avatarGroup.GroupID = groups.GroupData[i].GroupID;
-//                    avatarGroup.GroupInsigniaID = groups.GroupData[i].GroupInsigniaID;
-//                    avatarGroup.GroupName = Utils.BytesToString(groups.GroupData[i].GroupName);
-//                    avatarGroup.GroupPowers = (GroupPowers)groups.GroupData[i].GroupPowers;
-//                    avatarGroup.GroupTitle = Utils.BytesToString(groups.GroupData[i].GroupTitle);
-//                    avatarGroup.ListInProfile = groups.NewGroupData.ListInProfile;
-//
-//                    avatarGroups.Add(avatarGroup);
-//                }
-//
-//                OnAvatarGroupsReply(new AvatarGroupsReplyEventArgs(groups.AgentData.AvatarID, avatarGroups));
-//            }
-//        }
-//
-//        /// <summary>Process an incoming packet and raise the appropriate events</summary>
-//        /// <param name="sender">The sender</param>
-//        /// <param name="e">The EventArgs object containing the packet data</param>
-//        protected void AvatarPickerReplyHandler(object sender, PacketReceivedEventArgs e)
-//        {
-//            if (m_AvatarPickerReply != null)
-//            {
-//                Packet packet = e.Packet;
-//                AvatarPickerReplyPacket reply = (AvatarPickerReplyPacket)packet;
-//                Dictionary<UUID, string> avatars = new Dictionary<UUID, string>();
-//
-//                foreach (AvatarPickerReplyPacket.DataBlock block in reply.Data)
-//                {
-//                    avatars[block.AvatarID] = Utils.BytesToString(block.FirstName) +
-//                        " " + Utils.BytesToString(block.LastName);
-//                }
-//                OnAvatarPickerReply(new AvatarPickerReplyEventArgs(reply.AgentData.QueryID, avatars));
-//            }
-//        }
-//
-//        /// <summary>Process an incoming packet and raise the appropriate events</summary>
-//        /// <param name="sender">The sender</param>
-//        /// <param name="e">The EventArgs object containing the packet data</param>
-//        protected void ViewerEffectHandler(object sender, PacketReceivedEventArgs e)
-//        {
-//            Packet packet = e.Packet;
-//            ViewerEffectPacket effect = (ViewerEffectPacket)packet;
-//
-//            foreach (ViewerEffectPacket.EffectBlock block in effect.Effect)
-//            {
-//                EffectType type = (EffectType)block.Type;
-//
-//                // Each ViewerEffect type uses it's own custom binary format for additional data. Fun eh?
-//                switch (type)
-//                {
-//                    case EffectType.Text:
-//                        Logger.Log("Received a ViewerEffect of type " + type.ToString() + ", implement me!",
-//                            Helpers.LogLevel.Warning, Client);
-//                        break;
-//                    case EffectType.Icon:
-//                        Logger.Log("Received a ViewerEffect of type " + type.ToString() + ", implement me!",
-//                            Helpers.LogLevel.Warning, Client);
-//                        break;
-//                    case EffectType.Connector:
-//                        Logger.Log("Received a ViewerEffect of type " + type.ToString() + ", implement me!",
-//                            Helpers.LogLevel.Warning, Client);
-//                        break;
-//                    case EffectType.FlexibleObject:
-//                        Logger.Log("Received a ViewerEffect of type " + type.ToString() + ", implement me!",
-//                            Helpers.LogLevel.Warning, Client);
-//                        break;
-//                    case EffectType.AnimalControls:
-//                        Logger.Log("Received a ViewerEffect of type " + type.ToString() + ", implement me!",
-//                            Helpers.LogLevel.Warning, Client);
-//                        break;
-//                    case EffectType.AnimationObject:
-//                        Logger.Log("Received a ViewerEffect of type " + type.ToString() + ", implement me!",
-//                            Helpers.LogLevel.Warning, Client);
-//                        break;
-//                    case EffectType.Cloth:
-//                        Logger.Log("Received a ViewerEffect of type " + type.ToString() + ", implement me!",
-//                            Helpers.LogLevel.Warning, Client);
-//                        break;
-//                    case EffectType.Glow:
-//                        Logger.Log("Received a Glow ViewerEffect which is not implemented yet",
-//                            Helpers.LogLevel.Warning, Client);
-//                        break;
-//                    case EffectType.Beam:
-//                    case EffectType.Point:
-//                    case EffectType.Trail:
-//                    case EffectType.Sphere:
-//                    case EffectType.Spiral:
-//                    case EffectType.Edit:
-//                        if (m_ViewerEffect != null)
-//                        {
-//                            if (block.TypeData.Length == 56)
-//                            {
-//                                UUID sourceAvatar = new UUID(block.TypeData, 0);
-//                                UUID targetObject = new UUID(block.TypeData, 16);
-//                                Vector3d targetPos = new Vector3d(block.TypeData, 32);
-//                                OnViewerEffect(new ViewerEffectEventArgs(type, sourceAvatar, targetObject, targetPos, block.Duration, block.ID));
-//                            }
-//                            else
-//                            {
-//                                Logger.Log("Received a " + type.ToString() +
-//                                    " ViewerEffect with an incorrect TypeData size of " +
-//                                    block.TypeData.Length + " bytes", Helpers.LogLevel.Warning, Client);
-//                            }
-//                        }
-//                        break;
-//                    case EffectType.LookAt:
-//                        if (m_ViewerEffectLookAt != null)
-//                        {
-//                            if (block.TypeData.Length == 57)
-//                            {
-//                                UUID sourceAvatar = new UUID(block.TypeData, 0);
-//                                UUID targetObject = new UUID(block.TypeData, 16);
-//                                Vector3d targetPos = new Vector3d(block.TypeData, 32);
-//                                LookAtType lookAt = (LookAtType)block.TypeData[56];
-//
-//                                OnViewerEffectLookAt(new ViewerEffectLookAtEventArgs(sourceAvatar, targetObject, targetPos, lookAt,
-//                                    block.Duration, block.ID));
-//                            }
-//                            else
-//                            {
-//                                Logger.Log("Received a LookAt ViewerEffect with an incorrect TypeData size of " +
-//                                    block.TypeData.Length + " bytes", Helpers.LogLevel.Warning, Client);
-//                            }
-//                        }
-//                        break;
-//                    case EffectType.PointAt:
-//                        if (m_ViewerEffectPointAt != null)
-//                        {
-//                            if (block.TypeData.Length == 57)
-//                            {
-//                                UUID sourceAvatar = new UUID(block.TypeData, 0);
-//                                UUID targetObject = new UUID(block.TypeData, 16);
-//                                Vector3d targetPos = new Vector3d(block.TypeData, 32);
-//                                PointAtType pointAt = (PointAtType)block.TypeData[56];
-//
-//                                OnViewerEffectPointAt(new ViewerEffectPointAtEventArgs(e.Simulator, sourceAvatar, targetObject, targetPos,
-//                                    pointAt, block.Duration, block.ID));
-//                            }
-//                            else
-//                            {
-//                                Logger.Log("Received a PointAt ViewerEffect with an incorrect TypeData size of " +
-//                                    block.TypeData.Length + " bytes", Helpers.LogLevel.Warning, Client);
-//                            }
-//                        }
-//                        break;
-//                    default:
-//                        Logger.Log("Received a ViewerEffect with an unknown type " + type, Helpers.LogLevel.Warning, Client);
-//                        break;
-//                }
-//            }
-//        }
-//
-//        /// <summary>Process an incoming packet and raise the appropriate events</summary>
-//        /// <param name="sender">The sender</param>
-//        /// <param name="e">The EventArgs object containing the packet data</param>
-//        protected void AvatarPicksReplyHandler(object sender, PacketReceivedEventArgs e)
-//        {
-//            if (m_AvatarPicksReply == null)
-//            {
-//                return;
-//            }
-//            Packet packet = e.Packet;
-//
-//            AvatarPicksReplyPacket p = (AvatarPicksReplyPacket)packet;
-//            Dictionary<UUID, string> picks = new Dictionary<UUID, string>();
-//
-//            foreach (AvatarPicksReplyPacket.DataBlock b in p.Data)
-//            {
-//                picks.Add(b.PickID, Utils.BytesToString(b.PickName));
-//            }
-//
-//            OnAvatarPicksReply(new AvatarPicksReplyEventArgs(p.AgentData.TargetID, picks));
-//        }
-//
-//        /// <summary>Process an incoming packet and raise the appropriate events</summary>
-//        /// <param name="sender">The sender</param>
-//        /// <param name="e">The EventArgs object containing the packet data</param>
-//        protected void PickInfoReplyHandler(object sender, PacketReceivedEventArgs e)
-//        {
-//            if (m_PickInfoReply != null)
-//            {
-//                Packet packet = e.Packet;
-//                PickInfoReplyPacket p = (PickInfoReplyPacket)packet;
-//                ProfilePick ret = new ProfilePick();
-//                ret.CreatorID = p.Data.CreatorID;
-//                ret.Desc = Utils.BytesToString(p.Data.Desc);
-//                ret.Enabled = p.Data.Enabled;
-//                ret.Name = Utils.BytesToString(p.Data.Name);
-//                ret.OriginalName = Utils.BytesToString(p.Data.OriginalName);
-//                ret.ParcelID = p.Data.ParcelID;
-//                ret.PickID = p.Data.PickID;
-//                ret.PosGlobal = p.Data.PosGlobal;
-//                ret.SimName = Utils.BytesToString(p.Data.SimName);
-//                ret.SnapshotID = p.Data.SnapshotID;
-//                ret.SortOrder = p.Data.SortOrder;
-//                ret.TopPick = p.Data.TopPick;
-//                ret.User = Utils.BytesToString(p.Data.User);
-//
-//                OnPickInfoReply(new PickInfoReplyEventArgs(ret.PickID, ret));
-//            }
-//        }
-//
-//        /// <summary>Process an incoming packet and raise the appropriate events</summary>
-//        /// <param name="sender">The sender</param>
-//        /// <param name="e">The EventArgs object containing the packet data</param>
-//        protected void AvatarClassifiedReplyHandler(object sender, PacketReceivedEventArgs e)
-//        {
-//            if (m_AvatarClassifiedReply != null)
-//            {
-//                Packet packet = e.Packet;
-//                AvatarClassifiedReplyPacket p = (AvatarClassifiedReplyPacket)packet;
-//                Dictionary<UUID, string> classifieds = new Dictionary<UUID, string>();
-//
-//                foreach (AvatarClassifiedReplyPacket.DataBlock b in p.Data)
-//                {
-//                    classifieds.Add(b.ClassifiedID, Utils.BytesToString(b.Name));
-//                }
-//
-//                OnAvatarClassifiedReply(new AvatarClassifiedReplyEventArgs(p.AgentData.TargetID, classifieds));
-//            }
-//        }
-//
-//        /// <summary>Process an incoming packet and raise the appropriate events</summary>
-//        /// <param name="sender">The sender</param>
-//        /// <param name="e">The EventArgs object containing the packet data</param>
-//        protected void ClassifiedInfoReplyHandler(object sender, PacketReceivedEventArgs e)
-//        {
-//            if (m_AvatarClassifiedReply != null)
-//            {
-//                Packet packet = e.Packet;
-//                ClassifiedInfoReplyPacket p = (ClassifiedInfoReplyPacket)packet;
-//                ClassifiedAd ret = new ClassifiedAd();
-//                ret.Desc = Utils.BytesToString(p.Data.Desc);
-//                ret.Name = Utils.BytesToString(p.Data.Name);
-//                ret.ParcelID = p.Data.ParcelID;
-//                ret.ClassifiedID = p.Data.ClassifiedID;
-//                ret.Position = p.Data.PosGlobal;
-//                ret.SnapShotID = p.Data.SnapshotID;
-//                ret.Price = p.Data.PriceForListing;
-//                ret.ParentEstate = p.Data.ParentEstate;
-//                ret.ClassifiedFlags = p.Data.ClassifiedFlags;
-//                ret.Catagory = p.Data.Category;
-//
-//                OnClassifiedInfoReply(new ClassifiedInfoReplyEventArgs(ret.ClassifiedID, ret));
-//            }
-//        }
-//
-//        //endregion Packet Handlers
-//    }
-//
-//    //region EventArgs
-//
-//    /// <summary>Provides data for the <see cref="AvatarManager.AvatarAnimation"/> event</summary>
-//    /// <remarks>The <see cref="AvatarManager.AvatarAnimation"/> event occurs when the simulator sends
-//    /// the animation playlist for an agent</remarks>
-//    /// <example>
-//    /// The following code example uses the <see cref="AvatarAnimationEventArgs.AvatarID"/> and <see cref="AvatarAnimationEventArgs.Animations"/>
-//    /// properties to display the animation playlist of an avatar on the <see cref="Console"/> window.
-//    /// <code>
-//    ///     // subscribe to the event
-//    ///     Client.Avatars.AvatarAnimation += Avatars_AvatarAnimation;
-//    ///     
-//    ///     private void Avatars_AvatarAnimation(object sender, AvatarAnimationEventArgs e)
-//    ///     {
-//    ///         // create a dictionary of "known" animations from the Animations class using System.Reflection
-//    ///         Dictionary&lt;UUID, string&gt; systemAnimations = new Dictionary&lt;UUID, string&gt;();
-//    ///         Type type = typeof(Animations);
-//    ///         System.Reflection.FieldInfo[] fields = type.GetFields(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
-//    ///         foreach (System.Reflection.FieldInfo field in fields)
-//    ///         {
-//    ///             systemAnimations.Add((UUID)field.GetValue(type), field.Name);
-//    ///         }
-//    ///
-//    ///         // find out which animations being played are known animations and which are assets
-//    ///         foreach (Animation animation in e.Animations)
-//    ///         {
-//    ///             if (systemAnimations.ContainsKey(animation.AnimationID))
-//    ///             {
-//    ///                 Console.WriteLine("{0} is playing {1} ({2}) sequence {3}", e.AvatarID,
-//    ///                     systemAnimations[animation.AnimationID], animation.AnimationSequence);
-//    ///             }
-//    ///             else
-//    ///             {
-//    ///                 Console.WriteLine("{0} is playing {1} (Asset) sequence {2}", e.AvatarID,
-//    ///                     animation.AnimationID, animation.AnimationSequence);
-//    ///             }
-//    ///         }
-//    ///     }
-//    /// </code>
-//    /// </example>
-//    public class AvatarAnimationEventArgs : EventArgs
-//    {
-//        private readonly UUID m_AvatarID;
-//        private readonly List<Animation> m_Animations;
-//
-//        /// <summary>Get the ID of the agent</summary>
-//        public UUID AvatarID { get { return m_AvatarID; } }
-//        /// <summary>Get the list of animations to start</summary>
-//        public List<Animation> Animations { get { return m_Animations; } }
-//
-//        /// <summary>
-//        /// Construct a new instance of the AvatarAnimationEventArgs class
-//        /// </summary>
-//        /// <param name="avatarID">The ID of the agent</param>
-//        /// <param name="anims">The list of animations to start</param>
-//        public AvatarAnimationEventArgs(UUID avatarID, List<Animation> anims)
-//        {
-//            this.m_AvatarID = avatarID;
-//            this.m_Animations = anims;
-//        }
-//    }
-//
-//    /// <summary>Provides data for the <see cref="AvatarManager.AvatarAppearance"/> event</summary>
-//    /// <remarks>The <see cref="AvatarManager.AvatarAppearance"/> event occurs when the simulator sends
-//    /// the appearance data for an avatar</remarks>
-//    /// <example>
-//    /// The following code example uses the <see cref="AvatarAppearanceEventArgs.AvatarID"/> and <see cref="AvatarAppearanceEventArgs.VisualParams"/>
-//    /// properties to display the selected shape of an avatar on the <see cref="Console"/> window.
-//    /// <code>
-//    ///     // subscribe to the event
-//    ///     Client.Avatars.AvatarAppearance += Avatars_AvatarAppearance;
-//    /// 
-//    ///     // handle the data when the event is raised
-//    ///     void Avatars_AvatarAppearance(object sender, AvatarAppearanceEventArgs e)
-//    ///     {
-//    ///         Console.WriteLine("The Agent {0} is using a {1} shape.", e.AvatarID, (e.VisualParams[31] &gt; 0) : "male" ? "female")
-//    ///     }
-//    /// </code>
-//    /// </example>
-//    public class AvatarAppearanceEventArgs : EventArgs
-//    {
-//
-//        private readonly Simulator m_Simulator;
-//        private readonly UUID m_AvatarID;
-//        private readonly bool m_IsTrial;
-//        private readonly Primitive.TextureEntryFace m_DefaultTexture;
-//        private readonly Primitive.TextureEntryFace[] m_FaceTextures;
-//        private readonly List<byte> m_VisualParams;
-//
-//        /// <summary>Get the Simulator this request is from of the agent</summary>
-//        public Simulator Simulator { get { return m_Simulator; } }
-//        /// <summary>Get the ID of the agent</summary>
-//        public UUID AvatarID { get { return m_AvatarID; } }
-//        /// <summary>true if the agent is a trial account</summary>
-//        public bool IsTrial { get { return m_IsTrial; } }
-//        /// <summary>Get the default agent texture</summary>
-//        public Primitive.TextureEntryFace DefaultTexture { get { return m_DefaultTexture; } }
-//        /// <summary>Get the agents appearance layer textures</summary>
-//        public Primitive.TextureEntryFace[] FaceTextures { get { return m_FaceTextures; } }
-//        /// <summary>Get the <see cref="VisualParams"/> for the agent</summary>
-//        public List<byte> VisualParams { get { return m_VisualParams; } }
-//
-//        /// <summary>
-//        /// Construct a new instance of the AvatarAppearanceEventArgs class
-//        /// </summary>
-//        /// <param name="sim">The simulator request was from</param>
-//        /// <param name="avatarID">The ID of the agent</param>
-//        /// <param name="isTrial">true of the agent is a trial account</param>
-//        /// <param name="defaultTexture">The default agent texture</param>
-//        /// <param name="faceTextures">The agents appearance layer textures</param>
-//        /// <param name="visualParams">The <see cref="VisualParams"/> for the agent</param>
-//        public AvatarAppearanceEventArgs(Simulator sim, UUID avatarID, bool isTrial, Primitive.TextureEntryFace defaultTexture,
-//            Primitive.TextureEntryFace[] faceTextures, List<byte> visualParams)
-//        {
-//            this.m_Simulator = sim;
-//            this.m_AvatarID = avatarID;
-//            this.m_IsTrial = isTrial;
-//            this.m_DefaultTexture = defaultTexture;
-//            this.m_FaceTextures = faceTextures;
-//            this.m_VisualParams = visualParams;
-//        }
-//    }
-//
-//    /// <summary>Represents the interests from the profile of an agent</summary>
-//    public class AvatarInterestsReplyEventArgs : EventArgs
-//    {
-//        private readonly UUID m_AvatarID;
-//        private readonly Avatar.Interests m_Interests;
-//
-//        /// <summary>Get the ID of the agent</summary>
-//        public UUID AvatarID { get { return m_AvatarID; } }
-//        public Avatar.Interests Interests { get { return m_Interests; } }
-//
-//        public AvatarInterestsReplyEventArgs(UUID avatarID, Avatar.Interests interests)
-//        {
-//            this.m_AvatarID = avatarID;
-//            this.m_Interests = interests;
-//        }
-//    }
-//
-//    /// <summary>The properties of an agent</summary>
-//    public class AvatarPropertiesReplyEventArgs : EventArgs
-//    {
-//        private readonly UUID m_AvatarID;
-//        private readonly Avatar.AvatarProperties m_Properties;
-//
-//        /// <summary>Get the ID of the agent</summary>
-//        public UUID AvatarID { get { return m_AvatarID; } }
-//        public Avatar.AvatarProperties Properties { get { return m_Properties; } }
-//
-//        public AvatarPropertiesReplyEventArgs(UUID avatarID, Avatar.AvatarProperties properties)
-//        {
-//            this.m_AvatarID = avatarID;
-//            this.m_Properties = properties;
-//        }
-//    }
-//
-//
-//    public class AvatarGroupsReplyEventArgs : EventArgs
-//    {
-//        private readonly UUID m_AvatarID;
-//        private readonly List<AvatarGroup> m_Groups;
-//
-//        /// <summary>Get the ID of the agent</summary>
-//        public UUID AvatarID { get { return m_AvatarID; } }
-//        public List<AvatarGroup> Groups { get { return m_Groups; } }
-//
-//        public AvatarGroupsReplyEventArgs(UUID avatarID, List<AvatarGroup> avatarGroups)
-//        {
-//            this.m_AvatarID = avatarID;
-//            this.m_Groups = avatarGroups;
-//        }
-//    }
-//
-//    public class AvatarPicksReplyEventArgs : EventArgs
-//    {
-//        private readonly UUID m_AvatarID;
-//        private readonly Dictionary<UUID, string> m_Picks;
-//
-//        /// <summary>Get the ID of the agent</summary>
-//        public UUID AvatarID { get { return m_AvatarID; } }
-//        public Dictionary<UUID, string> Picks { get { return m_Picks; } }
-//
-//        public AvatarPicksReplyEventArgs(UUID avatarid, Dictionary<UUID, string> picks)
-//        {
-//            this.m_AvatarID = avatarid;
-//            this.m_Picks = picks;
-//        }
-//    }
-//
-//    public class PickInfoReplyEventArgs : EventArgs
-//    {
-//        private readonly UUID m_PickID;
-//        private readonly ProfilePick m_Pick;
-//
-//        public UUID PickID { get { return m_PickID; } }
-//        public ProfilePick Pick { get { return m_Pick; } }
-//
-//
-//        public PickInfoReplyEventArgs(UUID pickid, ProfilePick pick)
-//        {
-//            this.m_PickID = pickid;
-//            this.m_Pick = pick;
-//        }
-//    }
-//
-//    public class AvatarClassifiedReplyEventArgs : EventArgs
-//    {
-//        private readonly UUID m_AvatarID;
-//        private readonly Dictionary<UUID, string> m_Classifieds;
-//
-//        /// <summary>Get the ID of the avatar</summary>
-//        public UUID AvatarID { get { return m_AvatarID; } }
-//        public Dictionary<UUID, string> Classifieds { get { return m_Classifieds; } }
-//
-//        public AvatarClassifiedReplyEventArgs(UUID avatarid, Dictionary<UUID, string> classifieds)
-//        {
-//            this.m_AvatarID = avatarid;
-//            this.m_Classifieds = classifieds;
-//        }
-//    }
-//
-//    public class ClassifiedInfoReplyEventArgs : EventArgs
-//    {
-//        private readonly UUID m_ClassifiedID;
-//        private readonly ClassifiedAd m_Classified;
-//
-//        public UUID ClassifiedID { get { return m_ClassifiedID; } }
-//        public ClassifiedAd Classified { get { return m_Classified; } }
-//
-//
-//        public ClassifiedInfoReplyEventArgs(UUID classifiedID, ClassifiedAd Classified)
-//        {
-//            this.m_ClassifiedID = classifiedID;
-//            this.m_Classified = Classified;
-//        }
-//    }
-//
-//    public class UUIDNameReplyEventArgs : EventArgs
-//    {
-//        private readonly Dictionary<UUID, string> m_Names;
-//
-//        public Dictionary<UUID, string> Names { get { return m_Names; } }
-//
-//        public UUIDNameReplyEventArgs(Dictionary<UUID, string> names)
-//        {
-//            this.m_Names = names;
-//        }
-//    }
-//
-//    public class AvatarPickerReplyEventArgs : EventArgs
-//    {
-//        private readonly UUID m_QueryID;
-//        private readonly Dictionary<UUID, string> m_Avatars;
-//
-//        public UUID QueryID { get { return m_QueryID; } }
-//        public Dictionary<UUID, string> Avatars { get { return m_Avatars; } }
-//
-//        public AvatarPickerReplyEventArgs(UUID queryID, Dictionary<UUID, string> avatars)
-//        {
-//            this.m_QueryID = queryID;
-//            this.m_Avatars = avatars;
-//        }
-//    }
-//
-//    public class ViewerEffectEventArgs : EventArgs
-//    {
-//        private readonly EffectType m_Type;
-//        private readonly UUID m_SourceID;
-//        private readonly UUID m_TargetID;
-//        private readonly Vector3d m_TargetPosition;
-//        private readonly float m_Duration;
-//        private readonly UUID m_EffectID;
-//
-//        public EffectType Type { get { return m_Type; } }
-//        public UUID SourceID { get { return m_SourceID; } }
-//        public UUID TargetID { get { return m_TargetID; } }
-//        public Vector3d TargetPosition { get { return m_TargetPosition; } }
-//        public float Duration { get { return m_Duration; } }
-//        public UUID EffectID { get { return m_EffectID; } }
-//
-//        public ViewerEffectEventArgs(EffectType type, UUID sourceID, UUID targetID, Vector3d targetPos, float duration, UUID id)
-//        {
-//            this.m_Type = type;
-//            this.m_SourceID = sourceID;
-//            this.m_TargetID = targetID;
-//            this.m_TargetPosition = targetPos;
-//            this.m_Duration = duration;
-//            this.m_EffectID = id;
-//        }
-//    }
-//
-//    public class ViewerEffectPointAtEventArgs : EventArgs
-//    {
-//        private readonly Simulator m_Simulator;
-//        private readonly UUID m_SourceID;
-//        private readonly UUID m_TargetID;
-//        private readonly Vector3d m_TargetPosition;
-//        private readonly PointAtType m_PointType;
-//        private readonly float m_Duration;
-//        private readonly UUID m_EffectID;
-//
-//        public Simulator Simulator { get { return m_Simulator; } }
-//        public UUID SourceID { get { return m_SourceID; } }
-//        public UUID TargetID { get { return m_TargetID; } }
-//        public Vector3d TargetPosition { get { return m_TargetPosition; } }
-//        public PointAtType PointType { get { return m_PointType; } }
-//        public float Duration { get { return m_Duration; } }
-//        public UUID EffectID { get { return m_EffectID; } }
-//
-//        public ViewerEffectPointAtEventArgs(Simulator simulator, UUID sourceID, UUID targetID, Vector3d targetPos, PointAtType pointType, float duration, UUID id)
-//        {
-//            this.m_Simulator = simulator;
-//            this.m_SourceID = sourceID;
-//            this.m_TargetID = targetID;
-//            this.m_TargetPosition = targetPos;
-//            this.m_PointType = pointType;
-//            this.m_Duration = duration;
-//            this.m_EffectID = id;
-//        }
-//    }
-//
-//    public class ViewerEffectLookAtEventArgs : EventArgs
-//    {
-//        private readonly UUID m_SourceID;
-//        private readonly UUID m_TargetID;
-//        private readonly Vector3d m_TargetPosition;
-//        private readonly LookAtType m_LookType;
-//        private readonly float m_Duration;
-//        private readonly UUID m_EffectID;
-//
-//
-//        public UUID SourceID { get { return m_SourceID; } }
-//        public UUID TargetID { get { return m_TargetID; } }
-//        public Vector3d TargetPosition { get { return m_TargetPosition; } }
-//        public LookAtType LookType { get { return m_LookType; } }
-//        public float Duration { get { return m_Duration; } }
-//        public UUID EffectID { get { return m_EffectID; } }
-//
-//        public ViewerEffectLookAtEventArgs(UUID sourceID, UUID targetID, Vector3d targetPos, LookAtType lookType, float duration, UUID id)
-//        {
-//            this.m_SourceID = sourceID;
-//            this.m_TargetID = targetID;
-//            this.m_TargetPosition = targetPos;
-//            this.m_LookType = lookType;
-//            this.m_Duration = duration;
-//            this.m_EffectID = id;
-//        }
-//    }
-//
-//    /// <summary>
-//    /// Event args class for display name notification messages
-//    /// </summary>
-//    public class DisplayNameUpdateEventArgs : EventArgs
-//    {
-//        private string oldDisplayName;
-//        private AgentDisplayName displayName;
-//
-//        public String OldDisplayName { get { return oldDisplayName; }}
-//        public AgentDisplayName DisplayName { get { return displayName; } }
-//
-//        public DisplayNameUpdateEventArgs(string oldDisplayName, AgentDisplayName displayName)
-//        {
-//            this.oldDisplayName = oldDisplayName;
-//            this.displayName = displayName;
-//        }
-//    }
-//    //endregion
-    
+            cap.BeginGetResponse(null, "", Client.settings.CAPS_TIMEOUT);
+        }
+
+        /// <summary>
+        /// Start a request for Avatar Properties
+        /// </summary>
+        /// <param name="avatarid"></param>
+        public void RequestAvatarProperties(UUID avatarid)
+        {
+            AvatarPropertiesRequestPacket aprp = new AvatarPropertiesRequestPacket();
+
+            aprp.AgentData.AgentID = Client.self.getAgentID();
+            aprp.AgentData.SessionID = Client.self.getSessionID();
+            aprp.AgentData.AvatarID = avatarid;
+
+            Client.network.SendPacket(aprp);
+        }
+
+        /// <summary>
+        /// Search for an avatar (first name, last name)
+        /// </summary>
+        /// <param name="name">The name to search for</param>
+        /// <param name="queryID">An ID to associate with this query</param>
+        public void RequestAvatarNameSearch(String name, UUID queryID)
+        {
+            AvatarPickerRequestPacket aprp = new AvatarPickerRequestPacket();
+
+            aprp.AgentData.AgentID = Client.self.getAgentID();
+            aprp.AgentData.SessionID = Client.self.getSessionID();
+            aprp.AgentData.QueryID = queryID;
+            aprp.Data.Name = Utils.stringToBytes(name);
+
+            Client.network.SendPacket(aprp);
+        }
+
+        /// <summary>
+        /// Start a request for Avatar Picks
+        /// </summary>
+        /// <param name="avatarid">UUID of the avatar</param>
+        public void RequestAvatarPicks(UUID avatarid)
+        {
+            GenericMessagePacket gmp = new GenericMessagePacket();
+
+            gmp.AgentData.AgentID = Client.self.getAgentID();
+            gmp.AgentData.SessionID = Client.self.getSessionID();
+            gmp.AgentData.TransactionID = UUID.Zero;
+
+            gmp.MethodData.Method = Utils.stringToBytes("avatarpicksrequest");
+            gmp.MethodData.Invoice = UUID.Zero;
+            gmp.ParamList = new GenericMessagePacket.ParamListBlock[1];
+            gmp.ParamList[0] = new GenericMessagePacket.ParamListBlock();
+            gmp.ParamList[0].Parameter = Utils.stringToBytes(avatarid.toString());
+
+            Client.network.SendPacket(gmp);
+        }
+
+        /// <summary>
+        /// Start a request for Avatar Classifieds
+        /// </summary>
+        /// <param name="avatarid">UUID of the avatar</param>
+        public void RequestAvatarClassified(UUID avatarid)
+        {
+            GenericMessagePacket gmp = new GenericMessagePacket();
+
+            gmp.AgentData.AgentID = Client.self.getAgentID();
+            gmp.AgentData.SessionID = Client.self.getSessionID();
+            gmp.AgentData.TransactionID = UUID.Zero;
+
+            gmp.MethodData.Method = Utils.stringToBytes("avatarclassifiedsrequest");
+            gmp.MethodData.Invoice = UUID.Zero;
+            gmp.ParamList = new GenericMessagePacket.ParamListBlock[1];
+            gmp.ParamList[0] = new GenericMessagePacket.ParamListBlock();
+            gmp.ParamList[0].Parameter = Utils.stringToBytes(avatarid.toString());
+
+            Client.network.SendPacket(gmp);
+        }
+
+        /// <summary>
+        /// Start a request for details of a specific profile pick
+        /// </summary>
+        /// <param name="avatarid">UUID of the avatar</param>
+        /// <param name="pickid">UUID of the profile pick</param>
+        public void RequestPickInfo(UUID avatarid, UUID pickid)
+        {
+            GenericMessagePacket gmp = new GenericMessagePacket();
+
+            gmp.AgentData.AgentID = Client.self.getAgentID();
+            gmp.AgentData.SessionID = Client.self.getSessionID();
+            gmp.AgentData.TransactionID = UUID.Zero;
+
+            gmp.MethodData.Method = Utils.stringToBytes("pickinforequest");
+            gmp.MethodData.Invoice = UUID.Zero;
+            gmp.ParamList = new GenericMessagePacket.ParamListBlock[2];
+            gmp.ParamList[0] = new GenericMessagePacket.ParamListBlock();
+            gmp.ParamList[0].Parameter = Utils.stringToBytes(avatarid.toString());
+            gmp.ParamList[1] = new GenericMessagePacket.ParamListBlock();
+            gmp.ParamList[1].Parameter = Utils.stringToBytes(pickid.toString());
+
+            Client.network.SendPacket(gmp);
+        }
+
+        /// <summary>
+        /// Start a request for details of a specific profile classified
+        /// </summary>
+        /// <param name="avatarid">UUID of the avatar</param>
+        /// <param name="classifiedid">UUID of the profile classified</param>
+        public void RequestClassifiedInfo(UUID avatarid, UUID classifiedid)
+        {
+            GenericMessagePacket gmp = new GenericMessagePacket();
+
+            gmp.AgentData.AgentID = Client.self.getAgentID();
+            gmp.AgentData.SessionID = Client.self.getSessionID();
+            gmp.AgentData.TransactionID = UUID.Zero;
+
+            gmp.MethodData.Method = Utils.stringToBytes("classifiedinforequest");
+            gmp.MethodData.Invoice = UUID.Zero;
+            gmp.ParamList = new GenericMessagePacket.ParamListBlock[2];
+            gmp.ParamList[0] = new GenericMessagePacket.ParamListBlock();
+            gmp.ParamList[0].Parameter = Utils.stringToBytes(avatarid.toString());
+            gmp.ParamList[1] = new GenericMessagePacket.ParamListBlock();
+            gmp.ParamList[1].Parameter = Utils.stringToBytes(classifiedid.toString());
+
+            Client.network.SendPacket(gmp);
+        }
+
+        //region Packet Handlers
+
+        /// <summary>Process an incoming packet and raise the appropriate events</summary>
+        /// <param name="sender">The sender</param>
+        /// <param name="e">The EventArgs object containing the packet data</param>
+        protected void UUIDNameReplyHandler(Object sender, PacketReceivedEventArgs e) throws UnsupportedEncodingException
+        {
+            if (onUUIDNameReply != null)
+            {
+                Packet packet = e.getPacket();
+                Map<UUID, String> names = new HashMap<UUID, String>();
+                UUIDNameReplyPacket reply = (UUIDNameReplyPacket)packet;
+
+                for (UUIDNameReplyPacket.UUIDNameBlockBlock block : reply.UUIDNameBlock)
+                {
+                    names.put(block.ID, Utils.bytesToString(block.FirstName) +
+                        " " + Utils.bytesToString(block.LastName));
+                }
+
+                onUUIDNameReply.raiseEvent(new UUIDNameReplyEventArgs(names));
+            }
+        }
+
+        /// <summary>Process an incoming packet and raise the appropriate events</summary>
+        /// <param name="sender">The sender</param>
+        /// <param name="e">The EventArgs object containing the packet data</param>
+        protected void AvatarAnimationHandler(Object sender, PacketReceivedEventArgs e)
+        {
+            Packet packet = e.getPacket();
+
+            if (onAvatarAnimation != null)
+            {
+                AvatarAnimationPacket data = (AvatarAnimationPacket)packet;
+
+                List<Animation> signaledAnimations = new ArrayList<Animation>(data.AnimationList.length);
+
+                for (int i = 0; i < data.AnimationList.length; i++)
+                {
+                    Animation animation = new Animation();
+                    animation.AnimationID = data.AnimationList[i].AnimID;
+                    animation.AnimationSequence = data.AnimationList[i].AnimSequenceID;
+                    if (i < data.AnimationSourceList.length)
+                    {
+                        animation.AnimationSourceObjectID = data.AnimationSourceList[i].ObjectID;
+                    }
+
+                    signaledAnimations.add(animation);
+                }
+
+                onAvatarAnimation.raiseEvent(new AvatarAnimationEventArgs(data.Sender.ID, signaledAnimations));
+            }
+        }
+
+        /// <summary>Process an incoming packet and raise the appropriate events</summary>
+        /// <param name="sender">The sender</param>
+        /// <param name="e">The EventArgs object containing the packet data</param>
+        protected void AvatarAppearanceHandler(Object sender, PacketReceivedEventArgs e) throws Exception
+        {
+            if (onAvatarAppearance != null || Client.settings.AVATAR_TRACKING)
+            {
+                Packet packet = e.getPacket();
+                Simulator simulator = e.getSimulator();
+
+                final AvatarAppearancePacket appearance = (AvatarAppearancePacket)packet;
+
+                List<Byte> visualParams = new ArrayList<Byte>();
+                for (AvatarAppearancePacket.VisualParamBlock block : appearance.VisualParam)
+                {
+                    visualParams.add(block.ParamValue);
+                }
+
+                TextureEntry textureEntry = new TextureEntry(appearance.ObjectData.TextureEntry, 0,
+                        appearance.ObjectData.TextureEntry.length);
+
+                TextureEntryFace defaultTexture = textureEntry.DefaultTexture;
+                TextureEntryFace[] faceTextures = textureEntry.FaceTextures;
+
+//              Avatar av = simulator.ObjectsAvatars.Find((Avatar a) => { return a.ID == appearance.Sender.ID; });
+                final Avatar[] tmpAvatar = new Avatar[]{null};
+                simulator.ObjectsAvatars.foreach(new Action<Entry<Long, Avatar>>(){
+					public void execute(Entry<Long, Avatar> e) {
+						if(e.getValue().ID.equals(appearance.Sender.ID))
+							tmpAvatar[0] = e.getValue();
+					}	
+                }
+                );
+                Avatar av = tmpAvatar[0];
+                if (av != null)
+                {
+                    av.Textures = textureEntry;
+                    //TODO need to do better
+                    av.VisualParameters = new byte[visualParams.size()];
+                    int i = 0;
+                    for (Byte byte1 : visualParams)
+                    {
+                    	av.VisualParameters[i] = byte1;
+                        i ++;
+                    }
+                }
+
+                onAvatarAppearance.raiseEvent(new AvatarAppearanceEventArgs(simulator, appearance.Sender.ID, appearance.Sender.IsTrial,
+                    defaultTexture, faceTextures, visualParams));
+            }
+        }
+
+        /// <summary>Process an incoming packet and raise the appropriate events</summary>
+        /// <param name="sender">The sender</param>
+        /// <param name="e">The EventArgs object containing the packet data</param>
+        protected void AvatarPropertiesHandler(Object sender, PacketReceivedEventArgs e) throws UnsupportedEncodingException
+        {
+            if (onAvatarPropertiesReply != null)
+            {
+                Packet packet = e.getPacket();
+                AvatarPropertiesReplyPacket reply = (AvatarPropertiesReplyPacket)packet;
+                Avatar.AvatarProperties properties = new Avatar.AvatarProperties();
+
+                properties.ProfileImage = reply.PropertiesData.ImageID;
+                properties.FirstLifeImage = reply.PropertiesData.FLImageID;
+                properties.Partner = reply.PropertiesData.PartnerID;
+                properties.AboutText = Utils.bytesToString(reply.PropertiesData.AboutText);
+                properties.FirstLifeText = Utils.bytesToString(reply.PropertiesData.FLAboutText);
+                properties.BornOn = Utils.bytesToString(reply.PropertiesData.BornOn);
+                //properties.CharterMember = Utils.bytesToString(reply.PropertiesData.CharterMember);
+                //uint
+                long charter = Utils.bytesToUInt(reply.PropertiesData.CharterMember);
+                if (charter == 0)
+                {
+                    properties.CharterMember = "Resident";
+                }
+                else if (charter == 2)
+                {
+                    properties.CharterMember = "Charter";
+                }
+                else if (charter == 3)
+                {
+                    properties.CharterMember = "Linden";
+                }
+                else
+                {
+                    properties.CharterMember = Utils.bytesToString(reply.PropertiesData.CharterMember);
+                }
+                properties.Flags = ProfileFlags.get(reply.PropertiesData.Flags);
+                properties.ProfileURL = Utils.bytesToString(reply.PropertiesData.ProfileURL);
+
+                onAvatarPropertiesReply.raiseEvent(new AvatarPropertiesReplyEventArgs(reply.AgentData.AvatarID, properties));
+            }
+        }
+
+        /// <summary>Process an incoming packet and raise the appropriate events</summary>
+        /// <param name="sender">The sender</param>
+        /// <param name="e">The EventArgs object containing the packet data</param>
+        protected void AvatarInterestsHandler(Object sender, PacketReceivedEventArgs e) throws UnsupportedEncodingException
+        {
+            if (onAvatarInterestsReply != null)
+            {
+                Packet packet = e.getPacket();
+
+                AvatarInterestsReplyPacket airp = (AvatarInterestsReplyPacket)packet;
+                Avatar.Interests interests = new Avatar.Interests();
+
+                interests.WantToMask = airp.PropertiesData.WantToMask;
+                interests.WantToText = Utils.bytesToString(airp.PropertiesData.WantToText);
+                interests.SkillsMask = airp.PropertiesData.SkillsMask;
+                interests.SkillsText = Utils.bytesToString(airp.PropertiesData.SkillsText);
+                interests.LanguagesText = Utils.bytesToString(airp.PropertiesData.LanguagesText);
+
+                onAvatarInterestsReply.raiseEvent(new AvatarInterestsReplyEventArgs(airp.AgentData.AvatarID, interests));
+            }
+        }
+
+        /// <summary>
+        /// EQ Message fired when someone nearby changes their display name
+        /// </summary>
+        /// <param name="capsKey">The message key</param>
+        /// <param name="message">the IMessage object containing the deserialized data sent from the simulator</param>
+        /// <param name="simulator">The <see cref="Simulator"/> which originated the packet</param>
+        protected void DisplayNameUpdateMessageHandler(String capsKey, IMessage message, Simulator simulator)
+        {
+            if (onDisplayNameUpdate != null)
+            {
+                DisplayNameUpdateMessage msg = (DisplayNameUpdateMessage) message;
+                onDisplayNameUpdate.raiseEvent(new DisplayNameUpdateEventArgs(msg.OldDisplayName, msg.DisplayName));
+            }
+        }
+
+        /// <summary>
+        /// Crossed region handler for message that comes across the EventQueue. Sent to an agent
+        /// when the agent crosses a sim border into a new region.
+        /// </summary>
+        /// <param name="capsKey">The message key</param>
+        /// <param name="message">the IMessage object containing the deserialized data sent from the simulator</param>
+        /// <param name="simulator">The <see cref="Simulator"/> which originated the packet</param>
+        protected void AvatarGroupsReplyMessageHandler(String capsKey, IMessage message, Simulator simulator)
+        {
+            AgentGroupDataUpdateMessage msg = (AgentGroupDataUpdateMessage)message;
+            List<AvatarGroup> avatarGroups = new ArrayList<AvatarGroup>(msg.GroupDataBlock.length);
+            for (int i = 0; i < msg.GroupDataBlock.length; i++)
+            {
+                AvatarGroup avatarGroup = new AvatarGroup();
+                avatarGroup.AcceptNotices = msg.GroupDataBlock[i].AcceptNotices;
+                avatarGroup.GroupID = msg.GroupDataBlock[i].GroupID;
+                avatarGroup.GroupInsigniaID = msg.GroupDataBlock[i].GroupInsigniaID;
+                avatarGroup.GroupName = msg.GroupDataBlock[i].GroupName;
+                avatarGroup.GroupPowers = msg.GroupDataBlock[i].GroupPowers;
+                avatarGroup.ListInProfile = msg.NewGroupDataBlock[i].ListInProfile;
+
+                avatarGroups.add(avatarGroup);
+            }
+
+            onAvatarGroupsReply.raiseEvent(new AvatarGroupsReplyEventArgs(msg.AgentID, avatarGroups));
+        }
+
+        /// <summary>Process an incoming packet and raise the appropriate events</summary>
+        /// <param name="sender">The sender</param>
+        /// <param name="e">The EventArgs object containing the packet data</param>
+        protected void AvatarGroupsReplyHandler(Object sender, PacketReceivedEventArgs e) throws UnsupportedEncodingException
+        {
+            if (onAvatarGroupsReply != null)
+            {
+                Packet packet = e.getPacket();
+                AvatarGroupsReplyPacket groups = (AvatarGroupsReplyPacket)packet;
+                List<AvatarGroup> avatarGroups = new ArrayList<AvatarGroup>(groups.GroupData.length);
+
+                for (int i = 0; i < groups.GroupData.length; i++)
+                {
+                    AvatarGroup avatarGroup = new AvatarGroup();
+
+                    avatarGroup.AcceptNotices = groups.GroupData[i].AcceptNotices;
+                    avatarGroup.GroupID = groups.GroupData[i].GroupID;
+                    avatarGroup.GroupInsigniaID = groups.GroupData[i].GroupInsigniaID;
+                    avatarGroup.GroupName = Utils.bytesToString(groups.GroupData[i].GroupName);
+                    avatarGroup.GroupPowers = GroupPowers.get(groups.GroupData[i].GroupPowers.longValue());
+                    avatarGroup.GroupTitle = Utils.bytesToString(groups.GroupData[i].GroupTitle);
+                    avatarGroup.ListInProfile = groups.NewGroupData.ListInProfile;
+
+                    avatarGroups.add(avatarGroup);
+                }
+
+                onAvatarGroupsReply.raiseEvent(new AvatarGroupsReplyEventArgs(groups.AgentData.AvatarID, avatarGroups));
+            }
+        }
+
+        /// <summary>Process an incoming packet and raise the appropriate events</summary>
+        /// <param name="sender">The sender</param>
+        /// <param name="e">The EventArgs object containing the packet data</param>
+        protected void AvatarPickerReplyHandler(Object sender, PacketReceivedEventArgs e) throws UnsupportedEncodingException
+        {
+            if (onAvatarPickerReply != null)
+            {
+                Packet packet = e.getPacket();
+                AvatarPickerReplyPacket reply = (AvatarPickerReplyPacket)packet;
+                Map<UUID, String> avatars = new HashMap<UUID, String>();
+
+                for (AvatarPickerReplyPacket.DataBlock block : reply.Data)
+                {
+                    avatars.put(block.AvatarID,  Utils.bytesToString(block.FirstName) +
+                        " " + Utils.bytesToString(block.LastName));
+                }
+                onAvatarPickerReply.raiseEvent(new AvatarPickerReplyEventArgs(reply.AgentData.QueryID, avatars));
+            }
+        }
+
+        /// <summary>Process an incoming packet and raise the appropriate events</summary>
+        /// <param name="sender">The sender</param>
+        /// <param name="e">The EventArgs object containing the packet data</param>
+        protected void ViewerEffectHandler(Object sender, PacketReceivedEventArgs e)
+        {
+            Packet packet = e.getPacket();
+            ViewerEffectPacket effect = (ViewerEffectPacket)packet;
+
+            for (ViewerEffectPacket.EffectBlock block : effect.Effect)
+            {
+                EffectType type = EffectType.get(block.Type);
+
+                // Each ViewerEffect type uses it's own custom binary format for additional data. Fun eh?
+                switch (type)
+                {
+                    case Text:
+                        JLogger.warn("Received a ViewerEffect of type " + type.toString() + ", implement me!");
+                        break;
+                    case Icon:
+                        JLogger.warn("Received a ViewerEffect of type " + type.toString() + ", implement me!");
+                        break;
+                    case Connector:
+                        JLogger.warn("Received a ViewerEffect of type " + type.toString() + ", implement me!");
+                        break;
+                    case FlexibleObject:
+                        JLogger.warn("Received a ViewerEffect of type " + type.toString() + ", implement me!");
+                        break;
+                    case AnimalControls:
+                        JLogger.warn("Received a ViewerEffect of type " + type.toString() + ", implement me!");
+                        break;
+                    case AnimationObject:
+                        JLogger.warn("Received a ViewerEffect of type " + type.toString() + ", implement me!");
+                        break;
+                    case Cloth:
+                        JLogger.warn("Received a ViewerEffect of type " + type.toString() + ", implement me!");
+                        break;
+                    case Glow:
+                        JLogger.warn("Received a Glow ViewerEffect which is not implemented yet");
+                        break;
+                    case Beam:
+                    case Point:
+                    case Trail:
+                    case Sphere:
+                    case Spiral:
+                    case Edit:
+                        if (onViewerEffect != null)
+                        {
+                            if (block.TypeData.length == 56)
+                            {
+                                UUID sourceAvatar = new UUID(block.TypeData, 0);
+                                UUID targetObject = new UUID(block.TypeData, 16);
+                                Vector3d targetPos = new Vector3d(block.TypeData, 32);
+                                onViewerEffect.raiseEvent(new ViewerEffectEventArgs(type, sourceAvatar, targetObject, targetPos, block.Duration, block.ID));
+                            }
+                            else
+                            {
+                                JLogger.warn("Received a " + type.toString() +
+                                    " ViewerEffect with an incorrect TypeData size of " +
+                                    block.TypeData.length + " bytes");
+                            }
+                        }
+                        break;
+                    case LookAt:
+                        if (onViewerEffectLookAt != null)
+                        {
+                            if (block.TypeData.length == 57)
+                            {
+                                UUID sourceAvatar = new UUID(block.TypeData, 0);
+                                UUID targetObject = new UUID(block.TypeData, 16);
+                                Vector3d targetPos = new Vector3d(block.TypeData, 32);
+                                LookAtType lookAt = LookAtType.get(block.TypeData[56]);
+
+                                onViewerEffectLookAt.raiseEvent(new ViewerEffectLookAtEventArgs(sourceAvatar, targetObject, targetPos, lookAt,
+                                    block.Duration, block.ID));
+                            }
+                            else
+                            {
+                                JLogger.warn("Received a LookAt ViewerEffect with an incorrect TypeData size of " +
+                                    block.TypeData.length + " bytes");
+                            }
+                        }
+                        break;
+                    case PointAt:
+                        if (onViewerEffectPointAt != null)
+                        {
+                            if (block.TypeData.length == 57)
+                            {
+                                UUID sourceAvatar = new UUID(block.TypeData, 0);
+                                UUID targetObject = new UUID(block.TypeData, 16);
+                                Vector3d targetPos = new Vector3d(block.TypeData, 32);
+                                PointAtType pointAt = PointAtType.get(block.TypeData[56]);
+
+                                onViewerEffectPointAt.raiseEvent(new ViewerEffectPointAtEventArgs(e.getSimulator(), sourceAvatar, targetObject, targetPos,
+                                    pointAt, block.Duration, block.ID));
+                            }
+                            else
+                            {
+                                JLogger.warn("Received a PointAt ViewerEffect with an incorrect TypeData size of " +
+                                    block.TypeData.length + " bytes");
+                            }
+                        }
+                        break;
+                    default:
+                        JLogger.warn("Received a ViewerEffect with an unknown type " + type);
+                        break;
+                }
+            }
+        }
+
+        /// <summary>Process an incoming packet and raise the appropriate events</summary>
+        /// <param name="sender">The sender</param>
+        /// <param name="e">The EventArgs object containing the packet data</param>
+        protected void AvatarPicksReplyHandler(Object sender, PacketReceivedEventArgs e) throws UnsupportedEncodingException
+        {
+            if (onAvatarPicksReply == null)
+            {
+                return;
+            }
+            Packet packet = e.getPacket();
+
+            AvatarPicksReplyPacket p = (AvatarPicksReplyPacket)packet;
+            Map<UUID, String> picks = new HashMap<UUID, String>();
+
+            for (AvatarPicksReplyPacket.DataBlock b : p.Data)
+            {
+                picks.put(b.PickID, Utils.bytesToString(b.PickName));
+            }
+
+            onAvatarPicksReply.raiseEvent(new AvatarPicksReplyEventArgs(p.AgentData.TargetID, picks));
+        }
+
+        /// <summary>Process an incoming packet and raise the appropriate events</summary>
+        /// <param name="sender">The sender</param>
+        /// <param name="e">The EventArgs object containing the packet data</param>
+        protected void PickInfoReplyHandler(Object sender, PacketReceivedEventArgs e) throws UnsupportedEncodingException
+        {
+            if (onPickInfoReply != null)
+            {
+                Packet packet = e.getPacket();
+                PickInfoReplyPacket p = (PickInfoReplyPacket)packet;
+                ProfilePick ret = new ProfilePick();
+                ret.CreatorID = p.Data.CreatorID;
+                ret.Desc = Utils.bytesToString(p.Data.Desc);
+                ret.Enabled = p.Data.Enabled;
+                ret.Name = Utils.bytesToString(p.Data.Name);
+                ret.OriginalName = Utils.bytesToString(p.Data.OriginalName);
+                ret.ParcelID = p.Data.ParcelID;
+                ret.PickID = p.Data.PickID;
+                ret.PosGlobal = p.Data.PosGlobal;
+                ret.SimName = Utils.bytesToString(p.Data.SimName);
+                ret.SnapshotID = p.Data.SnapshotID;
+                ret.SortOrder = p.Data.SortOrder;
+                ret.TopPick = p.Data.TopPick;
+                ret.User = Utils.bytesToString(p.Data.User);
+
+                onPickInfoReply.raiseEvent(new PickInfoReplyEventArgs(ret.PickID, ret));
+            }
+        }
+
+        /// <summary>Process an incoming packet and raise the appropriate events</summary>
+        /// <param name="sender">The sender</param>
+        /// <param name="e">The EventArgs object containing the packet data</param>
+        protected void AvatarClassifiedReplyHandler(Object sender, PacketReceivedEventArgs e) throws UnsupportedEncodingException
+        {
+            if (onAvatarClassifiedReply != null)
+            {
+                Packet packet = e.getPacket();
+                AvatarClassifiedReplyPacket p = (AvatarClassifiedReplyPacket)packet;
+                Map<UUID, String> classifieds = new HashMap<UUID, String>();
+
+                for (AvatarClassifiedReplyPacket.DataBlock b : p.Data)
+                {
+                    classifieds.put(b.ClassifiedID, Utils.bytesToString(b.Name));
+                }
+
+                onAvatarClassifiedReply.raiseEvent(new AvatarClassifiedReplyEventArgs(p.AgentData.TargetID, classifieds));
+            }
+        }
+
+        /// <summary>Process an incoming packet and raise the appropriate events</summary>
+        /// <param name="sender">The sender</param>
+        /// <param name="e">The EventArgs object containing the packet data</param>
+        protected void ClassifiedInfoReplyHandler(Object sender, PacketReceivedEventArgs e) throws UnsupportedEncodingException
+        {
+            if (onAvatarClassifiedReply != null)
+            {
+                Packet packet = e.getPacket();
+                ClassifiedInfoReplyPacket p = (ClassifiedInfoReplyPacket)packet;
+                ClassifiedAd ret = new ClassifiedAd();
+                ret.Desc = Utils.bytesToString(p.Data.Desc);
+                ret.Name = Utils.bytesToString(p.Data.Name);
+                ret.ParcelID = p.Data.ParcelID;
+                ret.ClassifiedID = p.Data.ClassifiedID;
+                ret.Position = p.Data.PosGlobal;
+                ret.SnapShotID = p.Data.SnapshotID;
+                ret.Price = p.Data.PriceForListing;
+                ret.ParentEstate = p.Data.ParentEstate;
+                ret.ClassifiedFlags = p.Data.ClassifiedFlags;
+                ret.Catagory = p.Data.Category;
+
+                onClassifiedInfoReply.raiseEvent(new ClassifiedInfoReplyEventArgs(ret.ClassifiedID, ret));
+            }
+        }
+
+        //endregion Packet Handlers
 }

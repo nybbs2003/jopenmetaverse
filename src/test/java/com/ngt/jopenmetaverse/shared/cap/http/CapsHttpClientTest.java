@@ -15,6 +15,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.ngt.jopenmetaverse.shared.sim.events.EventObserver;
 import com.ngt.jopenmetaverse.shared.structureddata.OSD;
 import com.ngt.jopenmetaverse.shared.structureddata.OSDFormat;
 import com.ngt.jopenmetaverse.shared.structureddata.llsd.BinaryLLSDOSDParser;
@@ -23,19 +24,19 @@ import com.ngt.jopenmetaverse.shared.structureddata.llsd.XmlLLSDOSDParser;
 import com.ngt.jopenmetaverse.shared.util.Utils;
 
 public class CapsHttpClientTest {
- 	public class DownloadProgressObserver implements Observer
+ 	public class DownloadProgressObserver extends EventObserver<CapsHttpRequestProgressArg>
  	{
-		public void update(Observable arg0, Object arg1) {
+		public void handleEvent(Observable arg0, CapsHttpRequestProgressArg arg1) {
 			CapsHttpRequestProgressArg rcha = (CapsHttpRequestProgressArg) arg1;
 			System.out.println("Download Progress, bytes recieved: " 
 			+ rcha.bytesReceived + " total bytes revieved: " + rcha.totalBytesToReceive);
 		}	
  	}	
 
- 	public class RequestCompletedObserver implements Observer
+ 	public class RequestCompletedObserver extends EventObserver<CapsHttpRequestCompletedArg>
  	{
  		public boolean[] completed;
-		public void update(Observable arg0, Object arg1) {
+			public void handleEvent(Observable arg0, CapsHttpRequestCompletedArg arg1) {
 			System.out.println("RequestCompletedObserver called ...");
 			completed[0] = true;
 			CapsHttpRequestCompletedArg rcha = (CapsHttpRequestCompletedArg) arg1;

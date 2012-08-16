@@ -100,71 +100,78 @@ public class NetworkManager {
 		// Register internal CAPS callbacks
 		RegisterEventCallback("EnableSimulator", new EventObserver<CapsEventObservableArg>()
 				{
-					@Override
-					public void handleEvent(Observable o,
-							CapsEventObservableArg arg) {
-						try {
-							EnableSimulatorHandler(arg.getCapsKey(), arg.getMessage(), arg.getSimulator());
-						} catch (Exception e) {
-							JLogger.error("Error in EnableSimulatorHandler: " + Utils.getExceptionStackTraceAsString(e));
-						}
-					}
+			@Override
+			public void handleEvent(Observable o,
+					CapsEventObservableArg arg) {
+				try {
+					EnableSimulatorHandler(arg.getCapsKey(), arg.getMessage(), arg.getSimulator());
+				} catch (Exception e) {
+					JLogger.error("Error in EnableSimulatorHandler: " + Utils.getExceptionStackTraceAsString(e));
+				}
+			}
 				});
-				
+
 		// Register the internal callbacks
-//		RegisterCallback(PacketType.RegionHandshake, RegionHandshakeHandler);
-		RegisterCallback(PacketType.RegionHandshake, new Observer(){
-			public void update(Observable arg0, Object arg1) {
+		//		RegisterCallback(PacketType.RegionHandshake, RegionHandshakeHandler);
+		RegisterCallback(PacketType.RegionHandshake, new EventObserver<PacketReceivedEventArgs>(){
+			@Override
+			public void handleEvent(Observable arg0, PacketReceivedEventArgs arg1) {
 				try {
 					RegionHandshakeHandler(arg0, (PacketReceivedEventArgs)arg1);
 				} catch (UnsupportedEncodingException e) {
 					JLogger.error("Error in RegionHandshakeHandler: " + Utils.getExceptionStackTraceAsString(e));
 				}
 			}});
-		
-//		RegisterCallback(PacketType.StartPingCheck, StartPingCheckHandler, false);
-		RegisterCallback(PacketType.StartPingCheck, new Observer(){
-			public void update(Observable arg0, Object arg1) {
+
+		//		RegisterCallback(PacketType.StartPingCheck, StartPingCheckHandler, false);
+		RegisterCallback(PacketType.StartPingCheck, new EventObserver<PacketReceivedEventArgs>(){
+			@Override
+			public void handleEvent(Observable arg0, PacketReceivedEventArgs arg1) {
 				StartPingCheckHandler(arg0, (PacketReceivedEventArgs)arg1);
 			}}, false);
-		
-//		RegisterCallback(PacketType.DisableSimulator, DisableSimulatorHandler);
-		RegisterCallback(PacketType.DisableSimulator, new Observer(){
-			public void update(Observable arg0, Object arg1) {
+
+		//		RegisterCallback(PacketType.DisableSimulator, DisableSimulatorHandler);
+		RegisterCallback(PacketType.DisableSimulator, new EventObserver<PacketReceivedEventArgs>(){
+			@Override
+			public void handleEvent(Observable arg0, PacketReceivedEventArgs arg1) {
 				DisableSimulatorHandler(arg0, (PacketReceivedEventArgs)arg1);
 			}});
-		
-//		RegisterCallback(PacketType.KickUser, KickUserHandler);
-		RegisterCallback(PacketType.KickUser, new Observer(){
-			public void update(Observable arg0, Object arg1) {
+
+		//		RegisterCallback(PacketType.KickUser, KickUserHandler);
+		RegisterCallback(PacketType.KickUser, new EventObserver<PacketReceivedEventArgs>(){
+			@Override
+			public void handleEvent(Observable arg0, PacketReceivedEventArgs arg1) {
 				try {
 					KickUserHandler(arg0, (PacketReceivedEventArgs)arg1);
 				} catch (UnsupportedEncodingException e) {
 					JLogger.error("Error in KickUserHandler: " + Utils.getExceptionStackTraceAsString(e));
 				}
 			}});
-		
-//		RegisterCallback(PacketType.LogoutReply, LogoutReplyHandler);
-		RegisterCallback(PacketType.LogoutReply, new Observer(){
-			public void update(Observable arg0, Object arg1) {
+
+		//		RegisterCallback(PacketType.LogoutReply, LogoutReplyHandler);
+		RegisterCallback(PacketType.LogoutReply, new EventObserver<PacketReceivedEventArgs>(){
+			@Override
+			public void handleEvent(Observable arg0, PacketReceivedEventArgs arg1) {
 				LogoutReplyHandler(arg0, (PacketReceivedEventArgs)arg1);
 			}});
-		
-//		RegisterCallback(PacketType.CompletePingCheck, CompletePingCheckHandler, false);
-		RegisterCallback(PacketType.CompletePingCheck, new Observer(){
-			public void update(Observable arg0, Object arg1) {
+
+		//		RegisterCallback(PacketType.CompletePingCheck, CompletePingCheckHandler, false);
+		RegisterCallback(PacketType.CompletePingCheck, new EventObserver<PacketReceivedEventArgs>(){
+			@Override
+			public void handleEvent(Observable arg0, PacketReceivedEventArgs arg1) {
 				CompletePingCheckHandler(arg0, (PacketReceivedEventArgs)arg1);
 			}}, false);
-		
-//		RegisterCallback(PacketType.SimStats, SimStatsHandler, false);
-		RegisterCallback(PacketType.SimStats, new Observer(){
-			public void update(Observable arg0, Object arg1) {
+
+		//		RegisterCallback(PacketType.SimStats, SimStatsHandler, false);
+		RegisterCallback(PacketType.SimStats, new EventObserver<PacketReceivedEventArgs>(){
+			@Override
+			public void handleEvent(Observable arg0, PacketReceivedEventArgs arg1) {
 				SimStatsHandler(arg0, (PacketReceivedEventArgs)arg1);
 			}}, false);
 
 		//TODO Need to handle following
 		// GLOBAL SETTING: Don't force Expect-100: Continue headers on HTTP POST calls
-//		ServicePointManager.Expect100Continue = false;
+		//		ServicePointManager.Expect100Continue = false;
 
 	}
 
@@ -214,9 +221,9 @@ public class NetworkManager {
 		}	
 	}	
 
-	public class LoginCompletedObserver implements Observer
+	public class LoginCompletedObserver extends  EventObserver<CapsHttpRequestCompletedArg>
 	{
-		public void update(Observable arg0, Object arg1) {
+		public void handleEvent(Observable arg0, CapsHttpRequestCompletedArg arg1) {
 			//			System.out.println("RequestCompletedObserver called ...");
 			CapsHttpRequestCompletedArg rcha = (CapsHttpRequestCompletedArg) arg1;
 			OSD osd =  null;
@@ -369,29 +376,29 @@ public class NetworkManager {
 	private EventObservable<EventQueueRunningEventArgs> OnEventQueueRunning = new EventObservable<EventQueueRunningEventArgs>();
 
 
-	public void RegisterLoginResponseCallback(Observer callback)
+	public void RegisterLoginResponseCallback(EventObserver<LoginResponseCallbackArg> callback)
 	{
 		RegisterLoginResponseCallback(callback, null);
 	}
 
-	public void RegisterLoginResponseCallback(Observer callback, String[] options)
+	public void RegisterLoginResponseCallback(EventObserver<LoginResponseCallbackArg> callback, String[] options)
 	{
 		CallbackOptions.put(callback, options);
 		OnLoginResponse.addObserver(callback);
 	}
 
-	public void UnregisterLoginResponseCallback(Observer callback)
+	public void UnregisterLoginResponseCallback(EventObserver<LoginResponseCallbackArg> callback)
 	{
 		CallbackOptions.remove(callback);
 		OnLoginResponse.deleteObserver(callback);
 	}
 
-	public void RegisterLoginProgressCallback(Observer callback)
+	public void RegisterLoginProgressCallback(EventObserver<LoginProgressEventArgs> callback)
 	{
 		OnLoginProgress.addObserver(callback);
 	}
 
-	public void UnregisterLoginProgressCallback(Observer callback)
+	public void UnregisterLoginProgressCallback(EventObserver<LoginProgressEventArgs> callback)
 	{
 		OnLoginProgress.deleteObserver(callback);
 	}
@@ -489,7 +496,7 @@ public class NetworkManager {
 	/// <param name="type">Packet type to trigger events for</param>
 	/// <param name="callback">Callback to fire when a packet of this type
 	/// is received</param>
-	public void RegisterCallback(PacketType type, Observer callback)
+	public void RegisterCallback(PacketType type, EventObserver<PacketReceivedEventArgs> callback)
 	{
 		RegisterCallback(type, callback, true);
 	}
@@ -508,7 +515,7 @@ public class NetworkManager {
 	/// <remarks>If any callback for a packet type is marked as 
 	/// asynchronous, all callbacks for that packet type will be fired
 	/// asynchronously</remarks>
-	public void RegisterCallback(PacketType type, Observer callback, boolean isAsync)
+	public void RegisterCallback(PacketType type, EventObserver<PacketReceivedEventArgs> callback, boolean isAsync)
 	{
 		PacketEvents.RegisterEvent(type, callback, isAsync);
 	}
@@ -1107,7 +1114,7 @@ public class NetworkManager {
 									OnLoginResponse.raiseEvent(lrg);
 									//                            	OnLoginResponse(loginSuccess, redirect, data.Message, data.Reason, data); 
 								}
-								catch (Exception ex) { logger.warning(ex.getMessage()); }
+								catch (Exception ex) { logger.warning(Utils.getExceptionStackTraceAsString(ex)); }
 							}
 
 							// These parameters are stored in NetworkManager, so instead of registering

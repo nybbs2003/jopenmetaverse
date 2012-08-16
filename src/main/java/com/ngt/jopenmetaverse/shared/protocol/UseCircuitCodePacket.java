@@ -1,6 +1,7 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
 import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.util.JLogger;
 import com.ngt.jopenmetaverse.shared.util.Utils;
 
 
@@ -45,6 +46,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             @Override
             public  void ToBytes(byte[] bytes, int i[])
             {
+            	JLogger.debug(String.format("SessionID: %s, ID: %s", 
+            			SessionID == null?"Null": SessionID.toString(), ID==null? "null" : ID.toString()));
                 Utils.uintToBytesLit(Code, bytes, i[0]); i[0] += 4;
                 SessionID.ToBytes(bytes, i[0]); i[0] += 16;
                 ID.ToBytes(bytes, i[0]); i[0] += 16;

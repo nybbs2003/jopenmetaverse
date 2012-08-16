@@ -1,11 +1,12 @@
 package com.ngt.jopenmetaverse.shared.util;
 
+import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class JLogger {
 
-	static Logger logger = Logger.getLogger("JLogger");
+	static Logger logger = Logger.getLogger("Root");
 	
 	public static void debug(String msg)
 	{
@@ -28,4 +29,15 @@ public class JLogger {
 	{
 		logger.log(Level.SEVERE, msg);
 	}
+	
+	public static void setLevel(Level newLevel)
+	{
+		logger.setLevel(newLevel);
+	}
+	
+	public static void addHandler(Handler handler)
+	{
+		logger.addHandler(handler);
+	}
+	
 }
