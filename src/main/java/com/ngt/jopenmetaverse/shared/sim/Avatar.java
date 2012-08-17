@@ -335,7 +335,7 @@ public class Avatar extends Primitive
 	public Interests ProfileInterests;
 	/// <summary>Movement control flags for avatars. Typically not set or used by
 	/// clients. To move your avatar, use Client.Self.Movement instead</summary>
-	public AgentManager.ControlFlags ControlFlags;
+	public EnumSet<com.ngt.jopenmetaverse.shared.sim.AgentManager.ControlFlags> ControlFlags;
 
 	/// <summary>
 	/// Contains the visual parameters describing the deformation of the avatar
@@ -352,6 +352,7 @@ public class Avatar extends Primitive
 	/// <summary>First name</summary>
 	public String getFirstName()
 	{
+		if (NameValues != null && NameValues.length > 0)
 		for (int i = 0; i < NameValues.length; i++)
 		{
 			if (NameValues[i].Name.equals("FirstName") && NameValues[i].Type == NameValue.ValueType.String)
@@ -364,6 +365,7 @@ public class Avatar extends Primitive
 	/// <summary>Last name</summary>
 	public String getLastName()
 	{
+		if (NameValues != null && NameValues.length > 0)
 		for (int i = 0; i < NameValues.length; i++)
 		{
 			if (NameValues[i].Name.equals("LastName") && NameValues[i].Type == NameValue.ValueType.String)
@@ -479,14 +481,11 @@ public class Avatar extends Primitive
 
 	public static Avatar FromOSD(OSD O)
 	{
-
 		OSDMap tex = (OSDMap)O;
-
 		Avatar A = new Avatar();
+		Primitive P = Primitive.FromOSD(O);
 
-		//TODO need to implement following
-//		Primitive P = Primitive.FromOSD(O);
-//
+		//FIXME need to uncomment following
 //		Type Prim = typeof(Primitive);
 //
 //		FieldInfo[] Fields = Prim.GetFields();
@@ -496,60 +495,60 @@ public class Avatar extends Primitive
 //			Logger.Log("Field Matched in FromOSD: "+Fields[x].Name, Helpers.LogLevel.Debug);
 //			Fields[x].SetValue(A, Fields[x].GetValue(P));
 //		}            
-//
-//		A.Groups = new List<UUID>();
-//
-//		foreach (OSD U in (OSDArray)tex["groups"])
-//		{
-//			A.Groups.Add(U.AsUUID());
-//		}
-//
-//		A.ProfileStatistics = Statistics.FromOSD(tex["profile_statistics"]);
-//		A.ProfileProperties = AvatarProperties.FromOSD(tex["profile_properties"]);
-//		A.ProfileInterests = Interests.FromOSD(tex["profile_interest"]);
-//		A.ControlFlags = (AgentManager.ControlFlags)tex["control_flags"].AsInteger();
-//
-//		OSDArray vp = (OSDArray)tex["visual_parameters"];
-//		A.VisualParameters = new byte[vp.Count];
-//
-//		for (int i = 0; i < vp.Count; i++)
-//		{
-//			A.VisualParameters[i] = (byte)vp[i].AsInteger();
-//		}
-//
-//		// *********************From Code Above *******************************
-//		/*if (NameValues[i].Name == "FirstName" && NameValues[i].Type == NameValue.ValueType.String)
-//	                              firstName = (string)NameValues[i].Value;
-//	                          else if (NameValues[i].Name == "LastName" && NameValues[i].Type == NameValue.ValueType.String)
-//	                              lastName = (string)NameValues[i].Value;*/
-//		// ********************************************************************
-//
-//		A.NameValues = new NameValue[3];
-//
-//		NameValue First = new NameValue();
-//		First.Name = "FirstName";
-//		First.Type = NameValue.ValueType.String;
-//		First.Value = tex["first_name"].AsString();
-//
-//		NameValue Last = new NameValue();
-//		Last.Name = "LastName";
-//		Last.Type = NameValue.ValueType.String;
-//		Last.Value = tex["last_name"].AsString();
-//
-//		// ***************From Code Above***************
-//		// if (NameValues[i].Name == "Title" && NameValues[i].Type == NameValue.ValueType.String)
-//		// *********************************************
-//
-//		NameValue Group = new NameValue();
-//		Group.Name = "Title";
-//		Group.Type = NameValue.ValueType.String;
-//		Group.Value = tex["group_name"].AsString();
-//
-//
-//
-//		A.NameValues[0] = First;
-//		A.NameValues[1] = Last;
-//		A.NameValues[2] = Group;
+
+		A.Groups = new ArrayList<UUID>();
+
+		for (OSD U : (OSDArray)tex.get("groups"))
+		{
+			A.Groups.add(U.asUUID());
+		}
+
+		A.ProfileStatistics = Statistics.FromOSD(tex.get("profile_statistics"));
+		A.ProfileProperties = AvatarProperties.FromOSD(tex.get("profile_properties"));
+		A.ProfileInterests = Interests.FromOSD(tex.get("profile_interest"));
+		A.ControlFlags = AgentManager.ControlFlags.get(tex.get("control_flags").asLong());
+
+		OSDArray vp = (OSDArray)tex.get("visual_parameters");
+		A.VisualParameters = new byte[vp.count()];
+
+		for (int i = 0; i < vp.count(); i++)
+		{
+			A.VisualParameters[i] = (byte)vp.get(i).asInteger();
+		}
+
+		// *********************From Code Above *******************************
+		/*if (NameValues[i].Name == "FirstName" && NameValues[i].Type == NameValue.ValueType.String)
+	                              firstName = (string)NameValues[i].Value;
+	                          else if (NameValues[i].Name == "LastName" && NameValues[i].Type == NameValue.ValueType.String)
+	                              lastName = (string)NameValues[i].Value;*/
+		// ********************************************************************
+
+		A.NameValues = new NameValue[3];
+
+		NameValue First = new NameValue();
+		First.Name = "FirstName";
+		First.Type = NameValue.ValueType.String;
+		First.Value = tex.get("first_name").asString();
+
+		NameValue Last = new NameValue();
+		Last.Name = "LastName";
+		Last.Type = NameValue.ValueType.String;
+		Last.Value = tex.get("last_name").asString();
+
+		// ***************From Code Above***************
+		// if (NameValues[i].Name == "Title" && NameValues[i].Type == NameValue.ValueType.String)
+		// *********************************************
+
+		NameValue Group = new NameValue();
+		Group.Name = "Title";
+		Group.Type = NameValue.ValueType.String;
+		Group.Value = tex.get("group_name").asString();
+
+
+
+		A.NameValues[0] = First;
+		A.NameValues[1] = Last;
+		A.NameValues[2] = Group;
 
 		return A;
 

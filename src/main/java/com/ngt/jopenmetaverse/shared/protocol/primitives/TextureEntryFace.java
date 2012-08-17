@@ -401,7 +401,7 @@ import com.ngt.jopenmetaverse.shared.types.UUID;
                     new Boolean(getFullbright()).hashCode() ^
                     new Boolean(getMediaFlags()).hashCode() ^
                     getTexMapType().hashCode() ^
-                    getTextureID().GetHashCode()
+                    getTextureID().hashCode()
                     ;
                 
             }

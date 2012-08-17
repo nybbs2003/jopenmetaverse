@@ -6,7 +6,7 @@ import java.util.logging.Logger;
 
 public class JLogger {
 
-	static Logger logger = Logger.getLogger("Root");
+	static Logger logger = Logger.getLogger("ApplicationRoot");
 	
 	public static void debug(String msg)
 	{
@@ -35,9 +35,26 @@ public class JLogger {
 		logger.setLevel(newLevel);
 	}
 	
+	public static Logger getLogger(String logger)
+	{
+		return Logger.getLogger(logger);
+	}
+	
 	public static void addHandler(Handler handler)
 	{
 		logger.addHandler(handler);
 	}
+
+	public static Handler[] getHandlers()
+	{
+		return logger.getHandlers();
+	}
+	
+	public static void deleteHandler(Handler[] handlerList)
+	{
+		for(Handler h: handlerList)
+		logger.removeHandler(h);
+	}
+	
 	
 }

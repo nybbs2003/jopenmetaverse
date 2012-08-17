@@ -125,10 +125,10 @@ import com.ngt.jopenmetaverse.shared.types.Enums.AssetType;
 		@Override
 		public int hashCode()
 		{
-			return AssetUUID.GetHashCode() ^ Permissions.hashCode() ^ AssetType.hashCode() ^
-					InventoryType.hashCode() ^ Description.hashCode() ^ GroupID.GetHashCode() ^
+			return AssetUUID.hashCode() ^ Permissions.hashCode() ^ AssetType.hashCode() ^
+					InventoryType.hashCode() ^ Description.hashCode() ^ GroupID.hashCode() ^
 					new Boolean(GroupOwned).hashCode() ^ new Integer(SalePrice).hashCode() ^ SaleType.hashCode() ^
-					new Long(Flags).hashCode() ^ CreationDate.hashCode() ^ LastOwnerID.GetHashCode();
+					new Long(Flags).hashCode() ^ CreationDate.hashCode() ^ LastOwnerID.hashCode();
 		}
 
 		/// <summary>

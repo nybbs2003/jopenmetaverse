@@ -2041,13 +2041,13 @@ public class Utils {
 	}
 
 	public static int indexOfAny(String str, char[] chars) {
-		int j = -1;
+		int j = Integer.MAX_VALUE, k=-1;
 		for (int i = 0; i < chars.length; i++) {
-			j = str.indexOf(i);
-			if (j < 0)
-				return j;
+			k = str.indexOf(chars[i]);
+			if (k >= 0 && k < j)
+				j = k;
 		}
-		return j;
+		return (j == Integer.MAX_VALUE) ? -1 : j;
 	}
 
 	public static void arraycopy(byte[] bytes, int srcPos, byte[] dest,

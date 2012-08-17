@@ -1,13 +1,11 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
-import java.math.BigInteger;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
-
 import com.ngt.jopenmetaverse.shared.types.Vector3;
+import com.ngt.jopenmetaverse.shared.util.JLogger;
 import com.ngt.jopenmetaverse.shared.util.Utils;
-
 
     /// <summary>
     /// A Name Value pair with additional settings, used in the protocol
@@ -188,6 +186,11 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             '\r'
         };
 
+        public NameValue()
+        {
+        	
+        }
+        
         /// <summary>
         /// Constructor that takes all the fields as parameters
         /// </summary>
@@ -223,11 +226,14 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 Class = ClassType.Unknown;
                 Sendto = SendtoType.Unknown;
                 Value = null;
+                JLogger.debug("Unable to get proper index");
                 return;
             }
             Name = data.substring(0, i);
             data = data.substring(i + 1);
-
+            
+            JLogger.debug("Name=" + Name + " : data=" + data);
+            
             // Type
             i = Utils.indexOfAny(data, Separators);
             if (i > 0)
@@ -253,6 +259,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             }
 
             // Value
+            //FIXME why the type,  class and sendto are hardcoded here ?
             Type = ValueType.String;
             Class = ClassType.ReadOnly;
             Sendto = SendtoType.Sim;
@@ -338,7 +345,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 
             for (int i = 0; i < TypeStrings.length; i++)
             {
-                if (value == TypeStrings[i])
+                if (value.equals(TypeStrings[i]))
                 {
                     type = ValueType.get(i);
                     break;
@@ -357,7 +364,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 
             for (int i = 0; i < ClassStrings.length; i++)
             {
-                if (value == ClassStrings[i])
+                if (value.equals(ClassStrings[i]))
                 {
                     type = ClassType.get(i);
                     break;
@@ -376,7 +383,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 
             for (int i = 0; i < SendtoStrings.length; i++)
             {
-                if (value == SendtoStrings[i])
+                if (value.equals(SendtoStrings[i]))
                 {
                     type = SendtoType.get(i);
                     break;

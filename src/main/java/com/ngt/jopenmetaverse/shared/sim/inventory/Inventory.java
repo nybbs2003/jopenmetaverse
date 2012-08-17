@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.ngt.jopenmetaverse.shared.exception.nm.InventoryException;
 import com.ngt.jopenmetaverse.shared.sim.GridClient;
@@ -146,6 +147,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             {
                 UpdateNodeFor(value);
                 _RootNode = Items.get(value.UUID);
+                JLogger.debug("Found Root Node : " + contains(value.UUID) + _RootNode.getData().UUID.toString());
             }
 
         /// <summary>
@@ -248,7 +250,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             synchronized (Items)
             {
                 InventoryNode itemParent = null;
-                if (item.ParentUUID != UUID.Zero && 
+                if (!item.ParentUUID.equals(UUID.Zero) && 
                 		((itemParent = Items.get(item.ParentUUID)) == null))
                 {
                     // OK, we have no data on the parent, let's create a fake one.
@@ -302,6 +304,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 {
                     itemNode = new InventoryNode(item, itemParent);
                     Items.put(item.UUID, itemNode);
+                    JLogger.debug("Adding Inventory Node: " + item.UUID.toString());
                     if (onInventoryObjectAdded != null)
                     {
                         onInventoryObjectAdded.raiseEvent(new InventoryObjectAddedEventArgs(item));
@@ -358,6 +361,16 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             return Items.containsKey(uuid);
         }
 
+        public void printItems()
+        {
+        	JLogger.debug("Printing Inventory Items: ");
+        	for(Entry<UUID, InventoryNode> e: Items.entrySet())
+        	{
+        		JLogger.debug(e.getKey().toString() + " ==> "  + e.getValue().getData().UUID.toString());
+        	}
+        			
+        }
+        
         public boolean contains(InventoryBase obj)
         {
             return contains(obj.UUID);
@@ -534,8 +547,9 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         {
                 if (value != null)
                 {
+                	JLogger.debug(String.format("Adding Inventory Item: Name=%s %s", value.Name, value.UUID.toString() ));
                     // Log a warning if there is a UUID mismatch, this will cause problems
-                    if (value.UUID != uuid)
+                    if (!value.UUID.equals(uuid))
                         JLogger.warn("Inventory[uuid]: uuid " + uuid.toString() + " is not equal to value.UUID " +
                             value.UUID.toString());
 
@@ -543,6 +557,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 }
                 else
                 {
+                	JLogger.debug("Deleting Inventory Item");
                     InventoryNode node;
                     if ((node = Items.get(uuid))!=null)
                     {

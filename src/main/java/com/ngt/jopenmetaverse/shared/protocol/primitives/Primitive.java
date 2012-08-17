@@ -576,6 +576,7 @@ public class Primitive
         }
     }
 
+    @Override
     public  int hashCode()
     {
         return

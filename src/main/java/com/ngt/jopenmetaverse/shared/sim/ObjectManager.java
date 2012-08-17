@@ -2241,9 +2241,8 @@ public class ObjectManager {
 	}
 	//endregion
 
-	//TODO Implement
 
-	//	        //region Packet Handlers
+	//region Packet Handlers
 
 	/// <summary>Process an incoming packet and raise the appropriate events</summary>
 	/// <param name="sender">The sender</param>
@@ -2259,7 +2258,7 @@ public class ObjectManager {
 
 		for (int b = 0; b < update.ObjectData.length; b++)
 		{
-			JLogger.debug("Decoding ObjectData index: " + b);
+			//JLogger.debug("Decoding ObjectData index: " + b);
 			ObjectUpdatePacket.ObjectDataBlock block = update.ObjectData[b];
 
 			ObjectMovementUpdate objectupdate = new ObjectMovementUpdate();
@@ -2303,7 +2302,6 @@ public class ObjectManager {
 			//region NameValue parsing
 
 			String nameValue = Utils.bytesToString(block.NameValue);
-			JLogger.debug("Got NameValue String: " + nameValue);
 			if (nameValue.length() > 0)
 			{
 				String[] lines = nameValue.split("\n");
@@ -2324,6 +2322,8 @@ public class ObjectManager {
 				nameValues = new NameValue[0];
 			}
 
+			JLogger.debug("Got NameValue String: " + nameValue + " $Parsed Values$ " + NameValue.NameValuesToString(nameValues));
+			
 			//endregion NameValue parsing
 
 			//region Decode Object (primitive) parameters
@@ -2499,7 +2499,7 @@ public class ObjectManager {
 
 				//region Update Prim Info with decoded data
 				prim.Flags = PrimFlags.get(block.UpdateFlags);
-				JLogger.debug("Block UpdateFlags: " + block.UpdateFlags + Utils.bytesToHexDebugString(Utils.int64ToBytes(block.UpdateFlags), ""));
+				//JLogger.debug("Block UpdateFlags: " + block.UpdateFlags + Utils.bytesToHexDebugString(Utils.int64ToBytes(block.UpdateFlags), ""));
 				
 				if ((PrimFlags.getIndex(prim.Flags) & PrimFlags.ZlibCompressed.getIndex()) != 0)
 				{
@@ -2603,7 +2603,7 @@ public class ObjectManager {
 				isNewAvatar = !simulator.ObjectsAvatars.containsKey(block.ID);
 
 				// Update some internals if this is our avatar
-				if (block.FullID == Client.self.getAgentID() && simulator == Client.network.getCurrentSim())
+				if (block.FullID.equals(Client.self.getAgentID()) && simulator.equals(Client.network.getCurrentSim()))
 				{
 					//region Update Client.Self
 
@@ -2651,7 +2651,9 @@ public class ObjectManager {
 				}
 				avatar.ParentID = block.ParentID;
 				avatar.RegionHandle = update.RegionData.RegionHandle;
-
+				JLogger.debug("Set an avatar: " + avatar.getName() 
+						+ "\n with name values:\n" + NameValue.NameValuesToString(avatar.NameValues));
+				
 				SetAvatarSittingOn(simulator, avatar, block.ParentID, oldSeatID);
 
 				// Textures
@@ -3325,7 +3327,7 @@ public class ObjectManager {
 		ReportType requestType = ReportType.get(op.ObjectData.RequestFlags);
 
 		props.ObjectID = op.ObjectData.ObjectID;
-		ObjectCategory a;
+//		ObjectCategory a;
 		props.Category = ObjectCategory.get((int)op.ObjectData.Category);
 		props.Description = Utils.bytesToString(op.ObjectData.Description);
 		props.GroupID = op.ObjectData.GroupID;
@@ -3685,11 +3687,11 @@ public class ObjectManager {
 		{
 			synchronized (simulator.ObjectsPrimitives.getDictionary())
 			{
-
 				Avatar avatar;
 
 				if ((avatar = simulator.ObjectsAvatars.get(localID))!=null)
 				{
+					JLogger.debug("Found Avatar: " + avatar.LocalID);
 					return avatar;
 				}
 				else
@@ -3700,7 +3702,7 @@ public class ObjectManager {
 					avatar.RegionHandle = simulator.Handle;
 
 					simulator.ObjectsAvatars.add(localID, avatar);
-
+					JLogger.debug("Added Avatar: " + avatar.LocalID);
 					return avatar;
 				}
 			}
@@ -3740,7 +3742,7 @@ public class ObjectManager {
 						//region Linear Motion
 						// Only do movement interpolation (extrapolation) when there is a non-zero velocity but 
 						// no acceleration
-						if (avatar.Acceleration != Vector3.Zero && avatar.Velocity == Vector3.Zero)
+						if (avatar.Acceleration.equals(Vector3.Zero) && avatar.Velocity.equals(Vector3.Zero))
 						{
 							avatar.Position = Vector3.add(avatar.Position, 
 									Vector3.multiply((Vector3.add(avatar.Velocity, Vector3.multiply(avatar.Acceleration,

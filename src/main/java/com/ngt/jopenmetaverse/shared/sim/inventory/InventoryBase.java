@@ -68,7 +68,7 @@ public abstract class InventoryBase implements Serializable
 	@Override
 	public int hashCode()
 	{
-		return UUID.GetHashCode() ^ ParentUUID.GetHashCode() ^ Name.hashCode() ^ OwnerID.GetHashCode();
+		return UUID.hashCode() ^ ParentUUID.hashCode() ^ Name.hashCode() ^ OwnerID.hashCode();
 	}
 
 	/// <summary>

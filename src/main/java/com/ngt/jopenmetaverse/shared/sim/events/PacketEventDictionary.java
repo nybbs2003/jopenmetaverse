@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 import com.ngt.jopenmetaverse.shared.protocol.PacketType;
 import com.ngt.jopenmetaverse.shared.sim.GridClient;
 import com.ngt.jopenmetaverse.shared.sim.Simulator;
+import com.ngt.jopenmetaverse.shared.util.JLogger;
 import com.ngt.jopenmetaverse.shared.protocol.Packet;
 
 public class PacketEventDictionary {
@@ -174,7 +175,7 @@ public class PacketEventDictionary {
 
 		if (packetType != PacketType.Default && packetType != PacketType.PacketAck)
 		{
-			logger.log(Level.INFO, "No handler registered for packet event " + packetType, Client);
+			JLogger.info("No handler registered for packet event " + packetType);
 		}
 	}
 

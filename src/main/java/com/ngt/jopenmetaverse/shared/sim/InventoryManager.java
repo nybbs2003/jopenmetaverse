@@ -1077,9 +1077,7 @@ public class InventoryManager {
 	{
 		Client = client;
 
-		//TODO need to implement
 		// Client.network.RegisterCallback(PacketType.UpdateCreateInventoryItem, UpdateCreateInventoryItemHandler);
-
 		Client.network.RegisterCallback(PacketType.UpdateCreateInventoryItem, new EventObserver<PacketReceivedEventArgs>()
 				{ 
 			@Override
@@ -3960,7 +3958,7 @@ public class InventoryManager {
 	
 			String status = contents.get("state").asString().toLowerCase();
 	
-			if (status == "upload")
+			if (status.equals("upload"))
 			{
 				String uploadURL = contents.get("uploader").asString();
 	
@@ -3987,7 +3985,7 @@ public class InventoryManager {
 				upload.setUserData(new Object[] { callback, itemData, millisecondsTimeout, request });
 				upload.BeginGetResponse(itemData, "application/octet-stream", (int)millisecondsTimeout);
 			}
-			else if (status == "complete")
+			else if (status.equals("complete"))
 			{
 				JLogger.debug("CreateItemFromAsset: completed");
 	
@@ -4236,7 +4234,7 @@ public class InventoryManager {
 			if (reply.AgentData.Descendents > 0)
 			{
 				// InventoryDescendantsReply sends a null folder if the parent doesnt contain any folders
-				if (reply.FolderData[0].FolderID != UUID.Zero)
+				if (!reply.FolderData[0].FolderID.equals(UUID.Zero))
 				{
 					// Iterate folders in this packet
 					for (int i = 0; i < reply.FolderData.length; i++)
@@ -4258,7 +4256,7 @@ public class InventoryManager {
 				}
 	
 				// InventoryDescendantsReply sends a null item if the parent doesnt contain any items.
-				if (reply.ItemData[0].ItemID != UUID.Zero)
+				if (!reply.ItemData[0].ItemID.equals(UUID.Zero))
 				{
 					// Iterate items in this packet
 					for (int i = 0; i < reply.ItemData.length; i++)
@@ -4314,6 +4312,11 @@ public class InventoryManager {
 	
 			InventoryFolder parentFolder = null;
 	
+			JLogger.debug("Store Contains Root Folder? " + _Store.contains(reply.AgentData.FolderID));
+			 if(_Store.contains(reply.AgentData.FolderID))
+					JLogger.debug("Store Contains Root Folder? " + _Store.get(reply.AgentData.FolderID).getClass().toString());
+
+			
 			if (_Store.contains(reply.AgentData.FolderID) &&
 					_Store.get(reply.AgentData.FolderID) instanceof InventoryFolder)
 			{
@@ -4359,7 +4362,7 @@ public class InventoryManager {
 							for (int j = 0; j < folderContents.size(); j++)
 							{
 								// Check if this inventory Object matches the current path node
-								if (folderContents.get(j).Name == search.Path[search.Level])
+								if (folderContents.get(j).Name.equals(search.Path[search.Level]))
 								{
 									if (search.Level == search.Path.length - 1)
 									{
@@ -4452,7 +4455,7 @@ public class InventoryManager {
 				 * to the client to make sure that the item gets a good folder, otherwise
 				 * it will end up inaccesible in inventory.
 				 */
-				if (item.ParentUUID == UUID.Zero)
+				if (item.ParentUUID.equals(UUID.Zero))
 				{
 					// assign default folder for type
 					item.ParentUUID = FindFolderForType(item.AssetType);
