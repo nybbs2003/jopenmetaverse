@@ -1,9 +1,12 @@
 package com.ngt.jopenmetaverse.shared.sim;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import com.ngt.jopenmetaverse.shared.types.Action;
+import com.ngt.jopenmetaverse.shared.types.Predicate;
 
 /*
  * Using Apache Commons Predicate See https://discursive.atlassian.net/wiki/display/CJCOOK/Filtering+a+Collection+with+a+Predicate
@@ -115,61 +118,62 @@ public class InternalDictionary<T, E> {
             }
         }
 
-//        /// <summary>
-//        /// Finds the specified match.
-//        /// </summary>
-//        /// <param name="match">The match.</param>
-//        /// <returns>Matched value</returns>
-//        /// <example>
-//        /// <code>
-//        /// // use a delegate to find a prim in the ObjectsPrimitives InternalDictionary
-//        /// // with the ID 95683496
-//        /// uint findID = 95683496;
-//        /// Primitive findPrim = sim.ObjectsPrimitives.Find(
-//        ///             delegate(Primitive prim) { return prim.ID == findID; });
-//        /// </code>
-//        /// </example>
-//        public TValue Find(Predicate<TValue> match)
-//        {
-//            lock (Dictionary)
-//            {
-//                foreach (TValue value in Dictionary.Values)
-//                {
-//                    if (match(value))
-//                        return value;
-//                }
-//            }
-//            return default(TValue);
-//        }
-//
-//        /// <summary>Find All items in an <seealso cref="T:InternalDictionary"/></summary>
-//        /// <param name="match">return matching items.</param>
-//        /// <returns>a <seealso cref="T:System.Collections.Generic.List"/> containing found items.</returns>
-//        /// <example>
-//        /// Find All prims within 20 meters and store them in a List
-//        /// <code>
-//        /// int radius = 20;
-//        /// List&lt;Primitive&gt; prims = Client.Network.CurrentSim.ObjectsPrimitives.FindAll(
-//        ///         delegate(Primitive prim) {
-//        ///             Vector3 pos = prim.Position;
-//        ///             return ((prim.ParentID == 0) &amp;&amp; (pos != Vector3.Zero) &amp;&amp; (Vector3.Distance(pos, location) &lt; radius));
-//        ///         }
-//        ///    ); 
-//        ///</code>
-//        ///</example>
-//        public List<TValue> FindAll(Predicate<TValue> match)
-//        {
-//            List<TValue> found = new List<TValue>();
-//            lock (Dictionary)
-//            {
-//                foreach (KeyValuePair<TKey, TValue> kvp in Dictionary)
-//                {
-//                    if (match(kvp.Value))
-//                        found.Add(kvp.Value);
-//                }
-//            }
-//            return found;
-//        }
+        /// <summary>
+        /// Finds the specified match.
+        /// </summary>
+        /// <param name="match">The match.</param>
+        /// <returns>Matched value</returns>
+        /// <example>
+        /// <code>
+        /// // use a delegate to find a prim in the ObjectsPrimitives InternalDictionary
+        /// // with the ID 95683496
+        /// uint findID = 95683496;
+        /// Primitive findPrim = sim.ObjectsPrimitives.Find(
+        ///             delegate(Primitive prim) { return prim.ID == findID; });
+        /// </code>
+        /// </example>
+        public E Find(Predicate<E> pred)
+        {
+            synchronized (Dictionary)
+            {
+                for (E value : Dictionary.values())
+                {
+                    if (pred.match(value))
+                        return value;
+                }
+            }
+            return null;
+        }
+
+        /// <summary>Find All items in an <seealso cref="T:InternalDictionary"/></summary>
+        /// <param name="match">return matching items.</param>
+        /// <returns>a <seealso cref="T:System.Collections.Generic.List"/> containing found items.</returns>
+        /// <example>
+        /// Find All prims within 20 meters and store them in a List
+        /// <code>
+        /// int radius = 20;
+        /// List&lt;Primitive&gt; prims = Client.Network.CurrentSim.ObjectsPrimitives.FindAll(
+        ///         delegate(Primitive prim) {
+        ///             Vector3 pos = prim.Position;
+        ///             return ((prim.ParentID == 0) &amp;&amp; (pos != Vector3.Zero) &amp;&amp; (Vector3.Distance(pos, location) &lt; radius));
+        ///         }
+        ///    ); 
+        ///</code>
+        ///</example>
+        public List<E> FindAll(Predicate<E> pred)
+        {
+            List<E> found = new ArrayList<E>();
+            
+            synchronized (Dictionary)
+            {
+                for (E value : Dictionary.values())
+                {
+                    if (pred.match(value))
+                    	found.add(value);
+                }
+            }
+            return found;
+        }
 //
 //        /// <summary>Find All items in an <seealso cref="T:InternalDictionary"/></summary>
 //        /// <param name="match">return matching keys.</param>

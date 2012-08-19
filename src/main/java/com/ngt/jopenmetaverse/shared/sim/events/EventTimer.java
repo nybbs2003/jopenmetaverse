@@ -19,6 +19,11 @@ public class EventTimer {
 	{
 		timer.schedule(task, delay);
 	}
+
+	public void schedule(long delay, int interval)
+	{
+		timer.schedule(task, delay, interval);
+	}
 	
 	public void cancel()
 	{
@@ -29,5 +34,11 @@ public class EventTimer {
 	{
 		cancel();
 		schedule(delay);
+	}
+	
+	public void reschedule(long delay, int interval)
+	{
+		cancel();
+		schedule(delay, interval);
 	}
 }

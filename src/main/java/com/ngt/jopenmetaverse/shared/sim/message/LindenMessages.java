@@ -4552,9 +4552,9 @@ public class LindenMessages
 		{
 			if (map.containsKey("verb"))
 			{
-				if (map.get("verb").asString() == "GET")
+				if (map.get("verb").asString().equals("GET"))
 					Request = new ObjectMediaRequest();
-				else if (map.get("verb").asString() == "UPDATE")
+				else if (map.get("verb").asString().equals("UPDATE"))
 					Request = new ObjectMediaUpdate();
 			}
 			else if (map.containsKey("object_media_version"))

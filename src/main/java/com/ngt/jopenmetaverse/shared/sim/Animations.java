@@ -1,5 +1,7 @@
 package com.ngt.jopenmetaverse.shared.sim;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -279,20 +281,27 @@ public class Animations
     public final static UUID YOGA_FLOAT = new UUID("42ecd00b-9947-a97c-400a-bbc9174c7aeb");
 
     //TODO Implement
-//    /// <summary>
-//    /// A dictionary containing all pre-defined animations
-//    /// </summary>
-//    /// <returns>A dictionary containing the pre-defined animations, 
-//    /// where the key is the animations ID, and the value is a string
-//    /// containing a name to identify the purpose of the animation</returns>
-//    public static Map<UUID, String> toMap()
-//    {
-//        Map<UUID, String> dict = new HashMap<UUID, String>();
+    /// <summary>
+    /// A dictionary containing all pre-defined animations
+    /// </summary>
+    /// <returns>A dictionary containing the pre-defined animations, 
+    /// where the key is the animations ID, and the value is a string
+    /// containing a name to identify the purpose of the animation</returns>
+    public static Map<UUID, String> toMap() throws IllegalArgumentException, IllegalAccessException
+    {
+        Map<UUID, String> dict = new HashMap<UUID, String>();
+        Class<?> c = Animations.class;
 //        Type type = typeof(Animations);
-//        foreach (FieldInfo field in type.GetFields(BindingFlags.Public | BindingFlags.Static))
-//        {
-//            dict.Add((UUID)field.GetValue(type), field.Name);
-//        }
-//        return dict;
-//    }
+        Field[] flds = c.getDeclaredFields();
+        for (Field field : flds)
+        {
+        	int mod = field.getModifiers();
+        	
+        	if((mod & Modifier.STATIC) != 0)
+        	{
+        		dict.put((UUID)field.get(new Animations()), field.getName());
+        	}
+        }
+        return dict;
+    }
 }

@@ -1354,7 +1354,7 @@ public class Utils {
 		if (isNullOrEmpty(str)) {
 			return Utils.EmptyBytes;
 		}
-		// if (!str.endsWith("\0")) { str += "\0"; }
+//		if (!str.endsWith("\0")) { str += "\0"; }
 
 		try {
 			return str.getBytes("UTF-8");
@@ -1365,6 +1365,28 @@ public class Utils {
 		return Utils.EmptyBytes;
 	}
 
+	
+	// / <summary>
+	// / Convert a String to a UTF8 encoded byte array
+	// / </summary>
+	// / <param name="str">The String to convert</param>
+	// / <returns>A null-terminated UTF8 byte array</returns>
+	public static byte[] stringToBytesWithTrailingNullByte(String str) {
+		if (isNullOrEmpty(str)) {
+			return Utils.EmptyBytes;
+		}
+		
+		if (!str.endsWith("\0")) { str += "\0"; }
+
+		try {
+			return str.getBytes("UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			logger.warning(e.getMessage());
+		}
+		return Utils.EmptyBytes;
+	}
+	
 	// / <summary>
 	// / Converts a String containing hexadecimal characters to a byte array
 	// / </summary>
@@ -1766,7 +1788,7 @@ public class Utils {
 	// AssetType.Unknown if no match was found</returns>
 	public static AssetType StringToAssetType(String type) {
 		for (int i = 0; i < _AssetTypeNames.length; i++) {
-			if (_AssetTypeNames[i] == type)
+			if (_AssetTypeNames[i].equals(type))
 				return AssetType.get((byte) i);
 		}
 
@@ -1815,7 +1837,7 @@ public class Utils {
 	// / <returns>A SaleType object which matched the type</returns>
 	public static SaleType StringToSaleType(String value) {
 		for (int i = 0; i < _SaleTypeNames.length; i++) {
-			if (value == _SaleTypeNames[i])
+			if (value.equals(_SaleTypeNames[i]))
 				return SaleType.get((byte) i);
 		}
 
@@ -1830,7 +1852,7 @@ public class Utils {
 	// / <returns>AttachmentPoint enum</returns>
 	public static AttachmentPoint StringToAttachmentPoint(String value) {
 		for (int i = 0; i < _AttachmentPointNames.length; i++) {
-			if (value == _AttachmentPointNames[i])
+			if (value.equals(_AttachmentPointNames[i]))
 				return AttachmentPoint.get((byte) i);
 		}
 
@@ -1882,7 +1904,7 @@ public class Utils {
 	// / <param name="c">The right-hand (or Y) output value</param>
 	public static void longToInts(long a, int[] b) {
 		b[0] = (int) (a >> 32);
-		b[1] = (int) (a & 0x00000000FFFFFFFF);
+		b[1] = (int) (a & 0x00000000FFFFFFFFL);
 	}
 
 	// / <summary>
@@ -1893,7 +1915,7 @@ public class Utils {
 	// / <param name="c">The right-hand (or Y) output value</param>
 	public static void longToUInts(long a, long[] b) {
 		b[0] = (a >> 32);
-		b[1] = (a & 0x00000000FFFFFFFF);
+		b[1] = (a & 0x00000000FFFFFFFFL);
 	}
 
 	//
@@ -1916,7 +1938,7 @@ public class Utils {
 	// / <returns>An unsigned integer representing a unix timestamp for
 	// now</returns>
 	public static long getUnixTime() {
-		return Calendar.getInstance().getTimeInMillis() / 1000;
+		return Calendar.getInstance().getTimeInMillis();
 	}
 
 	// / <summary>

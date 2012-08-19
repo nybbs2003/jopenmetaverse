@@ -548,13 +548,13 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                         return binWriter.toByteArray();
             }
 
-            public int GetHashCode()
+            public int hashCode()
             {
-                int hashCode = DefaultTexture != null ? DefaultTexture.GetHashCode() : 0;
+                int hashCode = DefaultTexture != null ? DefaultTexture.hashCode() : 0;
                 for (int i = 0; i < FaceTextures.length; i++)
                 {
                     if (FaceTextures[i] != null)
-                        hashCode ^= FaceTextures[i].GetHashCode();
+                        hashCode ^= FaceTextures[i].hashCode();
                 }
                 return hashCode;
             }

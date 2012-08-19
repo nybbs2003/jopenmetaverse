@@ -3627,24 +3627,32 @@ public class AgentManager {
 	/// <param name="z">Z coordinate to move to</param>
 	public void AutoPilot(double globalX, double globalY, double z)
 	{
+		GenericMessagePacket autopilot = createGenericMessagePacket(globalX, globalY, z);
+		
+		Client.network.SendPacket(autopilot);		
+	}
+
+	public GenericMessagePacket createGenericMessagePacket(double globalX, double globalY, double z)
+	{
 		GenericMessagePacket autopilot = new GenericMessagePacket();
 
 		autopilot.AgentData.AgentID = Client.self.getAgentID();
 		autopilot.AgentData.SessionID = Client.self.getSessionID();
 		autopilot.AgentData.TransactionID = UUID.Zero;
 		autopilot.MethodData.Invoice = UUID.Zero;
-		autopilot.MethodData.Method = Utils.stringToBytes("autopilot");
+		autopilot.MethodData.Method = Utils.stringToBytesWithTrailingNullByte("autopilot");
 		autopilot.ParamList = new GenericMessagePacket.ParamListBlock[3];
 		autopilot.ParamList[0] = new GenericMessagePacket.ParamListBlock();
-		autopilot.ParamList[0].Parameter = Utils.stringToBytes(Double.toString(globalX));
+		autopilot.ParamList[0].Parameter = Utils.stringToBytesWithTrailingNullByte(Double.toString(globalX));
 		autopilot.ParamList[1] = new GenericMessagePacket.ParamListBlock();
-		autopilot.ParamList[1].Parameter = Utils.stringToBytes(Double.toString(globalY));
+		autopilot.ParamList[1].Parameter = Utils.stringToBytesWithTrailingNullByte(Double.toString(globalY));
 		autopilot.ParamList[2] = new GenericMessagePacket.ParamListBlock();
-		autopilot.ParamList[2].Parameter = Utils.stringToBytes(Double.toString(z));
-
-		Client.network.SendPacket(autopilot);
-	}
-
+		autopilot.ParamList[2].Parameter = Utils.stringToBytesWithTrailingNullByte(Double.toString(z));
+		
+		return autopilot;		
+	}	
+	
+	
 	/// <summary>
 	/// Use the autopilot sim function to move the avatar to a new position
 	/// </summary>

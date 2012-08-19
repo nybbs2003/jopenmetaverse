@@ -443,7 +443,7 @@ public class Color4 implements Comparable<Color4>, Serializable
 		return equals(this, other);
 	}
 
-	public int GetHashCode()
+	public int hashCode()
 	{
         return (new Float(R)).hashCode() ^ (new Float(G)).hashCode() ^ (new Float(B)).hashCode() ^ (new Float(A)).hashCode();
 	}

@@ -1078,7 +1078,7 @@ public class NetworkManager {
 					if ((osd = map.get("login")) !=null)
 					{
 						boolean loginSuccess = osd.asBoolean();
-						boolean redirect = (osd.asString() == "indeterminate");
+						boolean redirect = (osd.asString().equals("indeterminate"));
 
 						if (redirect)
 						{

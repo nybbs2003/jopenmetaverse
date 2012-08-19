@@ -1,5 +1,6 @@
 package com.ngt.jopenmetaverse.shared.util;
 
+import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
 
@@ -44,5 +45,54 @@ public class UtilsTest {
 		System.out.println(Utils.bytesToHexDebugString(new byte[]{a1}, ""));
 		Assert.assertEquals(251, i1);
 	}
-
+	
+	@Test
+	public void longToUintTests()
+	{
+		long[] uints1 = new long[2];
+		Utils.longToUInts(1099511628032000L, uints1);
+		Assert.assertEquals(1099511628032000L >> 32, uints1[0]);
+		Assert.assertEquals(1099511628032000L & 0x00000000ffffffffL, uints1[1]);
+//		System.out.println(String.format("%d --> %d --> %s --> %s", 1099511628032000L >> 32, 
+//				1099511628032000L & 0x00000000ffffffffL, 
+//				Utils.bytesToHexDebugString(Utils.int64ToBytes(uints1[0]), "")
+//				,Utils.bytesToHexDebugString(Utils.int64ToBytes(uints1[1]), "")));
+	}
+	
+	@Test
+	public void stringtoBytesTests()
+	{
+		System.out.println(String.format("22.660995 get converted to \n%s", 
+				Utils.bytesToHexDebugString(Utils.stringToBytes(Double.toString(22.660995)), "")));
+		System.out.println(String.format("20.1538619995117 gets converted to\n%s", 
+				Utils.bytesToHexDebugString(Utils.stringToBytes("20.1538619995117"), "")));
+	}
+	
+	@Test
+	public void stringToBytesWithTrailingNullByteTests()
+	{
+		System.out.println(String.format("22.660995 get converted to \n%s", 
+				Utils.bytesToHexDebugString(Utils.stringToBytesWithTrailingNullByte(Double.toString(22.660995)), "")));
+		System.out.println(String.format("20.1538619995117 gets converted to\n%s", 
+				Utils.bytesToHexDebugString(Utils.stringToBytesWithTrailingNullByte("20.1538619995117"), "")));
+		
+		Assert.assertEquals(Utils.bytesToHexDebugString(Utils.stringToBytesWithTrailingNullByte(Double.toString(22.660995)), ""), 
+				"32 32 2E 36 36 30 39 39 35 00");
+	}
+	
+	
+	@Test
+	public void bytesToStringWithTrailingNullByteTests()
+	{
+		try {
+			byte[] bytes1 = new byte[]{0x32, 0x32, 0x2E, 0x36, 0x36, 0x30, 0x39, 0x39, 0x35, 0x00};
+			String string1 = "22.660995";
+			Assert.assertEquals(Utils.bytesToString(bytes1), string1);			
+			
+		} catch (UnsupportedEncodingException e) {
+			Assert.fail("Failed with exception" + Utils.getExceptionStackTraceAsString(e));
+			e.printStackTrace();
+		} 
+	}	
+	
 }

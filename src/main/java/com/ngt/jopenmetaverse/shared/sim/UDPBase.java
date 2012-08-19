@@ -1,12 +1,10 @@
 package com.ngt.jopenmetaverse.shared.sim;
 
-import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.net.SocketException;
-
 import com.ngt.jopenmetaverse.shared.sim.buffers.UDPPacketBuffer;
 import com.ngt.jopenmetaverse.shared.sim.events.ThreadPool;
 import com.ngt.jopenmetaverse.shared.sim.events.ThreadPoolFactory;
@@ -144,9 +142,10 @@ public abstract class UDPBase {
 					//                        //wrappedBuffer);
 					//                        buf);
 
-					catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						catch (Exception e) {
+							//TODO handle error in a better way
+							JLogger.error("Error while recieving packet\n" + Utils.getExceptionStackTraceAsString(e));
+						
 					}
 					//                catch (SocketException e)
 					//                {
@@ -225,17 +224,13 @@ public abstract class UDPBase {
 				{
 					try {
 						DatagramPacket sendPacket = new DatagramPacket(buf.getData(), buf.getDataLength(), buf.getRemoteEndPoint());
-						JLogger.debug("Data sending to server: " + Utils.bytesToString(buf.getData()) + " " + buf.getDataLength());
+						JLogger.debug(String.format("Data sending to server of length %d \n%s ", buf.getDataLength(), Utils.bytesToHexDebugString(buf.getData(), "")));
 						udpSocket.send(sendPacket);
 						PacketSent(buf, buf.getDataLength());
 					}
-					catch (SocketException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+					catch (Exception e) {
+						//TODO handle error in a better way
+						JLogger.error("Error while sending packet\n" + Utils.getExceptionStackTraceAsString(e));
 					}
 				}
 			});

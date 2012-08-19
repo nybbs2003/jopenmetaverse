@@ -942,7 +942,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             return equals(this, other);
         }
 
-        public int GetHashCode()
+        public int hashCode()
         {
             return
                 (new Float(M11)).hashCode() ^ (new Float(M12)).hashCode() ^ (new Float(M13)).hashCode() ^ (new Float(M14)).hashCode() 

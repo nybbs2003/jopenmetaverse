@@ -30,6 +30,29 @@ public class JLogger {
 		logger.log(Level.SEVERE, msg);
 	}
 	
+	
+	public static void debug(String loggerName, String msg)
+	{
+//		logger.log(Level.ALL, msg);
+//		System.out.println(msg);
+		Logger.getLogger(loggerName).log(Level.INFO, msg);		
+	}	
+	
+	public static void info(String loggerName, String msg)
+	{
+		Logger.getLogger(loggerName).log(Level.INFO, msg);		
+	}
+
+	public static void warn(String loggerName, String msg)
+	{
+		Logger.getLogger(loggerName).log(Level.WARNING, msg);
+	}
+	
+	public static void error(String loggerName, String msg)
+	{
+		Logger.getLogger(loggerName).log(Level.SEVERE, msg);
+	}
+	
 	public static void setLevel(Level newLevel)
 	{
 		logger.setLevel(newLevel);

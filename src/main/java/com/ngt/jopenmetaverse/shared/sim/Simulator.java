@@ -925,9 +925,13 @@ public class Simulator extends UDPBase
 			if (packetCount > 1)
 				JLogger.debug("Split " + packet.Type + " packet into " + packetCount + " packets");
 
+			JLogger.debug("Sending Multi Block Packets of count " +  packetCount);
+			
+			
 			for (int i = 0; i < packetCount; i++)
 			{
 				byte[] data = datas[i];
+				JLogger.debug("Sending Multi Block Packet of length" +  data.length + "\n" + Utils.bytesToHexDebugString(data, ""));
 				SendPacketData(data, data.length, packet.Type, packet.header.Zerocoded);
 			}
 		}

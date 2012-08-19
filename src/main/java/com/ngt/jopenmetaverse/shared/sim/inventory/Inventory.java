@@ -277,7 +277,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 {
                     InventoryNode oldParent = itemNode.getParent();
                     // Handle parent change
-                    if (oldParent == null || itemParent == null || itemParent.getData().UUID != oldParent.getData().UUID)
+                    if (oldParent == null || itemParent == null 
+                    		|| itemParent.getData().UUID.equals(oldParent.getData().UUID))
                     {
                         if (oldParent != null)
                         {

@@ -386,10 +386,10 @@ import com.ngt.jopenmetaverse.shared.types.UUID;
                 return ret;
             }
 
-            public  int GetHashCode()
+            public  int hashCode()
             {
                 return
-                    getRGBA().GetHashCode() ^
+                    getRGBA().hashCode() ^
                     (new Float(getRepeatU()).hashCode()) ^
                     (new Float(getRepeatV()).hashCode()) ^
                     new Float(getOffsetU()).hashCode() ^

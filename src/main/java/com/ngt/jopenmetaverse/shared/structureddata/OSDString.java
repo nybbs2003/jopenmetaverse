@@ -43,7 +43,7 @@ public final class OSDString extends OSD
         if (Utils.isNullOrEmpty(value))
             return false;
 
-        if (value == "0" || value.toLowerCase().equals("false"))
+        if (value.equals("0") || value.toLowerCase().equals("false"))
             return false;
 
         return true;

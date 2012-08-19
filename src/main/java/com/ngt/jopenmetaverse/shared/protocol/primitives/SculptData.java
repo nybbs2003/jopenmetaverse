@@ -103,7 +103,7 @@ import com.ngt.jopenmetaverse.shared.types.UUID;
             return sculpt;
         }
 
-        public  int GetHashCode()
+        public  int hashCode()
         {
             return SculptTexture.hashCode() ^ new Byte(type).hashCode();
         }

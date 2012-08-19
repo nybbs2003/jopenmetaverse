@@ -767,7 +767,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 && Z == other.Z;
         }
 
-        public int GetHashCode()
+        public int hashCode()
         {
             return (new Float(X)).hashCode() ^ (new Float(Y)).hashCode() ^ (new Float(Z)).hashCode() ^ (new Float(W)).hashCode();
         }
