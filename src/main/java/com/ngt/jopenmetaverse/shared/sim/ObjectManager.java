@@ -1461,7 +1461,7 @@ public class ObjectManager {
 		image.ObjectData[0] = new ObjectImagePacket.ObjectDataBlock();
 		image.ObjectData[0].ObjectLocalID = localID;
 		image.ObjectData[0].TextureEntry = textures.GetBytes();
-		image.ObjectData[0].MediaURL = Utils.stringToBytes(mediaUrl);
+		image.ObjectData[0].MediaURL = Utils.stringToBytesWithTrailingNullByte(mediaUrl);
 
 		Client.network.SendPacket(image, simulator);
 	}
@@ -1681,7 +1681,7 @@ public class ObjectManager {
 		{
 			namePacket.ObjectData[i] = new ObjectNamePacket.ObjectDataBlock();
 			namePacket.ObjectData[i].LocalID = localIDs[i];
-			namePacket.ObjectData[i].Name = Utils.stringToBytes(names[i]);
+			namePacket.ObjectData[i].Name = Utils.stringToBytesWithTrailingNullByte(names[i]);
 		}
 
 		Client.network.SendPacket(namePacket, simulator);
@@ -1716,7 +1716,7 @@ public class ObjectManager {
 		{
 			descPacket.ObjectData[i] = new ObjectDescriptionPacket.ObjectDataBlock();
 			descPacket.ObjectData[i].LocalID = localIDs[i];
-			descPacket.ObjectData[i].Description = Utils.stringToBytes(descriptions[i]);
+			descPacket.ObjectData[i].Description = Utils.stringToBytesWithTrailingNullByte(descriptions[i]);
 		}
 
 		Client.network.SendPacket(descPacket, simulator);
@@ -2301,7 +2301,7 @@ public class ObjectManager {
 
 			//region NameValue parsing
 
-			String nameValue = Utils.bytesToString(block.NameValue);
+			String nameValue = Utils.bytesWithTrailingNullByteToString(block.NameValue);
 			if (nameValue.length() > 0)
 			{
 				String[] lines = nameValue.split("\n");
@@ -2521,8 +2521,8 @@ public class ObjectManager {
 				prim.Scale = block.Scale;
 				prim.ClickAction = ClickAction.get(block.ClickAction);
 				prim.OwnerID = block.OwnerID;
-				prim.MediaURL = Utils.bytesToString(block.MediaURL);
-				prim.Text = Utils.bytesToString(block.Text);
+				prim.MediaURL = Utils.bytesWithTrailingNullByteToString(block.MediaURL);
+				prim.Text = Utils.bytesWithTrailingNullByteToString(block.Text);
 				prim.TextColor = new Color4(block.TextColor, 0, false, true);
 				prim.IsAttachment = attachment;
 
@@ -3258,20 +3258,20 @@ public class ObjectManager {
 			props.Category = ObjectCategory.get((int)objectData.Category);
 			props.CreationDate = Utils.unixTimeToDate(objectData.CreationDate.longValue());
 			props.CreatorID = objectData.CreatorID;
-			props.Description = Utils.bytesToString(objectData.Description);
+			props.Description = Utils.bytesWithTrailingNullByteToString(objectData.Description);
 			props.FolderID = objectData.FolderID;
 			props.FromTaskID = objectData.FromTaskID;
 			props.GroupID = objectData.GroupID;
 			props.InventorySerial = objectData.InventorySerial;
 			props.ItemID = objectData.ItemID;
 			props.LastOwnerID = objectData.LastOwnerID;
-			props.Name = Utils.bytesToString(objectData.Name);
+			props.Name = Utils.bytesWithTrailingNullByteToString(objectData.Name);
 			props.OwnerID = objectData.OwnerID;
 			props.OwnershipCost = objectData.OwnershipCost;
 			props.SalePrice = objectData.SalePrice;
 			props.SaleType = SaleType.get(objectData.SaleType);
-			props.SitName = Utils.bytesToString(objectData.SitName);
-			props.TouchName = Utils.bytesToString(objectData.TouchName);
+			props.SitName = Utils.bytesWithTrailingNullByteToString(objectData.SitName);
+			props.TouchName = Utils.bytesWithTrailingNullByteToString(objectData.TouchName);
 
 			int numTextures = objectData.TextureID.length / 16;
 			props.TextureIDs = new UUID[numTextures];
@@ -3329,10 +3329,10 @@ public class ObjectManager {
 		props.ObjectID = op.ObjectData.ObjectID;
 //		ObjectCategory a;
 		props.Category = ObjectCategory.get((int)op.ObjectData.Category);
-		props.Description = Utils.bytesToString(op.ObjectData.Description);
+		props.Description = Utils.bytesWithTrailingNullByteToString(op.ObjectData.Description);
 		props.GroupID = op.ObjectData.GroupID;
 		props.LastOwnerID = op.ObjectData.LastOwnerID;
-		props.Name = Utils.bytesToString(op.ObjectData.Name);
+		props.Name = Utils.bytesWithTrailingNullByteToString(op.ObjectData.Name);
 		props.OwnerID = op.ObjectData.OwnerID;
 		props.OwnershipCost = op.ObjectData.OwnershipCost;
 		props.SalePrice = op.ObjectData.SalePrice;

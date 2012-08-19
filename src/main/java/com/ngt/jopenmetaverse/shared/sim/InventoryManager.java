@@ -1721,7 +1721,7 @@ public class InventoryManager {
 			invFolder.FolderData[0] = new UpdateInventoryFolderPacket.FolderDataBlock();
 			invFolder.FolderData[0].FolderID = folderID;
 			invFolder.FolderData[0].ParentID = parentID;
-			invFolder.FolderData[0].Name = Utils.stringToBytes(name);
+			invFolder.FolderData[0].Name = Utils.stringToBytesWithTrailingNullByte(name);
 			invFolder.FolderData[0].Type = (byte)type.getIndex();
 	
 			Client.network.SendPacket(invFolder);
@@ -1840,7 +1840,7 @@ public class InventoryManager {
 			move.InventoryData[0] = new MoveInventoryItemPacket.InventoryDataBlock();
 			move.InventoryData[0].ItemID = itemID;
 			move.InventoryData[0].FolderID = folderID;
-			move.InventoryData[0].NewName = Utils.stringToBytes(newName);
+			move.InventoryData[0].NewName = Utils.stringToBytesWithTrailingNullByte(newName);
 	
 			Client.network.SendPacket(move);
 		}
@@ -2102,8 +2102,8 @@ public class InventoryManager {
 			create.InventoryBlock.Type = (byte)type.getIndex();
 			create.InventoryBlock.InvType = (byte)invType.getIndex();
 			create.InventoryBlock.WearableType = (byte)wearableType.getIndex();
-			create.InventoryBlock.Name = Utils.stringToBytes(name);
-			create.InventoryBlock.Description = Utils.stringToBytes(description);
+			create.InventoryBlock.Name = Utils.stringToBytesWithTrailingNullByte(name);
+			create.InventoryBlock.Description = Utils.stringToBytesWithTrailingNullByte(description);
 	
 			Client.network.SendPacket(create);
 		}
@@ -2172,7 +2172,7 @@ public class InventoryManager {
 			create.FolderData.FolderID = id;
 			create.FolderData.ParentID = parentID;
 			create.FolderData.Type = (byte)preferredType.getIndex();
-			create.FolderData.Name = Utils.stringToBytes(name);
+			create.FolderData.Name = Utils.stringToBytesWithTrailingNullByte(name);
 	
 			Client.network.SendPacket(create);
 	
@@ -2324,8 +2324,8 @@ public class InventoryManager {
 			create.InventoryBlock.OldItemID = itemID;
 			create.InventoryBlock.Type = (byte)assetType.getIndex();
 			create.InventoryBlock.InvType = (byte)invType.getIndex();
-			create.InventoryBlock.Name = Utils.stringToBytes(name);
-			create.InventoryBlock.Description = Utils.stringToBytes(description);
+			create.InventoryBlock.Name = Utils.stringToBytesWithTrailingNullByte(name);
+			create.InventoryBlock.Description = Utils.stringToBytesWithTrailingNullByte(description);
 	
 			Client.network.SendPacket(create);
 		}
@@ -2404,7 +2404,7 @@ public class InventoryManager {
 				copy.InventoryData[i].OldItemID = items.get(i);
 	
 				if (newNames != null && !Utils.isNullOrEmpty(newNames.get(i)))
-					copy.InventoryData[i].NewName = Utils.stringToBytes(newNames.get(i));
+					copy.InventoryData[i].NewName = Utils.stringToBytesWithTrailingNullByte(newNames.get(i));
 				else
 					copy.InventoryData[i].NewName = Utils.EmptyBytes;
 			}
@@ -2505,7 +2505,7 @@ public class InventoryManager {
 				//TODO need to check if the data should be in Integer
 				block.CreationDate = (int)Utils.dateToUnixTime(item.CreationDate);
 				block.CreatorID = item.CreatorID;
-				block.Description = Utils.stringToBytes(item.Description);
+				block.Description = Utils.stringToBytesWithTrailingNullByte(item.Description);
 				block.EveryoneMask = (long)PermissionMask.getIndex(item.Permissions.EveryoneMask);
 				block.Flags = (long)item.Flags;
 				block.FolderID = item.ParentUUID;
@@ -2514,7 +2514,7 @@ public class InventoryManager {
 				block.GroupOwned = item.GroupOwned;
 				block.InvType = (byte)item.InventoryType.getIndex();
 				block.ItemID = item.UUID;
-				block.Name = Utils.stringToBytes(item.Name);
+				block.Name = Utils.stringToBytesWithTrailingNullByte(item.Name);
 				block.NextOwnerMask = (long)PermissionMask.getIndex(item.Permissions.NextOwnerMask);
 				block.OwnerID = item.OwnerID;
 				block.OwnerMask = (long)PermissionMask.getIndex(item.Permissions.OwnerMask);
@@ -2826,8 +2826,8 @@ public class InventoryManager {
 			add.InventoryData.Flags = (long)item.Flags;
 			add.InventoryData.SaleType = (byte)item.SaleType.getIndex();
 			add.InventoryData.SalePrice = item.SalePrice;
-			add.InventoryData.Name = Utils.stringToBytes(item.Name);
-			add.InventoryData.Description = Utils.stringToBytes(item.Description);
+			add.InventoryData.Name = Utils.stringToBytesWithTrailingNullByte(item.Name);
+			add.InventoryData.Description = Utils.stringToBytesWithTrailingNullByte(item.Description);
 			add.InventoryData.CreationDate = (int)Utils.dateToUnixTime(item.CreationDate);
 	
 			Client.network.SendPacket(add, simulator);
@@ -2918,8 +2918,8 @@ public class InventoryManager {
 			add.InventoryData.Flags = (long)item.Flags;
 			add.InventoryData.SaleType = (byte)item.SaleType.getIndex();
 			add.InventoryData.SalePrice = item.SalePrice;
-			add.InventoryData.Name = Utils.stringToBytes(item.Name);
-			add.InventoryData.Description = Utils.stringToBytes(item.Description);
+			add.InventoryData.Name = Utils.stringToBytesWithTrailingNullByte(item.Name);
+			add.InventoryData.Description = Utils.stringToBytesWithTrailingNullByte(item.Description);
 			add.InventoryData.CreationDate = (int)Utils.dateToUnixTime(item.CreationDate);
 	
 			Client.network.SendPacket(add, simulator);
@@ -3082,8 +3082,8 @@ public class InventoryManager {
 			update.InventoryData.Flags = (long)item.Flags;
 			update.InventoryData.SaleType = (byte)item.SaleType.getIndex();
 			update.InventoryData.SalePrice = item.SalePrice;
-			update.InventoryData.Name = Utils.stringToBytes(item.Name);
-			update.InventoryData.Description = Utils.stringToBytes(item.Description);
+			update.InventoryData.Name = Utils.stringToBytesWithTrailingNullByte(item.Name);
+			update.InventoryData.Description = Utils.stringToBytesWithTrailingNullByte(item.Description);
 			update.InventoryData.CreationDate = (int)Utils.dateToUnixTime(item.CreationDate);
 			update.InventoryData.CRC = ItemCRC(item);
 	
@@ -3159,7 +3159,7 @@ public class InventoryManager {
 //									{
 //										Client.assets.XferReceived -= xferCallback;
 //
-//										String taskList = Utils.bytesToString(assetData);
+//										String taskList = Utils.bytesWithTrailingNullByteToString(assetData);
 //										return ParseTaskInventory(taskList);
 //									}
 //									else
@@ -3302,8 +3302,8 @@ public class InventoryManager {
 			ScriptPacket.InventoryBlock.Flags = (long)item.Flags;
 			ScriptPacket.InventoryBlock.SaleType = (byte)item.SaleType.getIndex();
 			ScriptPacket.InventoryBlock.SalePrice = item.SalePrice;
-			ScriptPacket.InventoryBlock.Name = Utils.stringToBytes(item.Name);
-			ScriptPacket.InventoryBlock.Description = Utils.stringToBytes(item.Description);
+			ScriptPacket.InventoryBlock.Name = Utils.stringToBytesWithTrailingNullByte(item.Name);
+			ScriptPacket.InventoryBlock.Description = Utils.stringToBytesWithTrailingNullByte(item.Description);
 			ScriptPacket.InventoryBlock.CreationDate = (int)Utils.dateToUnixTime(item.CreationDate);
 			ScriptPacket.InventoryBlock.CRC = ItemCRC(item);
 	
@@ -3883,7 +3883,7 @@ public class InventoryManager {
 					imp.MessageBlock.Offline = 0;
 					imp.MessageBlock.ID = e.getIM().IMSessionID;
 					imp.MessageBlock.Timestamp = 0;
-					imp.MessageBlock.FromAgentName = Utils.stringToBytes(Client.self.getName());
+					imp.MessageBlock.FromAgentName = Utils.stringToBytesWithTrailingNullByte(Client.self.getName());
 					imp.MessageBlock.Message = Utils.EmptyBytes;
 					imp.MessageBlock.ParentEstateID = 0;
 					imp.MessageBlock.RegionID = UUID.Zero;
@@ -4246,7 +4246,7 @@ public class InventoryManager {
 						{
 							InventoryFolder folder = new InventoryFolder(reply.FolderData[i].FolderID);
 							folder.ParentUUID = reply.FolderData[i].ParentID;
-							folder.Name = Utils.bytesToString(reply.FolderData[i].Name);
+							folder.Name = Utils.bytesWithTrailingNullByteToString(reply.FolderData[i].Name);
 							folder.PreferredType = AssetType.get(reply.FolderData[i].Type);
 							folder.OwnerID = reply.AgentData.OwnerID;
 	
@@ -4289,9 +4289,9 @@ public class InventoryManager {
 							item.AssetType = AssetType.get(reply.ItemData[i].Type);
 							item.AssetUUID = reply.ItemData[i].AssetID;
 							item.CreationDate = Utils.unixTimeToDate((long)reply.ItemData[i].CreationDate);
-							item.Description = Utils.bytesToString(reply.ItemData[i].Description);
+							item.Description = Utils.bytesWithTrailingNullByteToString(reply.ItemData[i].Description);
 							item.Flags = reply.ItemData[i].Flags;
-							item.Name = Utils.bytesToString(reply.ItemData[i].Name);
+							item.Name = Utils.bytesWithTrailingNullByteToString(reply.ItemData[i].Name);
 							item.GroupID = reply.ItemData[i].GroupID;
 							item.GroupOwned = reply.ItemData[i].GroupOwned;
 							item.Permissions = new Permissions(
@@ -4433,11 +4433,11 @@ public class InventoryManager {
 				item.AssetUUID = dataBlock.AssetID;
 				item.CreationDate = Utils.unixTimeToDate(dataBlock.CreationDate);
 				item.CreatorID = dataBlock.CreatorID;
-				item.Description = Utils.bytesToString(dataBlock.Description);
+				item.Description = Utils.bytesWithTrailingNullByteToString(dataBlock.Description);
 				item.Flags = dataBlock.Flags;
 				item.GroupID = dataBlock.GroupID;
 				item.GroupOwned = dataBlock.GroupOwned;
-				item.Name = Utils.bytesToString(dataBlock.Name);
+				item.Name = Utils.bytesWithTrailingNullByteToString(dataBlock.Name);
 				item.OwnerID = dataBlock.OwnerID;
 				item.ParentUUID = dataBlock.FolderID;
 				item.Permissions = new Permissions(
@@ -4512,7 +4512,7 @@ public class InventoryManager {
 			for (int i = 0; i < move.InventoryData.length; i++)
 			{
 				// FIXME: Do something here
-				String newName = Utils.bytesToString(move.InventoryData[i].NewName);
+				String newName = Utils.bytesWithTrailingNullByteToString(move.InventoryData[i].NewName);
 	
 				JLogger.warn(String.format(
 						"MoveInventoryItemHandler: Item {0} is moving to Folder {1} with new name \"{2}\". Someone write this function!",
@@ -4538,7 +4538,7 @@ public class InventoryManager {
 						JLogger.warn("Received BulkUpdate for unknown folder: " + dataBlock.FolderID);
 	
 					InventoryFolder folder = new InventoryFolder(dataBlock.FolderID);
-					folder.Name = Utils.bytesToString(dataBlock.Name);
+					folder.Name = Utils.bytesWithTrailingNullByteToString(dataBlock.Name);
 					folder.OwnerID = update.AgentData.AgentID;
 					folder.ParentUUID = dataBlock.ParentID;
 					_Store.put(folder.UUID, folder);
@@ -4562,11 +4562,11 @@ public class InventoryManager {
 					if (dataBlock.AssetID != UUID.Zero) item.AssetUUID = dataBlock.AssetID;
 					item.CreationDate = Utils.unixTimeToDate(dataBlock.CreationDate);
 					item.CreatorID = dataBlock.CreatorID;
-					item.Description = Utils.bytesToString(dataBlock.Description);
+					item.Description = Utils.bytesWithTrailingNullByteToString(dataBlock.Description);
 					item.Flags = dataBlock.Flags;
 					item.GroupID = dataBlock.GroupID;
 					item.GroupOwned = dataBlock.GroupOwned;
-					item.Name = Utils.bytesToString(dataBlock.Name);
+					item.Name = Utils.bytesWithTrailingNullByteToString(dataBlock.Name);
 					item.OwnerID = dataBlock.OwnerID;
 					item.ParentUUID = dataBlock.FolderID;
 					item.Permissions = new Permissions(
@@ -4626,12 +4626,12 @@ public class InventoryManager {
 				item.AssetUUID = dataBlock.AssetID;
 				item.CreationDate = Utils.unixTimeToDate(dataBlock.CreationDate);
 				item.CreatorID = dataBlock.CreatorID;
-				item.Description = Utils.bytesToString(dataBlock.Description);
+				item.Description = Utils.bytesWithTrailingNullByteToString(dataBlock.Description);
 				item.Flags = dataBlock.Flags;
 				item.GroupID = dataBlock.GroupID;
 				item.GroupOwned = dataBlock.GroupOwned;
 				item.InventoryType = InventoryType.get(dataBlock.InvType);
-				item.Name = Utils.bytesToString(dataBlock.Name);
+				item.Name = Utils.bytesWithTrailingNullByteToString(dataBlock.Name);
 				item.OwnerID = dataBlock.OwnerID;
 				item.ParentUUID = dataBlock.FolderID;
 				item.Permissions = new Permissions(
@@ -4666,7 +4666,7 @@ public class InventoryManager {
 				ReplyTaskInventoryPacket reply = (ReplyTaskInventoryPacket)packet;
 	
 				onTaskInventoryReply.raiseEvent(new TaskInventoryReplyEventArgs(reply.InventoryData.TaskID, reply.InventoryData.Serial,
-						Utils.bytesToString(reply.InventoryData.Filename)));
+						Utils.bytesWithTrailingNullByteToString(reply.InventoryData.Filename)));
 			}
 		}
 	

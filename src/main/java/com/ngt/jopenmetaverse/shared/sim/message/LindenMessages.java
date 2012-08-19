@@ -3076,7 +3076,7 @@ public class LindenMessages
 				FromAgentID = map.get("from_id").asUUID();
 				FromAgentName = map.get("from_name").asString();
 				IMSessionID = map.get("session_id").asUUID();
-				BinaryBucket = Utils.stringToBytes(map.get("session_name").asString());
+				BinaryBucket = Utils.stringToBytesWithTrailingNullByte(map.get("session_name").asString());
 				Voice = true;
 			}
 			else

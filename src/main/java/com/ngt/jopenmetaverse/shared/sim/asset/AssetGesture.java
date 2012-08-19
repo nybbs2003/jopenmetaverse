@@ -329,7 +329,7 @@ public class AssetGesture extends Asset{
 			switch (step.getGestureStepType())
 			{
 			case EOF:
-				AssetData = Utils.stringToBytes(sb.toString());
+				AssetData = Utils.stringToBytesWithTrailingNullByte(sb.toString());
 				//exit the for loop
 				exitForLoop = true;
 				break;
@@ -395,7 +395,7 @@ public class AssetGesture extends Asset{
 	{
 		try
 		{
-			String[] lines = Utils.bytesToString(AssetData).split("\n");
+			String[] lines = Utils.bytesWithTrailingNullByteToString(AssetData).split("\n");
 			Sequence = new ArrayList<GestureStep>();
 
 			int i = 0;

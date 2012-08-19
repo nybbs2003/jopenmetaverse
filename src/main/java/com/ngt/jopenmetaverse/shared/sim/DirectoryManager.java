@@ -1088,7 +1088,7 @@ public class DirectoryManager {
 		query.QueryData.Category = (long)category.getIndex();
 		query.QueryData.QueryFlags = (long)queryFlags.getIndex();
 		query.QueryData.QueryID = queryID;
-		query.QueryData.QueryText = Utils.stringToBytes(searchText);
+		query.QueryData.QueryText = Utils.stringToBytesWithTrailingNullByte(searchText);
 
 		Client.network.SendPacket(query);
 
@@ -1147,9 +1147,9 @@ public class DirectoryManager {
 		query.QueryData.QueryFlags = (long)DirFindFlags.getIndex(queryFlags);
 
 		query.QueryData.QueryID = queryID;
-		query.QueryData.QueryText = Utils.stringToBytes(searchText);
+		query.QueryData.QueryText = Utils.stringToBytesWithTrailingNullByte(searchText);
 		query.QueryData.QueryStart = queryStart;
-		query.QueryData.SimName = Utils.stringToBytes("");
+		query.QueryData.SimName = Utils.stringToBytesWithTrailingNullByte("");
 
 		Client.network.SendPacket(query);
 
@@ -1283,7 +1283,7 @@ public class DirectoryManager {
 		find.AgentData.AgentID = Client.self.getAgentID();
 		find.AgentData.SessionID = Client.self.getSessionID();
 		find.QueryData.QueryFlags = DirFindFlags.getIndex(flags);
-		find.QueryData.QueryText = Utils.stringToBytes(searchText);
+		find.QueryData.QueryText = Utils.stringToBytesWithTrailingNullByte(searchText);
 		find.QueryData.QueryID = UUID.Random();
 		find.QueryData.QueryStart = queryStart;
 
@@ -1304,7 +1304,7 @@ public class DirectoryManager {
 		find.AgentData.AgentID = Client.self.getAgentID();
 		find.AgentData.SessionID = Client.self.getSessionID();
 		find.QueryData.QueryFlags = (long)DirFindFlags.People.getIndex();
-		find.QueryData.QueryText = Utils.stringToBytes(searchText);
+		find.QueryData.QueryText = Utils.stringToBytesWithTrailingNullByte(searchText);
 		find.QueryData.QueryID = UUID.Random();
 		find.QueryData.QueryStart = queryStart;
 
@@ -1367,10 +1367,10 @@ public class DirectoryManager {
 
 		find.TransactionData.TransactionID = transactionID;
 
-		find.QueryData.QueryText = Utils.stringToBytes(searchText);
+		find.QueryData.QueryText = Utils.stringToBytesWithTrailingNullByte(searchText);
 		find.QueryData.QueryFlags = DirFindFlags.getIndex(findFlags);
 		find.QueryData.Category = searchCategory.getIndex();
-		find.QueryData.SimName = Utils.stringToBytes(simulatorName);
+		find.QueryData.SimName = Utils.stringToBytesWithTrailingNullByte(simulatorName);
 
 		Client.network.SendPacket(find);
 		return transactionID;
@@ -1417,7 +1417,7 @@ public class DirectoryManager {
 		UUID queryID = UUID.Random();
 
 		find.QueryData.QueryID = queryID;
-		find.QueryData.QueryText = Utils.stringToBytes(eventDay + "|" + (int)category.getIndex() + "|" + searchText);
+		find.QueryData.QueryText = Utils.stringToBytesWithTrailingNullByte(eventDay + "|" + (int)category.getIndex() + "|" + searchText);
 		find.QueryData.QueryFlags = (long)DirFindFlags.getIndex(queryFlags);
 		find.QueryData.QueryStart = (int)queryStart;
 
@@ -1491,7 +1491,7 @@ public class DirectoryManager {
 				classified.ExpirationDate = Utils.unixTimeToDate(block.ExpirationDate);
 				classified.Flags = ClassifiedFlags.get(block.ClassifiedFlags);
 				classified.ID = block.ClassifiedID;
-				classified.Name = Utils.bytesToString(block.Name);
+				classified.Name = Utils.bytesWithTrailingNullByteToString(block.Name);
 				classified.Price = block.PriceForListing;
 
 				classifieds.add(classified);
@@ -1517,7 +1517,7 @@ public class DirectoryManager {
 
 				dirParcel.ActualArea = block.ActualArea;
 				dirParcel.ID = block.ParcelID;
-				dirParcel.Name = Utils.bytesToString(block.Name);
+				dirParcel.Name = Utils.bytesWithTrailingNullByteToString(block.Name);
 				dirParcel.SalePrice = block.SalePrice;
 				dirParcel.Auction = block.Auction;
 				dirParcel.ForSale = block.ForSale;
@@ -1571,8 +1571,8 @@ public class DirectoryManager {
 			{
 				AgentSearchData searchData = new AgentSearchData();
 				searchData.Online = reply.Online;
-				searchData.FirstName = Utils.bytesToString(reply.FirstName);
-				searchData.LastName = Utils.bytesToString(reply.LastName);
+				searchData.FirstName = Utils.bytesWithTrailingNullByteToString(reply.FirstName);
+				searchData.LastName = Utils.bytesWithTrailingNullByteToString(reply.LastName);
 				searchData.AgentID = reply.AgentID;
 				matches.add(searchData);
 			}
@@ -1595,7 +1595,7 @@ public class DirectoryManager {
 			{
 				GroupSearchData groupsData = new GroupSearchData();
 				groupsData.GroupID = reply.GroupID;
-				groupsData.GroupName = Utils.bytesToString(reply.GroupName);
+				groupsData.GroupName = Utils.bytesWithTrailingNullByteToString(reply.GroupName);
 				groupsData.Members = reply.Members;
 				matches.add(groupsData);
 			}
@@ -1654,15 +1654,15 @@ public class DirectoryManager {
 			{
 				PlacesSearchData place = new PlacesSearchData();
 				place.OwnerID = block.OwnerID;
-				place.Name = Utils.bytesToString(block.Name);
-				place.Desc = Utils.bytesToString(block.Desc);
+				place.Name = Utils.bytesWithTrailingNullByteToString(block.Name);
+				place.Desc = Utils.bytesWithTrailingNullByteToString(block.Desc);
 				place.ActualArea = block.ActualArea;
 				place.BillableArea = block.BillableArea;
 				place.Flags = PlacesFlags.get(block.Flags);
 				place.GlobalX = block.GlobalX;
 				place.GlobalY = block.GlobalY;
 				place.GlobalZ = block.GlobalZ;
-				place.SimName = Utils.bytesToString(block.SimName);
+				place.SimName = Utils.bytesWithTrailingNullByteToString(block.SimName);
 				place.SnapshotID = block.SnapshotID;
 				place.Dwell = block.Dwell;
 				place.Price = block.Price;
@@ -1689,9 +1689,9 @@ public class DirectoryManager {
 			{
 				EventsSearchData eventsData = new EventsSearchData();
 				eventsData.Owner = reply.OwnerID;
-				eventsData.Name = Utils.bytesToString(reply.Name);
+				eventsData.Name = Utils.bytesWithTrailingNullByteToString(reply.Name);
 				eventsData.ID = reply.EventID;
-				eventsData.Date = Utils.bytesToString(reply.Date);
+				eventsData.Date = Utils.bytesWithTrailingNullByteToString(reply.Date);
 				eventsData.Time = reply.UnixTime;
 				eventsData.Flags = EventFlags.get((int)reply.EventFlags);
 				matches.add(eventsData);
@@ -1712,17 +1712,17 @@ public class DirectoryManager {
 			EventInfoReplyPacket eventReply = (EventInfoReplyPacket)packet;
 			EventInfo evinfo = new EventInfo();
 			evinfo.ID = eventReply.EventData.EventID;
-			evinfo.Name = Utils.bytesToString(eventReply.EventData.Name);
-			evinfo.Desc = Utils.bytesToString(eventReply.EventData.Desc);
+			evinfo.Name = Utils.bytesWithTrailingNullByteToString(eventReply.EventData.Name);
+			evinfo.Desc = Utils.bytesWithTrailingNullByteToString(eventReply.EventData.Desc);
 			evinfo.Amount = eventReply.EventData.Amount;
 			evinfo.Category = EventCategories.get((int)Utils.bytesToUInt(eventReply.EventData.Category));
 			evinfo.Cover = eventReply.EventData.Cover;
-			evinfo.Creator = new UUID(Utils.bytesToString(eventReply.EventData.Creator));
-			evinfo.Date = Utils.bytesToString(eventReply.EventData.Date);
+			evinfo.Creator = new UUID(Utils.bytesWithTrailingNullByteToString(eventReply.EventData.Creator));
+			evinfo.Date = Utils.bytesWithTrailingNullByteToString(eventReply.EventData.Date);
 			evinfo.DateUTC = eventReply.EventData.DateUTC;
 			evinfo.Duration = eventReply.EventData.Duration;
 			evinfo.Flags = EventFlags.get((int)eventReply.EventData.EventFlags);
-			evinfo.SimName = Utils.bytesToString(eventReply.EventData.SimName);
+			evinfo.SimName = Utils.bytesWithTrailingNullByteToString(eventReply.EventData.SimName);
 			evinfo.GlobalPos = eventReply.EventData.GlobalPos;
 
 			OnEventInfo.raiseEvent(new EventInfoReplyEventArgs(evinfo));
@@ -1745,7 +1745,7 @@ public class DirectoryManager {
 				DirectoryParcel p = new DirectoryParcel();
 
 				p.ID = reply.QueryReplies[i].ParcelID;
-				p.Name = Utils.bytesToString(reply.QueryReplies[i].Name);
+				p.Name = Utils.bytesWithTrailingNullByteToString(reply.QueryReplies[i].Name);
 				p.Dwell = reply.QueryReplies[i].Dwell;
 				p.Auction = reply.QueryReplies[i].Auction;
 				p.ForSale = reply.QueryReplies[i].ForSale;

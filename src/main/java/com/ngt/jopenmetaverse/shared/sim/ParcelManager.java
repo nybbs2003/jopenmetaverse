@@ -829,14 +829,14 @@ public class ParcelManager {
 	
 	                request.ParcelData.AuthBuyerID = this.AuthBuyerID;
 	                request.ParcelData.Category = (byte)this.Category.getIndex();
-	                request.ParcelData.Desc = Utils.stringToBytes(this.Desc);
+	                request.ParcelData.Desc = Utils.stringToBytesWithTrailingNullByte(this.Desc);
 	                request.ParcelData.GroupID = this.GroupID;
 	                request.ParcelData.LandingType = (byte)this.Landing.getIndex();
 	                request.ParcelData.MediaAutoScale = (this.Media.MediaAutoScale) ? (byte)0x1 : (byte)0x0;
 	                request.ParcelData.MediaID = this.Media.MediaID;
-	                request.ParcelData.MediaURL = Utils.stringToBytes(this.Media.MediaURL.toString());
-	                request.ParcelData.MusicURL = Utils.stringToBytes(this.MusicURL.toString());
-	                request.ParcelData.Name = Utils.stringToBytes(this.Name);
+	                request.ParcelData.MediaURL = Utils.stringToBytesWithTrailingNullByte(this.Media.MediaURL.toString());
+	                request.ParcelData.MusicURL = Utils.stringToBytesWithTrailingNullByte(this.MusicURL.toString());
+	                request.ParcelData.Name = Utils.stringToBytesWithTrailingNullByte(this.Name);
 	                if (wantReply) request.ParcelData.Flags = 1;
 	                request.ParcelData.ParcelFlags = ParcelFlags.getIndex(this.Flags);
 	                request.ParcelData.PassHours = this.PassHours;

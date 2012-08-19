@@ -647,7 +647,7 @@ public class GridManager {
 		request.AgentData.Flags = layer.getIndex();
 		request.AgentData.EstateID = 0; // Filled in on the sim
 		request.AgentData.Godlike = false; // Filled in on the sim
-		request.NameData.Name = Utils.stringToBytes(regionName);
+		request.NameData.Name = Utils.stringToBytesWithTrailingNullByte(regionName);
 
 		Client.network.SendPacket(request);
 	}
@@ -902,7 +902,7 @@ public class GridManager {
 
 				region.X = block.X;
 				region.Y = block.Y;
-				region.Name = Utils.bytesToString(block.Name);
+				region.Name = Utils.bytesWithTrailingNullByteToString(block.Name);
 				// RegionFlags seems to always be zero here?
 				region.RegionFlags = RegionFlags.get((int)block.RegionFlags);
 				region.WaterHeight = block.WaterHeight;
@@ -938,7 +938,7 @@ public class GridManager {
 
 			for (int i = 0; i < reply.Data.length; i++)
 			{
-				String name = Utils.bytesToString(reply.Data[i].Name);
+				String name = Utils.bytesWithTrailingNullByteToString(reply.Data[i].Name);
 
 				switch (type)
 				{
@@ -1004,7 +1004,7 @@ public class GridManager {
 					MapAdultEvent adultEvent = new MapAdultEvent();
 					adultEvent.GlobalX = reply.Data[i].X;
 					adultEvent.GlobalY = reply.Data[i].Y;
-					adultEvent.Description = Utils.bytesToString(reply.Data[i].Name);
+					adultEvent.Description = Utils.bytesWithTrailingNullByteToString(reply.Data[i].Name);
 					adultEvent.Flags = DirectoryManager.EventFlags.get(reply.Data[i].Extra2);
 					items.add(adultEvent);
 					break;

@@ -1932,7 +1932,7 @@ public class NetworkManager {
 		e.getSimulator().ID = handshake.RegionInfo.CacheID;
 
 		simulator.IsEstateManager = handshake.RegionInfo.IsEstateManager;
-		simulator.Name = Utils.bytesToString(handshake.RegionInfo.SimName);
+		simulator.Name = Utils.bytesWithTrailingNullByteToString(handshake.RegionInfo.SimName);
 		simulator.SimOwner = handshake.RegionInfo.SimOwner;
 		simulator.TerrainBase0 = handshake.RegionInfo.TerrainBase0;
 		simulator.TerrainBase1 = handshake.RegionInfo.TerrainBase1;
@@ -1956,11 +1956,11 @@ public class NetworkManager {
 		simulator.Access = SimAccess.get((short)Utils.ubyteToInt(handshake.RegionInfo.SimAccess));
 
 		simulator.RegionID = handshake.RegionInfo2.RegionID;
-		simulator.ColoLocation = Utils.bytesToString(handshake.RegionInfo3.ColoName);
+		simulator.ColoLocation = Utils.bytesWithTrailingNullByteToString(handshake.RegionInfo3.ColoName);
 		simulator.CPUClass = handshake.RegionInfo3.CPUClassID;
 		simulator.CPURatio = handshake.RegionInfo3.CPURatio;
-		simulator.ProductName = Utils.bytesToString(handshake.RegionInfo3.ProductName);
-		simulator.ProductSku = Utils.bytesToString(handshake.RegionInfo3.ProductSKU);
+		simulator.ProductName = Utils.bytesWithTrailingNullByteToString(handshake.RegionInfo3.ProductName);
+		simulator.ProductSku = Utils.bytesWithTrailingNullByteToString(handshake.RegionInfo3.ProductSKU);
 
 		// Send a RegionHandshakeReply
 		RegionHandshakeReplyPacket reply = new RegionHandshakeReplyPacket();
@@ -2012,7 +2012,7 @@ public class NetworkManager {
 	/// <param name="e">The EventArgs object containing the packet data</param>
 	protected void KickUserHandler(Object sender, PacketReceivedEventArgs e) throws UnsupportedEncodingException
 	{
-		String message = Utils.bytesToString(((KickUserPacket)e.getPacket()).UserInfo.Reason);
+		String message = Utils.bytesWithTrailingNullByteToString(((KickUserPacket)e.getPacket()).UserInfo.Reason);
 
 		// Shutdown the network layer
 		Shutdown(DisconnectType.ServerInitiated, message);

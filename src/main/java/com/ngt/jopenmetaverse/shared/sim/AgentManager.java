@@ -3028,7 +3028,7 @@ public class AgentManager {
 		chat.AgentData.AgentID = this.id;
 		chat.AgentData.SessionID = Client.self.getSessionID();
 		chat.ChatData.Channel = channel;
-		chat.ChatData.Message = Utils.stringToBytes(message);
+		chat.ChatData.Message = Utils.stringToBytesWithTrailingNullByte(message);
 		chat.ChatData.Type = (byte)type.getIndex();
 
 		Client.network.SendPacket(chat);
@@ -3126,10 +3126,10 @@ public class AgentManager {
 				im.AgentData.SessionID = Client.self.getSessionID();
 
 				im.MessageBlock.Dialog = (byte)dialog.getIndex();
-				im.MessageBlock.FromAgentName = Utils.stringToBytes(fromName);
+				im.MessageBlock.FromAgentName = Utils.stringToBytesWithTrailingNullByte(fromName);
 				im.MessageBlock.FromGroup = false;
 				im.MessageBlock.ID = imSessionID;
-				im.MessageBlock.Message = Utils.stringToBytes(message);
+				im.MessageBlock.Message = Utils.stringToBytesWithTrailingNullByte(message);
 				im.MessageBlock.Offline = (byte)offline.getIndex();
 				im.MessageBlock.ToAgentID = target;
 
@@ -3179,15 +3179,15 @@ public class AgentManager {
 				im.AgentData.AgentID = Client.self.getAgentID();
 				im.AgentData.SessionID = Client.self.getSessionID();
 				im.MessageBlock.Dialog = (byte)InstantMessageDialog.SessionSend.getIndex();
-				im.MessageBlock.FromAgentName = Utils.stringToBytes(fromName);
+				im.MessageBlock.FromAgentName = Utils.stringToBytesWithTrailingNullByte(fromName);
 				im.MessageBlock.FromGroup = false;
-				im.MessageBlock.Message = Utils.stringToBytes(message);
+				im.MessageBlock.Message = Utils.stringToBytesWithTrailingNullByte(message);
 				im.MessageBlock.Offline = 0;
 				im.MessageBlock.ID = groupID;
 				im.MessageBlock.ToAgentID = groupID;
 				im.MessageBlock.Position = Vector3.Zero;
 				im.MessageBlock.RegionID = UUID.Zero;
-				im.MessageBlock.BinaryBucket = Utils.stringToBytes("\0");
+				im.MessageBlock.BinaryBucket = Utils.stringToBytesWithTrailingNullByte("\0");
 
 				Client.network.SendPacket(im);
 			}
@@ -3209,7 +3209,7 @@ public class AgentManager {
 		im.AgentData.AgentID = Client.self.getAgentID();
 		im.AgentData.SessionID = Client.self.getSessionID();
 		im.MessageBlock.Dialog = (byte)InstantMessageDialog.SessionGroupStart.getIndex();
-		im.MessageBlock.FromAgentName = Utils.stringToBytes(Client.self.getName());
+		im.MessageBlock.FromAgentName = Utils.stringToBytesWithTrailingNullByte(Client.self.getName());
 		im.MessageBlock.FromGroup = false;
 		im.MessageBlock.Message = Utils.EmptyBytes;
 		im.MessageBlock.ParentEstateID = 0;
@@ -3235,7 +3235,7 @@ public class AgentManager {
 		im.AgentData.AgentID = Client.self.getAgentID();
 		im.AgentData.SessionID = Client.self.getSessionID();
 		im.MessageBlock.Dialog = (byte)InstantMessageDialog.SessionDrop.getIndex();
-		im.MessageBlock.FromAgentName = Utils.stringToBytes(Client.self.getName());
+		im.MessageBlock.FromAgentName = Utils.stringToBytesWithTrailingNullByte(Client.self.getName());
 		im.MessageBlock.FromGroup = false;
 		im.MessageBlock.Message = Utils.EmptyBytes;
 		im.MessageBlock.Offline = 0;
@@ -3270,7 +3270,7 @@ public class AgentManager {
 		reply.AgentData.SessionID = Client.self.getSessionID();
 
 		reply.Data.ButtonIndex = buttonIndex;
-		reply.Data.ButtonLabel = Utils.stringToBytes(buttonlabel);
+		reply.Data.ButtonLabel = Utils.stringToBytesWithTrailingNullByte(buttonlabel);
 		reply.Data.ChatChannel = channel;
 		reply.Data.ObjectID = objectID;
 
@@ -3669,14 +3669,14 @@ public class AgentManager {
 		autopilot.AgentData.SessionID = Client.self.getSessionID();
 		autopilot.AgentData.TransactionID = UUID.Zero;
 		autopilot.MethodData.Invoice = UUID.Zero;
-		autopilot.MethodData.Method = Utils.stringToBytes("autopilot");
+		autopilot.MethodData.Method = Utils.stringToBytesWithTrailingNullByte("autopilot");
 		autopilot.ParamList = new GenericMessagePacket.ParamListBlock[3];
 		autopilot.ParamList[0] = new GenericMessagePacket.ParamListBlock();
-		autopilot.ParamList[0].Parameter = Utils.stringToBytes(globalX.toString());
+		autopilot.ParamList[0].Parameter = Utils.stringToBytesWithTrailingNullByte(globalX.toString());
 		autopilot.ParamList[1] = new GenericMessagePacket.ParamListBlock();
-		autopilot.ParamList[1].Parameter = Utils.stringToBytes(globalY.toString());
+		autopilot.ParamList[1].Parameter = Utils.stringToBytesWithTrailingNullByte(globalY.toString());
 		autopilot.ParamList[2] = new GenericMessagePacket.ParamListBlock();
-		autopilot.ParamList[2].Parameter = Utils.stringToBytes(Float.toString(z));
+		autopilot.ParamList[2].Parameter = Utils.stringToBytesWithTrailingNullByte(Float.toString(z));
 
 		Client.network.SendPacket(autopilot);
 	}
@@ -3975,7 +3975,7 @@ public class AgentManager {
 		MoneyTransferRequestPacket money = new MoneyTransferRequestPacket();
 		money.AgentData.AgentID = this.id;
 		money.AgentData.SessionID = Client.self.getSessionID();
-		money.MoneyData.Description = Utils.stringToBytes(description);
+		money.MoneyData.Description = Utils.stringToBytesWithTrailingNullByte(description);
 		money.MoneyData.DestID = target;
 		money.MoneyData.SourceID = this.id;
 		money.MoneyData.TransactionType = (int)type.getIndex();
@@ -4439,7 +4439,7 @@ public class AgentManager {
 		p.AgentData.AgentID = Client.self.id;
 		p.AgentData.SessionID = Client.self.getSessionID();
 		p.Info.LureType = 0;
-		p.Info.Message = Utils.stringToBytes(message);
+		p.Info.Message = Utils.stringToBytesWithTrailingNullByte(message);
 		p.TargetData = new StartLurePacket.TargetDataBlock[] { new StartLurePacket.TargetDataBlock() };
 		p.TargetData[0].TargetID = targetID;
 		Client.network.SendPacket(p);
@@ -4487,13 +4487,13 @@ public class AgentManager {
 		AvatarPropertiesUpdatePacket apup = new AvatarPropertiesUpdatePacket();
 		apup.AgentData.AgentID = id;
 		apup.AgentData.SessionID = sessionID;
-		apup.PropertiesData.AboutText = Utils.stringToBytes(profile.AboutText);
+		apup.PropertiesData.AboutText = Utils.stringToBytesWithTrailingNullByte(profile.AboutText);
 		apup.PropertiesData.AllowPublish = profile.isAllowPublish();
-		apup.PropertiesData.FLAboutText = Utils.stringToBytes(profile.FirstLifeText);
+		apup.PropertiesData.FLAboutText = Utils.stringToBytesWithTrailingNullByte(profile.FirstLifeText);
 		apup.PropertiesData.FLImageID = profile.FirstLifeImage;
 		apup.PropertiesData.ImageID = profile.ProfileImage;
 		apup.PropertiesData.MaturePublish = profile.getMaturePublish();
-		apup.PropertiesData.ProfileURL = Utils.stringToBytes(profile.ProfileURL);
+		apup.PropertiesData.ProfileURL = Utils.stringToBytesWithTrailingNullByte(profile.ProfileURL);
 
 		Client.network.SendPacket(apup);
 	}
@@ -4507,11 +4507,11 @@ public class AgentManager {
 		AvatarInterestsUpdatePacket aiup = new AvatarInterestsUpdatePacket();
 		aiup.AgentData.AgentID = id;
 		aiup.AgentData.SessionID = sessionID;
-		aiup.PropertiesData.LanguagesText = Utils.stringToBytes(interests.LanguagesText);
+		aiup.PropertiesData.LanguagesText = Utils.stringToBytesWithTrailingNullByte(interests.LanguagesText);
 		aiup.PropertiesData.SkillsMask = interests.SkillsMask;
-		aiup.PropertiesData.SkillsText = Utils.stringToBytes(interests.SkillsText);
+		aiup.PropertiesData.SkillsText = Utils.stringToBytesWithTrailingNullByte(interests.SkillsText);
 		aiup.PropertiesData.WantToMask = interests.WantToMask;
-		aiup.PropertiesData.WantToText = Utils.stringToBytes(interests.WantToText);
+		aiup.PropertiesData.WantToText = Utils.stringToBytesWithTrailingNullByte(interests.WantToText);
 
 		Client.network.SendPacket(aiup);
 	}
@@ -4574,7 +4574,7 @@ public class AgentManager {
 
 		p.MuteData.MuteType = (int)type.getIndex();
 		p.MuteData.MuteID = id;
-		p.MuteData.MuteName = Utils.stringToBytes(name);
+		p.MuteData.MuteName = Utils.stringToBytesWithTrailingNullByte(name);
 		p.MuteData.MuteFlags = (long)flags.getIndex();
 
 		Client.network.SendPacket(p);
@@ -4604,7 +4604,7 @@ public class AgentManager {
 		p.AgentData.SessionID = Client.self.getSessionID();
 
 		p.MuteData.MuteID = id;
-		p.MuteData.MuteName = Utils.stringToBytes(name);
+		p.MuteData.MuteName = Utils.stringToBytesWithTrailingNullByte(name);
 
 		Client.network.SendPacket(p);
 
@@ -4633,7 +4633,7 @@ public class AgentManager {
 		s.StartLocationData = new SetStartLocationRequestPacket.StartLocationDataBlock();
 		s.StartLocationData.LocationPos = Client.self.getSimPosition();
 		s.StartLocationData.LocationID = 1;
-		s.StartLocationData.SimName = Utils.stringToBytes("");
+		s.StartLocationData.SimName = Utils.stringToBytesWithTrailingNullByte("");
 		s.StartLocationData.LocationLookAt = Movement.Camera.getAtAxis();
 		Client.network.SendPacket(s);
 	}
@@ -4705,7 +4705,7 @@ public class AgentManager {
 		request.Requester.RequestID = requestID;
 		request.Requester.SearchDir = Quaternion.Identity; // TODO: this needs to be tested
 		request.Requester.SearchID = searchID;
-		request.Requester.SearchName = Utils.stringToBytes(name);
+		request.Requester.SearchName = Utils.stringToBytesWithTrailingNullByte(name);
 		request.Requester.SearchPos = Vector3.Zero;
 		request.Requester.SearchRegions = 0; // TODO: ?
 		request.Requester.SourceID = Client.self.getAgentID();
@@ -4730,11 +4730,11 @@ public class AgentManager {
 		pick.AgentData.AgentID = Client.self.getAgentID();
 		pick.AgentData.SessionID = Client.self.getSessionID();
 		pick.Data.PickID = pickID;
-		pick.Data.Desc = Utils.stringToBytes(description);
+		pick.Data.Desc = Utils.stringToBytesWithTrailingNullByte(description);
 		pick.Data.CreatorID = Client.self.getAgentID();
 		pick.Data.TopPick = topPick;
 		pick.Data.ParcelID = parcelID;
-		pick.Data.Name = Utils.stringToBytes(name);
+		pick.Data.Name = Utils.stringToBytesWithTrailingNullByte(name);
 		pick.Data.SnapshotID = textureID;
 		pick.Data.PosGlobal = globalPosition;
 		pick.Data.SortOrder = 0;
@@ -4790,8 +4790,8 @@ public class AgentManager {
 		// TODO: verify/fix ^
 
 		classified.Data.PriceForListing = price;
-		classified.Data.Name = Utils.stringToBytes(name);
-		classified.Data.Desc = Utils.stringToBytes(desc);
+		classified.Data.Name = Utils.stringToBytesWithTrailingNullByte(name);
+		classified.Data.Desc = Utils.stringToBytesWithTrailingNullByte(desc);
 		Client.network.SendPacket(classified);
 	}
 
@@ -4955,7 +4955,7 @@ public class AgentManager {
 			{
 				InstantMessage message = new InstantMessage();
 				message.FromAgentID = im.AgentData.AgentID;
-				message.FromAgentName = Utils.bytesToString(im.MessageBlock.FromAgentName);
+				message.FromAgentName = Utils.bytesWithTrailingNullByteToString(im.MessageBlock.FromAgentName);
 				message.ToAgentID = im.MessageBlock.ToAgentID;
 				message.ParentEstateID = im.MessageBlock.ParentEstateID;
 				message.RegionID = im.MessageBlock.RegionID;
@@ -4964,7 +4964,7 @@ public class AgentManager {
 				message.GroupIM = im.MessageBlock.FromGroup;
 				message.IMSessionID = im.MessageBlock.ID;
 				message.Timestamp = new Date(im.MessageBlock.Timestamp);
-				message.Message = Utils.bytesToString(im.MessageBlock.Message);
+				message.Message = Utils.bytesWithTrailingNullByteToString(im.MessageBlock.Message);
 				message.Offline = InstantMessageOnline.get((int)im.MessageBlock.Offline);
 				message.BinaryBucket = im.MessageBlock.BinaryBucket;
 
@@ -4987,11 +4987,11 @@ public class AgentManager {
 
 			ChatFromSimulatorPacket chat = (ChatFromSimulatorPacket)packet;
 
-			onChatFromSimulator.raiseEvent(new ChatEventArgs(e.getSimulator(), Utils.bytesToString(chat.ChatData.Message),
+			onChatFromSimulator.raiseEvent(new ChatEventArgs(e.getSimulator(), Utils.bytesWithTrailingNullByteToString(chat.ChatData.Message),
 					ChatAudibleLevel.get(chat.ChatData.Audible),
 					ChatType.get(chat.ChatData.ChatType),
 					ChatSourceType.get(chat.ChatData.SourceType),
-					Utils.bytesToString(chat.ChatData.FromName),
+					Utils.bytesWithTrailingNullByteToString(chat.ChatData.FromName),
 					chat.ChatData.SourceID,
 					chat.ChatData.OwnerID,
 					chat.ChatData.Position));
@@ -5014,7 +5014,7 @@ public class AgentManager {
 
 			for (ScriptDialogPacket.ButtonsBlock button : dialog.Buttons)
 			{
-				buttons.add(Utils.bytesToString(button.ButtonLabel));
+				buttons.add(Utils.bytesWithTrailingNullByteToString(button.ButtonLabel));
 			}
 
 			UUID ownerID = UUID.Zero;
@@ -5024,12 +5024,12 @@ public class AgentManager {
 				ownerID = dialog.OwnerData[0].OwnerID;
 			}
 
-			onScriptDialog.raiseEvent(new ScriptDialogEventArgs(Utils.bytesToString(dialog.Data.Message),
-					Utils.bytesToString(dialog.Data.ObjectName),
+			onScriptDialog.raiseEvent(new ScriptDialogEventArgs(Utils.bytesWithTrailingNullByteToString(dialog.Data.Message),
+					Utils.bytesWithTrailingNullByteToString(dialog.Data.ObjectName),
 					dialog.Data.ImageID,
 					dialog.Data.ObjectID,
-					Utils.bytesToString(dialog.Data.FirstName),
-					Utils.bytesToString(dialog.Data.LastName),
+					Utils.bytesWithTrailingNullByteToString(dialog.Data.FirstName),
+					Utils.bytesWithTrailingNullByteToString(dialog.Data.LastName),
 					dialog.Data.ChatChannel,
 					buttons,
 					ownerID));
@@ -5053,8 +5053,8 @@ public class AgentManager {
 			onScriptQuestion.raiseEvent(new ScriptQuestionEventArgs(simulator,
 					question.Data.TaskID,
 					question.Data.ItemID,
-					Utils.bytesToString(question.Data.ObjectName),
-					Utils.bytesToString(question.Data.ObjectOwner),
+					Utils.bytesWithTrailingNullByteToString(question.Data.ObjectName),
+					Utils.bytesWithTrailingNullByteToString(question.Data.ObjectOwner),
 					ScriptPermission.get(question.Data.Questions)));
 		}
 	}
@@ -5095,12 +5095,12 @@ public class AgentManager {
 			LoadURLPacket loadURL = (LoadURLPacket)packet;
 
 			onLoadURL.raiseEvent(new LoadUrlEventArgs(
-					Utils.bytesToString(loadURL.Data.ObjectName),
+					Utils.bytesWithTrailingNullByteToString(loadURL.Data.ObjectName),
 					loadURL.Data.ObjectID,
 					loadURL.Data.OwnerID,
 					loadURL.Data.OwnerIsGroup,
-					Utils.bytesToString(loadURL.Data.Message),
-					Utils.bytesToString(loadURL.Data.URL)
+					Utils.bytesWithTrailingNullByteToString(loadURL.Data.Message),
+					Utils.bytesWithTrailingNullByteToString(loadURL.Data.URL)
 					));
 		}
 	}
@@ -5121,7 +5121,7 @@ public class AgentManager {
 		relativePosition = movement.Data.Position;
 		Movement.Camera.LookDirection(movement.Data.LookAt);
 		simulator.Handle = movement.Data.RegionHandle;
-		simulator.SimVersion = Utils.bytesToString(movement.SimData.ChannelVersion);
+		simulator.SimVersion = Utils.bytesWithTrailingNullByteToString(movement.SimData.ChannelVersion);
 		simulator.AgentMovementComplete = true;
 	}
 
@@ -5146,15 +5146,15 @@ public class AgentManager {
 
 		if (p.AgentData.AgentID.equals(simulator.Client.self.getAgentID()))
 		{
-			firstName = Utils.bytesToString(p.AgentData.FirstName);
-			lastName = Utils.bytesToString(p.AgentData.LastName);
+			firstName = Utils.bytesWithTrailingNullByteToString(p.AgentData.FirstName);
+			lastName = Utils.bytesWithTrailingNullByteToString(p.AgentData.LastName);
 			activeGroup = p.AgentData.ActiveGroupID;
 			activeGroupPowers = GroupPowers.get(p.AgentData.GroupPowers.longValue());
 
 			if (onAgentDataReply != null)
 			{
-				String groupTitle = Utils.bytesToString(p.AgentData.GroupTitle);
-				String groupName = Utils.bytesToString(p.AgentData.GroupName);
+				String groupTitle = Utils.bytesWithTrailingNullByteToString(p.AgentData.GroupTitle);
+				String groupName = Utils.bytesWithTrailingNullByteToString(p.AgentData.GroupName);
 
 				onAgentDataReply.raiseEvent(new AgentDataReplyEventArgs(firstName, lastName, activeGroup, groupTitle, activeGroupPowers, groupName));
 			}
@@ -5187,14 +5187,14 @@ public class AgentManager {
 				transactionInfo.DestID = reply.TransactionInfo.DestID;
 				transactionInfo.IsDestGroup = reply.TransactionInfo.IsDestGroup;
 				transactionInfo.Amount = reply.TransactionInfo.Amount;
-				transactionInfo.ItemDescription =  Utils.bytesToString(reply.TransactionInfo.ItemDescription);
+				transactionInfo.ItemDescription =  Utils.bytesWithTrailingNullByteToString(reply.TransactionInfo.ItemDescription);
 
 				onMoneyBalanceReply.raiseEvent(new MoneyBalanceReplyEventArgs(reply.MoneyData.TransactionID,
 						reply.MoneyData.TransactionSuccess,
 						reply.MoneyData.MoneyBalance,
 						reply.MoneyData.SquareMetersCredit,
 						reply.MoneyData.SquareMetersCommitted,
-						Utils.bytesToString(reply.MoneyData.Description),
+						Utils.bytesWithTrailingNullByteToString(reply.MoneyData.Description),
 						transactionInfo));
 			}
 		}
@@ -5257,7 +5257,7 @@ public class AgentManager {
 
 		TeleportFailedPacket failedPacket = new TeleportFailedPacket();
 		failedPacket.Info.AgentID = msg.AgentID;
-		failedPacket.Info.Reason = Utils.stringToBytes(msg.Reason);
+		failedPacket.Info.Reason = Utils.stringToBytesWithTrailingNullByte(msg.Reason);
 
 		TeleportHandler(this, new PacketReceivedEventArgs(failedPacket, simulator));
 	}
@@ -5276,7 +5276,7 @@ public class AgentManager {
 		p.Info.AgentID = msg.AgentID;
 		p.Info.LocationID = msg.LocationID;
 		p.Info.RegionHandle = msg.RegionHandle;
-		p.Info.SeedCapability = Utils.stringToBytes(msg.SeedCapability.toString()); // FIXME: Check This
+		p.Info.SeedCapability = Utils.stringToBytesWithTrailingNullByte(msg.SeedCapability.toString()); // FIXME: Check This
 		p.Info.SimAccess = (byte)msg.SimAccess.getIndex();
 		p.Info.SimIP = Utils.IPToUInt(msg.IP);
 		p.Info.SimPort = msg.Port;
@@ -5311,7 +5311,7 @@ public class AgentManager {
 		{
 			TeleportProgressPacket progress = (TeleportProgressPacket)packet;
 
-			teleportMessage = Utils.bytesToString(progress.Info.Message);
+			teleportMessage = Utils.bytesWithTrailingNullByteToString(progress.Info.Message);
 			flags = TeleportFlags.get(progress.Info.TeleportFlags);
 			teleportStat = TeleportStatus.Progress;
 
@@ -5321,7 +5321,7 @@ public class AgentManager {
 		{
 			TeleportFailedPacket failed = (TeleportFailedPacket)packet;
 
-			teleportMessage = Utils.bytesToString(failed.Info.Reason);
+			teleportMessage = Utils.bytesWithTrailingNullByteToString(failed.Info.Reason);
 			teleportStat = TeleportStatus.Failed;
 			finished = true;
 
@@ -5332,7 +5332,7 @@ public class AgentManager {
 			TeleportFinishPacket finish = (TeleportFinishPacket)packet;
 
 			flags = TeleportFlags.get(finish.Info.TeleportFlags);
-			String seedcaps = Utils.bytesToString(finish.Info.SeedCapability);
+			String seedcaps = Utils.bytesWithTrailingNullByteToString(finish.Info.SeedCapability);
 			finished = true;
 
 			JLogger.debug("TeleportFinish received, Flags: " + flags.toString());
@@ -5549,7 +5549,7 @@ public class AgentManager {
 	{
 		Packet packet = e.getPacket();
 		CrossedRegionPacket crossing = (CrossedRegionPacket)packet;
-		String seedCap = Utils.bytesToString(crossing.RegionData.SeedCapability);
+		String seedCap = Utils.bytesWithTrailingNullByteToString(crossing.RegionData.SeedCapability);
 		InetSocketAddress endPoint = new InetSocketAddress(Utils.UIntToIP(crossing.RegionData.SimIP), crossing.RegionData.SimPort);
 
 		JLogger.debug("Crossed in to new region area, attempting to connect to " + endPoint.toString());
@@ -5791,7 +5791,7 @@ public class AgentManager {
 
 			AlertMessagePacket alert = (AlertMessagePacket)packet;
 
-			onAlertMessage.raiseEvent(new AlertMessageEventArgs(Utils.bytesToString(alert.AlertData.Message)));
+			onAlertMessage.raiseEvent(new AlertMessageEventArgs(Utils.bytesWithTrailingNullByteToString(alert.AlertData.Message)));
 		}
 	}
 
@@ -5825,7 +5825,7 @@ public class AgentManager {
 				ScriptSensorReplyPacket.SensedDataBlock block = reply.SensedData[i];
 				ScriptSensorReplyPacket.RequesterBlock requestor = reply.Requester;
 
-				onScriptSensorReply.raiseEvent(new ScriptSensorReplyEventArgs(requestor.SourceID, block.GroupID, Utils.bytesToString(block.Name),
+				onScriptSensorReply.raiseEvent(new ScriptSensorReplyEventArgs(requestor.SourceID, block.GroupID, Utils.bytesWithTrailingNullByteToString(block.Name),
 						block.ObjectID, block.OwnerID, block.Position, block.Range, block.Rotation, ScriptSensorTypeFlags.get(block.Type), block.Velocity));
 			}
 		}
@@ -5863,7 +5863,7 @@ public class AgentManager {
 		//		{
 		//			using (AutoResetEvent gotMuteList = new AutoResetEvent(false))
 		//			{
-		//				String fileName = Utils.bytesToString(packet.MuteData.Filename);
+		//				String fileName = Utils.bytesWithTrailingNullByteToString(packet.MuteData.Filename);
 		//				String muteList = string.Empty;
 		//				ulong xferID = 0;
 		//				byte[] assetData = null;
@@ -5883,7 +5883,7 @@ public class AgentManager {
 		//
 		//				if (gotMuteList.WaitOne(60 * 1000, false))
 		//				{
-		//					muteList = Utils.bytesToString(assetData);
+		//					muteList = Utils.bytesWithTrailingNullByteToString(assetData);
 		//
 		//					synchronized (MuteList.getDictionary())
 		//					{

@@ -1264,10 +1264,10 @@ public class Utils {
 	// / <returns>The decoded String</returns>
 	public static String bytesToString(byte[] bytes)
 			throws UnsupportedEncodingException {
-		if (bytes.length > 0 && bytes[bytes.length - 1] == 0x00)
-			return new String(bytes, 0, bytes.length - 1, "UTF-8");
-		else
-			// return UTF8Encoding.UTF8.GetString(bytes, 0, bytes.length);
+//		if (bytes.length > 0 && bytes[bytes.length - 1] == 0x00)
+//			return new String(bytes, 0, bytes.length - 1, "UTF-8");
+//		else
+//			// return UTF8Encoding.UTF8.GetString(bytes, 0, bytes.length);
 			return new String(bytes, 0, bytes.length, "UTF-8");
 	}
 
@@ -1287,6 +1287,40 @@ public class Utils {
 
 	}
 
+	// / <summary>
+	// / Convert a variable length UTF8 byte array to a String
+	// / </summary>
+	// / <param name="bytes">The UTF8 encoded byte array to convert</param>
+	// / <returns>The decoded String</returns>
+	public static String bytesWithTrailingNullByteToString(byte[] bytes)
+			throws UnsupportedEncodingException {
+//		if (bytes.length > 0 && bytes[bytes.length - 1] == 0x00)
+//			return new String(bytes, 0, bytes.length - 1, "UTF-8");
+//		else
+//			return new String(bytes, 0, bytes.length, "UTF-8");
+		return bytesWithTrailingNullByteToString(bytes, 0, bytes.length, "UTF-8");
+	}
+
+	public static String bytesWithTrailingNullByteToString(byte[] bytes, int index, int count) throws UnsupportedEncodingException {
+		// if (bytes.length > index + count && bytes[index + count - 1] == 0x00)
+		// return UTF8Encoding.UTF8.GetString(bytes, index, count - 1);
+		// else
+		// return UTF8Encoding.UTF8.GetString(bytes, index, count);
+
+//		return new String(bytes, index, count);
+
+		return bytesWithTrailingNullByteToString(bytes, index, count, "UTF-8");
+	}
+
+	public static String bytesWithTrailingNullByteToString(byte[] bytes, int index, int count,
+			String charsetName) throws UnsupportedEncodingException {
+		 if (bytes.length > index + count && bytes[index + count - 1] == 0x00)
+		 return new String(bytes, index, count - 1, charsetName);
+		 else
+		 return new String(bytes, index, count, charsetName);
+//		return new String(bytes, index, count, charsetName);
+	}
+	
 	// / <summary>
 	// / Converts a byte array to a String containing hexadecimal characters
 	// / </summary>

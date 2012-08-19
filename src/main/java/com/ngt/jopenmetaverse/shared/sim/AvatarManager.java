@@ -1095,7 +1095,7 @@ public class AvatarManager {
             aprp.AgentData.AgentID = Client.self.getAgentID();
             aprp.AgentData.SessionID = Client.self.getSessionID();
             aprp.AgentData.QueryID = queryID;
-            aprp.Data.Name = Utils.stringToBytes(name);
+            aprp.Data.Name = Utils.stringToBytesWithTrailingNullByte(name);
 
             Client.network.SendPacket(aprp);
         }
@@ -1112,11 +1112,11 @@ public class AvatarManager {
             gmp.AgentData.SessionID = Client.self.getSessionID();
             gmp.AgentData.TransactionID = UUID.Zero;
 
-            gmp.MethodData.Method = Utils.stringToBytes("avatarpicksrequest");
+            gmp.MethodData.Method = Utils.stringToBytesWithTrailingNullByte("avatarpicksrequest");
             gmp.MethodData.Invoice = UUID.Zero;
             gmp.ParamList = new GenericMessagePacket.ParamListBlock[1];
             gmp.ParamList[0] = new GenericMessagePacket.ParamListBlock();
-            gmp.ParamList[0].Parameter = Utils.stringToBytes(avatarid.toString());
+            gmp.ParamList[0].Parameter = Utils.stringToBytesWithTrailingNullByte(avatarid.toString());
 
             Client.network.SendPacket(gmp);
         }
@@ -1133,11 +1133,11 @@ public class AvatarManager {
             gmp.AgentData.SessionID = Client.self.getSessionID();
             gmp.AgentData.TransactionID = UUID.Zero;
 
-            gmp.MethodData.Method = Utils.stringToBytes("avatarclassifiedsrequest");
+            gmp.MethodData.Method = Utils.stringToBytesWithTrailingNullByte("avatarclassifiedsrequest");
             gmp.MethodData.Invoice = UUID.Zero;
             gmp.ParamList = new GenericMessagePacket.ParamListBlock[1];
             gmp.ParamList[0] = new GenericMessagePacket.ParamListBlock();
-            gmp.ParamList[0].Parameter = Utils.stringToBytes(avatarid.toString());
+            gmp.ParamList[0].Parameter = Utils.stringToBytesWithTrailingNullByte(avatarid.toString());
 
             Client.network.SendPacket(gmp);
         }
@@ -1155,13 +1155,13 @@ public class AvatarManager {
             gmp.AgentData.SessionID = Client.self.getSessionID();
             gmp.AgentData.TransactionID = UUID.Zero;
 
-            gmp.MethodData.Method = Utils.stringToBytes("pickinforequest");
+            gmp.MethodData.Method = Utils.stringToBytesWithTrailingNullByte("pickinforequest");
             gmp.MethodData.Invoice = UUID.Zero;
             gmp.ParamList = new GenericMessagePacket.ParamListBlock[2];
             gmp.ParamList[0] = new GenericMessagePacket.ParamListBlock();
-            gmp.ParamList[0].Parameter = Utils.stringToBytes(avatarid.toString());
+            gmp.ParamList[0].Parameter = Utils.stringToBytesWithTrailingNullByte(avatarid.toString());
             gmp.ParamList[1] = new GenericMessagePacket.ParamListBlock();
-            gmp.ParamList[1].Parameter = Utils.stringToBytes(pickid.toString());
+            gmp.ParamList[1].Parameter = Utils.stringToBytesWithTrailingNullByte(pickid.toString());
 
             Client.network.SendPacket(gmp);
         }
@@ -1179,13 +1179,13 @@ public class AvatarManager {
             gmp.AgentData.SessionID = Client.self.getSessionID();
             gmp.AgentData.TransactionID = UUID.Zero;
 
-            gmp.MethodData.Method = Utils.stringToBytes("classifiedinforequest");
+            gmp.MethodData.Method = Utils.stringToBytesWithTrailingNullByte("classifiedinforequest");
             gmp.MethodData.Invoice = UUID.Zero;
             gmp.ParamList = new GenericMessagePacket.ParamListBlock[2];
             gmp.ParamList[0] = new GenericMessagePacket.ParamListBlock();
-            gmp.ParamList[0].Parameter = Utils.stringToBytes(avatarid.toString());
+            gmp.ParamList[0].Parameter = Utils.stringToBytesWithTrailingNullByte(avatarid.toString());
             gmp.ParamList[1] = new GenericMessagePacket.ParamListBlock();
-            gmp.ParamList[1].Parameter = Utils.stringToBytes(classifiedid.toString());
+            gmp.ParamList[1].Parameter = Utils.stringToBytesWithTrailingNullByte(classifiedid.toString());
 
             Client.network.SendPacket(gmp);
         }
@@ -1205,8 +1205,8 @@ public class AvatarManager {
 
                 for (UUIDNameReplyPacket.UUIDNameBlockBlock block : reply.UUIDNameBlock)
                 {
-                    names.put(block.ID, Utils.bytesToString(block.FirstName) +
-                        " " + Utils.bytesToString(block.LastName));
+                    names.put(block.ID, Utils.bytesWithTrailingNullByteToString(block.FirstName) +
+                        " " + Utils.bytesWithTrailingNullByteToString(block.LastName));
                 }
 
                 onUUIDNameReply.raiseEvent(new UUIDNameReplyEventArgs(names));
@@ -1309,10 +1309,10 @@ public class AvatarManager {
                 properties.ProfileImage = reply.PropertiesData.ImageID;
                 properties.FirstLifeImage = reply.PropertiesData.FLImageID;
                 properties.Partner = reply.PropertiesData.PartnerID;
-                properties.AboutText = Utils.bytesToString(reply.PropertiesData.AboutText);
-                properties.FirstLifeText = Utils.bytesToString(reply.PropertiesData.FLAboutText);
-                properties.BornOn = Utils.bytesToString(reply.PropertiesData.BornOn);
-                //properties.CharterMember = Utils.bytesToString(reply.PropertiesData.CharterMember);
+                properties.AboutText = Utils.bytesWithTrailingNullByteToString(reply.PropertiesData.AboutText);
+                properties.FirstLifeText = Utils.bytesWithTrailingNullByteToString(reply.PropertiesData.FLAboutText);
+                properties.BornOn = Utils.bytesWithTrailingNullByteToString(reply.PropertiesData.BornOn);
+                //properties.CharterMember = Utils.bytesWithTrailingNullByteToString(reply.PropertiesData.CharterMember);
                 //uint
                 long charter = Utils.bytesToUInt(reply.PropertiesData.CharterMember);
                 if (charter == 0)
@@ -1329,10 +1329,10 @@ public class AvatarManager {
                 }
                 else
                 {
-                    properties.CharterMember = Utils.bytesToString(reply.PropertiesData.CharterMember);
+                    properties.CharterMember = Utils.bytesWithTrailingNullByteToString(reply.PropertiesData.CharterMember);
                 }
                 properties.Flags = ProfileFlags.get(reply.PropertiesData.Flags);
-                properties.ProfileURL = Utils.bytesToString(reply.PropertiesData.ProfileURL);
+                properties.ProfileURL = Utils.bytesWithTrailingNullByteToString(reply.PropertiesData.ProfileURL);
 
                 onAvatarPropertiesReply.raiseEvent(new AvatarPropertiesReplyEventArgs(reply.AgentData.AvatarID, properties));
             }
@@ -1351,10 +1351,10 @@ public class AvatarManager {
                 Avatar.Interests interests = new Avatar.Interests();
 
                 interests.WantToMask = airp.PropertiesData.WantToMask;
-                interests.WantToText = Utils.bytesToString(airp.PropertiesData.WantToText);
+                interests.WantToText = Utils.bytesWithTrailingNullByteToString(airp.PropertiesData.WantToText);
                 interests.SkillsMask = airp.PropertiesData.SkillsMask;
-                interests.SkillsText = Utils.bytesToString(airp.PropertiesData.SkillsText);
-                interests.LanguagesText = Utils.bytesToString(airp.PropertiesData.LanguagesText);
+                interests.SkillsText = Utils.bytesWithTrailingNullByteToString(airp.PropertiesData.SkillsText);
+                interests.LanguagesText = Utils.bytesWithTrailingNullByteToString(airp.PropertiesData.LanguagesText);
 
                 onAvatarInterestsReply.raiseEvent(new AvatarInterestsReplyEventArgs(airp.AgentData.AvatarID, interests));
             }
@@ -1420,9 +1420,9 @@ public class AvatarManager {
                     avatarGroup.AcceptNotices = groups.GroupData[i].AcceptNotices;
                     avatarGroup.GroupID = groups.GroupData[i].GroupID;
                     avatarGroup.GroupInsigniaID = groups.GroupData[i].GroupInsigniaID;
-                    avatarGroup.GroupName = Utils.bytesToString(groups.GroupData[i].GroupName);
+                    avatarGroup.GroupName = Utils.bytesWithTrailingNullByteToString(groups.GroupData[i].GroupName);
                     avatarGroup.GroupPowers = GroupPowers.get(groups.GroupData[i].GroupPowers.longValue());
-                    avatarGroup.GroupTitle = Utils.bytesToString(groups.GroupData[i].GroupTitle);
+                    avatarGroup.GroupTitle = Utils.bytesWithTrailingNullByteToString(groups.GroupData[i].GroupTitle);
                     avatarGroup.ListInProfile = groups.NewGroupData.ListInProfile;
 
                     avatarGroups.add(avatarGroup);
@@ -1445,8 +1445,8 @@ public class AvatarManager {
 
                 for (AvatarPickerReplyPacket.DataBlock block : reply.Data)
                 {
-                    avatars.put(block.AvatarID,  Utils.bytesToString(block.FirstName) +
-                        " " + Utils.bytesToString(block.LastName));
+                    avatars.put(block.AvatarID,  Utils.bytesWithTrailingNullByteToString(block.FirstName) +
+                        " " + Utils.bytesWithTrailingNullByteToString(block.LastName));
                 }
                 onAvatarPickerReply.raiseEvent(new AvatarPickerReplyEventArgs(reply.AgentData.QueryID, avatars));
             }
@@ -1577,7 +1577,7 @@ public class AvatarManager {
 
             for (AvatarPicksReplyPacket.DataBlock b : p.Data)
             {
-                picks.put(b.PickID, Utils.bytesToString(b.PickName));
+                picks.put(b.PickID, Utils.bytesWithTrailingNullByteToString(b.PickName));
             }
 
             onAvatarPicksReply.raiseEvent(new AvatarPicksReplyEventArgs(p.AgentData.TargetID, picks));
@@ -1594,18 +1594,18 @@ public class AvatarManager {
                 PickInfoReplyPacket p = (PickInfoReplyPacket)packet;
                 ProfilePick ret = new ProfilePick();
                 ret.CreatorID = p.Data.CreatorID;
-                ret.Desc = Utils.bytesToString(p.Data.Desc);
+                ret.Desc = Utils.bytesWithTrailingNullByteToString(p.Data.Desc);
                 ret.Enabled = p.Data.Enabled;
-                ret.Name = Utils.bytesToString(p.Data.Name);
-                ret.OriginalName = Utils.bytesToString(p.Data.OriginalName);
+                ret.Name = Utils.bytesWithTrailingNullByteToString(p.Data.Name);
+                ret.OriginalName = Utils.bytesWithTrailingNullByteToString(p.Data.OriginalName);
                 ret.ParcelID = p.Data.ParcelID;
                 ret.PickID = p.Data.PickID;
                 ret.PosGlobal = p.Data.PosGlobal;
-                ret.SimName = Utils.bytesToString(p.Data.SimName);
+                ret.SimName = Utils.bytesWithTrailingNullByteToString(p.Data.SimName);
                 ret.SnapshotID = p.Data.SnapshotID;
                 ret.SortOrder = p.Data.SortOrder;
                 ret.TopPick = p.Data.TopPick;
-                ret.User = Utils.bytesToString(p.Data.User);
+                ret.User = Utils.bytesWithTrailingNullByteToString(p.Data.User);
 
                 onPickInfoReply.raiseEvent(new PickInfoReplyEventArgs(ret.PickID, ret));
             }
@@ -1624,7 +1624,7 @@ public class AvatarManager {
 
                 for (AvatarClassifiedReplyPacket.DataBlock b : p.Data)
                 {
-                    classifieds.put(b.ClassifiedID, Utils.bytesToString(b.Name));
+                    classifieds.put(b.ClassifiedID, Utils.bytesWithTrailingNullByteToString(b.Name));
                 }
 
                 onAvatarClassifiedReply.raiseEvent(new AvatarClassifiedReplyEventArgs(p.AgentData.TargetID, classifieds));
@@ -1641,8 +1641,8 @@ public class AvatarManager {
                 Packet packet = e.getPacket();
                 ClassifiedInfoReplyPacket p = (ClassifiedInfoReplyPacket)packet;
                 ClassifiedAd ret = new ClassifiedAd();
-                ret.Desc = Utils.bytesToString(p.Data.Desc);
-                ret.Name = Utils.bytesToString(p.Data.Name);
+                ret.Desc = Utils.bytesWithTrailingNullByteToString(p.Data.Desc);
+                ret.Name = Utils.bytesWithTrailingNullByteToString(p.Data.Name);
                 ret.ParcelID = p.Data.ParcelID;
                 ret.ClassifiedID = p.Data.ClassifiedID;
                 ret.Position = p.Data.PosGlobal;
