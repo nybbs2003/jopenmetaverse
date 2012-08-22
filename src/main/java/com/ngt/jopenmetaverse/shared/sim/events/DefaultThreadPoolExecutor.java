@@ -27,23 +27,29 @@ public class DefaultThreadPoolExecutor implements ThreadPool {
                 keepAliveTime, unit, queue);
     }
     
+    //FIXME Need to find a way to catch the exception and save the thread..
     public void execute(Runnable task)
     {
         threadPool.execute(task);
     }
  
-    @Override
+    public void execute(Runnable[] tasks)
+    {
+    	for(Runnable task: tasks)
+    		execute(task);
+    }    
+    
     public void shutdown()
     {
         threadPool.shutdown();
+        queue.clear();
+        queue = null;
     }
 
-	@Override
 	public int getQueueSize() {
 		return queue.size();
 	}
 
-	@Override
 	public int getActiveThreadCount() {
 		return threadPool.getActiveCount();
 	}

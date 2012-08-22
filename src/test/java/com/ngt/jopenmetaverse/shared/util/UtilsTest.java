@@ -87,12 +87,25 @@ public class UtilsTest {
 		try {
 			byte[] bytes1 = new byte[]{0x32, 0x32, 0x2E, 0x36, 0x36, 0x30, 0x39, 0x39, 0x35, 0x00};
 			String string1 = "22.660995";
-			Assert.assertEquals(Utils.bytesToString(bytes1), string1);			
+			Assert.assertEquals(Utils.bytesWithTrailingNullByteToString(bytes1), string1);			
+
+			byte[] bytes2 = new byte[]{0x32, 0x32, 0x2E, 0x36, 0x36, 0x30, 0x39, 0x39, 0x35};
+			String string2 = "22.660995";
+			Assert.assertEquals(Utils.bytesWithTrailingNullByteToString(bytes2), string2);
 			
 		} catch (UnsupportedEncodingException e) {
 			Assert.fail("Failed with exception" + Utils.getExceptionStackTraceAsString(e));
 			e.printStackTrace();
 		} 
 	}	
+	
+	
+	@Test
+	public void uintToHexStringTests()
+	{
+		long uint1 = 0x78fe8945ee6ea2b9L;
+		String str1 = Utils.uintToHexString(uint1);
+		Assert.assertEquals("ee6ea2b9", str1);
+	}
 	
 }

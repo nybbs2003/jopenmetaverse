@@ -239,9 +239,9 @@ public class Permissions
 		return !equals(lhs, rhs);
 	}
 
-	public static boolean hasPermissions(PermissionMask perms, PermissionMask checkPerms)
+	public static boolean hasPermissions(EnumSet<PermissionMask> perms, EnumSet<PermissionMask> checkPerms)
 	{
-		return (perms.getIndex() & checkPerms.getIndex()) == checkPerms.getIndex();
+		return (PermissionMask.getIndex(perms) & PermissionMask.getIndex(checkPerms)) == PermissionMask.getIndex(checkPerms);
 	}
 
 	public static final Permissions NoPermissions = new Permissions();

@@ -11,7 +11,7 @@ public abstract class Asset {
     /// <summary>A unique ID</summary>
     private UUID _AssetID;
     /// <summary>The assets unique ID</summary>
-    public UUID AssetID()
+    public UUID getAssetID()
     {
         return _AssetID;
     }
@@ -46,12 +46,12 @@ public abstract class Asset {
     /// Regenerates the <code>AssetData</code> byte array from the properties 
     /// of the derived class.
     /// </summary>
-    public abstract void Encode();
+    public abstract void Encode() throws Exception;
 
     /// <summary>
     /// Decodes the AssetData, placing it in appropriate properties of the derived
     /// class.
     /// </summary>
     /// <returns>True if the asset decoding succeeded, otherwise false</returns>
-    public abstract boolean Decode();
+    public abstract boolean Decode() throws Exception;
 }

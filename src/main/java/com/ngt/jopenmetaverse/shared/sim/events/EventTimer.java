@@ -14,7 +14,7 @@ public class EventTimer {
 		timer = new Timer();
 		this.task=task;
 	}
-	
+
 	public void schedule(long delay)
 	{
 		timer.schedule(task, delay);

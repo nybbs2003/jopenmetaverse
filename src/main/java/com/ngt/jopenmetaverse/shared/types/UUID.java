@@ -229,6 +229,7 @@ public class UUID implements Comparable<UUID>, Serializable
 	/// Return a hash code for this UUID, used by .NET for hash tables
 	/// </summary>
 	/// <returns>An integer composed of all the UUID bytes XORed together</returns>
+	@Override
 	public int hashCode()
 	{
 		return Guid.hashCode();

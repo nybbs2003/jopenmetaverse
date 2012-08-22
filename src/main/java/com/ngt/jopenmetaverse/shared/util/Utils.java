@@ -1245,18 +1245,30 @@ public class Utils {
 	// endregion ToBytes
 
 	// region Strings
-	//
-	// /// <summary>
-	// /// Converts an unsigned integer to a hexadecimal String
-	// /// </summary>
-	// /// <param name="i">An unsigned integer to convert to a String</param>
-	// /// <returns>A hexadecimal String 10 characters long</returns>
-	// /// <example>0x7fffffff</example>
-	// public static String UIntToHexString(uint i)
-	// {
-	// return String.Format("{0:x8}", i);
-	// }
+	
+	 /// <summary>
+	 /// Converts an unsigned integer to a hexadecimal String
+	 /// </summary>
+	 /// <param name="i">An unsigned integer to convert to a String</param>
+	 /// <returns>A hexadecimal String 10 characters long</returns>
+	 /// <example>0x7fffffff</example>
+	 public static String uintToHexString(long i)
+	 {
+	 return Utils.bytesToHexString(Utils.uintToBytes(i), false);
+	 }
 
+	 /// <summary>
+	 /// Converts an long to a hexadecimal String
+	 /// </summary>
+	 /// <param name="i">An unsigned integer to convert to a String</param>
+	 /// <returns>A hexadecimal String 10 characters long</returns>
+	 /// <example>0xffffffff7fffffff</example>
+	 public static String longToHexString(long i)
+	 {
+	 return Utils.bytesToHexString(Utils.int64ToBytes(i), false);
+	 }
+	 
+	 
 	// / <summary>
 	// / Convert a variable length UTF8 byte array to a String
 	// / </summary>
@@ -1314,7 +1326,7 @@ public class Utils {
 
 	public static String bytesWithTrailingNullByteToString(byte[] bytes, int index, int count,
 			String charsetName) throws UnsupportedEncodingException {
-		 if (bytes.length > index + count && bytes[index + count - 1] == 0x00)
+		 if (bytes.length >= index + count && bytes[index + count - 1] == 0x00)
 		 return new String(bytes, index, count - 1, charsetName);
 		 else
 		 return new String(bytes, index, count, charsetName);
@@ -1393,7 +1405,6 @@ public class Utils {
 		try {
 			return str.getBytes("UTF-8");
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
 			logger.warning(e.getMessage());
 		}
 		return Utils.EmptyBytes;
@@ -1415,7 +1426,6 @@ public class Utils {
 		try {
 			return str.getBytes("UTF-8");
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
 			logger.warning(e.getMessage());
 		}
 		return Utils.EmptyBytes;
@@ -1569,6 +1579,14 @@ public class Utils {
 		return val & 0xff;
 	}
 
+	public static int uint16ToInt(short val) {
+		return val & 0xffff;
+	}
+
+	public static short ubyteToShort(byte val) {
+		return (short)(val & 0xff);
+	}
+	
 	public static float UInt16ToFloat(byte[] bytes, int pos, float lower,
 			float upper) {
 		int val = bytesToUInt16(bytes, pos);
@@ -2132,4 +2150,6 @@ public class Utils {
 	public static byte booleanToBytes(boolean set) {
 		return (byte) (set ? 0x01 : 0x00);
 	}
+	
+	public static short UByteMaxValue = 0x0ff;  
 }

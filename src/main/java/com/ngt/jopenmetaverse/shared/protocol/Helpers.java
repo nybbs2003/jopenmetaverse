@@ -1,6 +1,11 @@
 package com.ngt.jopenmetaverse.shared.protocol;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.lang.reflect.Field;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -430,31 +435,37 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 //            return GetResourceStream(resourceName, "openmetaverse_data");
 //        }
 
-//        /// <summary>
-//        /// Attempts to load a file either embedded in the assembly or found in
-//        /// a given search path
-//        /// </summary>
-//        /// <param name="resourceName">The filename of the resource to load</param>
-//        /// <param name="searchPath">An optional path that will be searched if
-//        /// the asset is not found embedded in the assembly</param>
-//        /// <returns>A Stream for the requested file, or null if the resource
-//        /// was not successfully loaded</returns>
-//        public static System.IO.Stream GetResourceStream(String resourceName, String searchPath)
-//        {
-//            if (searchPath != null)
-//            {
+        /// <summary>
+        /// Attempts to load a file either embedded in the assembly or found in
+        /// a given search path
+        /// </summary>
+        /// <param name="resourceName">The filename of the resource to load</param>
+        /// <param name="searchPath">An optional path that will be searched if
+        /// the asset is not found embedded in the assembly</param>
+        /// <returns>A Stream for the requested file, or null if the resource
+        /// was not successfully loaded</returns>
+        public static InputStream GetResourceStream(String resourceName, String searchPath)
+        {
+            if (searchPath != null)
+            {
+        		URL fileLocation =  Helpers.class.getClassLoader().getResource(searchPath);
+            	String fullPath = fileLocation.getPath() + "/" + resourceName;
+        		
 //                String filename = System.IO.Path.Combine(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), searchPath), resourceName);
-//                try
-//                {
+                try
+                {
+                	return new FileInputStream(new File(fullPath));
 //                    return new System.IO.FileStream(
 //                        filename,
 //                        System.IO.FileMode.Open, System.IO.FileAccess.Read, System.IO.FileShare.Read);
-//                }
-//                catch (Exception ex)
-//                {
-//                    Logger.Log(String.Format("Failed opening resource from file {0}: {1}", filename, ex.Message), LogLevel.Error);
-//                }
-//            }
+                }
+                catch (Exception ex)
+                {
+                    JLogger.error(String.format("Failed opening resource from file %s: %s \n %s", fullPath, ex.getMessage(), 
+                    		Utils.getExceptionStackTraceAsString(ex)));
+                }
+            }
+            //TODO need to handle following
 //            else
 //            {
 //                try
@@ -469,9 +480,17 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 //                    Logger.getLogger(Helpers.class.getName()).log(Level.SEVERE, String.format("Failed opening resource stream: {0}", ex.getMessage()));
 //                }
 //            }
-//
-//            return null;
-//        }
+
+            return null;
+        }
+        
+        public static String GetResourcePath(String resourceName, String searchPath)
+        {
+        	URL fileLocation =  Helpers.class.getClassLoader().getResource(searchPath);
+        	return  fileLocation.getPath() + "/" + resourceName;
+        }
+        
+        
         /// <summary>
         /// Converts a list of primitives to an object that can be serialized
         /// with the LLSD system
