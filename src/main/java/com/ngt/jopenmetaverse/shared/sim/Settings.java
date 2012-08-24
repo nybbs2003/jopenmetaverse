@@ -2,14 +2,19 @@ package com.ngt.jopenmetaverse.shared.sim;
 
 import java.net.Inet4Address;
 import java.net.InetAddress;
+import java.util.Observable;
+
 import com.ngt.jopenmetaverse.shared.protocol.EconomyDataPacket;
 import com.ngt.jopenmetaverse.shared.protocol.Helpers;
+import com.ngt.jopenmetaverse.shared.protocol.PacketType;
+import com.ngt.jopenmetaverse.shared.sim.events.EventObserver;
 import com.ngt.jopenmetaverse.shared.sim.events.PacketReceivedEventArgs;
 import com.ngt.jopenmetaverse.shared.types.Color4;
 import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.util.JLogger;
+import com.ngt.jopenmetaverse.shared.util.Utils;
 
-
-    /// <summary>
+	/// <summary>
     /// Class for controlling various system settings.
     /// </summary>
     /// <remarks>Some values are readonly because they affect things that
@@ -26,6 +31,7 @@ import com.ngt.jopenmetaverse.shared.types.UUID;
         /// <summary>Beta grid login server</summary>
         public final String ADITI_LOGIN_SERVER = "https://login.aditi.lindenlab.com/cgi-bin/login.cgi";
 
+        //Local Development Server
         public final String LOCAL_LOGIN_SERVER = "http://127.0.0.1:9000/";
         
         /// <summary>The relative directory where external resources are kept</summary>
@@ -40,7 +46,7 @@ import com.ngt.jopenmetaverse.shared.types.UUID;
         	}
         	catch(Exception e)
         	{
-        		//TODO Log the Exception
+        		JLogger.error(Utils.getExceptionStackTraceAsString(e));
         		BIND_ADDR = null;
         	}
         }
@@ -329,8 +335,14 @@ import com.ngt.jopenmetaverse.shared.types.UUID;
         public Settings(GridClient client)
         {
             this.client = client;
-          //TODO Need to implement
-//            this.client.network.RegisterCallback(PacketType.EconomyData, EconomyDataHandler);
+//            this.client.network.RegisterCallback(PacketType.EconomyData, EconomyDataHandler);            
+            this.client.network.RegisterCallback(PacketType.EconomyData, new EventObserver<PacketReceivedEventArgs>(){
+    			@Override
+    			public void handleEvent(Observable o, PacketReceivedEventArgs arg) {
+    				EconomyDataHandler(o, arg);
+    			}
+              });
+            
         }
 
         //endregion
@@ -342,7 +354,6 @@ import com.ngt.jopenmetaverse.shared.types.UUID;
         protected void EconomyDataHandler(Object sender, PacketReceivedEventArgs e)
         {
             EconomyDataPacket econ = (EconomyDataPacket)e.getPacket();
-
             priceUpload = econ.info.PriceUpload;
         }
         //endregion

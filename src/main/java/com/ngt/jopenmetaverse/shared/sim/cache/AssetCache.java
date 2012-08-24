@@ -8,17 +8,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Observable;
 import java.util.TimerTask;
-import java.util.Map.Entry;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.ngt.jopenmetaverse.shared.sim.GridClient;
 import com.ngt.jopenmetaverse.shared.sim.Settings;
 import com.ngt.jopenmetaverse.shared.sim.events.EventObserver;
 import com.ngt.jopenmetaverse.shared.sim.events.EventTimer;
 import com.ngt.jopenmetaverse.shared.sim.events.MethodDelegate;
+import com.ngt.jopenmetaverse.shared.sim.events.ThreadPool;
+import com.ngt.jopenmetaverse.shared.sim.events.ThreadPoolFactory;
 import com.ngt.jopenmetaverse.shared.sim.events.asm.ComputeAssetCacheFilenameEventArgs;
 import com.ngt.jopenmetaverse.shared.sim.events.asm.ImageDownload;
 import com.ngt.jopenmetaverse.shared.sim.events.nm.DisconnectedEventArgs;
@@ -32,7 +33,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 /// <summary>
 /// Class that handles the local asset cache
 /// </summary>
-public class AssetCache
+public class AssetCache implements IAssetCache
 {
 	// User can plug in a routine to compute the asset cache location
 	//        public delegate String ComputeAssetCacheFilenameDelegate(String cacheDir, UUID assetID);
@@ -49,8 +50,12 @@ public class AssetCache
 		this.computeAssetCacheFilenameDelegate = computeAssetCacheFilenameDelegate;
 	}
 
+	private static ThreadPool threadPool = ThreadPoolFactory.getThreadPool();
+
+
 	private GridClient Client;
-//	private Thread cleanerThread;
+	//	private Thread cleanerThread;
+	private AtomicBoolean isCleanerThread = new AtomicBoolean(false); 
 	private EventTimer cleanerTimer;
 	private double pruneInterval = 1000 * 60 * 5;
 	private boolean autoPruneEnabled = true;
@@ -121,10 +126,10 @@ public class AssetCache
 				});
 
 		//            Client.network.LoginProgress += delegate(object sender, LoginProgressEventArgs e)
-				//            {
-			//                if (e.Status == LoginStatus.Success)
-				//                {
-				//                    SetupTimer();
+		//            {
+		//                if (e.Status == LoginStatus.Success)
+		//                {
+		//                    SetupTimer();
 		//                }
 		//            };
 		//
@@ -176,7 +181,7 @@ public class AssetCache
 	/// </summary>
 	/// <param name="assetID">UUID of the asset we want to get</param>
 	/// <returns>Raw bytes of the asset, or null on failure</returns>
-	public byte[] GetCachedAssetBytes(UUID assetID)
+	public byte[] getCachedAssetBytes(UUID assetID)
 	{
 		if (!Operational())
 		{
@@ -222,12 +227,12 @@ public class AssetCache
 	/// </summary>
 	/// <param name="imageID">UUID of the image we want to get</param>
 	/// <returns>ImageDownload object containing the image, or null on failure</returns>
-	public ImageDownload GetCachedImage(UUID imageID)
+	public ImageDownload getCachedImage(UUID imageID)
 	{
 		if (!Operational())
 			return null;
 
-		byte[] imageData = GetCachedAssetBytes(imageID);
+		byte[] imageData = getCachedAssetBytes(imageID);
 		if (imageData == null)
 			return null;
 		ImageDownload transfer = new ImageDownload();
@@ -242,36 +247,12 @@ public class AssetCache
 	}
 
 	/// <summary>
-	/// Constructs a file name of the cached asset
-	/// </summary>
-	/// <param name="assetID">UUID of the asset</param>
-	/// <returns>String with the file name of the cahced asset</returns>
-	private String FileName(UUID assetID)
-	{
-		if (computeAssetCacheFilenameDelegate != null)
-		{
-			return computeAssetCacheFilenameDelegate.execute(new ComputeAssetCacheFilenameEventArgs(Client.settings.ASSET_CACHE_DIR, assetID));
-		}
-		return Client.settings.ASSET_CACHE_DIR + "/" + assetID.toString();
-	}
-
-	/// <summary>
-	/// Constructs a file name of the static cached asset
-	/// </summary>
-	/// <param name="assetID">UUID of the asset</param>
-	/// <returns>String with the file name of the static cached asset</returns>
-	private String StaticFileName(UUID assetID)
-	{
-		return Settings.RESOURCE_DIR + "/" + "static_assets" + "/" + assetID.toString();
-	}
-
-	/// <summary>
 	/// Saves an asset to the local cache
 	/// </summary>
 	/// <param name="assetID">UUID of the asset</param>
 	/// <param name="assetData">Raw bytes the asset consists of</param>
 	/// <returns>Weather the operation was successfull</returns>
-	public boolean SaveAssetToCache(UUID assetID, byte[] assetData)
+	public boolean saveAssetToCache(UUID assetID, byte[] assetData)
 	{
 		if (!Operational())
 		{
@@ -285,7 +266,7 @@ public class AssetCache
 			if (!dir.exists())
 			{
 				//                    Directory.CreateDirectory(Client.settings.ASSET_CACHE_DIR);
-				new File(Client.settings.ASSET_CACHE_DIR).mkdir();
+				new File(Client.settings.ASSET_CACHE_DIR).mkdirs();
 			}
 
 			//                File.WriteAllBytes(FileName(assetID), assetData);
@@ -345,7 +326,7 @@ public class AssetCache
 	/// </summary>
 	/// <param name="assetID">UUID of the asset</param>
 	/// <returns>True is the asset is stored in the cache, otherwise false</returns>
-	public boolean HasAsset(UUID assetID)
+	public boolean hasAsset(UUID assetID)
 	{
 		if (!Operational())
 			return false;
@@ -366,7 +347,7 @@ public class AssetCache
 	/// <summary>
 	/// Wipes out entire cache
 	/// </summary>
-	public void Clear()
+	public void clear()
 	{
 		String cacheDir = Client.settings.ASSET_CACHE_DIR;
 		File dir = new File(cacheDir);
@@ -380,8 +361,10 @@ public class AssetCache
 		//            // We save file with UUID as file name, only delete those
 		//            FileInfo[] files = di.GetFiles("????????-????-????-????-????????????", SearchOption.TopDirectoryOnly);
 
-		File[] files = getFileList(cacheDir, "????????-????-????-????-????????????", true);
+//		File[] files = getFileList(cacheDir, "????????-????-????-????-????????????", true);
+		File[] files = getFileList(cacheDir, "\\w{8}-\\w{4}-\\w{4}-\\w{4}-\\w{12}", true);
 
+		
 		int num = 0;
 		for (File file : files)
 		{
@@ -395,7 +378,7 @@ public class AssetCache
 	/// <summary>
 	/// Brings cache size to the 90% of the max size
 	/// </summary>
-	public void Prune()
+	public void prune()
 	{
 		String cacheDir = Client.settings.ASSET_CACHE_DIR;
 		File dir = new File(cacheDir);
@@ -409,19 +392,19 @@ public class AssetCache
 		//            // We save file with UUID as file name, only count those
 		//            FileInfo[] files = di.GetFiles("????????-????-????-????-????????????", SearchOption.TopDirectoryOnly);
 
-		File[] files = getFileList(cacheDir, "????????-????-????-????-????????????", true);      
+		File[] files = getFileList(cacheDir, "\\w{8}-\\w{4}-\\w{4}-\\w{4}-\\w{12}", true);
 		long size = GetFileSize(files);
 
 		if (size > Client.settings.ASSET_CACHE_MAX_SIZE)
 		{
 			//                Array.Sort(files, new SortFilesByAccesTimeHelper());
-			Collection<Entry<UUID, Long>> assetIDs = assetTagMap.getAssets();
+			List<UUID> assetIDs = assetTagMap.getAssets();
 			long targetSize = (long)(Client.settings.ASSET_CACHE_MAX_SIZE * 0.9);
 			int num = 0;
 			File file = null;
-			for (Entry<UUID, Long> assetID : assetIDs)
+			for (UUID assetID : assetIDs)
 			{
-				if((file = getAssetFile(assetID.getKey()))!=null)
+				if((file = getAssetFile(assetID))!=null)
 				{
 					++num;
 					size -= file.length();
@@ -444,7 +427,7 @@ public class AssetCache
 	/// <summary>
 	/// Asynchronously brings cache size to the 90% of the max size
 	/// </summary>
-	public void BeginPrune()
+	public void beginPrune()
 	{
 		//TODO need to verify 
 		//            // Check if the background cache cleaning thread is active first
@@ -453,19 +436,54 @@ public class AssetCache
 		//                return;
 		//            }
 
-		synchronized (this)
+		if(!isCleanerThread.get())
 		{
-			//                cleanerThread = new Thread(new ThreadStart(this.Prune));
-			//                cleanerThread.IsBackground = true;
-			//                cleanerThread.Start();
-			Prune();
+			isCleanerThread.set(true);
+			threadPool.execute(new Runnable() {
+				public void run() {
+					isCleanerThread.set(true);
+					synchronized (this)
+					{
+						//                cleanerThread = new Thread(new ThreadStart(this.Prune));
+						//                cleanerThread.IsBackground = true;
+						//                cleanerThread.Start();
+						prune();
+					}
+					isCleanerThread.set(false);
+				}
+			});
 		}
 	}
 
 	/// <summary>
+	/// Constructs a file name of the cached asset
+	/// </summary>
+	/// <param name="assetID">UUID of the asset</param>
+	/// <returns>String with the file name of the cahced asset</returns>
+	private String FileName(UUID assetID)
+	{
+		if (computeAssetCacheFilenameDelegate != null)
+		{
+			return computeAssetCacheFilenameDelegate.execute(new ComputeAssetCacheFilenameEventArgs(Client.settings.ASSET_CACHE_DIR, assetID));
+		}
+		return Client.settings.ASSET_CACHE_DIR + "/" + assetID.toString();
+	}
+
+	/// <summary>
+	/// Constructs a file name of the static cached asset
+	/// </summary>
+	/// <param name="assetID">UUID of the asset</param>
+	/// <returns>String with the file name of the static cached asset</returns>
+	private String StaticFileName(UUID assetID)
+	{
+		return Settings.RESOURCE_DIR + "/" + "static_assets" + "/" + assetID.toString();
+	}
+
+
+	/// <summary>
 	/// Adds up file sizes passes in a FileInfo array
 	/// </summary>
-	long GetFileSize(File[] files)
+	private long GetFileSize(File[] files)
 	{
 		long ret = 0;
 		for (File file : files)
@@ -488,7 +506,7 @@ public class AssetCache
 	/// </summary>
 	private void cleanerTimer_Elapsed()
 	{
-		BeginPrune();
+		beginPrune();
 	}
 
 	/// <summary>

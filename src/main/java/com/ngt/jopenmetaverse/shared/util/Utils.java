@@ -1326,6 +1326,9 @@ public class Utils {
 
 	public static String bytesWithTrailingNullByteToString(byte[] bytes, int index, int count,
 			String charsetName) throws UnsupportedEncodingException {
+		if(bytes.length ==0)
+			return "";
+		
 		 if (bytes.length >= index + count && bytes[index + count - 1] == 0x00)
 		 return new String(bytes, index, count - 1, charsetName);
 		 else

@@ -10,8 +10,6 @@ public class AssetManager {
     	//TODO Need to implement
     }
     
-   
-    
     //region Enums
 
     public enum EstateAssetTypeint

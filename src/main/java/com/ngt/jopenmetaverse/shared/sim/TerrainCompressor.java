@@ -1,5 +1,9 @@
 package com.ngt.jopenmetaverse.shared.sim;
 
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.Map;
+
 import com.ngt.jopenmetaverse.shared.protocol.BitPack;
 import com.ngt.jopenmetaverse.shared.protocol.LayerDataPacket;
 import com.ngt.jopenmetaverse.shared.util.JLogger;
@@ -26,6 +30,18 @@ public class TerrainCompressor {
 	    		{
 	    			return index;
 	    		}  
+	    		
+	    		private static final Map<Byte,LayerType> lookup  = new HashMap<Byte,LayerType>();
+
+	    		static {
+	    			for(LayerType s : EnumSet.allOf(LayerType.class))
+	    				lookup.put(s.getIndex(), s);
+	    		}
+
+	    		public static LayerType get(Byte index)
+	    		{
+	    			return lookup.get(index);
+	    		}
 	        }
 
 	        public static class GroupHeader

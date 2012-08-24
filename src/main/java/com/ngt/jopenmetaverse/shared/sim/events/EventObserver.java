@@ -5,11 +5,11 @@ import java.util.Observer;
 
 
 public abstract class EventObserver<T> implements Observer
-{	
-	public abstract void handleEvent(Observable o, T arg);
+{
+	public abstract void handleEvent(Observable sender, T arg);
 
-	public void update(Observable o, Object arg) {
+	public void update(Observable sender, Object arg) {
 		T t = (T)arg;
-		handleEvent(o, t);
+		handleEvent(sender, t);
 	}
 }

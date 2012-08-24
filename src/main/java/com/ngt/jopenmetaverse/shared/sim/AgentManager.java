@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Observable;
-import java.util.Observer;
 import com.ngt.jopenmetaverse.shared.cap.http.CapsHttpClient;
 import com.ngt.jopenmetaverse.shared.cap.http.CapsHttpRequestCompletedArg;
 import com.ngt.jopenmetaverse.shared.exception.NotImplementedException;
