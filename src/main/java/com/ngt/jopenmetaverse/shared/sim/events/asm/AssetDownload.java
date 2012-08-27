@@ -22,7 +22,7 @@ import com.ngt.jopenmetaverse.shared.sim.Simulator;
         public float Priority;
         public Simulator Simulator;
         public MethodDelegate<Void, AssetReceivedCallbackArgs> Callback;
-        private ManualResetEvent HeaderReceivedEvent = new ManualResetEvent(false);
+        public ManualResetEvent HeaderReceivedEvent = new ManualResetEvent(false);
 
         public AssetDownload()
         {

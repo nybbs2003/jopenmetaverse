@@ -29,36 +29,41 @@ public class Color4 implements Comparable<Color4>, Serializable
 /*
  * Removed following constructor, as floating point constructor will always take precedence	
  */
-//	/// <summary>
-//	/// 
-//	/// </summary>
-//	/// <param name="r"></param>
-//	/// <param name="g"></param>
-//	/// <param name="b"></param>
-//	/// <param name="a"></param>
-//	public Color4(short r, short g, short b, short a)
-//	{
-//		final float quanta = 1.0f / 255.0f;
-//
-//		R = (float)r * quanta;
-//		G = (float)g * quanta;
-//		B = (float)b * quanta;
-//		A = (float)a * quanta;
-//	}
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="r"></param>
+	/// <param name="g"></param>
+	/// <param name="b"></param>
+	/// <param name="a"></param>
+	private void normalizeColor(short r, short g, short b, short a)
+	{
+		final float quanta = 1.0f / 255.0f;
+
+		R = (float)r * quanta;
+		G = (float)g * quanta;
+		B = (float)b * quanta;
+		A = (float)a * quanta;
+	}
 
 	public Color4(float r, float g, float b, float a)
 	{
 		// Quick check to see if someone is doing something obviously wrong
 		// like using float values from 0.0 - 255.0
 		if (r > 1f || g > 1f || b > 1f || a > 1f)
-			throw new IllegalArgumentException(
-					"Attempting to initialize Color4 with out of range values <" + r + "," + g + "," + b + "," + a +">");
+			normalizeColor((short)r, (short)g, (short)b, (short)a);
+		else
+		{
+//		if (r > 1f || g > 1f || b > 1f || a > 1f)
+//			throw new IllegalArgumentException(
+//					"Attempting to initialize Color4 with out of range values <" + r + "," + g + "," + b + "," + a +">");
 
 		// Valid range is from 0.0 to 1.0
 		R = Utils.clamp(r, 0f, 1f);
 		G = Utils.clamp(g, 0f, 1f);
 		B = Utils.clamp(b, 0f, 1f);
 		A = Utils.clamp(a, 0f, 1f);
+		}
 	}
 
 	/// <summary>

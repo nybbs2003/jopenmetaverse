@@ -78,6 +78,13 @@ public class JLogger {
 		for(Handler h: handlerList)
 		logger.removeHandler(h);
 	}
+
+	public static void error(Exception e) {
+		error(Utils.getExceptionStackTraceAsString(e));
+	}
 	
+	public static void warn(Exception e) {
+		warn(Utils.getExceptionStackTraceAsString(e));
+	}	
 	
 }

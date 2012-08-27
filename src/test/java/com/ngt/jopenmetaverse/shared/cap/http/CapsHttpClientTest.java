@@ -2,19 +2,14 @@ package com.ngt.jopenmetaverse.shared.cap.http;
 
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Observable;
-import java.util.Observer;
-
 import junit.framework.Assert;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
 import com.ngt.jopenmetaverse.shared.sim.events.EventObserver;
 import com.ngt.jopenmetaverse.shared.structureddata.OSD;
 import com.ngt.jopenmetaverse.shared.structureddata.OSDFormat;

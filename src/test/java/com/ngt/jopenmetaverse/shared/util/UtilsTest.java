@@ -108,4 +108,19 @@ public class UtilsTest {
 		Assert.assertEquals("ee6ea2b9", str1);
 	}
 	
+	@Test
+	public void hexStringToBytes()
+	{
+		try{
+			String hex1 = "7fffffff";
+			byte[] bytes1 = Utils.hexStringToBytes(hex1, false);
+			System.out.println(Utils.bytesToHexDebugString(bytes1, ""));
+			bytes1 = Utils.hexStringToBytes(hex1, false);
+			System.out.println(Utils.bytesToHexDebugString(bytes1, ""));			
+		}
+		catch(Exception e)
+		{ Assert.fail(Utils.getExceptionStackTraceAsString(e));}
+		
+	}
+	
 }

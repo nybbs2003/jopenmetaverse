@@ -20,6 +20,7 @@ import com.ngt.jopenmetaverse.shared.sim.NetworkManager;
 import com.ngt.jopenmetaverse.shared.sim.Simulator;
 import com.ngt.jopenmetaverse.shared.sim.interfaces.IMessage;
 import com.ngt.jopenmetaverse.shared.sim.message.MessageUtils;
+import com.ngt.jopenmetaverse.shared.sim.stats.UtilizationStatistics.Type;
 import com.ngt.jopenmetaverse.shared.util.JLogger;
 import com.ngt.jopenmetaverse.shared.util.Utils;
 
@@ -235,7 +236,6 @@ public class Caps
 				});
 				_EventQueueCap.registerEventObserver(new Observer(){
 					public void update(Observable o, Object arg) {
-						// TODO Auto-generated method stub
 						EventQueueClientEventObservableArg obj = (EventQueueClientEventObservableArg) arg;
 						EventQueueEventHandler(obj.getEventName(), obj.getBody());
 					}
@@ -288,8 +288,7 @@ public class Caps
 			//region Stats Tracking
 			if (Simulator.Client.settings.TRACK_UTILIZATION)
 			{
-				//TODO Implement following
-				//Simulator.Client.Stats.Update(eventName, OpenMetaverse.Stats.Type.Message, 0, body.toString().Length);
+				Simulator.Client.stats.Update(eventName, Type.Message, 0, body.toString().length());
 			}
 			//endregion
 		}

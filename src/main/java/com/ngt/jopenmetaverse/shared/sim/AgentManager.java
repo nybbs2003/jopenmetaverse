@@ -13,6 +13,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Observable;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import com.ngt.jopenmetaverse.shared.cap.http.CapsHttpClient;
 import com.ngt.jopenmetaverse.shared.cap.http.CapsHttpRequestCompletedArg;
 import com.ngt.jopenmetaverse.shared.exception.NotImplementedException;
@@ -46,6 +49,7 @@ import com.ngt.jopenmetaverse.shared.protocol.MoneyBalanceReplyPacket;
 import com.ngt.jopenmetaverse.shared.protocol.MoneyBalanceRequestPacket;
 import com.ngt.jopenmetaverse.shared.protocol.MoneyTransferRequestPacket;
 import com.ngt.jopenmetaverse.shared.protocol.MuteListRequestPacket;
+import com.ngt.jopenmetaverse.shared.protocol.MuteListUpdatePacket;
 import com.ngt.jopenmetaverse.shared.protocol.ObjectDeGrabPacket;
 import com.ngt.jopenmetaverse.shared.protocol.ObjectGrabPacket;
 import com.ngt.jopenmetaverse.shared.protocol.ObjectGrabUpdatePacket;
@@ -81,11 +85,17 @@ import com.ngt.jopenmetaverse.shared.sim.GroupManager.ChatSessionMember;
 import com.ngt.jopenmetaverse.shared.sim.GroupManager.GroupPowers;
 import com.ngt.jopenmetaverse.shared.sim.agent.AgentMovement;
 import com.ngt.jopenmetaverse.shared.sim.asset.AssetGesture;
+import com.ngt.jopenmetaverse.shared.sim.asset.AssetGesture.GestureStep;
+import com.ngt.jopenmetaverse.shared.sim.asset.AssetGesture.GestureStepAnimation;
+import com.ngt.jopenmetaverse.shared.sim.asset.AssetGesture.GestureStepChat;
+import com.ngt.jopenmetaverse.shared.sim.asset.AssetGesture.GestureStepSound;
+import com.ngt.jopenmetaverse.shared.sim.asset.AssetGesture.GestureStepWait;
 import com.ngt.jopenmetaverse.shared.sim.events.AutoResetEvent;
 import com.ngt.jopenmetaverse.shared.sim.events.EventArgs;
 import com.ngt.jopenmetaverse.shared.sim.events.EventObservable;
 import com.ngt.jopenmetaverse.shared.sim.events.EventObserver;
 import com.ngt.jopenmetaverse.shared.sim.events.ManualResetEvent;
+import com.ngt.jopenmetaverse.shared.sim.events.MethodDelegate;
 import com.ngt.jopenmetaverse.shared.sim.events.PacketReceivedEventArgs;
 import com.ngt.jopenmetaverse.shared.sim.events.CapsEventObservableArg;
 import com.ngt.jopenmetaverse.shared.sim.events.ThreadPool;
@@ -112,6 +122,8 @@ import com.ngt.jopenmetaverse.shared.sim.events.am.ScriptQuestionEventArgs;
 import com.ngt.jopenmetaverse.shared.sim.events.am.ScriptSensorReplyEventArgs;
 import com.ngt.jopenmetaverse.shared.sim.events.am.SetDisplayNameReplyEventArgs;
 import com.ngt.jopenmetaverse.shared.sim.events.am.TeleportEventArgs;
+import com.ngt.jopenmetaverse.shared.sim.events.asm.AssetReceivedCallbackArgs;
+import com.ngt.jopenmetaverse.shared.sim.events.asm.XferReceivedEventArgs;
 import com.ngt.jopenmetaverse.shared.sim.events.nm.DisconnectedEventArgs;
 import com.ngt.jopenmetaverse.shared.sim.events.nm.EventQueueRunningEventArgs;
 import com.ngt.jopenmetaverse.shared.sim.interfaces.IMessage;
@@ -122,6 +134,7 @@ import com.ngt.jopenmetaverse.shared.sim.message.LindenMessages.ChatSessionAccep
 import com.ngt.jopenmetaverse.shared.sim.message.LindenMessages.ChatSessionRequestMuteUpdate;
 import com.ngt.jopenmetaverse.shared.sim.message.LindenMessages.ChatSessionRequestStartConference;
 import com.ngt.jopenmetaverse.shared.sim.message.LindenMessages.ChatterBoxInvitationMessage;
+import com.ngt.jopenmetaverse.shared.sim.message.LindenMessages.ChatterBoxSessionAgentListUpdatesMessage;
 import com.ngt.jopenmetaverse.shared.sim.message.LindenMessages.ChatterBoxSessionStartReplyMessage;
 import com.ngt.jopenmetaverse.shared.sim.message.LindenMessages.ChatterboxSessionEventReplyMessage;
 import com.ngt.jopenmetaverse.shared.sim.message.LindenMessages.CrossedRegionMessage;
@@ -133,12 +146,14 @@ import com.ngt.jopenmetaverse.shared.sim.message.LindenMessages.TeleportFinishMe
 import com.ngt.jopenmetaverse.shared.sim.message.LindenMessages.UpdateAgentLanguageMessage;
 import com.ngt.jopenmetaverse.shared.structureddata.OSDFormat;
 import com.ngt.jopenmetaverse.shared.types.Color4;
+import com.ngt.jopenmetaverse.shared.types.Enums.AssetType;
 import com.ngt.jopenmetaverse.shared.types.Quaternion;
 import com.ngt.jopenmetaverse.shared.types.UUID;
 import com.ngt.jopenmetaverse.shared.types.Vector3;
 import com.ngt.jopenmetaverse.shared.types.Vector3d;
 import com.ngt.jopenmetaverse.shared.types.Vector4;
 import com.ngt.jopenmetaverse.shared.util.JLogger;
+import com.ngt.jopenmetaverse.shared.util.PlatformUtils;
 import com.ngt.jopenmetaverse.shared.util.Utils;
 
 /// <summary>
@@ -281,28 +296,28 @@ public class AgentManager {
 				lookup.put(s.getIndex(), s);
 		}
 
-        public static EnumSet<ControlFlags> get(Long index)
-        {
-                EnumSet<ControlFlags> enumsSet = EnumSet.allOf(ControlFlags.class);
-                for(Entry<Long,ControlFlags> entry: lookup.entrySet())
-                {
-                        if((entry.getKey().longValue() | index) != index)
-                        {
-                                enumsSet.remove(entry.getValue());
-                        }
-                }
-                return enumsSet;
-        }
-        
-        public static long getIndex(EnumSet<ControlFlags> enumSet)
-        {
-                long ret = 0;
-                for(ControlFlags s: enumSet)
-                {
-                        ret |= s.getIndex();
-                }
-                return ret;
-        }
+		public static EnumSet<ControlFlags> get(Long index)
+		{
+			EnumSet<ControlFlags> enumsSet = EnumSet.allOf(ControlFlags.class);
+			for(Entry<Long,ControlFlags> entry: lookup.entrySet())
+			{
+				if((entry.getKey().longValue() | index) != index)
+				{
+					enumsSet.remove(entry.getValue());
+				}
+			}
+			return enumsSet;
+		}
+
+		public static long getIndex(EnumSet<ControlFlags> enumSet)
+		{
+			long ret = 0;
+			for(ControlFlags s: enumSet)
+			{
+				ret |= s.getIndex();
+			}
+			return ret;
+		}
 
 
 	}
@@ -367,28 +382,28 @@ public class AgentManager {
 				lookup.put(s.getIndex(), s);
 		}
 
-		 public static EnumSet<ScriptPermission> get(Integer index)
-         {
-                 EnumSet<ScriptPermission> enumsSet = EnumSet.allOf(ScriptPermission.class);
-                 for(Entry<Integer,ScriptPermission> entry: lookup.entrySet())
-                 {
-                         if((entry.getKey().intValue() | index) != index)
-                         {
-                                 enumsSet.remove(entry.getValue());
-                         }
-                 }
-                 return enumsSet;
-         }
+		public static EnumSet<ScriptPermission> get(Integer index)
+		{
+			EnumSet<ScriptPermission> enumsSet = EnumSet.allOf(ScriptPermission.class);
+			for(Entry<Integer,ScriptPermission> entry: lookup.entrySet())
+			{
+				if((entry.getKey().intValue() | index) != index)
+				{
+					enumsSet.remove(entry.getValue());
+				}
+			}
+			return enumsSet;
+		}
 
-         public static int getIndex(EnumSet<ScriptPermission> enumSet)
-         {
-                 int ret = 0;
-                 for(ScriptPermission s: enumSet)
-                 {
-                         ret |= s.getIndex();
-                 }
-                 return ret;
-         }
+		public static int getIndex(EnumSet<ScriptPermission> enumSet)
+		{
+			int ret = 0;
+			for(ScriptPermission s: enumSet)
+			{
+				ret |= s.getIndex();
+			}
+			return ret;
+		}
 
 	}
 
@@ -777,17 +792,17 @@ public class AgentManager {
 			return index;
 		}
 
-					private static final Map<Byte,LookAtType> lookup  = new HashMap<Byte,LookAtType>();
-		
-					static {
-						for(LookAtType s : EnumSet.allOf(LookAtType.class))
-							lookup.put(s.getIndex(), s);
-					}
-		
-					public static LookAtType get(Byte index)
-					{
-						return lookup.get(index);
-					}
+		private static final Map<Byte,LookAtType> lookup  = new HashMap<Byte,LookAtType>();
+
+		static {
+			for(LookAtType s : EnumSet.allOf(LookAtType.class))
+				lookup.put(s.getIndex(), s);
+		}
+
+		public static LookAtType get(Byte index)
+		{
+			return lookup.get(index);
+		}
 	}
 
 	/// <summary>
@@ -815,17 +830,17 @@ public class AgentManager {
 			return index;
 		}
 
-					private static final Map<Byte,PointAtType> lookup  = new HashMap<Byte,PointAtType>();
-		
-					static {
-						for(PointAtType s : EnumSet.allOf(PointAtType.class))
-							lookup.put(s.getIndex(), s);
-					}
-		
-					public static PointAtType get(Byte index)
-					{
-						return lookup.get(index);
-					}
+		private static final Map<Byte,PointAtType> lookup  = new HashMap<Byte,PointAtType>();
+
+		static {
+			for(PointAtType s : EnumSet.allOf(PointAtType.class))
+				lookup.put(s.getIndex(), s);
+		}
+
+		public static PointAtType get(Byte index)
+		{
+			return lookup.get(index);
+		}
 	}
 
 	/// <summary>
@@ -987,35 +1002,35 @@ public class AgentManager {
 			return index;
 		}
 
-					private static final Map<Byte,TransactionFlags> lookup  = new HashMap<Byte,TransactionFlags>();
-		
-					static {
-						for(TransactionFlags s : EnumSet.allOf(TransactionFlags.class))
-							lookup.put(s.getIndex(), s);
-					}
-		
-		 public static EnumSet<TransactionFlags> get(Byte index)
-	        {
-	                EnumSet<TransactionFlags> enumsSet = EnumSet.allOf(TransactionFlags.class);
-	                for(Entry<Byte,TransactionFlags> entry: lookup.entrySet())
-	                {
-	                        if((entry.getKey().byteValue() | index) != index)
-	                        {
-	                                enumsSet.remove(entry.getValue());
-	                        }
-	                }
-	                return enumsSet;
-	        }
+		private static final Map<Byte,TransactionFlags> lookup  = new HashMap<Byte,TransactionFlags>();
 
-	        public static byte getIndex(EnumSet<TransactionFlags> enumSet)
-	        {
-	                byte ret = 0;
-	                for(TransactionFlags s: enumSet)
-	                {
-	                        ret |= s.getIndex();
-	                }
-	                return ret;
-	        }
+		static {
+			for(TransactionFlags s : EnumSet.allOf(TransactionFlags.class))
+				lookup.put(s.getIndex(), s);
+		}
+
+		public static EnumSet<TransactionFlags> get(Byte index)
+		{
+			EnumSet<TransactionFlags> enumsSet = EnumSet.allOf(TransactionFlags.class);
+			for(Entry<Byte,TransactionFlags> entry: lookup.entrySet())
+			{
+				if((entry.getKey().byteValue() | index) != index)
+				{
+					enumsSet.remove(entry.getValue());
+				}
+			}
+			return enumsSet;
+		}
+
+		public static byte getIndex(EnumSet<TransactionFlags> enumSet)
+		{
+			byte ret = 0;
+			for(TransactionFlags s: enumSet)
+			{
+				ret |= s.getIndex();
+			}
+			return ret;
+		}
 
 	}
 	/// <summary>
@@ -1106,31 +1121,31 @@ public class AgentManager {
 			for(ScriptControlChange s : EnumSet.allOf(ScriptControlChange.class))
 				lookup.put(s.getIndex(), s);
 		}
-		
-        public static EnumSet<ScriptControlChange> get(Long index)
-        {
-                EnumSet<ScriptControlChange> enumsSet = EnumSet.allOf(ScriptControlChange.class);
-                for(Entry<Long,ScriptControlChange> entry: lookup.entrySet())
-                {
-                        if((entry.getKey().longValue() | index) != index)
-                        {
-                                enumsSet.remove(entry.getValue());
-                        }
-                }
-                return enumsSet;
-        }
 
-        public static long getIndex(EnumSet<ScriptControlChange> enumSet)
-        {
-                long ret = 0;
-                for(ScriptControlChange s: enumSet)
-                {
-                        ret |= s.getIndex();
-                }
-                return ret;
-        }
+		public static EnumSet<ScriptControlChange> get(Long index)
+		{
+			EnumSet<ScriptControlChange> enumsSet = EnumSet.allOf(ScriptControlChange.class);
+			for(Entry<Long,ScriptControlChange> entry: lookup.entrySet())
+			{
+				if((entry.getKey().longValue() | index) != index)
+				{
+					enumsSet.remove(entry.getValue());
+				}
+			}
+			return enumsSet;
+		}
 
-		
+		public static long getIndex(EnumSet<ScriptControlChange> enumSet)
+		{
+			long ret = 0;
+			for(ScriptControlChange s: enumSet)
+			{
+				ret |= s.getIndex();
+			}
+			return ret;
+		}
+
+
 	}
 
 	/// <summary>
@@ -1152,36 +1167,36 @@ public class AgentManager {
 		{
 			return index;
 		} 
-		
+
 		private static final Map<Byte,AgentFlags> lookup  = new HashMap<Byte,AgentFlags>();
 
 		static {
 			for(AgentFlags s : EnumSet.allOf(AgentFlags.class))
 				lookup.put(s.getIndex(), s);
 		}
-		
-		 public static EnumSet<AgentFlags> get(Byte index)
-	        {
-	                EnumSet<AgentFlags> enumsSet = EnumSet.allOf(AgentFlags.class);
-	                for(Entry<Byte,AgentFlags> entry: lookup.entrySet())
-	                {
-	                        if((entry.getKey().byteValue() | index) != index)
-	                        {
-	                                enumsSet.remove(entry.getValue());
-	                        }
-	                }
-	                return enumsSet;
-	        }
 
-	        public static byte getIndex(EnumSet<AgentFlags> enumSet)
-	        {
-	                byte ret = 0;
-	                for(AgentFlags s: enumSet)
-	                {
-	                        ret |= s.getIndex();
-	                }
-	                return ret;
-	        }
+		public static EnumSet<AgentFlags> get(Byte index)
+		{
+			EnumSet<AgentFlags> enumsSet = EnumSet.allOf(AgentFlags.class);
+			for(Entry<Byte,AgentFlags> entry: lookup.entrySet())
+			{
+				if((entry.getKey().byteValue() | index) != index)
+				{
+					enumsSet.remove(entry.getValue());
+				}
+			}
+			return enumsSet;
+		}
+
+		public static byte getIndex(EnumSet<AgentFlags> enumSet)
+		{
+			byte ret = 0;
+			for(AgentFlags s: enumSet)
+			{
+				ret |= s.getIndex();
+			}
+			return ret;
+		}
 
 	}
 
@@ -1209,37 +1224,37 @@ public class AgentManager {
 		{
 			return index;
 		}  
-		
+
 		private static final Map<Byte,AgentState> lookup  = new HashMap<Byte,AgentState>();
 
 		static {
 			for(AgentState s : EnumSet.allOf(AgentState.class))
 				lookup.put(s.getIndex(), s);
 		}
-		
-		 public static EnumSet<AgentState> get(Byte index)
-	        {
-	                EnumSet<AgentState> enumsSet = EnumSet.allOf(AgentState.class);
-	                for(Entry<Byte,AgentState> entry: lookup.entrySet())
-	                {
-	                        if((entry.getKey().byteValue() | index) != index)
-	                        {
-	                                enumsSet.remove(entry.getValue());
-	                        }
-	                }
-	                return enumsSet;
-	        }
 
-	        public static byte getIndex(EnumSet<AgentState> enumSet)
-	        {
-	                byte ret = 0;
-	                for(AgentState s: enumSet)
-	                {
-	                        ret |= s.getIndex();
-	                }
-	                return ret;
-	        }
-		
+		public static EnumSet<AgentState> get(Byte index)
+		{
+			EnumSet<AgentState> enumsSet = EnumSet.allOf(AgentState.class);
+			for(Entry<Byte,AgentState> entry: lookup.entrySet())
+			{
+				if((entry.getKey().byteValue() | index) != index)
+				{
+					enumsSet.remove(entry.getValue());
+				}
+			}
+			return enumsSet;
+		}
+
+		public static byte getIndex(EnumSet<AgentState> enumSet)
+		{
+			byte ret = 0;
+			for(AgentState s: enumSet)
+			{
+				ret |= s.getIndex();
+			}
+			return ret;
+		}
+
 	}
 
 	/// <summary>
@@ -1326,28 +1341,28 @@ public class AgentManager {
 				lookup.put(s.getIndex(), s);
 		}
 
-        public static EnumSet<TeleportFlags> get(Long index)
-        {
-                EnumSet<TeleportFlags> enumsSet = EnumSet.allOf(TeleportFlags.class);
-                for(Entry<Long,TeleportFlags> entry: lookup.entrySet())
-                {
-                        if((entry.getKey().longValue() | index) != index)
-                        {
-                                enumsSet.remove(entry.getValue());
-                        }
-                }
-                return enumsSet;
-        }
+		public static EnumSet<TeleportFlags> get(Long index)
+		{
+			EnumSet<TeleportFlags> enumsSet = EnumSet.allOf(TeleportFlags.class);
+			for(Entry<Long,TeleportFlags> entry: lookup.entrySet())
+			{
+				if((entry.getKey().longValue() | index) != index)
+				{
+					enumsSet.remove(entry.getValue());
+				}
+			}
+			return enumsSet;
+		}
 
-        public static long getIndex(EnumSet<TeleportFlags> enumSet)
-        {
-                long ret = 0;
-                for(TeleportFlags s: enumSet)
-                {
-                        ret |= s.getIndex();
-                }
-                return ret;
-        }
+		public static long getIndex(EnumSet<TeleportFlags> enumSet)
+		{
+			long ret = 0;
+			for(TeleportFlags s: enumSet)
+			{
+				ret |= s.getIndex();
+			}
+			return ret;
+		}
 
 	}
 
@@ -1374,36 +1389,36 @@ public class AgentManager {
 			return index;
 		}
 
-					private static final Map<Integer,TeleportLureFlags> lookup  
-					= new HashMap<Integer,TeleportLureFlags>();
-		
-					static {
-						for(TeleportLureFlags s : EnumSet.allOf(TeleportLureFlags.class))
-							lookup.put(s.getIndex(), s);
-					}
-		
-					 public static EnumSet<TeleportLureFlags> get(Integer index)
-			         {
-			                 EnumSet<TeleportLureFlags> enumsSet = EnumSet.allOf(TeleportLureFlags.class);
-			                 for(Entry<Integer,TeleportLureFlags> entry: lookup.entrySet())
-			                 {
-			                         if((entry.getKey().intValue() | index) != index)
-			                         {
-			                                 enumsSet.remove(entry.getValue());
-			                         }
-			                 }
-			                 return enumsSet;
-			         }
+		private static final Map<Integer,TeleportLureFlags> lookup  
+		= new HashMap<Integer,TeleportLureFlags>();
 
-			         public static int getIndex(EnumSet<TeleportLureFlags> enumSet)
-			         {
-			                 int ret = 0;
-			                 for(TeleportLureFlags s: enumSet)
-			                 {
-			                         ret |= s.getIndex();
-			                 }
-			                 return ret;
-			         }
+		static {
+			for(TeleportLureFlags s : EnumSet.allOf(TeleportLureFlags.class))
+				lookup.put(s.getIndex(), s);
+		}
+
+		public static EnumSet<TeleportLureFlags> get(Integer index)
+		{
+			EnumSet<TeleportLureFlags> enumsSet = EnumSet.allOf(TeleportLureFlags.class);
+			for(Entry<Integer,TeleportLureFlags> entry: lookup.entrySet())
+			{
+				if((entry.getKey().intValue() | index) != index)
+				{
+					enumsSet.remove(entry.getValue());
+				}
+			}
+			return enumsSet;
+		}
+
+		public static int getIndex(EnumSet<TeleportLureFlags> enumSet)
+		{
+			int ret = 0;
+			for(TeleportLureFlags s: enumSet)
+			{
+				ret |= s.getIndex();
+			}
+			return ret;
+		}
 
 	}
 
@@ -1441,28 +1456,28 @@ public class AgentManager {
 		}
 
 
-		 public static EnumSet<ScriptSensorTypeFlags> get(Integer index)
-		         {
-		                 EnumSet<ScriptSensorTypeFlags> enumsSet = EnumSet.allOf(ScriptSensorTypeFlags.class);
-		                 for(Entry<Integer,ScriptSensorTypeFlags> entry: lookup.entrySet())
-		                 {
-		                         if((entry.getKey().intValue() | index) != index)
-		                         {
-		                                 enumsSet.remove(entry.getValue());
-		                         }
-		                 }
-		                 return enumsSet;
-		         }
+		public static EnumSet<ScriptSensorTypeFlags> get(Integer index)
+		{
+			EnumSet<ScriptSensorTypeFlags> enumsSet = EnumSet.allOf(ScriptSensorTypeFlags.class);
+			for(Entry<Integer,ScriptSensorTypeFlags> entry: lookup.entrySet())
+			{
+				if((entry.getKey().intValue() | index) != index)
+				{
+					enumsSet.remove(entry.getValue());
+				}
+			}
+			return enumsSet;
+		}
 
-		         public static int getIndex(EnumSet<ScriptSensorTypeFlags> enumSet)
-		         {
-		                 int ret = 0;
-		                 for(ScriptSensorTypeFlags s: enumSet)
-		                 {
-		                         ret |= s.getIndex();
-		                 }
-		                 return ret;
-		         }
+		public static int getIndex(EnumSet<ScriptSensorTypeFlags> enumSet)
+		{
+			int ret = 0;
+			for(ScriptSensorTypeFlags s: enumSet)
+			{
+				ret |= s.getIndex();
+			}
+			return ret;
+		}
 
 	}
 
@@ -1492,18 +1507,18 @@ public class AgentManager {
 			return index;
 		}
 
-					private static final Map<Integer,MuteType> lookup  
-					= new HashMap<Integer,MuteType>();
-		
-					static {
-						for(MuteType s : EnumSet.allOf(MuteType.class))
-							lookup.put(s.getIndex(), s);
-					}
-		
-					public static MuteType get(Integer index)
-					{
-						return lookup.get(index);
-					}
+		private static final Map<Integer,MuteType> lookup  
+		= new HashMap<Integer,MuteType>();
+
+		static {
+			for(MuteType s : EnumSet.allOf(MuteType.class))
+				lookup.put(s.getIndex(), s);
+		}
+
+		public static MuteType get(Integer index)
+		{
+			return lookup.get(index);
+		}
 	}
 
 	/// <summary>
@@ -1535,36 +1550,36 @@ public class AgentManager {
 			return index;
 		}
 
-					private static final Map<Integer,MuteFlags> lookup  
-					= new HashMap<Integer,MuteFlags>();
-		
-					static {
-						for(MuteFlags s : EnumSet.allOf(MuteFlags.class))
-							lookup.put(s.getIndex(), s);
-					}
-		
-					 public static EnumSet<MuteFlags> get(Integer index)
-			         {
-			                 EnumSet<MuteFlags> enumsSet = EnumSet.allOf(MuteFlags.class);
-			                 for(Entry<Integer,MuteFlags> entry: lookup.entrySet())
-			                 {
-			                         if((entry.getKey().intValue() | index) != index)
-			                         {
-			                                 enumsSet.remove(entry.getValue());
-			                         }
-			                 }
-			                 return enumsSet;
-			         }
+		private static final Map<Integer,MuteFlags> lookup  
+		= new HashMap<Integer,MuteFlags>();
 
-			         public static int getIndex(EnumSet<MuteFlags> enumSet)
-			         {
-			                 int ret = 0;
-			                 for(MuteFlags s: enumSet)
-			                 {
-			                         ret |= s.getIndex();
-			                 }
-			                 return ret;
-			         }
+		static {
+			for(MuteFlags s : EnumSet.allOf(MuteFlags.class))
+				lookup.put(s.getIndex(), s);
+		}
+
+		public static EnumSet<MuteFlags> get(Integer index)
+		{
+			EnumSet<MuteFlags> enumsSet = EnumSet.allOf(MuteFlags.class);
+			for(Entry<Integer,MuteFlags> entry: lookup.entrySet())
+			{
+				if((entry.getKey().intValue() | index) != index)
+				{
+					enumsSet.remove(entry.getValue());
+				}
+			}
+			return enumsSet;
+		}
+
+		public static int getIndex(EnumSet<MuteFlags> enumSet)
+		{
+			int ret = 0;
+			for(MuteFlags s: enumSet)
+			{
+				ret |= s.getIndex();
+			}
+			return ret;
+		}
 
 	}
 	//endregion Enums
@@ -1629,7 +1644,7 @@ public class AgentManager {
 		/// <summary>Mute entry name</summary>
 		public String Name;
 		/// <summary>Mute flags</summary>
-		public MuteFlags Flags;
+		public EnumSet<MuteFlags> Flags;
 	}
 
 	/// <summary>Transaction detail sent with MoneyBalanceReply message</summary>
@@ -2453,7 +2468,7 @@ public class AgentManager {
 	/// <summary>An <seealso cref="Vector3"/> representing the acceleration of our agent</summary>
 	public Vector3 getAcceleration() {return acceleration;}
 	public void setAcceleration(Vector3 value) {acceleration = value;}
-	
+
 	/// <summary>A <seealso cref="Vector3"/> which specifies the angular speed, and axis about which an Avatar is rotating.</summary>
 	public Vector3 getAngularVelocity() {return angularVelocity;}
 	public void setAngularVelocity(Vector3 value) {angularVelocity = value;}
@@ -2645,14 +2660,11 @@ public class AgentManager {
 	{
 		Client = client;
 		Movement = new AgentMovement(Client);
-		//TODO Need to implement
-
 
 		//		            Client.network.Disconnected += Network_OnDisconnected;
 		Client.network.RegisterOnDisconnectedCallback(new EventObserver<DisconnectedEventArgs>(){
 			@Override
 			public void handleEvent(Observable o, DisconnectedEventArgs arg) {
-				// TODO Auto-generated method stub	
 				Network_OnDisconnected(o, arg);
 			}
 		});
@@ -2938,13 +2950,13 @@ public class AgentManager {
 				);
 		// Login
 		Client.network.RegisterLoginResponseCallback(new EventObserver<LoginResponseCallbackArg>()
-		{
+				{
 			public void handleEvent(Observable arg0, LoginResponseCallbackArg arg1) {
 				LoginResponseCallbackArg obj = (LoginResponseCallbackArg)arg1;
 				Network_OnLoginResponse(obj.isLoginSuccess(), obj.isRedirect(), 
 						obj.getMessage(), obj.getReason(), obj.getReplyData());
 			}	
-		});
+				});
 
 		//            // Alert Messages
 		//            // Client.network.RegisterCallback(PacketType.AlertMessage, AlertMessageHandler);
@@ -3627,7 +3639,7 @@ public class AgentManager {
 	public void AutoPilot(double globalX, double globalY, double z)
 	{
 		GenericMessagePacket autopilot = createGenericMessagePacket(globalX, globalY, z);
-		
+
 		Client.network.SendPacket(autopilot);		
 	}
 
@@ -3647,11 +3659,11 @@ public class AgentManager {
 		autopilot.ParamList[1].Parameter = Utils.stringToBytesWithTrailingNullByte(Double.toString(globalY));
 		autopilot.ParamList[2] = new GenericMessagePacket.ParamListBlock();
 		autopilot.ParamList[2].Parameter = Utils.stringToBytesWithTrailingNullByte(Double.toString(z));
-		
+
 		return autopilot;		
 	}	
-	
-	
+
+
 	/// <summary>
 	/// Use the autopilot sim function to move the avatar to a new position
 	/// </summary>
@@ -3988,109 +4000,114 @@ public class AgentManager {
 
 	//endregion Money
 
-	//TODO Need to Implement
-	//	        //region Gestures
-	//	        /// <summary>
-	//	        /// Plays a gesture
-	//	        /// </summary>
-	//	        /// <param name="gestureID">Asset <seealso cref="UUID"/> of the gesture</param>
-	//	        public void PlayGesture(UUID gestureID)
-	//	        {
-	//	            Thread t = new Thread(new ThreadStart(delegate()
-	//	                {
-	//	                    // First fetch the guesture
-	//	                    AssetGesture gesture = null;
-	//	
-	//	                    if (gestureCache.containsKey(gestureID))
-	//	                    {
-	//	                        gesture = gestureCache[gestureID];
-	//	                    }
-	//	                    else
-	//	                    {
-	//	                        AutoResetEvent gotAsset = new AutoResetEvent(false);
-	//	
-	//	                        Client.Assets.RequestAsset(gestureID, AssetType.Gesture, true,
-	//	                                                    delegate(AssetDownload transfer, Asset asset)
-	//	                                                    {
-	//	                                                        if (transfer.Success)
-	//	                                                        {
-	//	                                                            gesture = (AssetGesture)asset;
-	//	                                                        }
-	//	
-	//	                                                        gotAsset.Set();
-	//	                                                    }
-	//	                        );
-	//	
-	//	                        gotAsset.WaitOne(30 * 1000, false);
-	//	
-	//	                        if (gesture != null && gesture.Decode())
-	//	                        {
-	//	                            synchronized (gestureCache)
-	//	                            {
-	//	                                if (!gestureCache.containsKey(gestureID))
-	//	                                {
-	//	                                    gestureCache[gestureID] = gesture;
-	//	                                }
-	//	                            }
-	//	                        }
-	//	                    }
-	//	
-	//	                    // We got it, now we play it
-	//	                    if (gesture != null)
-	//	                    {
-	//	                        for (int i = 0; i < gesture.Sequence.Count; i++)
-	//	                        {
-	//	                            GestureStep step = gesture.Sequence[i];
-	//	
-	//	                            switch (step.GestureStepType)
-	//	                            {
-	//	                                case GestureStepType.Chat:
-	//	                                    Chat(((GestureStepChat)step).Text, 0, ChatType.Normal);
-	//	                                    break;
-	//	
-	//	                                case GestureStepType.Animation:
-	//	                                    GestureStepAnimation anim = (GestureStepAnimation)step;
-	//	
-	//	                                    if (anim.AnimationStart)
-	//	                                    {
-	//	                                        if (SignaledAnimations.containsKey(anim.ID))
-	//	                                        {
-	//	                                            AnimationStop(anim.ID, true);
-	//	                                        }
-	//	                                        AnimationStart(anim.ID, true);
-	//	                                    }
-	//	                                    else
-	//	                                    {
-	//	                                        AnimationStop(anim.ID, true);
-	//	                                    }
-	//	                                    break;
-	//	
-	//	                                case GestureStepType.Sound:
-	//	                                    Client.Sound.PlaySound(((GestureStepSound)step).ID);
-	//	                                    break;
-	//	
-	//	                                case GestureStepType.Wait:
-	//	                                    GestureStepWait wait = (GestureStepWait)step;
-	//	                                    if (wait.WaitForTime)
-	//	                                    {
-	//	                                        Thread.Sleep((int)(1000f * wait.WaitTime));
-	//	                                    }
-	//	                                    if (wait.WaitForAnimation)
-	//	                                    {
-	//	                                        // TODO: implement waiting for all animations to end that were triggered
-	//	                                        // during playing of this guesture sequence
-	//	                                    }
-	//	                                    break;
-	//	                            }
-	//	                        }
-	//	                    }
-	//	                }));
-	//	
-	//	            t.IsBackground = true;
-	//	            t.Name = "Gesture thread: " + gestureID;
-	//	            t.Start();
-	//	        }
-	//	
+	//region Gestures
+	/// <summary>
+	/// Plays a gesture
+	/// </summary>
+	/// <param name="gestureID">Asset <seealso cref="UUID"/> of the gesture</param>
+	public void PlayGesture(final UUID gestureID)
+	{
+		threadPool.execute(new Runnable(){
+			public void run()
+			{
+				final AssetGesture[] gesture = new AssetGesture[1];
+
+				if (gestureCache.containsKey(gestureID))
+				{
+					gesture[0] = gestureCache.get(gestureID);
+				}
+				else
+				{
+					final AutoResetEvent gotAsset = new AutoResetEvent(false);
+
+					MethodDelegate<Void, AssetReceivedCallbackArgs> assetReceivedCallback = new MethodDelegate<Void, AssetReceivedCallbackArgs>()
+							{
+						public Void execute(
+								AssetReceivedCallbackArgs e) {
+							if (e.getTransfer().Success)
+							{
+								gesture[0] = (AssetGesture)e.getAsset();
+							}
+
+							gotAsset.set();
+							return null;
+						}
+
+							};
+							Client.assets.RequestAsset(gestureID, AssetType.Gesture, true, 
+									assetReceivedCallback);
+
+							try {
+								gotAsset.waitOne(30 * 1000);
+							} catch (InterruptedException e1) {
+								JLogger.error("Error while playing a gesture: " + Utils.getExceptionStackTraceAsString(e1));
+							}
+
+							if (gesture[0] != null && gesture[0].Decode())
+							{
+								synchronized (gestureCache)
+								{
+									if (!gestureCache.containsKey(gestureID))
+									{
+										gestureCache.put(gestureID, gesture[0]);
+									}
+								}
+							}
+				}
+
+				// We got it, now we play it
+				if (gesture[0] != null)
+				{
+					for (int i = 0; i < gesture[0].Sequence.size(); i++)
+					{
+						GestureStep step = gesture[0].Sequence.get(i);
+
+						switch (step.getGestureStepType())
+						{
+						case Chat:
+							Chat(((GestureStepChat)step).Text, 0, ChatType.Normal);
+							break;
+
+						case Animation:
+							GestureStepAnimation anim = (GestureStepAnimation)step;
+
+							if (anim.AnimationStart)
+							{
+								if (SignaledAnimations.containsKey(anim.ID))
+								{
+									AnimationStop(anim.ID, true);
+								}
+								AnimationStart(anim.ID, true);
+							}
+							else
+							{
+								AnimationStop(anim.ID, true);
+							}
+							break;
+
+						case Sound:
+							Client.sound.PlaySound(((GestureStepSound)step).ID);
+							break;
+
+						case Wait:
+							GestureStepWait wait = (GestureStepWait)step;
+							if (wait.WaitForTime)
+							{
+								PlatformUtils.sleep((int)(1000f * wait.WaitTime));
+							}
+							if (wait.WaitForAnimation)
+							{
+								// TODO: implement waiting for all animations to end that were triggered
+								// during playing of this guesture sequence
+							}
+							break;
+						}
+					}
+				}
+			}
+		});
+	}
+
 	/// <summary>
 	/// Mark gesture active
 	/// </summary>
@@ -4555,7 +4572,7 @@ public class AgentManager {
 	/// <param name="name">Mute name</param>
 	public void UpdateMuteListEntry(MuteType type, UUID id, String name)
 	{
-		UpdateMuteListEntry(type, id, name, MuteFlags.Default);
+		UpdateMuteListEntry(type, id, name, MuteFlags.get(MuteFlags.Default.getIndex()));
 	}
 
 	/// <summary>
@@ -4565,7 +4582,7 @@ public class AgentManager {
 	/// <param name="id">Mute UUID</param>
 	/// <param name="name">Mute name</param>
 	/// <param name="flags">Mute flags</param>
-	public void UpdateMuteListEntry(MuteType type, UUID id, String name, MuteFlags flags)
+	public void UpdateMuteListEntry(MuteType type, UUID id, String name, EnumSet<MuteFlags> flags)
 	{
 		UpdateMuteListEntryPacket p = new UpdateMuteListEntryPacket();
 		p.AgentData.AgentID = Client.self.getAgentID();
@@ -4574,7 +4591,7 @@ public class AgentManager {
 		p.MuteData.MuteType = (int)type.getIndex();
 		p.MuteData.MuteID = id;
 		p.MuteData.MuteName = Utils.stringToBytesWithTrailingNullByte(name);
-		p.MuteData.MuteFlags = (long)flags.getIndex();
+		p.MuteData.MuteFlags = (long)MuteFlags.getIndex(flags);
 
 		Client.network.SendPacket(p);
 
@@ -4834,7 +4851,7 @@ public class AgentManager {
 			URI url = Client.network.getCurrentSim().Caps.CapabilityURI("AttachmentResources");
 			CapsHttpClient request = new CapsHttpClient(url);
 			request.addRequestCompleteObserver(new EventObserver<CapsHttpRequestCompletedArg>()
-			{
+					{
 				public void handleEvent(Observable arg0, CapsHttpRequestCompletedArg arg1) {
 					//			System.out.println("RequestCompletedObserver called ...");
 					CapsHttpRequestCompletedArg rcha = (CapsHttpRequestCompletedArg) arg1;
@@ -4854,7 +4871,7 @@ public class AgentManager {
 						callback.handleEvent(null, new AttachmentResourcesCallbackArg(false, null));
 					}
 				}	
-			}
+					}
 					);
 			//			request.OnComplete += delegate(CapsHttpClient client, OSD result, Exception error)
 			//					{
@@ -5612,6 +5629,27 @@ public class AgentManager {
 		onGroupChatJoined.raiseEvent(new GroupChatJoinedEventArgs(msg.SessionID, msg.SessionName, msg.TempSessionID, msg.Success));
 	}
 
+	private ChatSessionMember findChatSessionMember(List<ChatSessionMember> list, UUID agentID)
+	{
+		for(ChatSessionMember c : list)
+		{
+			if(c.AvatarKey.equals(agentID))
+				return c;
+		}
+		return null;
+	}
+
+	private int findChatSessionMemberIndex(List<ChatSessionMember> list, UUID agentID)
+	{
+		for(int i =0; i < list.size(); i++)
+		{
+			ChatSessionMember c = list.get(i);
+			if(c.AvatarKey.equals(agentID))
+				return i;
+		}
+		return -1;
+	}
+	
 	/// <summary>
 	/// Someone joined or left group chat
 	/// </summary>
@@ -5620,87 +5658,76 @@ public class AgentManager {
 	/// <param name="simulator"></param>
 	private void ChatterBoxSessionAgentListUpdatesEventHandler(String capsKey, IMessage message, Simulator simulator) throws NotImplementedException
 	{
-		//TODO need to implement
-		throw new NotImplementedException("Need to implement");
-		//		ChatterBoxSessionAgentListUpdatesMessage msg = (ChatterBoxSessionAgentListUpdatesMessage)message;
-		//
-		//		synchronized (GroupChatSessions.getDictionary())
-		//		{
-		//		if (!GroupChatSessions.containsKey(msg.SessionID))
-		//			GroupChatSessions.add(msg.SessionID, new ArrayList<ChatSessionMember>());
-		//		}
-		//
-		//		for (int i = 0; i < msg.Updates.length; i++)
-		//		{
-		//			ChatSessionMember fndMbr;
-		//			synchronized (GroupChatSessions.getDictionary())
-		//			{
-		//				fndMbr = GroupChatSessions[msg.SessionID].Find(delegate(ChatSessionMember member)
-		//						{
-		//					return member.AvatarKey == msg.Updates[i].AgentID;
-		//						});
-		//			}
-		//
-		//			if (msg.Updates[i].Transition != null)
-		//			{
-		//				if (msg.Updates[i].Transition.Equals("ENTER"))
-		//				{
-		//					if (fndMbr.AvatarKey == UUID.Zero)
-		//					{
-		//						fndMbr = new ChatSessionMember();
-		//						fndMbr.AvatarKey = msg.Updates[i].AgentID;
-		//
-		//						synchronized (GroupChatSessions.getDictionary())
-		//						{
-		//						GroupChatSessions[msg.SessionID].Add(fndMbr);
-		//						}
-		//
-		//						if (m_ChatSessionMemberAdded != null)
-		//						{
-		//							OnChatSessionMemberAdded(new ChatSessionMemberAddedEventArgs(msg.SessionID, fndMbr.AvatarKey));
-		//						}
-		//					}
-		//				}
-		//				else if (msg.Updates[i].Transition.Equals("LEAVE"))
-		//				{
-		//					if (fndMbr.AvatarKey != UUID.Zero)
-		//						synchronized (GroupChatSessions.getDictionary())
-		//						{
-		//						GroupChatSessions[msg.SessionID].Remove(fndMbr);
-		//						}
-		//
-		//					if (m_ChatSessionMemberLeft != null)
-		//					{
-		//						OnChatSessionMemberLeft(new ChatSessionMemberLeftEventArgs(msg.SessionID, msg.Updates[i].AgentID));
-		//					}
-		//				}
-		//			}
-		//
-		//			// handle updates
-		//			ChatSessionMember update_member = GroupChatSessions.getDictionary()[msg.SessionID].Find(delegate(ChatSessionMember m)
-		//					{
-		//				return m.AvatarKey == msg.Updates[i].AgentID;
-		//					});
-		//
-		//
-		//			update_member.MuteText = msg.Updates[i].MuteText;
-		//			update_member.MuteVoice = msg.Updates[i].MuteVoice;
-		//
-		//			update_member.CanVoiceChat = msg.Updates[i].CanVoiceChat;
-		//			update_member.IsModerator = msg.Updates[i].IsModerator;
-		//
-		//			// replace existing member record
-		//			synchronized (GroupChatSessions.getDictionary())
-		//			{
-		//				int found = GroupChatSessions.getDictionary()[msg.SessionID].FindIndex(delegate(ChatSessionMember m)
-		//						{
-		//					return m.AvatarKey == msg.Updates[i].AgentID;
-		//						});
-		//
-		//				if (found >= 0)
-		//					GroupChatSessions.getDictionary()[msg.SessionID][found] = update_member;
-		//			}
-		//		}
+				ChatterBoxSessionAgentListUpdatesMessage msg = (ChatterBoxSessionAgentListUpdatesMessage)message;
+		
+				synchronized (GroupChatSessions.getDictionary())
+				{
+				if (!GroupChatSessions.containsKey(msg.SessionID))
+					GroupChatSessions.add(msg.SessionID, new ArrayList<ChatSessionMember>());
+				}
+		
+				for (int i = 0; i < msg.Updates.length; i++)
+				{
+					ChatSessionMember fndMbr;
+					synchronized (GroupChatSessions.getDictionary())
+					{
+						fndMbr = findChatSessionMember(GroupChatSessions.get(msg.SessionID), msg.Updates[i].AgentID);
+					}
+		
+					if (msg.Updates[i].Transition != null)
+					{
+						if (msg.Updates[i].Transition.equals("ENTER"))
+						{
+							if (fndMbr.AvatarKey == UUID.Zero)
+							{
+								fndMbr = new ChatSessionMember();
+								fndMbr.AvatarKey = msg.Updates[i].AgentID;
+		
+								synchronized (GroupChatSessions.getDictionary())
+								{
+								GroupChatSessions.get(msg.SessionID).add(fndMbr);
+								}
+		
+								if (onChatSessionMemberAdded != null)
+								{
+									onChatSessionMemberAdded.raiseEvent(new ChatSessionMemberAddedEventArgs(msg.SessionID, fndMbr.AvatarKey));
+								}
+							}
+						}
+						else if (msg.Updates[i].Transition.equals("LEAVE"))
+						{
+							if (fndMbr.AvatarKey != UUID.Zero)
+								synchronized (GroupChatSessions.getDictionary())
+								{
+								GroupChatSessions.get(msg.SessionID).remove(fndMbr);
+								}
+		
+							if (onChatSessionMemberLeft != null)
+							{
+								onChatSessionMemberLeft.raiseEvent(new ChatSessionMemberLeftEventArgs(msg.SessionID, msg.Updates[i].AgentID));
+							}
+						}
+					}
+		
+					// handle updates
+					ChatSessionMember update_member = findChatSessionMember(GroupChatSessions.getDictionary().get(msg.SessionID),  msg.Updates[i].AgentID);
+						
+		
+					update_member.MuteText = msg.Updates[i].MuteText;
+					update_member.MuteVoice = msg.Updates[i].MuteVoice;
+		
+					update_member.CanVoiceChat = msg.Updates[i].CanVoiceChat;
+					update_member.IsModerator = msg.Updates[i].IsModerator;
+		
+					// replace existing member record
+					synchronized (GroupChatSessions.getDictionary())
+					{
+						int found = findChatSessionMemberIndex(GroupChatSessions.getDictionary().get(msg.SessionID),  msg.Updates[i].AgentID);
+		
+						if (found >= 0)
+							GroupChatSessions.getDictionary().get(msg.SessionID).add(found, update_member);
+					}
+				}
 	}
 
 	/// <summary>
@@ -5848,86 +5875,95 @@ public class AgentManager {
 		}
 	}
 
-	protected void MuteListUpdateHander(Object sender, PacketReceivedEventArgs e) throws NotImplementedException
+	protected void MuteListUpdateHander(Object sender, PacketReceivedEventArgs e) 
 	{
-		//TODO need to implement
-		throw new NotImplementedException("Need to impleement");
-		//		MuteListUpdatePacket packet = (MuteListUpdatePacket)e.getPacket();
-		//		if (packet.MuteData.AgentID != Client.self.getAgentID())
-		//		{
-		//			return;
-		//		}
-		//
-		//		ThreadPool.QueueUserWorkItem(sync =>
-		//		{
-		//			using (AutoResetEvent gotMuteList = new AutoResetEvent(false))
-		//			{
-		//				String fileName = Utils.bytesWithTrailingNullByteToString(packet.MuteData.Filename);
-		//				String muteList = string.Empty;
-		//				ulong xferID = 0;
-		//				byte[] assetData = null;
-		//
-		//				EventHandler<XferReceivedEventArgs> xferCallback = (object xsender, XferReceivedEventArgs xe) =>
-		//				{
-		//					if (xe.Xfer.XferID == xferID)
-		//					{
-		//						assetData = xe.Xfer.AssetData;
-		//						gotMuteList.Set();
-		//					}
-		//				};
-		//
-		//
-		//				Client.Assets.XferReceived += xferCallback;
-		//				xferID = Client.Assets.RequestAssetXfer(fileName, true, false, UUID.Zero, AssetType.Unknown, true);
-		//
-		//				if (gotMuteList.WaitOne(60 * 1000, false))
-		//				{
-		//					muteList = Utils.bytesWithTrailingNullByteToString(assetData);
-		//
-		//					synchronized (MuteList.getDictionary())
-		//					{
-		//						MuteList.getDictionary().Clear();
-		//						foreach (var line in muteList.Split('\n'))
-		//						{
-		//							if (line.Trim() == string.Empty) continue;
-		//
-		//							try
-		//							{
-		//								Match m;
-		//								if ((m = Regex.Match(line, @"(?<MyteType>\d+)\s+(?<Key>[a-zA-Z0-9-]+)\s+(?<Name>[^|]+)|(?<Flags>.+)", RegexOptions.CultureInvariant)).Success)
-		//								{
-		//									MuteEntry me = new MuteEntry();
-		//									me.Type = (MuteType)int.Parse(m.Groups["MyteType"].Value);
-		//									me.ID = new UUID(m.Groups["Key"].Value);
-		//									me.Name = m.Groups["Name"].Value;
-		//									int flags = 0;
-		//									int.TryParse(m.Groups["Flags"].Value, out flags);
-		//									me.Flags = (MuteFlags)flags;
-		//									MuteList[string.Format("{0}|{1}", me.ID, me.Name)] = me;
-		//								}
-		//								else
-		//								{
-		//									throw new ArgumentException("Invalid mutelist entry line");
-		//								}
-		//							}
-		//							catch (Exception ex)
-		//							{
-		//								Logger.Log("Failed to parse the mute list line: " + line, Helpers.LogLevel.Warning, Client, ex);
-		//							}
-		//						}
-		//					}
-		//
-		//					OnMuteListUpdated(EventArgs.Empty);
-		//				}
-		//				else
-		//				{
-		//					Logger.Log("Timed out waiting for mute list download", Helpers.LogLevel.Warning, Client);
-		//				}
-		//
-		//				Client.Assets.XferReceived -= xferCallback;
-		//
-		//			}
-		//		});
+				final MuteListUpdatePacket packet = (MuteListUpdatePacket)e.getPacket();
+				if (packet.MuteData.AgentID != Client.self.getAgentID())
+				{
+					return;
+				}
+				threadPool.execute(new Runnable(){
+					public void run()
+					{
+						try
+						{
+						final AutoResetEvent gotMuteList = new AutoResetEvent(false);
+						String fileName = Utils.bytesWithTrailingNullByteToString(packet.MuteData.Filename);
+						String muteList = "";
+						final BigInteger[] xferID = new BigInteger[]{new BigInteger("0")};
+						final byte[][] assetData = new byte[1][];
+		
+						EventObserver<XferReceivedEventArgs> xferCallback = new EventObserver<XferReceivedEventArgs>()
+								{
+									@Override
+									public void handleEvent(Observable sender,
+											XferReceivedEventArgs xe) {
+										if (xe.getXfer().XferID.equals(xferID[0]))
+											{
+												assetData[0] = xe.getXfer().AssetData;
+												gotMuteList.set();
+											}
+									}	
+								};
+						
+					Client.assets.registerOnXferReceived(xferCallback);
+						
+					xferID[0] = Client.assets.RequestAssetXfer(fileName, true, false, UUID.Zero, AssetType.Unknown, true);
+		
+						if (gotMuteList.waitOne(60 * 1000))
+						{
+							muteList = Utils.bytesWithTrailingNullByteToString(assetData[0]);
+		
+							synchronized (MuteList.getDictionary())
+							{
+								MuteList.getDictionary().clear();
+								for (String line : muteList.split("\n"))
+								{
+									if (Utils.isNullOrEmpty(line.trim())) continue;
+		
+									try
+									{
+										Pattern pattern = Pattern.compile("(?<MyteType>\\d+)\\s+(?<Key>[a-zA-Z0-9-]+)\\s+(?<Name>[^|]+)|(?<Flags>.+)");
+										Matcher m;
+										if ((m = pattern.matcher(line)).find())
+										{
+											MuteEntry me = new MuteEntry();
+											me.Type = MuteType.get(Integer.parseInt(m.group(0)));
+											me.ID = new UUID(m.group(1));
+											me.Name = m.group(2);
+											int[] flags = new int[1];
+											Utils.tryParseInt(m.group(3), flags);
+//											Integer.parseInt(m.Groups["Flags"].Value;
+											me.Flags = MuteFlags.get(flags[0]);
+											MuteList.add(String.format("%s|%s", me.ID, me.Name), me);
+										}
+										else
+										{
+											throw new IllegalArgumentException("Invalid mutelist entry line");
+										}
+									}
+									catch (Exception ex)
+									{
+										JLogger.error("Failed to parse the mute list line: " + line, Utils.getExceptionStackTraceAsString(ex));
+									}
+								}
+							}
+		
+							onMuteListUpdated.raiseEvent(new EventArgs());
+						}
+						else
+						{
+							JLogger.warn("Timed out waiting for mute list download");
+						}
+		
+						Client.assets.unregisterOnXferReceived(xferCallback);
+					}
+					
+					catch(Exception e)
+					{
+						JLogger.error(e);
+					}
+				}});
 	}
 
 	//endregion Packet Handlers

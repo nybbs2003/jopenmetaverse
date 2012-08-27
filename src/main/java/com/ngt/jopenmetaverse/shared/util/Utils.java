@@ -17,6 +17,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
 import java.util.logging.Logger;
+
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.ArrayUtils;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
@@ -1283,6 +1285,11 @@ public class Utils {
 			return new String(bytes, 0, bytes.length, "UTF-8");
 	}
 
+	public static String bytesToString(byte[] bytes, String encoding)
+			throws UnsupportedEncodingException {
+			return new String(bytes, 0, bytes.length, encoding);
+	}
+	
 	public static String bytesToString(byte[] bytes, int index, int count) {
 		// if (bytes.length > index + count && bytes[index + count - 1] == 0x00)
 		// return UTF8Encoding.UTF8.GetString(bytes, index, count - 1);
@@ -1400,19 +1407,23 @@ public class Utils {
 	// / <param name="str">The String to convert</param>
 	// / <returns>A null-terminated UTF8 byte array</returns>
 	public static byte[] stringToBytes(String str) {
+		return stringToBytes(str, "UTF-8");
+	}
+
+	public static byte[] stringToBytes(String str, String encoding) {
 		if (isNullOrEmpty(str)) {
 			return Utils.EmptyBytes;
 		}
 //		if (!str.endsWith("\0")) { str += "\0"; }
 
 		try {
-			return str.getBytes("UTF-8");
+			return str.getBytes(encoding);
 		} catch (UnsupportedEncodingException e) {
 			logger.warning(e.getMessage());
 		}
 		return Utils.EmptyBytes;
 	}
-
+	
 	
 	// / <summary>
 	// / Convert a String to a UTF8 encoded byte array
@@ -1470,7 +1481,7 @@ public class Utils {
 		int j = 0;
 
 		for (int i = 0; i < bytes.length; i++) {
-			bytes[i] = hexToByte(hexString.substring(j, 2));
+			bytes[i] = hexToByte(hexString.substring(j, j+2));
 			j += 2;
 		}
 
@@ -2112,7 +2123,23 @@ public class Utils {
 	// }
 
 	// endregion Miscellaneous
+	
+	public static String trimEnd(String str, char[] chars)
+	{
+		return str.replaceAll("[" + new String(chars) + "]+$", "");
+	}
 
+	
+	public static String trimStart(String str, char[] chars)
+	{
+		return str.replaceAll("^[" + new String(chars) + "]+", "");
+	}
+	
+	public static String trim(String str, char[] chars)
+	{
+		return trimStart(trimEnd(str, chars), chars);
+	}
+	
 	public static boolean isNullOrEmpty(String str) {
 		return str == null || str.isEmpty();
 	}
@@ -2152,6 +2179,16 @@ public class Utils {
 
 	public static byte booleanToBytes(boolean set) {
 		return (byte) (set ? 0x01 : 0x00);
+	}
+	
+	public static String encodeBase64String(byte[] bytes)
+	{
+		return Base64.encodeBase64String(bytes);
+	}
+
+	public static byte[] decodeBase64String(String str)
+	{
+		return Base64.decodeBase64(str);
 	}
 	
 	public static short UByteMaxValue = 0x0ff;  

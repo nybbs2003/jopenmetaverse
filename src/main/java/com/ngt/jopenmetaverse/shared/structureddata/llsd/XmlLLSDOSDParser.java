@@ -30,6 +30,7 @@ import com.ngt.jopenmetaverse.shared.structureddata.OSDArray;
 import com.ngt.jopenmetaverse.shared.structureddata.OSDException;
 import com.ngt.jopenmetaverse.shared.structureddata.OSDMap;
 import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.util.JLogger;
 import com.ngt.jopenmetaverse.shared.util.Utils;
 
 /// </summary>
@@ -88,6 +89,7 @@ public class XmlLLSDOSDParser
 		}
 		catch(Exception e)
 		{
+			JLogger.error("Error in parsing xml: " + Utils.getExceptionStackTraceAsString(e));
 			e.printStackTrace();
 			return new OSD();
 		}
@@ -361,7 +363,6 @@ public class XmlLLSDOSDParser
 	
 	private static OSD ParseLLSDXmlElement(Node reader) throws OSDException, URISyntaxException
 	{
-
 		if (reader.getNodeType() != Node.ELEMENT_NODE)
 			throw new OSDException("Expected an element");
 

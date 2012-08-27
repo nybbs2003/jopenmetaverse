@@ -2,8 +2,6 @@ package com.ngt.jopenmetaverse.shared.cap.http;
 
 import java.net.URI;
 import java.security.cert.X509Certificate;
-import java.util.Observable;
-import java.util.Observer;
 import java.util.logging.Logger;
 
 import org.apache.http.client.methods.HttpRequestBase;
@@ -11,6 +9,7 @@ import org.apache.http.client.methods.HttpRequestBase;
 import com.ngt.jopenmetaverse.shared.sim.events.AutoResetEvent;
 import com.ngt.jopenmetaverse.shared.sim.events.EventObservable;
 import com.ngt.jopenmetaverse.shared.sim.events.EventObserver;
+import com.ngt.jopenmetaverse.shared.sim.events.MethodDelegate;
 import com.ngt.jopenmetaverse.shared.structureddata.OSD;
 import com.ngt.jopenmetaverse.shared.structureddata.OSDFormat;
 import com.ngt.jopenmetaverse.shared.structureddata.OSDParser;
@@ -24,46 +23,51 @@ public class CapsHttpClient
 	Logger logger = Logger.getLogger(getClass().toString());
 	final CapsHttpClient capsHttpClient = this;
 
-	public class RequestCompletedObserver implements Observer
-	{
-		public void update(Observable arg0, Object arg1) {
-			HttpBaseRequestCompletedArg rcha = (HttpBaseRequestCompletedArg) arg1;
-
-			_Request = rcha.getRequest();
-
-			OSD result = null;
-
-			if (rcha.getResponseData() != null)
-			{
-				try { result = OSDParser.Deserialize(rcha.getResponseData()); }
-				catch (Exception ex) { rcha.setError(ex); }
-			}
-			FireCompleteCallback(result, rcha.getError());
-		}	
-	}
+//	public class RequestCompletedObserver implements Observer
+//	{
+//		public void update(Observable arg0, Object arg1) {
+//			HttpBaseRequestCompletedArg rcha = (HttpBaseRequestCompletedArg) arg1;
+//
+//			_Request = rcha.getRequest();
+//
+//			OSD result = null;
+//
+//			if (rcha.getResponseData() != null)
+//			{
+//				try { result = OSDParser.Deserialize(rcha.getResponseData()); }
+//				catch (Exception ex) { rcha.setError(ex); }
+//			}
+//			FireCompleteCallback(result, rcha.getError());
+//		}	
+//	}
 
 	private void FireCompleteCallback(OSD result, Exception error)
 	{
 		CapsHttpRequestCompletedArg r = new CapsHttpRequestCompletedArg(capsHttpClient, result, error);
 		requestCompleteObservable.raiseEvent(r);
+		if(requestCompleteDelegate !=null)
+			requestCompleteDelegate.execute(r);
 		_Response = result;
         _ResponseEvent.set();
 	}
 
-	public class DownloadProgressObserver implements Observer
-	{
-		public void update(Observable arg0, Object arg1) {
-			HttpBaseDownloadProgressArg rcha = (HttpBaseDownloadProgressArg) arg1;
-			CapsHttpRequestProgressArg chrpa = new CapsHttpRequestProgressArg(capsHttpClient, rcha.bytesReceived, rcha.totalBytesToReceive);
-			requestProgressObservable.raiseEvent(chrpa);
-		}	
-	}		 	
+//	public class DownloadProgressObserver implements Observer
+//	{
+//		public void update(Observable arg0, Object arg1) {
+//			HttpBaseDownloadProgressArg rcha = (HttpBaseDownloadProgressArg) arg1;
+//			CapsHttpRequestProgressArg chrpa = new CapsHttpRequestProgressArg(capsHttpClient, rcha.bytesReceived, rcha.totalBytesToReceive);
+//			requestProgressObservable.raiseEvent(chrpa);
+//		}	
+//	}		 	
 
 	protected EventObservable<CapsHttpRequestCompletedArg> requestCompleteObservable;
 	protected EventObservable<CapsHttpRequestProgressArg> requestProgressObservable;
 
-	protected EventObservable<HttpBaseRequestCompletedArg> internalRequestCompletedObservable;
-	protected EventObservable<HttpBaseDownloadProgressArg> internaldownloadProgressObservable;	 	
+	protected MethodDelegate<Void, CapsHttpRequestCompletedArg> requestCompleteDelegate = null;
+	protected MethodDelegate<Void, CapsHttpRequestProgressArg> requestProgressDelegate = null;
+
+	protected MethodDelegate<Void, HttpBaseRequestCompletedArg> internalRequestCompletedDelegate;
+	protected MethodDelegate<Void, HttpBaseDownloadProgressArg> internaldownloadProgressDelegate;	 	
 	protected Object UserData;
 	protected URI _Address;
 	protected byte[] _PostData;
@@ -87,11 +91,34 @@ public class CapsHttpClient
 
 		requestCompleteObservable = new EventObservable<CapsHttpRequestCompletedArg>();
 		requestProgressObservable = new EventObservable<CapsHttpRequestProgressArg>();;
+		
+		internalRequestCompletedDelegate = new MethodDelegate<Void, HttpBaseRequestCompletedArg>()
+				{
+					public Void execute(HttpBaseRequestCompletedArg rcha) {
+						_Request = rcha.getRequest();
 
-		internalRequestCompletedObservable = new EventObservable<HttpBaseRequestCompletedArg>();
-		internalRequestCompletedObservable.addObserver(new RequestCompletedObserver());
-		internaldownloadProgressObservable = new EventObservable<HttpBaseDownloadProgressArg>();
-		internaldownloadProgressObservable.addObserver(new DownloadProgressObserver());
+						OSD result = null;
+
+						if (rcha.getResponseData() != null)
+						{
+							try { result = OSDParser.Deserialize(rcha.getResponseData()); }
+							catch (Exception ex) { rcha.setError(ex); }
+						}
+						FireCompleteCallback(result, rcha.getError());						
+						return null;
+					}
+				};
+				
+		internaldownloadProgressDelegate = new MethodDelegate<Void, HttpBaseDownloadProgressArg>()
+				{
+					public Void execute(HttpBaseDownloadProgressArg rcha) {
+						CapsHttpRequestProgressArg chrpa = new CapsHttpRequestProgressArg(capsHttpClient, rcha.bytesReceived, rcha.totalBytesToReceive);
+						requestProgressObservable.raiseEvent(chrpa);
+						if(requestProgressDelegate !=null)
+							requestProgressDelegate.execute(chrpa);
+						return null;
+					}
+				};
 	}        
 
 	public void addRequestCompleteObserver(EventObserver<CapsHttpRequestCompletedArg> o)
@@ -105,6 +132,28 @@ public class CapsHttpClient
 	}
 	
 	
+	public MethodDelegate<Void, CapsHttpRequestCompletedArg> getRequestCompleteDelegate() {
+		return requestCompleteDelegate;
+	}
+
+
+	public void setRequestCompleteDelegate(
+			MethodDelegate<Void, CapsHttpRequestCompletedArg> requestCompleteDelegate) {
+		this.requestCompleteDelegate = requestCompleteDelegate;
+	}
+
+
+	public MethodDelegate<Void, CapsHttpRequestProgressArg> getRequestProgressDelegate() {
+		return requestProgressDelegate;
+	}
+
+
+	public void setRequestProgressDelegate(
+			MethodDelegate<Void, CapsHttpRequestProgressArg> requestProgressDelegate) {
+		this.requestProgressDelegate = requestProgressDelegate;
+	}
+
+
 	public Object getUserData() {
 		return UserData;
 	}
@@ -169,15 +218,15 @@ public class CapsHttpClient
 			// GET
 			//Logger.Log.Debug("[CapsClient] GET " + _Address);
 //			System.out.println("Going to send GET request");
-			_Request = HttpBaseClient.DownloadStringAsync(_Address, _ClientCert, millisecondsTimeout,internaldownloadProgressObservable, 
-					internalRequestCompletedObservable);
+			_Request = HttpBaseClient.DownloadStringAsync(_Address, _ClientCert, millisecondsTimeout,internaldownloadProgressDelegate, 
+					internalRequestCompletedDelegate);
 		}
 		else
 		{
 			// POST
 			//Logger.Log.Debug("[CapsClient] POST (" + postData.Length + " bytes) " + _Address);
 			_Request = HttpBaseClient.UploadDataAsync(_Address, _ClientCert, contentType, postData, millisecondsTimeout, null,
-					internaldownloadProgressObservable, internalRequestCompletedObservable);
+					internaldownloadProgressDelegate, internalRequestCompletedDelegate);
 		}
 	}
 	public OSD GetResponse(int millisecondsTimeout) throws InterruptedException

@@ -304,7 +304,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         /// <summary>
         /// Textures taking longer than this value will be flagged as timed out and removed from the pipeline
         /// </summary>
-        public int PIPELINE_REQUEST_TIMEOUT = 45*1000;
+        public static int PIPELINE_REQUEST_TIMEOUT = 45*1000;
         //endregion
 
         //region Logging Configuration

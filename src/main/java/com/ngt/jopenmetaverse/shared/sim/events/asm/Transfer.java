@@ -13,7 +13,7 @@ public class Transfer
     public int Size;
     public byte[] AssetData = Utils.EmptyBytes;
     //int
-    public long Transferred;
+    public int Transferred;
     public boolean Success;
     public Enums.AssetType AssetType;
 

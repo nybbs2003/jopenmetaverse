@@ -19,8 +19,8 @@ import com.ngt.jopenmetaverse.shared.sim.AssetManager.ImageType;
         public ImageType ImageType;
         public int DiscardLevel;
         public float Priority;
-        private int InitialDataSize;
-        private  ManualResetEvent HeaderReceivedEvent = new ManualResetEvent(false);
+        public int InitialDataSize;
+        public  ManualResetEvent HeaderReceivedEvent = new ManualResetEvent(false);
 
         public ImageDownload()
         {

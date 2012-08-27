@@ -1,6 +1,7 @@
 package com.ngt.jopenmetaverse.shared.types;
 
 import java.io.Serializable;
+import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
 import com.ngt.jopenmetaverse.shared.util.Utils;
 
@@ -145,9 +146,9 @@ public class UUID implements Comparable<UUID>, Serializable
 	/// Create a 64-bit integer representation from the second half of this UUID
 	/// </summary>
 	/// <returns>An integer created from the last eight bytes of this UUID</returns>
-	public long GetULong()
+	public BigInteger GetULong()
 	{
-		return Guid.getLeastSignificantBits();
+		return new BigInteger(Utils.int64ToBytes(Guid.getLeastSignificantBits()));
 	}
 
 	//endregion Public Methods

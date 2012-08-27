@@ -1,9 +1,8 @@
 package com.ngt.jopenmetaverse.shared.sim.events.asm;
 
 import com.ngt.jopenmetaverse.shared.sim.asset.Asset;
-import com.ngt.jopenmetaverse.shared.sim.events.EventArgs;
 
-public class AssetReceivedCallbackArgs extends EventArgs{
+public class AssetReceivedCallbackArgs {
 	AssetDownload transfer;
 	Asset asset;
 	

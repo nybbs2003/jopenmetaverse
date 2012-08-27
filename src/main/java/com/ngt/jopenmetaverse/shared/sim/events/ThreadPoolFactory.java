@@ -22,7 +22,9 @@ public class ThreadPoolFactory {
 	
 	public static void executeParallel(Runnable[] tasks, int capacity) throws InterruptedException
 	{
-		//FIXME a dirty implement of executing 
+		//FIXME a dirty implement of executing parallel tasks
+		if(tasks.length > 0)
+		{
 		final ThreadPool pool = new DefaultThreadPoolExecutor(capacity, capacity, 10, 
 				TimeUnit.SECONDS, tasks.length);
 		final AutoResetEvent event = new AutoResetEvent(false); 
@@ -44,5 +46,8 @@ public class ThreadPoolFactory {
 		timer.schedule(1000, 1000);
 		event.waitOne();
 		JLogger.debug("Execute Parallel returing...");
+		}
+		else
+			JLogger.warn("0 number of tasks are provided to get executed in parallel");
 	}
 }

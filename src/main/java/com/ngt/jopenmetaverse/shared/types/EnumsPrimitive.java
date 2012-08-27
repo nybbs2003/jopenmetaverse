@@ -13,7 +13,7 @@ public class EnumsPrimitive
     /// <summary>
     /// Identifier code for primitive types
     /// </summary>
-    public enum PCode
+    public static enum PCode
     {
         /// <summary>None</summary>
         None ((byte)0),
@@ -58,7 +58,7 @@ public class EnumsPrimitive
     /// Primary parameters for primitives such as Physics Enabled or Phantom
     ///Flags
     /// </summary>
-    public enum PrimFlags
+    public static enum PrimFlags
     {
         /// <summary>Deprecated</summary>
         None ((long)0),
@@ -172,12 +172,32 @@ public class EnumsPrimitive
 			return ret;
 		}
 		
+		public static long or(EnumSet<PrimFlags> p1, EnumSet<PrimFlags> p2)
+		{
+			return PrimFlags.getIndex(p1) | PrimFlags.getIndex(p2);
+		}
+
+		public static long or(EnumSet<PrimFlags> p1, PrimFlags p2)
+		{
+			return PrimFlags.getIndex(p1) | p2.getIndex();
+		}
+		
+		public static long and(EnumSet<PrimFlags> p1, EnumSet<PrimFlags> p2)
+		{
+			return PrimFlags.getIndex(p1) & PrimFlags.getIndex(p2);
+		}
+		
+		public static long and(EnumSet<PrimFlags> p1, PrimFlags p2)
+		{
+			return PrimFlags.getIndex(p1) & p2.getIndex();
+		}
+		
     }
 
     /// <summary>
     /// Sound flags for sounds attached to primitives
     /// </summary>
-    public enum SoundFlags
+    public static enum SoundFlags
     {
         /// <summary></summary>
         None ((byte)0),
@@ -235,7 +255,7 @@ public class EnumsPrimitive
 	        }		
     }
 
-    public enum ProfileCurve
+    public static enum ProfileCurve
     {
         Circle ((byte)0x00),
         Square ((byte)0x01),
@@ -267,7 +287,7 @@ public class EnumsPrimitive
 		}
     }
 
-    public enum HoleType 
+    public static enum HoleType 
     {
         Same ((byte)0x00),
         Circle ((byte)0x10),
@@ -297,7 +317,7 @@ public class EnumsPrimitive
 		}		
     }
 
-    public enum PathCurve 
+    public static enum PathCurve 
     {
         Line ((byte)0x10),
         Circle ((byte)0x20),
@@ -331,7 +351,7 @@ public class EnumsPrimitive
     /// <summary>
     /// Material type for a primitive
     /// </summary>
-    public enum Material
+    public static enum Material
     {
         /// <summary></summary>
         Stone ((byte)0),
@@ -376,7 +396,7 @@ public class EnumsPrimitive
     /// <summary>
     /// Used in a helper function to roughly determine prim shape
     /// </summary>
-    public enum PrimType
+    public static enum PrimType
     {
         Unknown(0),
         Box(1),
@@ -406,7 +426,7 @@ public class EnumsPrimitive
     /// reserved already
     /// </summary>
     //[Flags]
-    public enum ExtraParamType
+    public static enum ExtraParamType
     {
         /// <summary>Whether this object has flexible parameters</summary>
         Flexible (0x10),
@@ -463,7 +483,7 @@ public class EnumsPrimitive
     /// <summary>
     /// 
     /// </summary>
-    public enum JointType 
+    public static enum JointType 
     {
         /// <summary></summary>
         Invalid ((byte)0),
@@ -504,7 +524,7 @@ public class EnumsPrimitive
     /// <summary>
     /// 
     /// </summary>
-    public enum SculptType 
+    public static enum SculptType 
     {
         /// <summary></summary>
         None ((byte)0),
@@ -549,7 +569,7 @@ public class EnumsPrimitive
     /// <summary>
     /// 
     /// </summary>
-    public enum FaceType
+    public static enum FaceType
     {
         /// <summary></summary>
         PathBegin (0x1 << 0),
@@ -584,7 +604,7 @@ public class EnumsPrimitive
     /// <summary>
     /// 
     /// </summary>
-    public enum ObjectCategory
+    public static enum ObjectCategory
     {
         /// <summary></summary>
         Invalid (-1),
@@ -630,7 +650,7 @@ public class EnumsPrimitive
     /// <remarks>
     /// Both InventoryObject and InventoryAttachment types can be attached
     ///</remarks>
-    public enum AttachmentPoint
+    public static enum AttachmentPoint
     {
         /// <summary>Right hand if object was not previously attached</summary>
         //[EnumInfo(Text = "Default")]
@@ -777,7 +797,7 @@ public class EnumsPrimitive
     /// <summary>
     /// Tree foliage types
     /// </summary>
-    public enum Tree
+    public static enum Tree
     {
         /// <summary>Pine1 tree</summary>
         Pine1 ((byte)0),
@@ -848,7 +868,7 @@ public class EnumsPrimitive
     /// <summary>
     /// Grass foliage types
     /// </summary>
-    public enum Grass
+    public static enum Grass
     {
         /// <summary></summary>
         Grass0 ((byte)0),
@@ -889,7 +909,7 @@ public class EnumsPrimitive
     /// <summary>
     /// Action associated with clicking on an object
     /// </summary>
-    public enum ClickAction 
+    public static enum ClickAction 
     {
         /// <summary>Touch object</summary>
         Touch ((byte)0),
@@ -933,7 +953,7 @@ public class EnumsPrimitive
     /// <summary>
     /// Type of physics representation used for this prim in the simulator
     /// </summary>
-    public enum PhysicsShapeType
+    public static enum PhysicsShapeType
     {
         /// <summary>Use prim physics form this object</summary>
         Prim ((byte)0),

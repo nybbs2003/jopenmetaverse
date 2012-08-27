@@ -27,6 +27,7 @@ import com.ngt.jopenmetaverse.shared.sim.login.LoginProgressEventArgs;
 import com.ngt.jopenmetaverse.shared.sim.login.LoginStatus;
 import com.ngt.jopenmetaverse.shared.types.Enums.AssetType;
 import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.util.FileUtils;
 import com.ngt.jopenmetaverse.shared.util.JLogger;
 import com.ngt.jopenmetaverse.shared.util.Utils;
 
@@ -112,10 +113,7 @@ public class AssetCache implements IAssetCache
 				if (e.getStatus() == LoginStatus.Success)
 				{
 					SetupTimer();
-				}
-			}
-				}
-				);
+				}}});
 
 		Client.network.RegisterOnDisconnectedCallback(new EventObserver<DisconnectedEventArgs>()
 				{
@@ -196,7 +194,7 @@ public class AssetCache implements IAssetCache
 				JLogger.debug("Reading " + FileName(assetID) + " from asset cache.");
 				FileInputStream fs = new FileInputStream(f); 
 				//                    data = File.ReadAllBytes(FileName(assetID));
-				data = readBytes(fs);
+				data = FileUtils.readBytes(fs);
 				fs.close();
 			}
 			else
@@ -207,7 +205,7 @@ public class AssetCache implements IAssetCache
 				if(f.exists())
 				{
 					FileInputStream fs = new FileInputStream(f); 
-					data = readBytes(fs);
+					data = FileUtils.readBytes(fs);
 				}
 			}
 			assetTagMap.assetAccessed(assetID);
@@ -272,7 +270,7 @@ public class AssetCache implements IAssetCache
 			//                File.WriteAllBytes(FileName(assetID), assetData);
 			File f = new File(FileName(assetID));
 			FileOutputStream fos = new FileOutputStream(f);
-			writeBytes(fos, assetData);
+			FileUtils.writeBytes(fos, assetData);
 			assetTagMap.assetAdded(assetID);
 			fos.close();
 		}
@@ -362,7 +360,7 @@ public class AssetCache implements IAssetCache
 		//            FileInfo[] files = di.GetFiles("????????-????-????-????-????????????", SearchOption.TopDirectoryOnly);
 
 //		File[] files = getFileList(cacheDir, "????????-????-????-????-????????????", true);
-		File[] files = getFileList(cacheDir, "\\w{8}-\\w{4}-\\w{4}-\\w{4}-\\w{12}", true);
+		File[] files = FileUtils.getFileList(cacheDir, "\\w{8}-\\w{4}-\\w{4}-\\w{4}-\\w{12}", true);
 
 		
 		int num = 0;
@@ -392,7 +390,7 @@ public class AssetCache implements IAssetCache
 		//            // We save file with UUID as file name, only count those
 		//            FileInfo[] files = di.GetFiles("????????-????-????-????-????????????", SearchOption.TopDirectoryOnly);
 
-		File[] files = getFileList(cacheDir, "\\w{8}-\\w{4}-\\w{4}-\\w{4}-\\w{12}", true);
+		File[] files = FileUtils.getFileList(cacheDir, "\\w{8}-\\w{4}-\\w{4}-\\w{4}-\\w{12}", true);
 		long size = GetFileSize(files);
 
 		if (size > Client.settings.ASSET_CACHE_MAX_SIZE)
@@ -518,11 +516,11 @@ public class AssetCache implements IAssetCache
 	{
 		String size = "0 Bytes";
 		if (byteCount >= 1073741824)
-			size = String.format("%f", byteCount / 1073741824) + " GB";
+			size = String.format("%f", byteCount / 1073741824.0) + " GB";
 		else if (byteCount >= 1048576)
-			size = String.format("%f", byteCount / 1048576) + " MB";
+			size = String.format("%f", byteCount / 1048576.0) + " MB";
 		else if (byteCount >= 1024)
-			size = String.format("%f", byteCount / 1024) + " KB";
+			size = String.format("%f", byteCount / 1024.0) + " KB";
 		else if (byteCount > 0 && byteCount < 1024)
 			size = byteCount + " Bytes";
 
@@ -545,57 +543,4 @@ public class AssetCache implements IAssetCache
 	//            }
 	//        }
 
-	private File[] getFileList(String dirname, String regex, boolean topDirectoryOnly)
-	{
-		//TODO need to implement topDirectoryOnly
-		JLogger.debug("Try to traverse the directory" + dirname);
-		List<File> files = new ArrayList<File>(); 
-		File file = new File(dirname); 
-
-		if(file.isDirectory())
-		{
-			System.out.println("Directory is  " + dirname);
-			String str[] = file.list();
-			for( int i = 0; i < str.length; i++)
-			{
-				if(str[i].matches(regex))
-				{
-					File f=new File(dirname + "/" + str[i]);
-					if(f.isDirectory()){
-						System.out.println(str[i] + " is a directory");
-					}
-					else
-					{
-						files.add(f);
-						System.out.println(str[i] + " is a file");
-					}
-				}
-			}
-		}
-		return files.toArray(new File[0]);
-	}
-
-
-	private byte[] readBytes(InputStream input) throws IOException
-	{
-		int totalBytesRead = 0;
-		int bytesRead = 0;
-		final int maxByteRead = 10000;
-		ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream(2048);
-		byte[] bytes = new byte[maxByteRead];
-
-		while(bytesRead >= 0){
-			bytesRead = input.read(bytes, 0, maxByteRead); 
-			if (bytesRead > 0){
-				totalBytesRead = totalBytesRead + bytesRead;
-				byteBuffer.write(bytes, 0, bytesRead);
-			}
-		}
-		return byteBuffer.toByteArray();
-	}
-
-	private void writeBytes(OutputStream output, byte[] data) throws IOException
-	{	
-		output.write(data);	
-	}   
 }

@@ -4,19 +4,18 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import java.util.Observable;
-import javax.security.cert.X509Certificate;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.conn.PoolingClientConnectionManager;
+import org.apache.http.util.EntityUtils;
 
-import com.ngt.jopenmetaverse.shared.sim.events.EventObservable;
+import com.ngt.jopenmetaverse.shared.sim.events.MethodDelegate;
 import com.ngt.jopenmetaverse.shared.sim.events.ThreadPool;
 import com.ngt.jopenmetaverse.shared.sim.events.ThreadPoolFactory;
 import com.ngt.jopenmetaverse.shared.util.Utils;
@@ -37,7 +36,7 @@ public class HttpBaseClient {
 	static 
 	{
 		//TODO manage httpclient level resources 
-		httpclient = new DefaultHttpClient();
+		httpclient = new DefaultHttpClient(new PoolingClientConnectionManager());
 
 		// When HttpClient instance is no longer needed,
 		// shut down the connection manager to ensure
@@ -48,9 +47,9 @@ public class HttpBaseClient {
 
 	public static HttpRequestBase UploadDataAsync(URI _Address,
 			java.security.cert.X509Certificate _ClientCert, String contentType,
-			byte[] postData, int millisecondsTimeout, Object object,
-			final EventObservable<HttpBaseDownloadProgressArg> downloadProgressObservable,
-			final EventObservable<HttpBaseRequestCompletedArg> requestCompletedObservable) 
+			byte[] postData, int millisecondsTimeout, MethodDelegate<Void, HttpRequestBase> openWriteCallback,
+			final MethodDelegate<Void, HttpBaseDownloadProgressArg> downloadProgressObservable,
+			final MethodDelegate<Void, HttpBaseRequestCompletedArg> requestCompletedObservable) 
 	{
 		   HttpPost httppost = new HttpPost(_Address);
 		   
@@ -59,7 +58,7 @@ public class HttpBaseClient {
 
 	        httppost.setEntity(new ByteArrayEntity(postData));
 
-			HttpRequestStringThreadPoolTaskAsyc(httppost, millisecondsTimeout, 
+			HttpRequestStringThreadPoolTaskAsyc(httppost, millisecondsTimeout, openWriteCallback,
 					downloadProgressObservable, requestCompletedObservable);
 		    return httppost;
 	}
@@ -68,42 +67,58 @@ public class HttpBaseClient {
 	public static HttpRequestBase DownloadStringAsync(URI _Address, 
 			java.security.cert.X509Certificate _ClientCert,
 			final int millisecondsTimeout,
-			final EventObservable<HttpBaseDownloadProgressArg> downloadProgressObservable,
-			final EventObservable<HttpBaseRequestCompletedArg> requestCompletedObservable)
+			final MethodDelegate<Void,HttpBaseDownloadProgressArg> downloadProgressObservable,
+			final MethodDelegate<Void,HttpBaseRequestCompletedArg> requestCompletedObservable)
 			{
 		// Prepare a request object
 		final HttpGet httpget = new HttpGet(_Address);
 
-		HttpRequestStringThreadPoolTaskAsyc(httpget, millisecondsTimeout, 
+		HttpRequestStringThreadPoolTaskAsyc(httpget, millisecondsTimeout, null,
 				downloadProgressObservable, requestCompletedObservable);
 		
 		return httpget;
 
 			}
 	
-	private static void HttpRequestStringThreadPoolTaskAsyc(final HttpRequestBase httprequest, final int millisecondsTimeout,
-			final EventObservable<HttpBaseDownloadProgressArg> downloadProgressObservable,
-			final EventObservable<HttpBaseRequestCompletedArg> requestCompletedObservable)
+	public static void DownloadStringAsync(final HttpGet httprequest,
+			final int millisecondsTimeout,
+			final MethodDelegate<Void,HttpBaseDownloadProgressArg> downloadProgressObservable,
+			final MethodDelegate<Void,HttpBaseRequestCompletedArg> requestCompletedObservable)
+			{
+		
+		HttpRequestStringThreadPoolTaskAsyc(httprequest, millisecondsTimeout, null, 
+				downloadProgressObservable, requestCompletedObservable);
+		
+			}
+	
+	private static void HttpRequestStringThreadPoolTaskAsyc(final HttpRequestBase httprequest, 
+			final int millisecondsTimeout,
+			final MethodDelegate<Void, HttpRequestBase> openWriteCallback,
+			final MethodDelegate<Void,HttpBaseDownloadProgressArg> downloadProgressObservable,
+			final MethodDelegate<Void,HttpBaseRequestCompletedArg> requestCompletedObservable)
 	{
 		threadPool.execute(new Runnable(){
 			public void run()
 			{
-				HttpRequestStringThreadPoolTask(httprequest, millisecondsTimeout, 
+				HttpRequestStringThreadPoolTask(httprequest, millisecondsTimeout, openWriteCallback,
 						downloadProgressObservable, requestCompletedObservable);
 			}
 		});
 	}
 	
 	private static void HttpRequestStringThreadPoolTask(HttpRequestBase httpget, int millisecondsTimeout,
-			final EventObservable<HttpBaseDownloadProgressArg> downloadProgressObservable,
-			final EventObservable<HttpBaseRequestCompletedArg> requestCompletedObservable)
+			final MethodDelegate<Void, HttpRequestBase> openWriteCallback,
+			final MethodDelegate<Void,HttpBaseDownloadProgressArg> downloadProgressObservable,
+			final MethodDelegate<Void,HttpBaseRequestCompletedArg> requestCompletedObservable)
 	{
 		// Execute the request
 		HttpResponse response = null;
 		int statusCode;
 		try {
 			response = httpclient.execute(httpget);
-
+			
+			if(openWriteCallback!=null)
+				openWriteCallback.execute(httpget);
 			// Examine the response status
 //			System.out.println(response.getStatusLine());
 			statusCode = response.getStatusLine().getStatusCode();
@@ -116,6 +131,9 @@ public class HttpBaseClient {
 				try {
 
 					byte[] bytes = readBytes(httpget, response, instream, downloadProgressObservable);
+					//release the resources
+					 EntityUtils.consume(entity);
+					 
 					HttpBaseRequestCompletedArg r = new HttpBaseRequestCompletedArg(httpget, response, bytes, null);
 					if(requestCompletedObservable !=null)
 						raiseRequestCompletedEvent(requestCompletedObservable, r);
@@ -153,7 +171,7 @@ public class HttpBaseClient {
 	
 	
 	private static byte[] readBytes(HttpRequestBase request, HttpResponse response, InputStream input, 
-			final EventObservable<HttpBaseDownloadProgressArg> downloadProgressObservable) throws IOException
+			final MethodDelegate<Void,HttpBaseDownloadProgressArg> downloadProgressObservable) throws IOException
 	{
 		int totalBytesRead = 0;
 		int bytesRead = 0;
@@ -174,21 +192,23 @@ public class HttpBaseClient {
 				raiseDownloadProgressEvent(downloadProgressObservable, r);
 			}
 		}
-		return byteBuffer.toByteArray();
+		byteBuffer.flush();
+		bytes = byteBuffer.toByteArray();
+		byteBuffer.close();
+		return bytes;
 	}
 
-	private static void raiseRequestCompletedEvent(EventObservable<HttpBaseRequestCompletedArg> requestCompletedObservable, HttpBaseRequestCompletedArg r)
+	private static void raiseRequestCompletedEvent(MethodDelegate<Void,HttpBaseRequestCompletedArg> requestCompletedObservable, HttpBaseRequestCompletedArg r)
 	{
 		if(requestCompletedObservable != null)
-		requestCompletedObservable.raiseEvent(r);
+		requestCompletedObservable.execute(r);
 	}
 	
-	private static void raiseDownloadProgressEvent(EventObservable<HttpBaseDownloadProgressArg> downloadProgressObservable, HttpBaseDownloadProgressArg r)
+	private static void raiseDownloadProgressEvent(MethodDelegate<Void,HttpBaseDownloadProgressArg> downloadProgressObservable, HttpBaseDownloadProgressArg r)
 	{
 		if(downloadProgressObservable != null)
-			downloadProgressObservable.raiseEvent(r);
+			downloadProgressObservable.execute(r);
 	}	
-	
 	
 }
 

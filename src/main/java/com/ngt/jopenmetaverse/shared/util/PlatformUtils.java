@@ -1,5 +1,8 @@
 package com.ngt.jopenmetaverse.shared.util;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.UnknownHostException;
@@ -95,6 +98,30 @@ public class PlatformUtils {
 			Thread.sleep(timeout);
 		} catch (InterruptedException e) {
 			JLogger.info(e.getMessage());
+		}
+	}
+	
+	/*
+	 * Silently try to close the stream with raising exception
+	 */
+	public static void closeStream(InputStream is)
+	{
+		try {
+			is.close();
+		} catch (IOException e) {
+			JLogger.warn("Error in closing the input stream " + Utils.getExceptionStackTraceAsString(e));
+		}
+	}
+
+	/*
+	 * Silently try to close the stream with raising exception
+	 */
+	public static void closeStream(OutputStream is)
+	{
+		try {
+			is.close();
+		} catch (IOException e) {
+			JLogger.warn("Error in closing the output stream " + Utils.getExceptionStackTraceAsString(e));
 		}
 	}
 	

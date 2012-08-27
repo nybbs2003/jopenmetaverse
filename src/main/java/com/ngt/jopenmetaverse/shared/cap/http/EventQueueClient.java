@@ -11,6 +11,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpRequestBase;
 import com.ngt.jopenmetaverse.shared.sim.events.EventObservable;
+import com.ngt.jopenmetaverse.shared.sim.events.MethodDelegate;
 import com.ngt.jopenmetaverse.shared.structureddata.OSD;
 import com.ngt.jopenmetaverse.shared.structureddata.OSDArray;
 import com.ngt.jopenmetaverse.shared.structureddata.OSDMap;
@@ -30,10 +31,11 @@ public class EventQueueClient {
 	//	public EventCallback OnEvent;
 
 	protected EventObservable connectedObservable = new EventObservable();
-	protected EventObservable eventObservable = new EventObservable();
+	protected EventObservable<EventQueueClientEventObservableArg> eventObservable = new EventObservable<EventQueueClientEventObservableArg>();
 
-	protected EventObservable internalOpenWriteObservable;
-	protected EventObservable internalRequestCompletedObservable;
+	//TODO Need to handle following in HTTPBaseCLient 
+	protected MethodDelegate<Void, HttpRequestBase> internalOpenWriteObservable;
+	protected MethodDelegate<Void, HttpBaseRequestCompletedArg> internalRequestCompletedObservable;
 
 	public void registerConnectedObserver(Observer o)
 	{
@@ -61,27 +63,23 @@ public class EventQueueClient {
 	public EventQueueClient(URI eventQueueLocation)
 	{
 		_Address = eventQueueLocation;
-		internalOpenWriteObservable = new EventObservable();
-		internalRequestCompletedObservable = new EventObservable();
-
-		internalOpenWriteObservable.addObserver(new Observer()
-		{
-			public void update(Observable o, Object arg) {
-				HttpRequestBase request = (HttpRequestBase)arg;
-				openWriteHandler(request);
-			}
-		});
-
-		internalRequestCompletedObservable.addObserver(new Observer()
-		{
-			public void update(Observable o, Object arg) {
-				HttpBaseRequestCompletedArg obj 
-				= (HttpBaseRequestCompletedArg)arg;
+		internalOpenWriteObservable = new MethodDelegate<Void, HttpRequestBase>()
+				{
+					public Void execute(HttpRequestBase request) {
+						openWriteHandler(request);
+						return null;
+					}
+				};
+		
+		internalRequestCompletedObservable =  new MethodDelegate<Void, HttpBaseRequestCompletedArg>()
+				{
+			public Void execute(HttpBaseRequestCompletedArg obj) {
 				requestCompletedHandler(obj.getRequest(), 
 						obj.getResponse(), obj.getResponseData(), 
 						obj.getError());
+				return null;
 			}
-		});
+		};
 	}
 
 	public void Start() throws Exception
