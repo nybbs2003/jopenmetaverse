@@ -1683,7 +1683,7 @@ public class AppearanceManager {
 									AssetTexture assetTexture = e.getAssetTexture();
 									if (state == TextureRequestState.Finished)
 									{
-										JLogger.warn("Downloaded Texture " + textureID + " Proceeding for backing...");
+										JLogger.info("Downloaded Texture " + textureID + " Proceeding for backing...");
 										assetTexture.Decode();
 
 										for (int i = 0; i < Textures.length; i++)

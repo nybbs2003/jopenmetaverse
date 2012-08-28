@@ -69,8 +69,8 @@ import com.ngt.jopenmetaverse.shared.protocol.primitives.Permissions.PermissionM
 
             try
             {
-                String data = Utils.bytesWithTrailingNullByteToString(AssetData);
-
+                String data = Utils.trim(Utils.bytesWithTrailingNullByteToString(AssetData), new char[]{'\0'});
+                
                 data = data.replace("\r", "");
                 String[] lines = data.split("\n");
                 for (int stri = 0; stri < lines.length; stri++)
@@ -110,10 +110,13 @@ import com.ngt.jopenmetaverse.shared.protocol.primitives.Permissions.PermissionM
                                     int id = 0;
 
                                     // Special handling for -0 edge case
-                                    if (fields[0] != "-0")
+                                    if (!fields[0].equals("-0"))
+                                    {
+                                    	JLogger.debug("Going to parse to integer: " + fields[0] + "\n" + Utils.bytesToHexDebugString(Utils.stringToBytes(fields[0]), ""));
                                         id = Integer.parseInt(fields[0]);
+                                    }
 
-                                    if (fields[1] == ",")
+                                    if (fields[1].equals(","))
                                         fields[1] = "0";
                                     else
                                         fields[1] = fields[1].replace(',', '.');
@@ -205,7 +208,7 @@ import com.ngt.jopenmetaverse.shared.protocol.primitives.Permissions.PermissionM
             }
             catch (Exception ex)
             {
-                JLogger.warn("Failed decoding wearable asset " + this.getAssetID() + ": " + Utils.getExceptionStackTraceAsString(ex));
+                JLogger.warn("Failed decoding wearable asset, type = " + this.getAssetType() + " ID" + this.getAssetID() + ": " + Utils.getExceptionStackTraceAsString(ex));
                 return false;
             }
 

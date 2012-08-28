@@ -1,9 +1,5 @@
 package com.ngt.jopenmetaverse.shared.sim.imaging;
 
-import java.io.IOException;
-
-import com.ngt.jopenmetaverse.shared.exception.NotImplementedException;
-import com.ngt.jopenmetaverse.shared.exception.NotSupportedException;
 
 public interface IOpenJPEG {
 	
@@ -37,14 +33,14 @@ public interface IOpenJPEG {
     /// <param name="image">The <seealso cref="ManagedImage"/> object to encode</param>
     /// <param name="lossless">true to enable lossless conversion, only useful for small images ie: sculptmaps</param>
     /// <returns>A byte array containing the encoded Image object</returns>
-    public byte[] Encode(ManagedImage image, boolean lossless) throws IOException;
+    public byte[] Encode(ManagedImage image, boolean lossless) throws Exception;
     
     /// <summary>
     /// Encode a <seealso cref="ManagedImage"/> object into a byte array
     /// </summary>
     /// <param name="image">The <seealso cref="ManagedImage"/> object to encode</param>
     /// <returns>a byte array of the encoded image</returns>
-    public  byte[] Encode(ManagedImage image) throws IOException;
+    public  byte[] Encode(ManagedImage image) throws Exception;
 
     /// <summary>
     /// Decode JPEG2000 data to an <seealso cref="System.Drawing.Image"/> and
@@ -54,7 +50,7 @@ public interface IOpenJPEG {
     /// <param name="managedImage">ManagedImage object to decode to</param>
     /// <param name="image">Image object to decode to</param>
     /// <returns>DecodeToImageResult if the decode succeeds, otherwise null</returns>
-    public  DecodeToImageResult DecodeToImage2(byte[] encoded) throws IOException, NotSupportedException, NotImplementedException;
+    public  DecodeToImageResult DecodeToImage2(byte[] encoded) throws Exception;
     
     /// <summary>
     /// 
@@ -62,7 +58,7 @@ public interface IOpenJPEG {
     /// <param name="encoded"></param>
     /// <param name="managedImage"></param>
     /// <returns>ManagedImage, if the decode succeeds, otherwise null</returns>
-    public  ManagedImage DecodeToImage(byte[] encoded) throws IOException, NotSupportedException, NotImplementedException;
+    public  ManagedImage DecodeToImage(byte[] encoded) throws Exception;
     
 //    /// <summary>
 //    /// 
@@ -80,5 +76,7 @@ public interface IOpenJPEG {
     /// <param name="lossless">true to enable lossless decoding</param>
     /// <returns>A byte array containing the source Bitmap object</returns>
     //unsafe
-    public  byte[] EncodeFromImage(IBitmap bitmap, boolean lossless) throws IOException;
+    public  byte[] EncodeFromImage(IBitmap bitmap, boolean lossless) throws Exception;
+
+	public IBitmap DecodeToIBitMap(byte[] encoded) throws Exception;
 }

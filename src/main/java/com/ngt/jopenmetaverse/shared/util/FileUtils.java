@@ -27,7 +27,7 @@ public class FileUtils {
 	
 	public static File[] getFileList(String dirname, boolean topDirectoryOnly)
 	{
-		return getFileList(dirname, "\\.*", topDirectoryOnly);
+		return getFileList(dirname, ".+", topDirectoryOnly);
 	}
 	
 	public static File[] getFileList(String dirname, String regex, boolean topDirectoryOnly)

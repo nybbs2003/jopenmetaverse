@@ -10,7 +10,6 @@ import java.util.Map.Entry;
 
 import com.ngt.jopenmetaverse.shared.exception.NotSupportedException;
 import com.ngt.jopenmetaverse.shared.sim.imaging.IBitmap;
-import com.ngt.jopenmetaverse.shared.sim.imaging.ManagedImage;
 import com.ngt.jopenmetaverse.shared.sim.imaging.PixelFormat;
 
 public class BitmapBufferedImageImpl  implements IBitmap
@@ -21,6 +20,14 @@ public class BitmapBufferedImageImpl  implements IBitmap
 	static 
 	{
 		PixelFormatMap.put(PixelFormat.Format32bppArgb, BufferedImage.TYPE_INT_ARGB);
+		PixelFormatMap.put(PixelFormat.Format24bppRgb, BufferedImage.TYPE_3BYTE_BGR);
+		PixelFormatMap.put(PixelFormat.Format32bppRgb, BufferedImage.TYPE_INT_RGB);
+
+		PixelFormatMap.put(PixelFormat.Format16bppGrayScale, BufferedImage.TYPE_USHORT_GRAY);
+		PixelFormatMap.put(PixelFormat.Format8bppGrayScale, BufferedImage.TYPE_BYTE_GRAY);
+		PixelFormatMap.put(PixelFormat.Custom, BufferedImage.TYPE_CUSTOM);
+
+		
 		//Add here more mapping
 		
 		for(Entry<PixelFormat, Integer> e: PixelFormatMap.entrySet())
@@ -44,7 +51,8 @@ public class BitmapBufferedImageImpl  implements IBitmap
 	
 	public boolean hasPixelFormat(PixelFormat pixelFormat) throws NotSupportedException{
 		if(!PixelFormatMap.containsKey(pixelFormat))
-			throw new NotSupportedException(pixelFormat + " is not supported");
+			return false;
+		
 		return img.getType() == PixelFormatMap.get(pixelFormat); 
 	}
 	

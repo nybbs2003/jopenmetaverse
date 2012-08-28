@@ -186,7 +186,7 @@ public class ManagedImage {
 
 		int pixelCount = Width * Height;
 
-		if (bitmap.hasPixelFormat(PixelFormat.Format32bppArgb))
+		if (bitmap.hasPixelFormat(PixelFormat.Format32bppArgb) || bitmap.hasPixelFormat(PixelFormat.Custom))
 		{
 			Channels = ImageChannels.get(ImageChannels.Alpha.getIndex() | ImageChannels.Color.getIndex());
 			Red = new byte[pixelCount];
@@ -226,12 +226,19 @@ public class ManagedImage {
 //
 //			bitmap.UnlockBits(bd);
 		}
-		else if (bitmap.hasPixelFormat(PixelFormat.Format16bppGrayScale))
+		else if (bitmap.hasPixelFormat(PixelFormat.Format16bppGrayScale) || bitmap.hasPixelFormat(PixelFormat.Format8bppGrayScale))
 		{
 			Channels = ImageChannels.get(ImageChannels.Gray.getIndex());
 			Red = new byte[pixelCount];
-
-			throw new NotImplementedException("16bpp grayscale image support is incomplete");
+			
+			int i =0;
+			for(int x = 0; x < Width; x++)
+				for(int y = 0; y< Height; y++)
+				{
+					i = x*Height + y;
+					int pixel = bitmap.getRGB(x, y);
+				        Red[i] = (byte) ((pixel >> 0) & 0xff);
+				}			
 		}
 		else if (bitmap.hasPixelFormat(PixelFormat.Format24bppRgb))
 		{

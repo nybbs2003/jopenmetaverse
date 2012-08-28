@@ -1,5 +1,8 @@
 package com.ngt.jopenmetaverse.shared.sim.events.asm;
 
+import java.util.SortedMap;
+import java.util.TreeMap;
+
 import com.ngt.jopenmetaverse.shared.sim.AssetManager.ChannelType;
 import com.ngt.jopenmetaverse.shared.sim.AssetManager.SourceType;
 import com.ngt.jopenmetaverse.shared.sim.AssetManager.StatusCode;
@@ -21,12 +24,14 @@ import com.ngt.jopenmetaverse.shared.sim.Simulator;
         public StatusCode Status;
         public float Priority;
         public Simulator Simulator;
+        public SortedMap<Integer, byte[]> pmap;
         public MethodDelegate<Void, AssetReceivedCallbackArgs> Callback;
         public ManualResetEvent HeaderReceivedEvent = new ManualResetEvent(false);
 
         public AssetDownload()
         {
            super();
+           pmap = new TreeMap<Integer, byte[]>();
         }
     }
 

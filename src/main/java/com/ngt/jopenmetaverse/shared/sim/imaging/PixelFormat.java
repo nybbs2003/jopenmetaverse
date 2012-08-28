@@ -28,6 +28,8 @@ public enum PixelFormat {
 	Format48bppRgb(19),//	Specifies that the format is 48 bits per pixel; 16 bits each are used for the red, green, and blue components.
 	Format64bppArgb(20),//	Specifies that the format is 64 bits per pixel; 16 bits each are used for the alpha, red, green, and blue components.
 	Format64bppPArgb(21),//	Specifies that the format is 64 bits per pixel; 16 bits each are used for the alpha, red, green, and blue components. The red, green, and blue components are premultiplied according to the alpha component.
+	Format8bppGrayScale(22), //Specified 8 bits of gray 
+	Custom(100),
 	Max(Integer.MAX_VALUE);//	The maximum value for this enumeration.
 	private int index;
 	PixelFormat(int index)

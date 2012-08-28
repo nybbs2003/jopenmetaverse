@@ -1850,9 +1850,11 @@ public class AssetManager {
             // hopefully that is a safe assumption to make
             try
             {
-                Utils.arraycopy(asset.TransferData.Data, 0, download.AssetData, 1000 * asset.TransferData.Packet,
-                    asset.TransferData.Data.length);
+            	byte[] bytes = new byte[asset.TransferData.Data.length];
+                Utils.arraycopy(asset.TransferData.Data, 0, bytes, 0, asset.TransferData.Data.length);
+                download.pmap.put(asset.TransferData.Packet, bytes);
                 download.Transferred += asset.TransferData.Data.length;
+                JLogger.debug(String.format("AssetManager: TransferPacketHandler: got asset %s packet length %d of packet no %d", download.AssetID.toString(), asset.TransferData.Data.length, asset.TransferData.Packet));
             }
             catch (IllegalArgumentException ex)
             {
@@ -1868,6 +1870,14 @@ public class AssetManager {
             // Check if we downloaded the full asset
             if (download.Transferred >= download.Size)
             {
+            	int i =0;
+            	
+            	for(Entry<Integer, byte[]> entry:download.pmap.entrySet())
+            	{
+            		Utils.arraycopy(entry.getValue(), 0, download.AssetData, i, entry.getValue().length);
+            		i += entry.getValue().length;
+            	}
+            	download.pmap.clear();
                 JLogger.debug("Transfer for asset " + download.AssetID.toString() + " completed");
 
                 download.Success = true;

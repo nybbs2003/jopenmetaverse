@@ -85,7 +85,7 @@ public class Baker {
             }
         }
 
-        public void Bake() throws IOException
+        public void Bake() throws Exception
         {
             bakedTexture = new AssetTexture(new ManagedImage(bakeWidth, bakeHeight,
             		ImageChannels.get(ManagedImage.ImageChannels.Color.getIndex() 

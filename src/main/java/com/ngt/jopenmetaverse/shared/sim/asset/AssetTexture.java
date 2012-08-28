@@ -73,7 +73,7 @@ import com.ngt.jopenmetaverse.shared.types.UUID;
         /// encoded image created from the data in <seealso cref="Image"/>
         /// </summary>AssetTexture
         @Override
-        public void Encode() throws IOException
+        public void Encode() throws Exception
         {
             AssetData = openJPEGFactory.getNewIntance().Encode(Image);
         }
@@ -84,7 +84,7 @@ import com.ngt.jopenmetaverse.shared.types.UUID;
         /// </summary>
         /// <returns>True if the decoding was successful, otherwise false</returns>
         @Override
-        public boolean Decode() throws IOException, NotSupportedException, NotImplementedException
+        public boolean Decode() throws Exception
         {
             if (AssetData != null && AssetData.length > 0)
             {
