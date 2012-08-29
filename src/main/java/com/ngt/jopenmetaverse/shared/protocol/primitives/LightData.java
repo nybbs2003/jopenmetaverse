@@ -40,9 +40,9 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             if (data.length - pos >= 16)
             {
                 Color = new Color4(data, pos, false);
-                Radius = Utils.bytesToFloat(data, pos + 4);
-                Cutoff = Utils.bytesToFloat(data, pos + 8);
-                Falloff = Utils.bytesToFloat(data, pos + 12);
+                Radius = Utils.bytesToFloatLit(data, pos + 4);
+                Cutoff = Utils.bytesToFloatLit(data, pos + 8);
+                Falloff = Utils.bytesToFloatLit(data, pos + 12);
 
                 // Alpha in color is actually intensity
                 Intensity = Color.A;
@@ -70,9 +70,9 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             Color4 tmpColor = Color;
             tmpColor.A = Intensity;
             System.arraycopy(tmpColor.getBytes(), 0, data, 0, 4);
-            System.arraycopy(Utils.floatToBytes(Radius), 0, data, 4, 4);
-            System.arraycopy(Utils.floatToBytes(Cutoff), 0, data, 8, 4);
-            System.arraycopy(Utils.floatToBytes(Falloff), 0, data, 12, 4);
+            System.arraycopy(Utils.floatToBytesLit(Radius), 0, data, 4, 4);
+            System.arraycopy(Utils.floatToBytesLit(Cutoff), 0, data, 8, 4);
+            System.arraycopy(Utils.floatToBytesLit(Falloff), 0, data, 12, 4);
             return data;
         }
 

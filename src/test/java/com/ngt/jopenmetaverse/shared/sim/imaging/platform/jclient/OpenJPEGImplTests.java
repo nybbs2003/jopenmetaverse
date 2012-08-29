@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.imageio.ImageIO;
-import javax.imageio.spi.IIORegistry;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,8 +22,6 @@ public class OpenJPEGImplTests {
 	public void setup() throws Exception
 	{
 		fileLocation =  getClass().getClassLoader().getResource("data/files/images");
-		IIORegistry registry = IIORegistry.getDefaultInstance();
-		registry.registerServiceProvider(new  com.ngt.jopenmetaverse.shared.sim.imaging.platform.jclient.tga.TGAImageReaderSpi());
 	}
 	
 	@Test

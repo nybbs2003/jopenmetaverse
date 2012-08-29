@@ -276,7 +276,7 @@ public class AppearanceManager {
 		/// <summary>A texture AssetID</summary>
 		public UUID TextureID = new UUID();
 		/// <summary>Asset data for the texture</summary>
-		public AssetTexture Texture = new AssetTexture(); 
+		public AssetTexture Texture = null;
 		/// <summary>Collection of alpha masks that needs applying</summary>
 		public Map<VisualAlphaParam, Float> AlphaMasks = new HashMap<VisualAlphaParam, Float>();
 		/// <summary>Tint that should be applied to the texture</summary>
@@ -486,7 +486,7 @@ public class AppearanceManager {
 	/// <summary>
 	/// Main appearance thread
 	/// </summary>
-	private Thread AppearanceThread;
+//	private Thread AppearanceThread;
 	//endregion Private Members
 
 	/// <summary>
@@ -497,8 +497,10 @@ public class AppearanceManager {
 	{
 		Client = client;
 
+		//TODO need to verify following
 		for(int i=0; i< Textures.length; i++)
 			Textures[i] = new TextureData();
+//			Textures[i] = null;
 		
 		// Client.network.RegisterCallback(PacketType.AgentWearablesUpdate, AgentWearablesUpdateHandler);
 		Client.network.RegisterCallback(PacketType.AgentWearablesUpdate, new EventObserver<PacketReceivedEventArgs>()
@@ -555,27 +557,6 @@ public class AppearanceManager {
 	//region Publics Methods
 
 	/// <summary>
-	/// Obsolete method for setting appearance. This function no longer does anything.
-	/// Use RequestSetAppearance() to manually start the appearance thread
-	/// </summary>
-	//				        [Obsolete("Appearance is now handled automatically")]
-	@Deprecated 	
-	public void SetPreviousAppearance()
-	{
-	}
-
-	/// <summary>
-	/// Obsolete method for setting appearance. This function no longer does anything.
-	/// Use RequestSetAppearance() to manually start the appearance thread
-	/// </summary>
-	/// <param name="allowBake">Unused parameter</param>
-	//				        [Obsolete("Appearance is now handled automatically")]
-	@Deprecated
-	public void SetPreviousAppearance(boolean allowBake)
-	{
-	}
-
-	/// <summary>
 	/// Starts the appearance setting thread
 	/// </summary>
 	public void RequestSetAppearance()
@@ -626,7 +607,10 @@ public class AppearanceManager {
 							throw new Exception("Failed to retrieve a list of current agent wearables, appearance cannot be set");
 						}
 					}
+					
+					JLogger.debug("Got Agent Wearable .. going to download wearables");
 
+					
 					// Download and parse all of the agent wearables
 					if (!DownloadWearables())
 					{
@@ -638,12 +622,15 @@ public class AppearanceManager {
 					// for cached bakes
 					if (SetAppearanceSerialNum.get() == 0 && !forceRebake)
 					{
+						JLogger.debug("Going to GetCachedBakes...");
 						// Compute hashes for each bake layer and compare against what the simulator currently has
 						if (!GetCachedBakes())
 						{
 							JLogger.warn("Failed to get a list of cached bakes from the simulator, appearance will be rebaked");
 						}
 					}
+
+					JLogger.debug("Going to create Bakes....");
 
 					// Download textures, compute bakes, and upload for any cache misses
 					if (!CreateBakes())
@@ -1637,7 +1624,10 @@ public class AppearanceManager {
 		// been downloaded, and it is not already in the download list
 		if (!textureData.TextureID.equals(UUID.Zero) && textureData.Texture == null 
 				&& !textures.contains(textureData.TextureID))
+		{
 			textures.add(textureData.TextureID);
+			JLogger.debug("Adding Texture to download: " + textureData.TextureID.toString());
+		}
 	}
 
 	/// <summary>
@@ -1684,13 +1674,19 @@ public class AppearanceManager {
 									if (state == TextureRequestState.Finished)
 									{
 										JLogger.info("Downloaded Texture " + textureID + " Proceeding for backing...");
-										assetTexture.Decode();
-
+										if(assetTexture.Decode())
+										{
 										for (int i = 0; i < Textures.length; i++)
 										{
 											if (Textures[i].TextureID.equals(textureID))
+											{
+												JLogger.info("Setting AssetTextureIndex " + i + " to "+ textureID );
 												Textures[i].Texture = assetTexture;
+											}
 										}
+										}
+										else
+											throw new Exception("Failed to decode Asset texture: " + textureID );
 									}
 									else
 									{
@@ -1748,8 +1744,10 @@ public class AppearanceManager {
 
 		if (pendingBakes.size() > 0)
 		{
+			JLogger.debug("Going to download Textures");
 			DownloadTextures(pendingBakes);
 
+			JLogger.debug("Going to CreateBake");
 			List<Runnable> tasks1 = new ArrayList<Runnable>();
 			for(final BakeType bakeType: pendingBakes)
 			{
@@ -1762,23 +1760,18 @@ public class AppearanceManager {
 						catch(Exception e)
 						{
 							JLogger.warn("Exception while running the task: \n" + Utils.getExceptionStackTraceAsString(e));
+							success.set(false);
 						}
 					}
 				};
 				tasks1.add(runnable);
 			}
 			ThreadPoolFactory.executeParallel(tasks1.toArray(new Runnable[0]), Math.min(MAX_CONCURRENT_UPLOADS, pendingBakes.size()));
-
-			//TODO need to implement
-			//				                Parallel.ForEach<BakeType>(Math.Min(MAX_CONCURRENT_UPLOADS, pendingBakes.Count), pendingBakes,
-			//				                    delegate(BakeType bakeType)
-			//				                    {
-			//				                        if (!CreateBake(bakeType))
-			//				                            success = false;
-			//				                    }
-			//				                );
 		}
 
+		if(!success.get())
+			JLogger.debug("One or more Baking of textures has failed");
+		
 		// Free up all the textures we're holding on to
 		for (int i = 0; i < Textures.length; i++)
 		{
@@ -1807,11 +1800,20 @@ public class AppearanceManager {
 		{
 			AvatarTextureIndex textureIndex = textureIndices.get(i);
 			TextureData texture = Textures[(int)textureIndex.getIndex()];
-			texture.TextureIndex = textureIndex;
-			oven.AddTexture(texture);
+			if(texture == null)
+				JLogger.warn("Texture is null for index" + textureIndex.getIndex());
+
+			//TODO need to verfy why original code was sending even Zero textures for baking
+			if(!texture.TextureID.equals(UUID.Zero))
+			{
+				JLogger.debug("Adding Texture to oven"  + texture.toString());
+				texture.TextureIndex = textureIndex;
+				oven.AddTexture(texture);
+			}
 		}
 
 		long start = Utils.getUnixTime();
+		JLogger.debug("Going to oven.Bake..");
 		oven.Bake();
 		JLogger.debug("Baking " + bakeType + " took " + (Utils.getUnixTime() - start) + "ms");
 
@@ -1820,6 +1822,7 @@ public class AppearanceManager {
 
 		while (newAssetID.equals(UUID.Zero) && retries > 0)
 		{
+			JLogger.debug(String.format("Uploading Bake ID: %s to Server retry no %d", oven.getBakedTexture().getAssetID(), retries));
 			newAssetID = UploadBake(oven.getBakedTexture().AssetData);
 			--retries;
 		}
@@ -1857,6 +1860,7 @@ public class AppearanceManager {
 			}
 
 		};
+		JLogger.debug(String.format("Going to wait %d ms for texture to get uploaded", UPLOAD_TIMEOUT));
 
 		Client.assets.RequestUploadBakedTexture(textureData,bakedTextureUploadedCallback);
 
@@ -1865,7 +1869,7 @@ public class AppearanceManager {
 		// timout either on Client.Settings.TRANSFER_TIMEOUT or Client.Settings.CAPS_TIMEOUT
 		// depending on which upload method is used.
 		uploadEvent.waitOne(UPLOAD_TIMEOUT);
-
+		JLogger.debug("Successfully Uploaded baked Texture got asset ID: " + bakeID[0]);
 		return bakeID[0];
 	}
 
@@ -2106,6 +2110,7 @@ public class AppearanceManager {
 			}
 		}
 
+		JLogger.logPkt("AgentSetAppearancePacket", set.ToBytes());
 		Client.network.SendPacket(set);
 		JLogger.debug("Send AgentSetAppearance packet");
 	}

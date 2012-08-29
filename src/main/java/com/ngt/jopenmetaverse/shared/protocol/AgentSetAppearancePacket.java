@@ -12,6 +12,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         {
             public UUID AgentID = new UUID();
             public UUID SessionID = new UUID();
+            //uint
             public long SerialNum;
             public Vector3 Size = new Vector3();
 
@@ -140,8 +141,9 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             @Override
 			public void ToBytes(byte[] bytes, int[] i)
             {
-                bytes[i[0]++] = (byte)(TextureEntry.length % 256);
-                bytes[i[0]++] = (byte)((TextureEntry.length >> 8) % 256);
+//                bytes[i[0]++] = (byte)(TextureEntry.length % 256);
+//                bytes[i[0]++] = (byte)((TextureEntry.length >> 8) % 256);
+                Utils.uint16ToBytesLit(TextureEntry.length, bytes, i[0]) ; i[0] += 2;
                 Utils.arraycopy(TextureEntry, 0, bytes, i[0], TextureEntry.length); i[0] +=  TextureEntry.length;
             }
 

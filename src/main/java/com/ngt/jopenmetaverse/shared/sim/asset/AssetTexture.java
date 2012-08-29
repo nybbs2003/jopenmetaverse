@@ -1,9 +1,5 @@
 package com.ngt.jopenmetaverse.shared.sim.asset;
 
-import java.io.IOException;
-
-import com.ngt.jopenmetaverse.shared.exception.NotImplementedException;
-import com.ngt.jopenmetaverse.shared.exception.NotSupportedException;
 import com.ngt.jopenmetaverse.shared.sim.imaging.IOpenJPEGFactory;
 import com.ngt.jopenmetaverse.shared.sim.imaging.ManagedImage;
 import com.ngt.jopenmetaverse.shared.sim.imaging.SuperFactory;
@@ -104,7 +100,6 @@ import com.ngt.jopenmetaverse.shared.types.UUID;
                     return true;
                 }
             }
-
             return false;
         }
 

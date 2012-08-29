@@ -229,7 +229,10 @@ public class ManagedImage {
 		else if (bitmap.hasPixelFormat(PixelFormat.Format16bppGrayScale) || bitmap.hasPixelFormat(PixelFormat.Format8bppGrayScale))
 		{
 			Channels = ImageChannels.get(ImageChannels.Gray.getIndex());
+			Alpha = new byte[pixelCount];
 			Red = new byte[pixelCount];
+			Green = new byte[pixelCount];
+			Blue = new byte[pixelCount];
 			
 			int i =0;
 			for(int x = 0; x < Width; x++)
@@ -237,7 +240,8 @@ public class ManagedImage {
 				{
 					i = x*Height + y;
 					int pixel = bitmap.getRGB(x, y);
-				        Red[i] = (byte) ((pixel >> 0) & 0xff);
+				     Red[i] = Green[i] = Blue[i] = (byte) ((pixel >> 0) & 0xff);
+				     Alpha[i] = (byte) ((pixel >> 24) & 0xff);
 				}			
 		}
 		else if (bitmap.hasPixelFormat(PixelFormat.Format24bppRgb))

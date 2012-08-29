@@ -241,10 +241,10 @@ public class Color4 implements Comparable<Color4>, Serializable
 
 		if (inverted)
 		{
-			dest[pos + 0] = (byte)(255 - dest[pos + 0]);
-			dest[pos + 1] = (byte)(255 - dest[pos + 1]);
-			dest[pos + 2] = (byte)(255 - dest[pos + 2]);
-			dest[pos + 3] = (byte)(255 - dest[pos + 3]);
+			dest[pos + 0] = (byte)(255 - Utils.ubyteToInt(dest[pos + 0]));
+			dest[pos + 1] = (byte)(255 - Utils.ubyteToInt(dest[pos + 1]));
+			dest[pos + 2] = (byte)(255 - Utils.ubyteToInt(dest[pos + 2]));
+			dest[pos + 3] = (byte)(255 - Utils.ubyteToInt(dest[pos + 3]));
 		}
 	}
 

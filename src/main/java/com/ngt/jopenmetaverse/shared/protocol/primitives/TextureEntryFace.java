@@ -336,7 +336,7 @@ import com.ngt.jopenmetaverse.shared.types.UUID;
                 tex.put("mapping", OSD.FromInteger((int)getTexMapType().getIndex()));
                 tex.put("glow", OSD.FromReal(getGlow()));
 
-                if (getTextureID() != TextureEntry.WHITE_TEXTURE)
+                if (!getTextureID().equals(TextureEntry.WHITE_TEXTURE))
                     tex.put("imageid",  OSD.FromUUID(getTextureID()));
                 else
                     tex.put("imageid", OSD.FromUUID(UUID.Zero));

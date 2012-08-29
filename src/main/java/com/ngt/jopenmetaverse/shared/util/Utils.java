@@ -973,7 +973,15 @@ public class Utils {
 		byte[] bytes = int16ToBytes(value);
 		System.arraycopy(bytes, 0, dest, pos, 2);
 	}
+	
+	public static void uint16ToBytesLit(int value, byte[] bytes, int i) {
+		int16ToBytesLit((short)value, bytes, i);
+	}  
 
+	public static void uint16ToBytes(int value, byte[] bytes, int i) {
+		int16ToBytes((short)value, bytes, i);
+	}  
+	
 	// public static byte[] UInt16ToBytes(ushort value)
 	// {
 	// byte[] bytes = new byte[2];
@@ -2191,5 +2199,7 @@ public class Utils {
 		return Base64.decodeBase64(str);
 	}
 	
-	public static short UByteMaxValue = 0x0ff;  
+	public static short UByteMaxValue = 0x0ff;
+
+
 }

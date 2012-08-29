@@ -3,6 +3,8 @@ package com.ngt.jopenmetaverse.shared.protocol.primitives;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
+import org.apache.commons.lang.ArrayUtils;
+
 import com.ngt.jopenmetaverse.shared.protocol.Helpers;
 import com.ngt.jopenmetaverse.shared.structureddata.OSD;
 import com.ngt.jopenmetaverse.shared.structureddata.OSDArray;
@@ -10,6 +12,7 @@ import com.ngt.jopenmetaverse.shared.structureddata.OSDMap;
 import com.ngt.jopenmetaverse.shared.structureddata.OSDType;
 import com.ngt.jopenmetaverse.shared.types.Color4;
 import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.util.JLogger;
 import com.ngt.jopenmetaverse.shared.util.Utils;
 
 
@@ -157,6 +160,9 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 
             private void FromBytes(byte[] data, int pos, int length) throws Exception
             {
+            	//TODO need to remove StringBuffer as it is only for debugging 
+            	StringBuffer sb = new StringBuffer();
+            	JLogger.debug(String.format("data buffer length %d , pos %d, length %d", data.length, pos, length));
                 if (length < 16)
                 {
                     // No TextureEntry to process
@@ -172,10 +178,13 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 long[] faceBits = new long[] {0};
                 int[] i = new int[] {pos};
 
+                sb.append(String.format("\nTextureEntry FromBytes: \n%s", Utils.bytesToHexDebugString(ArrayUtils.subarray(data, i[0], data.length),  "")));
+
+                
                 //region Texture
                 DefaultTexture.setTextureID(new UUID(data, i[0]));
                 i[0] += 16;
-
+                
                 while (ReadFaceBitfield(data, i, faceBits, bitfieldSize))
                 {
                     UUID tmpUUID = new UUID(data, i[0]);
@@ -185,6 +194,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                         if ((faceBits[0] & bit) != 0)
                             CreateFace((int)face).setTextureID(tmpUUID);
                 }
+                sb.append(String.format("\nTextureEntry Texture End: \n%s", Utils.bytesToHexDebugString(ArrayUtils.subarray(data, i[0], data.length),  "")));
+
                 //endregion Texture
 
                 //region Color
@@ -200,36 +211,42 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                         if ((faceBits[0] & bit) != 0)
                             CreateFace(face).setRGBA(tmpColor);
                 }
+                sb.append(String.format("\nTextureEntry Color End: \n%s", Utils.bytesToHexDebugString(ArrayUtils.subarray(data, i[0], data.length),  "")));
+
                 //endregion Color
 
                 //region RepeatU
-                DefaultTexture.setRepeatU(Utils.bytesToFloat(data, i[0]));
+                DefaultTexture.setRepeatU(Utils.bytesToFloatLit(data, i[0]));
                 i[0] += 4;
 
                 while (ReadFaceBitfield(data, i, faceBits, bitfieldSize))
                 {
-                    float tmpFloat = Utils.bytesToFloat(data, i[0]);
+                    float tmpFloat = Utils.bytesToFloatLit(data, i[0]);
                     i[0] += 4;
 
                     for (int face = 0, bit = 1; face < bitfieldSize[0]; face++, bit <<= 1)
                         if ((faceBits[0] & bit) != 0)
                             CreateFace(face).setRepeatU(tmpFloat);
                 }
+                sb.append(String.format("\nTextureEntry RepeatU End: \n%s", Utils.bytesToHexDebugString(ArrayUtils.subarray(data, i[0], data.length),  "")));
+
                 //endregion RepeatU
 
                 //region RepeatV
-                DefaultTexture.setRepeatV(Utils.bytesToFloat(data, i[0]));
+                DefaultTexture.setRepeatV(Utils.bytesToFloatLit(data, i[0]));
                 i[0] += 4;
 
                 while (ReadFaceBitfield(data, i, faceBits, bitfieldSize))
                 {
-                    float tmpFloat = Utils.bytesToFloat(data, i[0]);
+                    float tmpFloat = Utils.bytesToFloatLit(data, i[0]);
                     i[0] += 4;
 
                     for (int face = 0, bit = 1; face < bitfieldSize[0]; face++, bit <<= 1)
                         if ((faceBits[0] & bit) != 0)
                             CreateFace(face).setRepeatV(tmpFloat);
                 }
+                sb.append(String.format("\nTextureEntry RepeatV End: \n%s", Utils.bytesToHexDebugString(ArrayUtils.subarray(data, i[0], data.length),  "")));
+
                 //endregion RepeatV
 
                 //region OffsetU
@@ -245,6 +262,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                         if ((faceBits[0] & bit) != 0)
                             CreateFace(face).setOffsetU(tmpFloat);
                 }
+                sb.append(String.format("\nTextureEntry OffsetU End: \n%s", Utils.bytesToHexDebugString(ArrayUtils.subarray(data, i[0], data.length),  "")));
+
                 //endregion OffsetU
 
                 //region OffsetV
@@ -260,6 +279,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                         if ((faceBits[0] & bit) != 0)
                             CreateFace(face).setOffsetV(tmpFloat);
                 }
+                sb.append(String.format("\nTextureEntry OffsetV End: \n%s", Utils.bytesToHexDebugString(ArrayUtils.subarray(data, i[0], data.length),  "")));
+
                 //endregion OffsetV
 
                 //region Rotation
@@ -275,6 +296,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                         if ((faceBits[0] & bit) != 0)
                             CreateFace(face).setRotation(tmpFloat);
                 }
+                sb.append(String.format("\nTextureEntry Rotation End: \n%s", Utils.bytesToHexDebugString(ArrayUtils.subarray(data, i[0], data.length),  "")));
+
                 //endregion Rotation
 
                 //region Material
@@ -290,6 +313,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                         if ((faceBits[0] & bit) != 0)
                             CreateFace(face).setMaterial(tmpByte);
                 }
+                sb.append(String.format("\nTextureEntry Material End: \n%s", Utils.bytesToHexDebugString(ArrayUtils.subarray(data, i[0], data.length),  "")));
+                JLogger.debug("\nTextureEntry Material End" + sb.toString());
                 //endregion Material
 
                 //region Media
@@ -305,6 +330,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                         if ((faceBits[0] & bit) != 0)
                             CreateFace(face).setMedia(tmpByte);
                 }
+                sb.append(String.format("\nTextureEntry Media End: \n%s", Utils.bytesToHexDebugString(ArrayUtils.subarray(data, i[0], data.length),  "")));
+
                 //endregion Media
 
                 //region Glow
@@ -320,7 +347,10 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                         if ((faceBits[0] & bit) != 0)
                             CreateFace(face).setGlow(tmpFloat);
                 }
+                sb.append(String.format("\nTextureEntry Glow End: \n%s", Utils.bytesToHexDebugString(ArrayUtils.subarray(data, i[0], data.length),  "")));
+
  	  	        //endregion Glow
+                JLogger.debug("\nTextureEntry Glow End" + sb.toString());
             }
 
             /// <summary>
@@ -329,6 +359,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             /// <returns></returns>
             public byte[] GetBytes() throws IOException
             {
+            	//TODO need to remove StringBuffer as it is only for debugging 
+            	StringBuilder sb = new StringBuilder(); 
                 if (DefaultTexture == null)
                     return Utils.EmptyBytes;
                 
@@ -360,55 +392,55 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                         {
                             if (FaceTextures[i] == null) continue;
 
-                            if (FaceTextures[i].getTextureID() != DefaultTexture.getTextureID())
+                            if (! FaceTextures[i].getTextureID().equals(DefaultTexture.getTextureID()))
                             {
                                 if (textures[i] == Long.MAX_VALUE) textures[i] = 0;
-                                textures[i] |= (long)(1 << i);
+                                textures[i] |= (long)(1L << i);
                             }
-                            if (FaceTextures[i].getRGBA() != DefaultTexture.getRGBA())
+                            if (! FaceTextures[i].getRGBA().equals(DefaultTexture.getRGBA()))
                             {
                                 if (rgbas[i] == Long.MAX_VALUE) rgbas[i] = 0;
-                                rgbas[i] |= (long)(1 << i);
+                                rgbas[i] |= (long)(1L << i);
                             }
                             if (FaceTextures[i].getRepeatU() != DefaultTexture.getRepeatU())
                             {
                                 if (repeatus[i] == Long.MAX_VALUE) repeatus[i] = 0;
-                                repeatus[i] |= (long)(1 << i);
+                                repeatus[i] |= (long)(1L << i);
                             }
                             if (FaceTextures[i].getRepeatV() != DefaultTexture.getRepeatV())
                             {
                                 if (repeatvs[i] == Long.MAX_VALUE) repeatvs[i] = 0;
-                                repeatvs[i] |= (long)(1 << i);
+                                repeatvs[i] |= (long)(1L << i);
                             }
                             if (Helpers.TEOffsetShort(FaceTextures[i].getOffsetU()) != Helpers.TEOffsetShort(DefaultTexture.getOffsetU()))
                             {
                                 if (offsetus[i] == Long.MAX_VALUE) offsetus[i] = 0;
-                                offsetus[i] |= (long)(1 << i);
+                                offsetus[i] |= (long)(1L << i);
                             }
                             if (Helpers.TEOffsetShort(FaceTextures[i].getOffsetV()) != Helpers.TEOffsetShort(DefaultTexture.getOffsetV()))
                             {
                                 if (offsetvs[i] == Long.MAX_VALUE) offsetvs[i] = 0;
-                                offsetvs[i] |= (long)(1 << i);
+                                offsetvs[i] |= (long)(1L << i);
                             }
                             if (Helpers.TERotationShort(FaceTextures[i].getRotation()) != Helpers.TERotationShort(DefaultTexture.getRotation()))
                             {
                                 if (rotations[i] == Long.MAX_VALUE) rotations[i] = 0;
-                                rotations[i] |= (long)(1 << i);
+                                rotations[i] |= (long)(1L << i);
                             }
                             if (FaceTextures[i].getMaterial() != DefaultTexture.getMaterial())
                             {
                                 if (materials[i] == Long.MAX_VALUE) materials[i] = 0;
-                                materials[i] |= (long)(1 << i);
+                                materials[i] |= (long)(1L << i);
                             }
                             if (FaceTextures[i].getMedia() != DefaultTexture.getMedia())
                             {
                                 if (medias[i] == Long.MAX_VALUE) medias[i] = 0;
-                                medias[i] |= (long)(1 << i);
+                                medias[i] |= (long)(1L << i);
                             }
                             if (Helpers.TEGlowByte(FaceTextures[i].getGlow()) != Helpers.TEGlowByte(DefaultTexture.getGlow()))
                             {
                                 if (glows[i] == Long.MAX_VALUE) glows[i] = 0;
-                                glows[i] |= (long)(1 << i);
+                                glows[i] |= (long)(1L << i);
                             }
                         }
 
@@ -425,6 +457,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                             }
                         }
                         binWriter.write((byte)0);
+                        sb.append(String.format("\nEnd Texture: \n%s", Utils.bytesToHexDebugString(binWriter.toByteArray(), "")));
                         //endregion Texture
 
                         //region Color
@@ -440,71 +473,77 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                             }
                         }
                         binWriter.write((byte)0);
+                        sb.append(String.format("\nEnd Color: \n%s", Utils.bytesToHexDebugString(binWriter.toByteArray(), "")));
                         //endregion Color
 
                         //region RepeatU
-                        binWriter.write(Utils.floatToBytes(DefaultTexture.getRepeatU()));
+                        binWriter.write(Utils.floatToBytesLit(DefaultTexture.getRepeatU()));
                         for (int i = 0; i < repeatus.length; i++)
                         {
                             if (repeatus[i] != Long.MAX_VALUE)
                             {
                                 binWriter.write(GetFaceBitfieldBytes(repeatus[i]));
-                                binWriter.write(Utils.floatToBytes(FaceTextures[i].getRepeatU()));
+                                binWriter.write(Utils.floatToBytesLit(FaceTextures[i].getRepeatU()));
                             }
                         }
                         binWriter.write((byte)0);
+                        sb.append(String.format("\nEnd RepeatU: \n%s", Utils.bytesToHexDebugString(binWriter.toByteArray(), "")));
                         //endregion RepeatU
 
                         //region RepeatV
-                        binWriter.write(Utils.floatToBytes(DefaultTexture.getRepeatV()));
+                        binWriter.write(Utils.floatToBytesLit(DefaultTexture.getRepeatV()));
                         for (int i = 0; i < repeatvs.length; i++)
                         {
                             if (repeatvs[i] != Long.MAX_VALUE)
                             {
                                 binWriter.write(GetFaceBitfieldBytes(repeatvs[i]));
-                                binWriter.write(Utils.floatToBytes(FaceTextures[i].getRepeatV()));
+                                binWriter.write(Utils.floatToBytesLit(FaceTextures[i].getRepeatV()));
                             }
                         }
                         binWriter.write((byte)0);
+                        sb.append(String.format("\nEnd RepeatV: \n%s", Utils.bytesToHexDebugString(binWriter.toByteArray(), "")));
                         //endregion RepeatV
 
                         //region OffsetU
-                        binWriter.write(Helpers.TEOffsetShort(DefaultTexture.getOffsetU()));
+                        binWriter.write(Utils.int16ToBytesLit(Helpers.TEOffsetShort(DefaultTexture.getOffsetU())));
                         for (int i = 0; i < offsetus.length; i++)
                         {
                             if (offsetus[i] != Long.MAX_VALUE)
                             {
                                 binWriter.write(GetFaceBitfieldBytes(offsetus[i]));
-                                binWriter.write(Helpers.TEOffsetShort(FaceTextures[i].getOffsetU()));
+                                binWriter.write(Utils.int16ToBytesLit(Helpers.TEOffsetShort(FaceTextures[i].getOffsetU())));
                             }
                         }
                         binWriter.write((byte)0);
+                        sb.append(String.format("\nEnd OffsetU: \n%s", Utils.bytesToHexDebugString(binWriter.toByteArray(), "")));
                         //endregion OffsetU
 
                         //region OffsetV
-                        binWriter.write(Helpers.TEOffsetShort(DefaultTexture.getOffsetV()));
+                        binWriter.write(Utils.int16ToBytesLit(Helpers.TEOffsetShort(DefaultTexture.getOffsetV())));
                         for (int i = 0; i < offsetvs.length; i++)
                         {
                             if (offsetvs[i] != Long.MAX_VALUE)
                             {
                                 binWriter.write(GetFaceBitfieldBytes(offsetvs[i]));
-                                binWriter.write(Helpers.TEOffsetShort(FaceTextures[i].getOffsetV()));
+                                binWriter.write(Utils.int16ToBytesLit(Helpers.TEOffsetShort(FaceTextures[i].getOffsetV())));
                             }
                         }
                         binWriter.write((byte)0);
+                        sb.append(String.format("\nEnd OffsetV: \n%s", Utils.bytesToHexDebugString(binWriter.toByteArray(), "")));
                         //endregion OffsetV
 
                         //region Rotation
-                        binWriter.write(Helpers.TERotationShort(DefaultTexture.getRotation()));
+                        binWriter.write(Utils.int16ToBytesLit(Helpers.TERotationShort(DefaultTexture.getRotation())));
                         for (int i = 0; i < rotations.length; i++)
                         {
                             if (rotations[i] != Long.MAX_VALUE)
                             {
                                 binWriter.write(GetFaceBitfieldBytes(rotations[i]));
-                                binWriter.write(Helpers.TERotationShort(FaceTextures[i].getRotation()));
+                                binWriter.write(Utils.int16ToBytesLit(Helpers.TERotationShort(FaceTextures[i].getRotation())));
                             }
                         }
                         binWriter.write((byte)0);
+                        sb.append(String.format("\nEnd Rotation: \n%s", Utils.bytesToHexDebugString(binWriter.toByteArray(), "")));
                         //endregion Rotation
 
                         //region Material
@@ -518,6 +557,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                             }
                         }
                         binWriter.write((byte)0);
+                        sb.append(String.format("\nEnd Material: \n%s", Utils.bytesToHexDebugString(binWriter.toByteArray(), "")));
+
                         //endregion Material
 
                         //region Media
@@ -531,6 +572,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                             }
                         }
                         binWriter.write((byte)0);
+                        sb.append(String.format("\nEnd Media: \n%s", Utils.bytesToHexDebugString(binWriter.toByteArray(), "")));
+
                         //endregion Media
 
                         //region Glow
@@ -543,8 +586,12 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                                 binWriter.write(Helpers.TEGlowByte(FaceTextures[i].getGlow()));
                             }
                         }
+                        sb.append(String.format("\nEnd Glow: \n%s", Utils.bytesToHexDebugString(binWriter.toByteArray(), "")));
                         //endregion Glow
 
+                        JLogger.debug("TextureEntry Generated Bytes: " + sb.toString());
+                        JLogger.debug(String.format("Genetrated Texture Entry bytes: %s ", Utils.bytesToHexDebugString(binWriter.toByteArray(), "")));
+                        
                         return binWriter.toByteArray();
             }
 
@@ -586,7 +633,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                     array[i] = Long.MAX_VALUE;
             }
 
-            private boolean ReadFaceBitfield(byte[] data, int[] pos, long[] faceBits, long[] bitfieldSize)
+            protected boolean ReadFaceBitfield(byte[] data, int[] pos, long[] faceBits, long[] bitfieldSize)
             {
                 faceBits[0] = 0L;
                 bitfieldSize[0] = 0;
@@ -607,7 +654,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 return (faceBits[0] != 0);
             }
 
-            private byte[] GetFaceBitfieldBytes(long bitfield)
+            protected byte[] GetFaceBitfieldBytes(long bitfield)
             {
                 int byteLength = 0;
                 long tmpBitfield = bitfield;
@@ -627,6 +674,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                     if (i < byteLength - 1)
                         bytes[i] |= 0x80;
                 }
+                JLogger.debug(String.format("Generating GetFaceBitfieldBytes bytes: %s for bitfield %d", Utils.bytesToHexDebugString(bytes, ""),  bitfield));
                 return bytes;
             }
 

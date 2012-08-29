@@ -1,10 +1,8 @@
 package com.ngt.jopenmetaverse.shared.sim.imaging;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
-
 import com.ngt.jopenmetaverse.shared.protocol.Helpers;
 import com.ngt.jopenmetaverse.shared.sim.AppearanceManager;
 import com.ngt.jopenmetaverse.shared.sim.AppearanceManager.AvatarTextureIndex;
@@ -145,6 +143,9 @@ public class Baker {
                 // For head bake skin texture is drawn last, go figure
                 if (bakeType == BakeType.Head && i == 0) continue;
 
+                if(textures.get(i).Texture == null)
+                	JLogger.debug("textures.get(i).Texture is null");
+                
                 ManagedImage texture = textures.get(i).Texture.Image.Clone();
                 //File.WriteAllBytes(bakeType + "-texture-layer-" + i + ".tga", texture.ExportTGA());
 
@@ -284,6 +285,7 @@ public class Baker {
                 	String resourcePath = null;
                     if((resourcePath = Helpers.GetResourcePath(fileName, Settings.RESOURCE_DIR))!=null)
                     {
+                    	JLogger.debug("Got Resource Path: " + resourcePath);
                         bitmap = LoadTGAClass.LoadTGA(resourcePath);
                     }
                 }
@@ -299,7 +301,7 @@ public class Baker {
             }
             catch (Exception e)
             {
-                JLogger.error(String.format("Failed loading resource file: %s (%s)", fileName, e.getMessage()));
+                JLogger.error(String.format("Failed loading resource file: %s (%s)", fileName, Utils.getExceptionStackTraceAsString(e)));
                 return null;
             }
         }

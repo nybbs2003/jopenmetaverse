@@ -235,7 +235,7 @@ public class UUID implements Comparable<UUID>, Serializable
 	{
 		return Guid.hashCode();
 	}
-
+	
 	/// <summary>
 	/// Comparison function
 	/// </summary>

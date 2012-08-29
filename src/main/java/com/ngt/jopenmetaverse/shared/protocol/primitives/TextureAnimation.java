@@ -49,9 +49,9 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                     SizeX = (long)data[pos++];
                     SizeY = (long)data[pos++];
 
-                    Start = Utils.bytesToFloat(data, pos);
-                    Length = Utils.bytesToFloat(data, pos + 4);
-                    Rate = Utils.bytesToFloat(data, pos + 8);
+                    Start = Utils.bytesToFloatLit(data, pos);
+                    Length = Utils.bytesToFloatLit(data, pos + 4);
+                    Rate = Utils.bytesToFloatLit(data, pos + 8);
                 }
                 else
                 {
@@ -84,9 +84,9 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 //                Utils.floatToBytes(Length).CopyTo(data, pos + 4);
 //                Utils.floatToBytes(Rate).CopyTo(data, pos + 4);
 
-                byte[] startBytes = Utils.floatToBytes(Start);
-                byte[] lengthBytes = Utils.floatToBytes(Length);
-                byte[] rateBytes = Utils.floatToBytes(Rate);
+                byte[] startBytes = Utils.floatToBytesLit(Start);
+                byte[] lengthBytes = Utils.floatToBytesLit(Length);
+                byte[] rateBytes = Utils.floatToBytesLit(Rate);
                 
                 System.arraycopy(startBytes, 0, data, pos, startBytes.length);
                 System.arraycopy(lengthBytes, 0, data, pos+4, startBytes.length);

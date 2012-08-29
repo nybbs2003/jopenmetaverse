@@ -1,12 +1,48 @@
 package com.ngt.jopenmetaverse.shared.util;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Random;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class JLogger {
 
-	static Logger logger = Logger.getLogger("ApplicationRoot");
+	static Logger logger;
+	static String loggerDirURL;
+	static Random rdm;
+	
+	/*
+	 * Static Block, called only once 
+	 */
+	static {
+		logger = Logger.getLogger("ApplicationRoot");
+		rdm = new Random(Utils.getUnixTime());
+		loggerDirURL =  "openmetaverse_data/logs";
+		File f = new File(loggerDirURL);
+		if(!f.exists())
+			f.mkdirs();
+	}
+	
+	public static void logPkt(String pktName, byte[] bytes)
+	{
+		if(logger.isLoggable(Level.INFO))
+				{
+		try {
+			long now = Utils.getUnixTime();
+			File f = new File(FileUtils.combineFilePath(loggerDirURL, pktName + "_" + now + "_" + rdm.nextInt()));
+			f.createNewFile();
+			FileOutputStream fs = new FileOutputStream(f);
+			fs.write(bytes);
+			FileUtils.closeStream(fs);
+		} catch (IOException e) {
+			JLogger.warn(Utils.getExceptionStackTraceAsString(e));
+		}
+				}
+	}
+	
 	
 	public static void debug(String msg)
 	{

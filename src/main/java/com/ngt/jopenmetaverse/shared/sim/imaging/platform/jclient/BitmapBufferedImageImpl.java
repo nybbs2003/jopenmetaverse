@@ -3,6 +3,7 @@ package com.ngt.jopenmetaverse.shared.sim.imaging.platform.jclient;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferInt;
 import java.awt.image.MemoryImageSource;
 import java.util.HashMap;
 import java.util.Map;
@@ -45,8 +46,13 @@ public class BitmapBufferedImageImpl  implements IBitmap
 	}
 	
 	public BitmapBufferedImageImpl(int w, int h, int[] pixels) {
-        Image piximg =  Toolkit.getDefaultToolkit().createImage(new MemoryImageSource(w, h, pixels, 0, w));
-		this.img = (BufferedImage)piximg;
+		img = new BufferedImage( w, h, BufferedImage.TYPE_INT_ARGB );
+		final int[] a = ( (DataBufferInt) img.getRaster().getDataBuffer() ).getData();
+		System.arraycopy(pixels, 0, a, 0, pixels.length);
+//		
+//		
+//        Image piximg =  Toolkit.getDefaultToolkit().createImage(new MemoryImageSource(w, h, pixels, 0, w));
+//		this.img = (BufferedImage)piximg;
 	}
 	
 	public boolean hasPixelFormat(PixelFormat pixelFormat) throws NotSupportedException{

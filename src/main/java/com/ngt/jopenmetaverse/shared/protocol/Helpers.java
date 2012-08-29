@@ -486,8 +486,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         
         public static String GetResourcePath(String resourceName, String searchPath)
         {
-        	URL fileLocation =  Helpers.class.getClassLoader().getResource(searchPath);
-        	return  fileLocation.getPath() + "/" + resourceName;
+//        	URL fileLocation =  Helpers.class.getClassLoader().getResource(searchPath);
+        	return  searchPath + "/" + resourceName;
         }
         
         
