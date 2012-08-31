@@ -497,10 +497,8 @@ public class AppearanceManager {
 	{
 		Client = client;
 
-		//TODO need to verify following
 		for(int i=0; i< Textures.length; i++)
 			Textures[i] = new TextureData();
-//			Textures[i] = null;
 		
 		// Client.network.RegisterCallback(PacketType.AgentWearablesUpdate, AgentWearablesUpdateHandler);
 		Client.network.RegisterCallback(PacketType.AgentWearablesUpdate, new EventObserver<PacketReceivedEventArgs>()

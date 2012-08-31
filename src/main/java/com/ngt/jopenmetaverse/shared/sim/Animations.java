@@ -280,7 +280,6 @@ public class Animations
     /// <summary>Agent floating with legs and arms crossed</summary>
     public final static UUID YOGA_FLOAT = new UUID("42ecd00b-9947-a97c-400a-bbc9174c7aeb");
 
-    //TODO Implement
     /// <summary>
     /// A dictionary containing all pre-defined animations
     /// </summary>

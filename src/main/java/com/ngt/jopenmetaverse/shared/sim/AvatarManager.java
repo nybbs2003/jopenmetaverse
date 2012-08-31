@@ -34,7 +34,6 @@ import com.ngt.jopenmetaverse.shared.protocol.TrackAgentPacket;
 import com.ngt.jopenmetaverse.shared.protocol.UUIDNameReplyPacket;
 import com.ngt.jopenmetaverse.shared.protocol.UUIDNameRequestPacket;
 import com.ngt.jopenmetaverse.shared.protocol.ViewerEffectPacket;
-import com.ngt.jopenmetaverse.shared.protocol.primitives.Primitive;
 import com.ngt.jopenmetaverse.shared.protocol.primitives.TextureEntry;
 import com.ngt.jopenmetaverse.shared.protocol.primitives.TextureEntryFace;
 import com.ngt.jopenmetaverse.shared.structureddata.OSD;
@@ -50,7 +49,6 @@ import com.ngt.jopenmetaverse.shared.sim.AgentManager.PointAtType;
 import com.ngt.jopenmetaverse.shared.sim.Avatar.ProfileFlags;
 import com.ngt.jopenmetaverse.shared.sim.GroupManager.GroupPowers;
 import com.ngt.jopenmetaverse.shared.sim.events.CapsEventObservableArg;
-import com.ngt.jopenmetaverse.shared.sim.events.EventArgs;
 import com.ngt.jopenmetaverse.shared.sim.events.EventObservable;
 import com.ngt.jopenmetaverse.shared.sim.events.EventObserver;
 import com.ngt.jopenmetaverse.shared.sim.events.PacketReceivedEventArgs;
@@ -745,7 +743,6 @@ public class AvatarManager {
     public AvatarManager(GridClient client)
     {
     	Client = client;
-    	//TODO need to implement
     	// Avatar appearance callback
     	// Client.network.RegisterCallback(PacketType.AvatarAppearance, AvatarAppearanceHandler);
 
@@ -1314,7 +1311,7 @@ public class AvatarManager {
                 properties.BornOn = Utils.bytesWithTrailingNullByteToString(reply.PropertiesData.BornOn);
                 //properties.CharterMember = Utils.bytesWithTrailingNullByteToString(reply.PropertiesData.CharterMember);
                 //uint
-                long charter = Utils.bytesToUInt(reply.PropertiesData.CharterMember);
+                long charter = Utils.bytesToUIntLit(reply.PropertiesData.CharterMember);
                 if (charter == 0)
                 {
                     properties.CharterMember = "Resident";

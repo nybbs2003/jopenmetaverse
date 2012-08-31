@@ -381,7 +381,7 @@ public class Baker {
             addSourceAlpha = (addSourceAlpha && sourceHasAlpha);
 
             byte alpha = (byte)Utils.UByteMaxValue;
-            byte alphaInv = (byte)(Utils.UByteMaxValue - alpha);
+            byte alphaInv = (byte)(Utils.UByteMaxValue - Utils.ubyteToInt(alpha));
 
             byte[] bakedRed = bakedTexture.Image.Red;
             byte[] bakedGreen = bakedTexture.Image.Green;
@@ -402,19 +402,22 @@ public class Baker {
                     if (sourceHasAlpha)
                     {
                         alpha = sourceAlpha[i];
-                        alphaInv = (byte)(Utils.UByteMaxValue - alpha);
+                        alphaInv = (byte)(Utils.UByteMaxValue - Utils.ubyteToInt(alpha));
                     }
 
                     if (sourceHasColor)
                     {
-                        bakedRed[i] = (byte)((bakedRed[i] * alphaInv + sourceRed[i] * alpha) >> 8);
-                        bakedGreen[i] = (byte)((bakedGreen[i] * alphaInv + sourceGreen[i] * alpha) >> 8);
-                        bakedBlue[i] = (byte)((bakedBlue[i] * alphaInv + sourceBlue[i] * alpha) >> 8);
+                        bakedRed[i] = (byte)((Utils.ubyteToInt(bakedRed[i]) * Utils.ubyteToInt(alphaInv) 
+                        		+ Utils.ubyteToInt(sourceRed[i]) * Utils.ubyteToInt(alpha)) >> 8);
+                        bakedGreen[i] = (byte)((Utils.ubyteToInt(bakedGreen[i]) * Utils.ubyteToInt(alphaInv) 
+                        		+ Utils.ubyteToInt(sourceGreen[i]) * Utils.ubyteToInt(alpha)) >> 8);
+                        bakedBlue[i] = (byte)((Utils.ubyteToInt(bakedBlue[i]) * Utils.ubyteToInt(alphaInv) 
+                        		+ Utils.ubyteToInt(sourceBlue[i]) * Utils.ubyteToInt(alpha)) >> 8);
                     }
 
                     if (addSourceAlpha)
                     {
-                        if (sourceAlpha[i] < bakedAlpha[i])
+                        if (Utils.ubyteToInt(sourceAlpha[i]) < Utils.ubyteToInt(bakedAlpha[i]))
                         {
                             bakedAlpha[i] = sourceAlpha[i];
                         }
@@ -474,7 +477,7 @@ public class Baker {
 
             for (int i = 0; i < dest.Alpha.length; i++)
             {
-                byte alpha = src.Alpha[i] <= ((1 - val) * 255) ? (byte)0 : (byte)255;
+                byte alpha = Utils.ubyteToInt(src.Alpha[i]) <= ((1 - val) * 255) ? (byte)0 : (byte)255;
 
                 if (param.MultiplyBlend)
                 {
@@ -482,7 +485,7 @@ public class Baker {
                 }
                 else
                 {
-                    if (alpha > dest.Alpha[i])
+                    if (Utils.ubyteToInt(alpha) > Utils.ubyteToInt(dest.Alpha[i]))
                     {
                         dest.Alpha[i] = alpha;
                     }
@@ -496,7 +499,7 @@ public class Baker {
 
             for (int i = 0; i < dest.Alpha.length; i++)
             {
-                if (src.Alpha[i] < dest.Alpha[i])
+                if (Utils.ubyteToInt(src.Alpha[i]) < Utils.ubyteToInt(dest.Alpha[i]))
                 {
                     dest.Alpha[i] = src.Alpha[i];
                 }
@@ -560,15 +563,15 @@ public class Baker {
             gAlt = gByte;
             bAlt = bByte;
 
-            if (rByte < Utils.UByteMaxValue)
+            if (Utils.ubyteToInt(rByte) < Utils.UByteMaxValue)
                 rAlt++;
             else rAlt--;
 
-            if (gByte < Utils.UByteMaxValue)
+            if (Utils.ubyteToInt(gByte) < Utils.UByteMaxValue)
                 gAlt++;
             else gAlt--;
 
-            if (bByte < Utils.UByteMaxValue)
+            if (Utils.ubyteToInt(bByte) < Utils.UByteMaxValue)
                 bAlt++;
             else bAlt--;
 

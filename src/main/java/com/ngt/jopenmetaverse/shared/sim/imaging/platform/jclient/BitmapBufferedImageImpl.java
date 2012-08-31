@@ -1,10 +1,7 @@
 package com.ngt.jopenmetaverse.shared.sim.imaging.platform.jclient;
 
-import java.awt.Image;
-import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
-import java.awt.image.MemoryImageSource;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;

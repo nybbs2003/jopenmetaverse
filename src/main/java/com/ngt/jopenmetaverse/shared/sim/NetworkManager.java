@@ -1211,7 +1211,7 @@ public class NetworkManager {
 			JLogger.debug("CurrentSim object was null, using first found connected simulator");
 			simulator = client.network.Simulators.get(0);
 		}            
-
+		
 		if (simulator != null && simulator.getConnected())
 		{
 			simulator.SendPacket(packet);
@@ -1290,29 +1290,12 @@ public class NetworkManager {
 				// Mark that we are connecting/connected to the grid
 				// 
 				connected = true;
-
-				// Open the queues in case this is a reconnect and they were shut down
-				//TODO need to verify following
-				//                PacketInbox.Open();
-				//                PacketOutbox.Open();
-
-				// Start the packet decoding thread
-				//                Thread decodeThread = new Thread(new ThreadStart(IncomingPacketHandler));
-				//                decodeThread.Name = "Incoming UDP packet dispatcher";
-				//                decodeThread.Start();
-
 				threadPool.execute(new Runnable(){
 					public void run()
 					{
 						IncomingPacketHandler();
 					}
 				});
-
-
-				// Start the packet sending thread
-				//                Thread sendThread = new Thread(new ThreadStart(OutgoingPacketHandler));
-				//                sendThread.Name = "Outgoing UDP packet dispatcher";
-				//                sendThread.Start();     
 
 				threadPool.execute(new Runnable(){
 					public void run()

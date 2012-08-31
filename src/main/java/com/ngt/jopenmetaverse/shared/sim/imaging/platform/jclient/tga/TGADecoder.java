@@ -516,24 +516,18 @@ public final class TGADecoder {
 
 		if(imageType == TYPE_BLACKANDWHITE_RLE || imageType == TYPE_BLACKANDWHITE)
 		{
-			bufferedImage  = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_GRAY);
+			bufferedImage  = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 			for(int j = 0; j < height; j++)
 				for(int i = 0; i < width; i++) {
-					int  index;
-					if(flip)
-						index = ( (height - 1 -j)* width + i) * (pixelDepth/8);
-					else
-						index = ( (j)* width + i) * (pixelDepth/8);
-					//            System.out.println(String.format("rawdata = %d height = %d width = %d j = %d i = %d index = %d", 
-					//            		rawData.length, height, width, j, i , index));
-					//Specially handle 8 bit gray tga images to provide alpha values
-					int value = ((rawData[index + 0] & 0xFF) << 24)  | ((rawData[index + 0] & 0xFF) << 16)|
-							((rawData[index + 0] & 0xFF) <<  8)|
-							(rawData[index + 0] & 0xFF) ;	
-//					if(!flip)
-//						bufferedImage.setRGB(i, j,value);
-//					else
-						bufferedImage.setRGB(i, j,value);
+					int  index = ( (j)* width + i) * (pixelDepth/8);
+
+//					int value = ((rawData[index + 0] & 0xFF) << 24)  | ((rawData[index + 0] & 0xFF) << 16)|
+//							((rawData[index + 0] & 0xFF) <<  8)|
+//							(rawData[index + 0] & 0xFF) ;	
+
+					int value = ((rawData[index + 0] & 0xFF) << 24) ;
+					
+					bufferedImage.setRGB(i, j,value);
 				}
 		}
 		else
@@ -545,15 +539,7 @@ public final class TGADecoder {
 
 			for(int j = 0; j < height; j++)
 				for(int i = 0; i < width; i++) {
-					int  index;
-
-					if(flip)
-						index = ( (height - 1 -j)* width + i) * (pixelDepth/8);
-					else
-						index = ( (j)* width + i) * (pixelDepth/8);
-					
-//					System.out.println(String.format("rawdata = %d height = %d width = %d j = %d i = %d index = %d", 
-//							rawData.length, height, width, j, i , index));
+					int index = ( (j)* width + i) * (pixelDepth/8);
 					int value =  (rawData[index + 0] & 0xFF) << 16|
 							(rawData[index + 1] & 0xFF) <<  8|
 							(rawData[index + 2] & 0xFF) ;
@@ -565,25 +551,6 @@ public final class TGADecoder {
 
 				}
 		}
-
-
-		//        // Get a pointer to the image memory
-		//        ByteBuffer scratch = createByteBuffer(rawData.length);
-		////        InputStream in = new ByteArrayInputStream(rawData);
-		////        BufferedImage textureImage = ImageIO.read(in);
-		//        scratch.clear();
-		//        scratch.put(rawData);
-		//        scratch.rewind();
-		//        // Create the jme.image.Image object
-		//        Image textureImage = new Image();
-		//TODO do we need to handle fotmat
-		//        if (dl == 4)
-		//        	bufferedImage.setFormat(BufferedImage.TYPE_INT_ARGB);
-		//        else
-		//        	bufferedImage.setFormat(PixelFormat.f);
-		//        textureImage.setWidth(width);
-		//        textureImage.setHeight(height);
-		//        textureImage.setData(scratch);
 		return bufferedImage;
 	}
 

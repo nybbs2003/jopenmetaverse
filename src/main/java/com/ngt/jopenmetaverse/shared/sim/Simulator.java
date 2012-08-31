@@ -911,6 +911,9 @@ public class Simulator extends UDPBase
 		if (packet.header.AppendedAcks || (packet.header.AckList != null && packet.header.AckList.length > 0))
 			JLogger.error("Attempting to send packet " + packet.Type + " with ACKs appended before serialization");
 
+		JLogger.debug("Attempting to send packet " + packet.Type );
+		
+		
 		if (packet.HasVariableBlocks)
 		{
 			byte[][] datas;

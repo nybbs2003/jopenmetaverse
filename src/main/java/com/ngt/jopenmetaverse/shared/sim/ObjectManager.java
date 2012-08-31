@@ -2602,6 +2602,9 @@ public class ObjectManager {
 				//				lock (simulator.ObjectsAvatars.Dictionary)
 				isNewAvatar = !simulator.ObjectsAvatars.containsKey(block.ID);
 
+				if(block.FullID.equals(UUID.Zero))
+					JLogger.warn(String.format("Received Avatar with Zero ID PCcode %d LocalID %d", block.PCode, block.ID));
+				
 				// Update some internals if this is our avatar
 				if (block.FullID.equals(Client.self.getAgentID()) && simulator.equals(Client.network.getCurrentSim()))
 				{
@@ -2740,7 +2743,7 @@ public class ObjectManager {
 			try
 			{
 				int pos = 4;
-				long localid = Utils.bytesToUInt(block.Data, 0);
+				long localid = Utils.bytesToUIntLit(block.Data, 0);
 
 				// Check if we are interested in this update
 				if (!Client.settings.ALWAYS_DECODE_OBJECTS
@@ -2801,7 +2804,7 @@ public class ObjectManager {
 					update.Textures = new TextureEntry(block.TextureEntry, 4, block.TextureEntry.length - 4);
 
 				//endregion Decode update data
-
+				
 				final Primitive obj = !Client.settings.OBJECT_TRACKING ? null : (update.Avatar) ?
 						(Primitive)GetAvatar(simulator, update.LocalID, UUID.Zero) :
 							(Primitive)GetPrimitive(simulator, update.LocalID, UUID.Zero);
@@ -2930,7 +2933,7 @@ public class ObjectManager {
 				prim.Rotation = new Quaternion(block.Data, i, true);
 				i += 12;
 				// Compressed flags
-				EnumSet<CompressedFlags> flags = CompressedFlags.get(Utils.bytesToUInt(block.Data, i));
+				EnumSet<CompressedFlags> flags = CompressedFlags.get(Utils.bytesToUIntLit(block.Data, i));
 				i += 4;
 
 				prim.OwnerID = new UUID(block.Data, i);
@@ -3026,10 +3029,10 @@ public class ObjectManager {
 					prim.Sound = new UUID(block.Data, i);
 					i += 16;
 
-					prim.SoundGain = Utils.bytesToFloat(block.Data, i);
+					prim.SoundGain = Utils.bytesToFloatLit(block.Data, i);
 					i += 4;
 					prim.SoundFlags = SoundFlags.get(block.Data[i++]);
-					prim.SoundRadius = Utils.bytesToFloat(block.Data, i);
+					prim.SoundRadius = Utils.bytesToFloatLit(block.Data, i);
 					i += 4;
 				}
 
@@ -3062,9 +3065,9 @@ public class ObjectManager {
 				}
 
 				prim.PrimData.PathCurve = PathCurve.get(block.Data[i++]);
-				int pathBegin = Utils.bytesToUInt16(block.Data, i); i += 2;
+				int pathBegin = Utils.bytesToUInt16Lit(block.Data, i); i += 2;
 				prim.PrimData.PathBegin = Primitive.UnpackBeginCut(pathBegin);
-				int pathEnd = Utils.bytesToUInt16(block.Data, i); i += 2;
+				int pathEnd = Utils.bytesToUInt16Lit(block.Data, i); i += 2;
 				prim.PrimData.PathEnd = Primitive.UnpackEndCut(pathEnd);
 				prim.PrimData.PathScaleX = Primitive.UnpackPathScale(block.Data[i++]);
 				prim.PrimData.PathScaleY = Primitive.UnpackPathScale(block.Data[i++]);
@@ -3079,11 +3082,11 @@ public class ObjectManager {
 				prim.PrimData.PathSkew = Primitive.UnpackPathTwist((byte)block.Data[i++]);
 
 				prim.PrimData.profileCurve = block.Data[i++];
-				int profileBegin = Utils.bytesToUInt16(block.Data, i); i += 2;
+				int profileBegin = Utils.bytesToUInt16Lit(block.Data, i); i += 2;
 				prim.PrimData.ProfileBegin = Primitive.UnpackBeginCut(profileBegin);
-				int profileEnd = Utils.bytesToUInt16(block.Data, i); i += 2;
+				int profileEnd = Utils.bytesToUInt16Lit(block.Data, i); i += 2;
 				prim.PrimData.ProfileEnd = Primitive.UnpackEndCut(profileEnd);
-				int profileHollow = Utils.bytesToUInt16(block.Data, i); i += 2;
+				int profileHollow = Utils.bytesToUInt16Lit(block.Data, i); i += 2;
 				prim.PrimData.ProfileHollow = Primitive.UnpackProfileHollow(profileHollow);
 
 				// TextureEntry
@@ -3702,7 +3705,7 @@ public class ObjectManager {
 					avatar.RegionHandle = simulator.Handle;
 
 					simulator.ObjectsAvatars.add(localID, avatar);
-					JLogger.debug("Added Avatar: " + avatar.LocalID);
+					JLogger.debug(String.format("Added Avatar: ID %s LocalID %d", fullID, avatar.LocalID));
 					return avatar;
 				}
 			}
