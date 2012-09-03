@@ -4,18 +4,12 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.nio.ByteOrder;
-
 import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
-import javax.imageio.ImageTypeSpecifier;
 import javax.imageio.ImageWriteParam;
-import javax.imageio.ImageWriter;
-import javax.imageio.metadata.IIOMetadata;
 import javax.imageio.stream.FileCacheImageInputStream;
 import javax.imageio.stream.FileCacheImageOutputStream;
-
 import com.ngt.jopenmetaverse.shared.sim.imaging.IBitmap;
 import com.ngt.jopenmetaverse.shared.sim.imaging.IBitmapFactory;
 import com.ngt.jopenmetaverse.shared.sim.imaging.IOpenJPEG;

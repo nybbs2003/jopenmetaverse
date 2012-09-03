@@ -1803,18 +1803,18 @@ public class AppearanceManager {
 				JLogger.warn("Texture is null for index" + textureIndex.getIndex());
 
 			//TODO need to verfy why original code was sending even Zero textures for baking
-			if(!texture.TextureID.equals(UUID.Zero))
-			{
+//			if(!texture.TextureID.equals(UUID.Zero))
+//			{
 				JLogger.debug("Adding Texture to oven"  + texture.toString());
 				texture.TextureIndex = textureIndex;
 				oven.AddTexture(texture);
-			}
+//			}
 		}
 
 		long start = Utils.getUnixTime();
 		JLogger.debug("Going to oven.Bake..");
 		oven.Bake();
-		JLogger.debug("Baking " + bakeType + " took " + (Utils.getUnixTime() - start) + "ms");
+		JLogger.debug("Task Baking " + bakeType + " took " + (Utils.getUnixTime() - start) + "ms");
 
 		UUID newAssetID = UUID.Zero;
 		int retries = UPLOAD_RETRIES;
@@ -2270,6 +2270,7 @@ public class AppearanceManager {
 
 						// Add this wearable to our collection
 						Wearables.put(type, data);
+						JLogger.debug("Received WearableData: " +  data.toString());
 					}
 				}
 			}

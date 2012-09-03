@@ -207,29 +207,12 @@ public class ManagedImage {
 				        Blue[i] = (byte) ((pixel >> 0) & 0xff);
 				}
 			
-			
-//			System.Drawing.Imaging.BitmapData bd = bitmap.LockBits(new System.Drawing.Rectangle(0, 0, Width, Height),
-//					System.Drawing.Imaging.ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-//
-//			unsafe
-//			{
-//				byte* pixel = (byte*)bd.Scan0;
-//
-//				for (int i = 0; i < pixelCount; i++)
-//				{
-//					// GDI+ gives us BGRA and we need to turn that in to RGBA
-//					Blue[i] = *(pixel++);
-//					Green[i] = *(pixel++);
-//					Red[i] = *(pixel++);
-//					Alpha[i] = *(pixel++);
-//				}
-//			}
-//
-//			bitmap.UnlockBits(bd);
 		}
 		else if (bitmap.hasPixelFormat(PixelFormat.Format16bppGrayScale) || bitmap.hasPixelFormat(PixelFormat.Format8bppGrayScale))
 		{
-			Channels = ImageChannels.get(ImageChannels.Gray.getIndex());
+			//FIXME should we keep the color space. Making it grey dows not work with texture baking
+//			Channels = ImageChannels.get(ImageChannels.Gray.getIndex());
+			Channels = ImageChannels.get(ImageChannels.Alpha.getIndex() | ImageChannels.Color.getIndex());
 			Alpha = new byte[pixelCount];
 			Red = new byte[pixelCount];
 			Green = new byte[pixelCount];
@@ -264,23 +247,6 @@ public class ManagedImage {
 				        Blue[i] = (byte) ((pixel >> 0) & 0xff);
 				}
 			
-//			System.Drawing.Imaging.BitmapData bd = bitmap.LockBits(new System.Drawing.Rectangle(0, 0, Width, Height),
-//					System.Drawing.Imaging.ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
-//
-//			unsafe
-//			{
-//				byte* pixel = (byte*)bd.Scan0;
-//
-//				for (int i = 0; i < pixelCount; i++)
-//				{
-//					// GDI+ gives us BGR and we need to turn that in to RGB
-//					Blue[i] = *(pixel++);
-//					Green[i] = *(pixel++);
-//					Red[i] = *(pixel++);
-//				}
-//			}
-//
-//			bitmap.UnlockBits(bd);
 		}
 		else if (bitmap.hasPixelFormat(PixelFormat.Format32bppRgb))
 		{
@@ -300,25 +266,6 @@ public class ManagedImage {
 				        Green[i] = (byte) ((pixel >> 8) & 0xff);
 				        Blue[i] = (byte) ((pixel >> 0) & 0xff);
 				}
-			
-//			System.Drawing.Imaging.BitmapData bd = bitmap.LockBits(new System.Drawing.Rectangle(0, 0, Width, Height),
-//					System.Drawing.Imaging.ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppRgb);
-//
-//			unsafe
-//			{
-//				byte* pixel = (byte*)bd.Scan0;
-//
-//				for (int i = 0; i < pixelCount; i++)
-//				{
-//					// GDI+ gives us BGR and we need to turn that in to RGB
-//					Blue[i] = *(pixel++);
-//					Green[i] = *(pixel++);
-//					Red[i] = *(pixel++);
-//					pixel++;	// Skip over the empty byte where the Alpha info would normally be
-//				}
-//			}
-//
-//			bitmap.UnlockBits(bd);
 		}
 		else
 		{
@@ -353,20 +300,22 @@ public class ManagedImage {
 			Blue = null;
 		}
 
-		if ((ImageChannels.and(del , ImageChannels.Alpha)) != 0)
+		if ((ImageChannels.and(add , ImageChannels.Alpha)) != 0)
 		{
 			Alpha = new byte[n];
 			FillArray(Alpha, (byte)255);
 		}
 		else if ((ImageChannels.and(del , ImageChannels.Alpha) != 0))
+		{
 			Alpha = null;
+		}
 
-		if ((ImageChannels.and(del , ImageChannels.Bump) != 0))
+		if ((ImageChannels.and(add , ImageChannels.Bump) != 0))
 			Bump = new byte[n];
 		else if ((ImageChannels.and(del , ImageChannels.Bump) != 0))
 			Bump = null;
 
-		Channels = channels;
+		Channels = ImageChannels.get(ImageChannels.getIndex(channels));
 	}
 
 	/// <summary>
@@ -545,13 +494,6 @@ public class ManagedImage {
 				{
 					int pos = (Height - 1 - h) * Width + w;
 					int srcPos = h * Width + w;
-
-//					raw[pos * 4 + 0] = Red[srcPos];
-//					raw[pos * 4 + 1] = Green[srcPos];
-//					raw[pos * 4 + 2] = Blue[srcPos];
-//					//TODO need to verify
-////					raw[pos * 4 + 3] = Byte.MAX_VALUE;
-//					raw[pos * 4 + 3] = (byte)0xFF;
 					raw[index++] = 0xFF << 24
 							| Utils.ubyteToInt(Red[srcPos]) << 16 
 							| Utils.ubyteToInt(Green[srcPos]) << 8
