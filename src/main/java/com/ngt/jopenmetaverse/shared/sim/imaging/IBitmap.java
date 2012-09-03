@@ -10,4 +10,5 @@ public interface IBitmap {
  public String getPixelFormatAsString();
  public PixelFormat getPixelFormat(); 
  public IBitmap createIBitmap(int w, int h, int[] pixels);
+public void setRGB(int w, int h, int i);
 }

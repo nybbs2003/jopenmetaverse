@@ -1,14 +1,37 @@
 package com.ngt.jopenmetaverse.shared.util;
 
+import java.awt.Color;
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferInt;
+import java.awt.image.WritableRaster;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+
+import javax.imageio.IIOImage;
+import javax.imageio.ImageIO;
+import javax.imageio.ImageWriteParam;
+import javax.imageio.ImageWriter;
+import javax.imageio.stream.FileImageOutputStream;
+
+import com.ngt.jopenmetaverse.shared.exception.NotImplementedException;
+import com.ngt.jopenmetaverse.shared.exception.NotSupportedException;
+import com.ngt.jopenmetaverse.shared.sim.Settings;
+import com.ngt.jopenmetaverse.shared.sim.imaging.IBitmap;
+import com.ngt.jopenmetaverse.shared.sim.imaging.ManagedImage;
+import com.ngt.jopenmetaverse.shared.sim.imaging.platform.jclient.BitmapBufferedImageImpl;
+import com.ngt.jopenmetaverse.shared.sim.imaging.platform.jclient.BitmapFactoryImpl;
+import com.ngt.jopenmetaverse.shared.sim.imaging.platform.jclient.OpenJPEGImpl;
+import com.ngt.jopenmetaverse.shared.types.UUID;
 
 public class FileUtils {
 
@@ -60,11 +83,22 @@ public class FileUtils {
 		return files.toArray(new File[0]);
 	}
 
-	public static byte[] readBytes(File f) throws FileNotFoundException, IOException
+	
+	public static void writeBytes(File f, byte[] bytes) throws IOException
 	{
-		return readBytes(new FileInputStream(f));
+		FileOutputStream fo = new FileOutputStream(f);
+		writeBytes(fo, bytes);
+		closeStream(fo);
 	}
 	
+	public static byte[] readBytes(File f) throws FileNotFoundException, IOException
+	{
+		FileInputStream fis = new FileInputStream(f);
+		byte[] bytes = readBytes(fis);
+		closeStream(fis);
+		return bytes;
+	}
+
 	public static byte[] readBytes(InputStream input) throws IOException
 	{
 		int totalBytesRead = 0;
@@ -140,4 +174,69 @@ public class FileUtils {
 			JLogger.warn("Error in closing the output stream " + Utils.getExceptionStackTraceAsString(e));
 		}
 	}
+	
+//	//TODO Just a testing function need to move it from here
+//	public static void saveJpgImage(String baketype, String filepath, int w, int h, int[] pixels) throws NotSupportedException, NotImplementedException, Exception
+//	{
+//		BufferedImage img = new BufferedImage( w, h, BufferedImage.TYPE_INT_ARGB );
+//		final int[] a = ( (DataBufferInt) img.getRaster().getDataBuffer() ).getData();
+//		System.arraycopy(pixels, 0, a, 0, pixels.length);
+//		
+////		int k =0;
+////		for(int j =0; j< h; j++)
+////		{
+////			for(int i =0; i< w; i++)
+////			{
+////				k = j*w + i;
+////
+////				img.setRGB(i, j, pixels[k]);
+////
+//////				img.setRGB(i, j,   Color.RED.getRGB());
+////
+//////				if(img.getRGB(i, j) != pixels[k])
+//////					System.out.println(String.format("Color Mismatch %d %d", img.getRGB(i, j), pixels[k]));
+//////				System.out.println(String.format("BakeType %s Pixels @ <%d %d> <%d, %d, %d, %d>", baketype, i, j,
+//////							(pixels[k]>> 24) & 0xff, 
+//////							(pixels[k]>> 16) & 0xff, (pixels[k]>> 8) & 0xff, (pixels[k]) & 0xff));
+////				
+////			}
+////		}
+////		
+////		FileOutputStream is = new FileOutputStream(filepath+ ".png");
+//		
+////		FileImageOutputStream fios = new FileImageOutputStream(new File(filepath)); 
+////		
+//////		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+////		Iterator iter = ImageIO.getImageWritersByFormatName("jpeg");
+////		
+////		ImageWriter writer = (ImageWriter)iter.next();
+////		// instantiate an ImageWriteParam object with default compression options
+////		
+////		ImageWriteParam iwp = writer.getDefaultWriteParam();
+////		
+////		iwp.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
+////		iwp.setCompressionQuality(1);   // an integer between 0 and 1
+////		// 1 specifies minimum compression and maximum quality
+////		
+////		writer.setOutput(fios);
+////		IIOImage image = new IIOImage(img, null, null);
+////		writer.write(null, image, iwp);
+////		writer.dispose();
+//		
+////		ImageIO.write( img, "png",  is );		
+////		is.flush();
+////		closeStream(is);
+////		
+////		img = ImageIO.read(new File(filepath+ ".png"));
+////		
+////		ImageIO.write(img, "jpg", new File(filepath+ ".jpg"));
+//		
+//		FileOutputStream is = new FileOutputStream(filepath + ".jp2");
+//		 OpenJPEGImpl oji = new OpenJPEGImpl();
+//		oji.setBitmapFactory(new BitmapFactoryImpl());
+//		
+//		 is.write(oji.EncodeFromImage(new BitmapBufferedImageImpl(img), false));
+//			is.flush();
+//			closeStream(is);		 
+//	}
 }

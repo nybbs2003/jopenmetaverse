@@ -651,19 +651,19 @@ public class AssetPrim extends Asset
     			}
     			else if(nodeName.equalsIgnoreCase("LightColorR"))
     			{
-    				light.Color.R = Float.parseFloat(node.getFirstChild().getNodeValue().trim());
+    				light.Color.setR(Float.parseFloat(node.getFirstChild().getNodeValue().trim()));
     			}
     			else if(nodeName.equalsIgnoreCase("LightColorG"))
     			{
-    				light.Color.G = Float.parseFloat(node.getFirstChild().getNodeValue().trim());
+    				light.Color.setG(Float.parseFloat(node.getFirstChild().getNodeValue().trim()));
     			}
     			else if(nodeName.equalsIgnoreCase("LightColorB"))
     			{
-    				light.Color.B = Float.parseFloat(node.getFirstChild().getNodeValue().trim());
+    				light.Color.setB(Float.parseFloat(node.getFirstChild().getNodeValue().trim()));
     			}
     			else if(nodeName.equalsIgnoreCase("LightColorA"))
     			{
-    				light.Color.A = Float.parseFloat(node.getFirstChild().getNodeValue().trim());
+    				light.Color.setA(Float.parseFloat(node.getFirstChild().getNodeValue().trim()));
     			}
     			else if(nodeName.equalsIgnoreCase("LightRadius"))
     			{
@@ -885,13 +885,13 @@ public class AssetPrim extends Asset
     		{
     			String nodeName = node.getNodeName();
     			if(nodeName.equalsIgnoreCase("R"))
-    				color.R = Float.parseFloat(node.getFirstChild().getNodeValue().trim());
+    				color.setR(Float.parseFloat(node.getFirstChild().getNodeValue().trim()));
     			else if(nodeName.equalsIgnoreCase("G"))
-    				color.G = Float.parseFloat(node.getFirstChild().getNodeValue().trim());
+    				color.setG(Float.parseFloat(node.getFirstChild().getNodeValue().trim()));
     			else if(nodeName.equalsIgnoreCase("B"))
-    				color.B = Float.parseFloat(node.getFirstChild().getNodeValue().trim());
+    				color.setB(Float.parseFloat(node.getFirstChild().getNodeValue().trim()));
     			else if(nodeName.equalsIgnoreCase("A"))
-    				color.A = Float.parseFloat(node.getFirstChild().getNodeValue().trim()); 
+    				color.setA(Float.parseFloat(node.getFirstChild().getNodeValue().trim())); 
     		}
     	}
     	

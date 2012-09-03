@@ -2,6 +2,7 @@ package com.ngt.jopenmetaverse.shared.types;
 
 import java.io.Serializable;
 
+import com.ngt.jopenmetaverse.shared.util.JLogger;
 import com.ngt.jopenmetaverse.shared.util.Utils;
 
 public class Color4 implements Comparable<Color4>, Serializable
@@ -11,24 +12,60 @@ public class Color4 implements Comparable<Color4>, Serializable
 	 */
 	private static final long serialVersionUID = 2458051273363647723L;
 	/// <summary>Red</summary>
-	public float R;
+	private float R;
 	/// <summary>Green</summary>
-	public float G;
+	private float G;
 	/// <summary>Blue</summary>
-	public float B;
+	private float B;
 	/// <summary>Alpha</summary>
-	public float A;
+	private float A;
 
 	//region Constructors
 
 	public Color4()
 	{
 		this(0f, 0f, 0f, 0f);	
-		}
-	
-/*
- * Removed following constructor, as floating point constructor will always take precedence	
- */
+	}
+
+	public float getR() {
+		return R;
+	}
+
+	public void setR(float r) {
+		R = r;
+		normalizeColor();
+	}
+
+	public float getG() {
+		return G;
+	}
+
+	public void setG(float g) {
+		G = g;
+		normalizeColor();
+	}
+
+	public float getB() {
+		return B;
+	}
+
+	public void setB(float b) {
+		B = b;
+		normalizeColor();
+	}
+
+	public float getA() {
+		return A;
+	}
+
+	public void setA(float a) {
+		A = a;
+		normalizeColor();
+	}
+
+	/*
+	 * Removed following constructor, as floating point constructor will always take precedence	
+	 */
 	/// <summary>
 	/// 
 	/// </summary>
@@ -36,36 +73,83 @@ public class Color4 implements Comparable<Color4>, Serializable
 	/// <param name="g"></param>
 	/// <param name="b"></param>
 	/// <param name="a"></param>
-	private void normalizeColor(short r, short g, short b, short a)
-	{
-		final float quanta = 1.0f / 255.0f;
 
-		R = (float)r * quanta;
-		G = (float)g * quanta;
-		B = (float)b * quanta;
-		A = (float)a * quanta;
+	
+	
+	//FIXME need to handle colors in the range of 1 - 256. Should we clamp 
+	// the values or normalize them
+	private void normalizeColor()
+	{
+//		if (Utils.round(R) > 1f || Utils.round(G) > 1f || Utils.round(B) > 1f || Utils.round(A) > 1f)
+//		{
+//			final float quanta = (255);
+//		 
+//			R = (float)R / quanta;
+//			G = (float)G / quanta;
+//			B = (float)B / quanta;
+//			A = (float)A / quanta;
+//		}
+//		else
+//		{
+//			R = Utils.clamp(R, 0, 1);
+//			G = Utils.clamp(G, 0, 1);
+//			B = Utils.clamp(B, 0, 1);
+//			A = Utils.clamp(A, 0, 1);
+//		}
+
+		if (R > 1.5f || G > 1.5f || B > 1.5f || A > 1.5f)
+		{
+			JLogger.debug("Attempting to initialize Color4 with out of range values <" + R + "," + G + "," + B + "," + A +">");
+		}
+		
+		if (R > 1f || G > 1f || B > 1f || A > 1f)
+		{
+			float max = (float)Math.max(A, Math.max(G, Math.max(R, B)));
+			if(max > 0)
+			{
+				R = R / max;
+				G = G / max;
+				B = B / max;
+				A = A / max;
+			}
+		}
+	}
+	
+	private void checkSantity()
+	{
+		//TODO this method can be removed once the testing has been performed..
+		if (Utils.round(R) > 1f || Utils.round(G) > 1f || Utils.round(B) > 1f || Utils.round(A) > 1f)
+			throw new IllegalArgumentException(
+					"Attempting to initialize Color4 with out of range values <" + R + "," + G + "," + B + "," + A +">");
 	}
 
+	public Color4(int r, int g, int b, int a)
+	{
+		// Quick check to see if someone is doing something obviously wrong
+		// like using float values from 0.0 - 255.0
+		R = (float)r/255;
+		G = (float)g/255;
+		B = (float)b/255;
+		A = (float)a/255;
+		normalizeColor();
+	}
+	
+	
 	public Color4(float r, float g, float b, float a)
 	{
 		// Quick check to see if someone is doing something obviously wrong
 		// like using float values from 0.0 - 255.0
-		if (r > 1f || g > 1f || b > 1f || a > 1f)
-			normalizeColor((short)r, (short)g, (short)b, (short)a);
-		else
-		{
-//		if (r > 1f || g > 1f || b > 1f || a > 1f)
-//			throw new IllegalArgumentException(
-//					"Attempting to initialize Color4 with out of range values <" + r + "," + g + "," + b + "," + a +">");
-
-		// Valid range is from 0.0 to 1.0
-		R = Utils.clamp(r, 0f, 1f);
-		G = Utils.clamp(g, 0f, 1f);
-		B = Utils.clamp(b, 0f, 1f);
-		A = Utils.clamp(a, 0f, 1f);
-		}
+		R = r;
+		G = g;
+		B = b;
+		A = a;
+		normalizeColor();
 	}
 
+	public Color4(double r, double g, double b, double a)
+	{
+		this((float)r, (float)g, (float)b, (float)a); 
+	}
 	/// <summary>
 	/// Builds a color from a byte array (Little Endian)
 	/// </summary>
@@ -78,6 +162,8 @@ public class Color4 implements Comparable<Color4>, Serializable
 	{
 		R = G = B = A = 0f;
 		fromBytes(byteArray, pos, inverted);
+
+		normalizeColor();
 	}
 
 	/// <summary>
@@ -97,6 +183,8 @@ public class Color4 implements Comparable<Color4>, Serializable
 	{
 		R = G = B = A = 0f;
 		fromBytes(byteArray, pos, inverted, alphaInverted);
+		normalizeColor();
+		checkSantity();
 	}
 
 	/// <summary>
@@ -109,6 +197,8 @@ public class Color4 implements Comparable<Color4>, Serializable
 		G = color.G;
 		B = color.B;
 		A = color.A;
+		normalizeColor();
+		checkSantity();
 	}
 
 	//endregion Constructors
@@ -172,6 +262,9 @@ public class Color4 implements Comparable<Color4>, Serializable
 			B = (float)byteArray[pos + 2] * quanta;
 			A = (float)byteArray[pos + 3] * quanta;
 		}
+
+		normalizeColor();
+		checkSantity();
 	}
 
 	/// <summary>
@@ -287,11 +380,11 @@ public class Color4 implements Comparable<Color4>, Serializable
 			return (HUE_MAX / 3f) + rDelta - bDelta;
 		}
 		else // B == max
-				{
+		{
 			float gDelta = (((max - G) * (HUE_MAX / 6f)) + ((max - min) / 2f)) / (max - min);
 			float rDelta = (((max - R) * (HUE_MAX / 6f)) + ((max - min) / 2f)) / (max - min);
 			return ((2f * HUE_MAX) / 3f) + gDelta - rDelta;
-				}
+		}
 	}
 
 	/// <summary>
@@ -450,7 +543,7 @@ public class Color4 implements Comparable<Color4>, Serializable
 
 	public int hashCode()
 	{
-        return (new Float(R)).hashCode() ^ (new Float(G)).hashCode() ^ (new Float(B)).hashCode() ^ (new Float(A)).hashCode();
+		return (new Float(R)).hashCode() ^ (new Float(G)).hashCode() ^ (new Float(B)).hashCode() ^ (new Float(A)).hashCode();
 	}
 
 	//endregion Overrides

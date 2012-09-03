@@ -32,8 +32,16 @@ public class BakerTest {
 	{
 		Baker oven = new Baker(BakeType.Head);
 		//TODO need to implement
-		printImage(fileLocation.getPath() + "/jpg/shirt_collar_back_alpha.JPEG");
-		printImage(fileLocation.getPath() + "/jpg/shirt_collar_back_alpha.tga.jpg");		
+		Baker.LoadResourceLayer("head_hair.tga");
+		byte b1 = (byte)0xff;
+		byte b2 = (byte)0xff;
+		byte b3 = (byte)0xff;
+		byte b4 = (byte)0xff;
+
+		Assert.assertEquals((0xff << 24) | (0xff<<16) | (0xff<<8) | 0xff, 
+				(b1 << 24) | (b2 <<16) | (b3 << 8) | b4);
+//		printImage(fileLocation.getPath() + "/jpg/shirt_collar_back_alpha.JPEG");
+//		printImage(fileLocation.getPath() + "/jpg/shirt_collar_back_alpha.tga.jpg");		
 	}
 	
 	public void printImage(String relfilepath)

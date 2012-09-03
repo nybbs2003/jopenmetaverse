@@ -1,8 +1,13 @@
 package com.ngt.jopenmetaverse.shared.sim.imaging;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
+
+import com.ngt.jopenmetaverse.shared.exception.NotImplementedException;
+import com.ngt.jopenmetaverse.shared.exception.NotSupportedException;
 import com.ngt.jopenmetaverse.shared.protocol.Helpers;
 import com.ngt.jopenmetaverse.shared.sim.AppearanceManager;
 import com.ngt.jopenmetaverse.shared.sim.AppearanceManager.AvatarTextureIndex;
@@ -12,6 +17,8 @@ import com.ngt.jopenmetaverse.shared.sim.asset.AssetTexture;
 import com.ngt.jopenmetaverse.shared.sim.imaging.ManagedImage.ImageChannels;
 import com.ngt.jopenmetaverse.shared.sim.visual.VisualParams.VisualAlphaParam;
 import com.ngt.jopenmetaverse.shared.types.Color4;
+import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.util.FileUtils;
 import com.ngt.jopenmetaverse.shared.util.JLogger;
 import com.ngt.jopenmetaverse.shared.util.Utils;
 
@@ -32,7 +39,8 @@ public class Baker {
         /// <summary>Bake type</summary>
         public BakeType getBakeType() {return bakeType; } 
         /// <summary>Is this one of the 3 skin bakes</summary>
-        private boolean isSkin() {return bakeType == BakeType.Head || bakeType == BakeType.LowerBody || bakeType == BakeType.UpperBody; } 
+        private boolean isSkin() 
+        {return bakeType == BakeType.Head || bakeType == BakeType.LowerBody || bakeType == BakeType.UpperBody; } 
         //endregion
 
         //region Private fields
@@ -90,21 +98,28 @@ public class Baker {
             				| ManagedImage.ImageChannels.Alpha.getIndex() 
             				| ManagedImage.ImageChannels.Bump.getIndex())));
 
+            
+            System.out.println("Starting Baking...");
             // Base color for eye bake is white, color of layer0 for others
             if (bakeType == BakeType.Eyes)
             {
+                System.out.println("Bake type is Eyes...");
                 InitBakedLayerColor(Color4.White);
             }
             else if (textures.size() > 0)
             {
+                System.out.println("Bake type is not Eyes...");
                 InitBakedLayerColor(textures.get(0).Color);
             }
 
             // Do we have skin texture?
             boolean SkinTexture = textures.size() > 0 && textures.get(0).Texture != null;
+            
+            System.out.println("Do we already have skin texture: " + SkinTexture);
 
             if (bakeType == BakeType.Head)
             {
+                System.out.println("Bake type is head...");
                 DrawLayer(LoadResourceLayer("head_color.tga"), false);
                 AddAlpha(bakedTexture.Image, LoadResourceLayer("head_alpha.tga"));
                 MultiplyLayerFromAlpha(bakedTexture.Image, LoadResourceLayer("head_skingrain.tga"));
@@ -112,11 +127,13 @@ public class Baker {
 
             if (!SkinTexture && bakeType == BakeType.UpperBody)
             {
+                System.out.println("Do not have Skin Texture .. Drawing upper body texture...");
                 DrawLayer(LoadResourceLayer("upperbody_color.tga"), false);
             }
 
             if (!SkinTexture && bakeType == BakeType.LowerBody)
             {
+                System.out.println("Do not have Skin Texture .. Drawing lower body texture...");
                 DrawLayer(LoadResourceLayer("lowerbody_color.tga"), false);
             }
 
@@ -126,14 +143,20 @@ public class Baker {
             for (int i = 0; i < textures.size(); i++)
             {
                 // Skip if we have no texture on this layer
-                if (textures.get(i).Texture == null) continue;
+                if (textures.get(i).Texture == null) 
+                {
+                	System.out.println("Skipping as we have no texture on this layer");
+                	continue;
+                }
 
                 // Is this Alpha wearable and does it have an alpha channel?
                 if ((textures.get(i).TextureIndex.getIndex() >= AvatarTextureIndex.LowerAlpha.getIndex()) &&
                     (textures.get(i).TextureIndex.getIndex() <= AvatarTextureIndex.HairAlpha.getIndex()))
                 {
+                    System.out.println("this is Alpha wearable and does it have an alpha channel");
                     if (textures.get(i).Texture.Image.Alpha != null)
                     {
+                        System.out.println("and it have an alpha channel");
                         alphaWearableTexture = textures.get(i).Texture.Image.Clone();
                     }
                     continue;
@@ -141,11 +164,16 @@ public class Baker {
 
                 // Don't draw skin on head bake first
                 // For head bake skin texture is drawn last, go figure
-                if (bakeType == BakeType.Head && i == 0) continue;
+                if (bakeType == BakeType.Head && i == 0) 
+                {
+                	System.out.println("Do not drawing Head Bake first");
+                	continue;
+                }
 
                 if(textures.get(i).Texture == null)
                 	JLogger.debug("textures.get(i).Texture is null");
-                
+
+            	System.out.println("Cloning the texture image ....");
                 ManagedImage texture = textures.get(i).Texture.Image.Clone();
                 //File.WriteAllBytes(bakeType + "-texture-layer-" + i + ".tga", texture.ExportTGA());
 
@@ -153,7 +181,11 @@ public class Baker {
                 // FIXME: if texture is smaller than the layer, don't stretch it, tile it
                 if (texture.Width != bakeWidth || texture.Height != bakeHeight)
                 {
-                    try { texture.ResizeNearestNeighbor(bakeWidth, bakeHeight); }
+                    try 
+                    {
+                    	System.out.println("Resizing the image...");
+                    	texture.ResizeNearestNeighbor(bakeWidth, bakeHeight); 
+                    }
                     catch (Exception e) { JLogger.warn(Utils.getExceptionStackTraceAsString(e));continue; }
                 }
 
@@ -162,6 +194,7 @@ public class Baker {
                 // and apply hair pattern over the texture
                 if (!SkinTexture && bakeType == BakeType.Head && i == 1)
                 {
+                	System.out.println("!SkinTexture && bakeType == BakeType.Head && i == 1");
                     if (texture.Alpha != null)
                     {
                         for (int j = 0; j < texture.Alpha.length; j++) texture.Alpha[j] = (byte)255;
@@ -270,7 +303,14 @@ public class Baker {
 
             // We are done, encode asset for finalized bake
             bakedTexture.Encode();
+            
+            //TODO Testing Code
+            String filepath = "openmetaverse_data/logs/" + UUID.Random().toString();
+//            FileUtils.saveJpgImage(bakeType.toString(), "openmetaverse_data/logs/" + UUID.Random().toString(), 
+//            		bakedTexture.Image.Width, bakedTexture.Image.Height, bakedTexture.Image.ExportPixels());
+            
             //File.WriteAllBytes(bakeType + ".tga", bakedTexture.Image.ExportTGA());
+            FileUtils.writeBytes(new File(filepath+"245.j2k"), bakedTexture.AssetData);
         }
 
         private static Object ResourceSync = new Object();
@@ -279,6 +319,8 @@ public class Baker {
         {
             try
             {
+//            	return LoadResourceLayer2(fileName);
+
                 IBitmap bitmap = null;
                 synchronized (ResourceSync)
                 {
@@ -306,6 +348,54 @@ public class Baker {
             }
         }
 
+        public static ManagedImage LoadResourceLayer2(String fileName) throws IOException, NotSupportedException, NotImplementedException
+        {
+            IBitmap bitmap = null;
+            synchronized (ResourceSync)
+            {
+            	String resourcePath = null;
+                if((resourcePath = Helpers.GetResourcePath(fileName, Settings.RESOURCE_DIR))!=null)
+                {
+                	JLogger.debug("Got Resource Path: " + resourcePath);
+                    bitmap = LoadTGAClass.LoadTGA(resourcePath);
+                }
+            }
+        	
+        	String resourcePath = null;
+        	byte[] bytes = null;
+            if((resourcePath = Helpers.GetResourcePath(fileName + ".bin", Settings.RESOURCE_DIR + "/compiled"))!=null)
+            {
+            	JLogger.debug("Got Resource Path: " + resourcePath);
+                bytes =FileUtils.readBytes(new File(resourcePath));
+            }
+            
+         // RGBA
+            int Height = bitmap.getHeight();
+            int Width = bitmap.getWidth();
+			for (int h = 0; h < Height; h++)
+			{
+				for (int w = 0; w < Width; w++)
+				{
+					int pos = (Height - 1 - h) * Width + w;
+					int srcPos = h * Width + w;
+
+					int origColor = bitmap.getRGB(w, h); 
+					
+					bitmap.setRGB(w, h, Utils.ubyteToInt(bytes[pos * 4 + 0]) << 16 | 
+					Utils.ubyteToInt(bytes[pos * 4 + 1]) << 8 |
+					Utils.ubyteToInt(bytes[pos * 4 + 2]) |
+					Utils.ubyteToInt(bytes[pos * 4 + 3]) << 24);
+					
+					int newColor = bitmap.getRGB(w, h);
+					
+					
+					if(origColor != newColor)
+						System.out.println(String.format("X %d Y %d orig color %d New color %d", w, h, origColor, bitmap.getRGB(w, h)));
+				}
+			}
+            return  new ManagedImage(bitmap);
+        }
+        
         /// <summary>
         /// Converts avatar texture index (face) to Bake type
         /// </summary>
@@ -371,7 +461,6 @@ public class Baker {
             boolean sourceHasColor;
             boolean sourceHasAlpha;
             boolean sourceHasBump;
-            int i = 0;
 
             sourceHasColor = ((ImageChannels.and(source.Channels , ManagedImage.ImageChannels.Color)) != 0 &&
                     source.Red != null && source.Green != null && source.Blue != null);
@@ -395,6 +484,7 @@ public class Baker {
             byte[] sourceAlpha = sourceHasAlpha ? source.Alpha : null;
             byte[] sourceBump = sourceHasBump ? source.Bump : null;
 
+            int i = 0;
             for (int y = 0; y < bakeHeight; y++)
             {
                 for (int x = 0; x < bakeWidth; x++)
@@ -426,6 +516,9 @@ public class Baker {
                     if (sourceHasBump)
                         bakedBump[i] = sourceBump[i];
 
+//                    System.out.println(String.format("Baked: <R %d G %d B %d A %d>  Alpha %d AlphaInv %d ", 
+//                    		bakedRed[i], bakedGreen[i], bakedBlue[i], bakedAlpha[i], alpha, alphaInv));
+                    
                     ++i;
                 }
             }
@@ -481,7 +574,7 @@ public class Baker {
 
                 if (param.MultiplyBlend)
                 {
-                    dest.Alpha[i] = (byte)((dest.Alpha[i] * alpha) >> 8);
+                    dest.Alpha[i] =  addAlpha(dest.Alpha[i], alpha);
                 }
                 else
                 {
@@ -493,6 +586,11 @@ public class Baker {
             }
         }
 
+        private byte addAlpha(byte c, byte a)
+        {
+        	return (byte)(( (c&0xff) * (a&0xff) ) >> 8);
+        }
+        	
         private void AddAlpha(ManagedImage dest, ManagedImage src)
         {
             if (!SanitizeLayers(dest, src)) return;
@@ -512,9 +610,9 @@ public class Baker {
 
             for (int i = 0; i < dest.Red.length; i++)
             {
-                dest.Red[i] = (byte)((dest.Red[i] * src.Alpha[i]) >> 8);
-                dest.Green[i] = (byte)((dest.Green[i] * src.Alpha[i]) >> 8);
-                dest.Blue[i] = (byte)((dest.Blue[i] * src.Alpha[i]) >> 8);
+                dest.Red[i] = addAlpha(dest.Red[i], src.Alpha[i]);
+                dest.Green[i] = addAlpha(dest.Green[i], src.Alpha[i]);
+                dest.Blue[i] = addAlpha(dest.Blue[i], src.Alpha[i]);
             }
         }
 
@@ -524,9 +622,9 @@ public class Baker {
 
             for (int i = 0; i < dest.Red.length; i++)
             {
-                dest.Red[i] = (byte)((dest.Red[i] * Utils.floatToByte(src.R, 0f, 1f)) >> 8);
-                dest.Green[i] = (byte)((dest.Green[i] * Utils.floatToByte(src.G, 0f, 1f)) >> 8);
-                dest.Blue[i] = (byte)((dest.Blue[i] * Utils.floatToByte(src.B, 0f, 1f)) >> 8);
+                dest.Red[i] = addAlpha(dest.Red[i], Utils.floatToByte(src.getR(), 0f, 1f) );
+                dest.Green[i] = addAlpha(dest.Green[i], Utils.floatToByte(src.getG(), 0f, 1f));
+                dest.Blue[i] = addAlpha(dest.Blue[i], Utils.floatToByte(src.getB(), 0f, 1f));
             }
         }
 
@@ -539,7 +637,7 @@ public class Baker {
         /// <param name="color">Color of the base of this layer</param>
         private void InitBakedLayerColor(Color4 color)
         {
-            InitBakedLayerColor(color.R, color.G, color.B);
+            InitBakedLayerColor(color.getR(), color.getG(), color.getB());
         }
 
         /// <summary>
@@ -557,6 +655,8 @@ public class Baker {
             byte gByte = Utils.floatToByte(g, 0f, 1f);
             byte bByte = Utils.floatToByte(b, 0f, 1f);
 
+            System.out.println(String.format(" InitBakedLayerColor Color %d %d %d", rByte, gByte, bByte));
+            
             byte rAlt, gAlt, bAlt;
 
             rAlt = rByte;

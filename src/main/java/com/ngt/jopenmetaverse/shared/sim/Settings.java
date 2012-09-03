@@ -256,7 +256,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 
         /// <summary>Path to store cached texture data</summary>
         public String ASSET_CACHE_DIR = RESOURCE_DIR + "/cache";
-
+        
         /// <summary>Maximum size cached files are allowed to take on disk (bytes)</summary>
         public long ASSET_CACHE_MAX_SIZE = 1024 * 1024 * 1024; // 1GB
 

@@ -288,12 +288,13 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             }
             catch (Exception ex)
             {
-            	//TODO We require a logger
                 //Logger.Log(String.format("Zerodecoding error: i={0}, srclen={1}, bodylen={2}, zerolen={3}\n{4}\n{5}",
                   //  i, srclen, bodylen, zerolen, Utils.bytesToHexString(src, srclen, null), ex), LogLevel.Error);
 
-                throw new IndexOutOfBoundsException(String.format("Zerodecoding error: i={0}, srclen={1}, bodylen={2}, zerolen={3}\n{4}\n{5}",
-                    i, srclen, bodylen, zerolen, Utils.bytesToHexDebugString(src, srclen, null), ex));
+                throw new IndexOutOfBoundsException(String.format("Zerodecoding error: i=%d, srclen=%d, bodylen=%d, zerolen=%d\n%s\n%s",
+                    i, srclen, bodylen, zerolen, 
+                    Utils.bytesToHexDebugString(src, srclen, null), 
+                    Utils.getExceptionStackTraceAsString(ex)));
             }
         }
 

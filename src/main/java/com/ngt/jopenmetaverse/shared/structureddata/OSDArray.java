@@ -146,10 +146,10 @@ public final class OSDArray extends OSD implements Iterable<OSD>
 
         if (this.count()== 4)
         {
-            color.R = (float)this.get(0).asReal();
-            color.G = (float)this.get(1).asReal();
-            color.B = (float)this.get(2).asReal();
-            color.A = (float)this.get(3).asReal();
+            color.setR((float)this.get(0).asReal());
+            color.setG((float)this.get(1).asReal());
+            color.setB((float)this.get(2).asReal());
+            color.setA((float)this.get(3).asReal());
         }
 
         return color;

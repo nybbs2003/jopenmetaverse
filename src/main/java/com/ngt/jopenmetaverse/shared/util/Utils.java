@@ -1555,7 +1555,7 @@ public class Utils {
 		val -= lower;
 		val /= (upper - lower);
 
-		return (byte) Math.floor(val * (float) Byte.MAX_VALUE);
+		return (byte) Math.floor(val * (float) Utils.UByteMaxValue);
 	}
 
 	// / <summary>
@@ -1582,9 +1582,9 @@ public class Utils {
 	// / <param name="upper">Maximum value range</param>
 	// / <returns>A float value inclusively between lower and upper</returns>
 	public static float byteToFloat(byte val, float lower, float upper) {
-		final float ONE_OVER_BYTEMAX = 1.0f / (float) Byte.MAX_VALUE;
+		final float ONE_OVER_BYTEMAX = 1.0f / (float) Utils.UByteMaxValue;
 
-		float fval = (float) val * ONE_OVER_BYTEMAX;
+		float fval = (float) Utils.ubyteToInt(val) * ONE_OVER_BYTEMAX;
 		float delta = (upper - lower);
 		fval *= delta;
 		fval += lower;

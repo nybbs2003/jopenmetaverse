@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Observable;
-import java.util.Observer;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -69,16 +68,12 @@ import com.ngt.jopenmetaverse.shared.protocol.primitives.SculptData;
 import com.ngt.jopenmetaverse.shared.protocol.primitives.TextureAnimation;
 import com.ngt.jopenmetaverse.shared.protocol.primitives.TextureEntry;
 import com.ngt.jopenmetaverse.shared.sim.Avatar;
-import com.ngt.jopenmetaverse.shared.sim.AgentManager.ControlFlags;
-import com.ngt.jopenmetaverse.shared.sim.AgentManager.ScriptPermission;
 import com.ngt.jopenmetaverse.shared.sim.events.CapsEventObservableArg;
 import com.ngt.jopenmetaverse.shared.sim.events.EventObservable;
 import com.ngt.jopenmetaverse.shared.sim.events.EventObserver;
 import com.ngt.jopenmetaverse.shared.sim.events.PacketReceivedEventArgs;
 import com.ngt.jopenmetaverse.shared.sim.events.ThreadPool;
 import com.ngt.jopenmetaverse.shared.sim.events.ThreadPoolFactory;
-import com.ngt.jopenmetaverse.shared.sim.events.am.AnimationsChangedEventArgs;
-import com.ngt.jopenmetaverse.shared.sim.events.am.AttachmentResourcesCallbackArg;
 import com.ngt.jopenmetaverse.shared.sim.events.om.AvatarSitChangedEventArgs;
 import com.ngt.jopenmetaverse.shared.sim.events.om.AvatarUpdateEventArgs;
 import com.ngt.jopenmetaverse.shared.sim.events.om.KillObjectEventArgs;
@@ -93,7 +88,6 @@ import com.ngt.jopenmetaverse.shared.sim.events.om.PrimEventArgs;
 import com.ngt.jopenmetaverse.shared.sim.events.om.TerseObjectUpdateEventArgs;
 import com.ngt.jopenmetaverse.shared.sim.interfaces.IMessage;
 import com.ngt.jopenmetaverse.shared.sim.message.LindenMessages;
-import com.ngt.jopenmetaverse.shared.sim.message.LindenMessages.AttachmentResourcesMessage;
 import com.ngt.jopenmetaverse.shared.sim.message.LindenMessages.ObjectMediaNavigateMessage;
 import com.ngt.jopenmetaverse.shared.sim.message.LindenMessages.ObjectPhysicsPropertiesMessage;
 import com.ngt.jopenmetaverse.shared.structureddata.OSDFormat;
@@ -2061,14 +2055,6 @@ public class ObjectManager {
 				}
 			});
 
-			//	                request.OnComplete += (CapsClient client, OSD result, Exception error) =>
-			//	                    {
-			//	                        if (error != null)
-			//	                        {
-			//	                            JLogger.error("ObjectMediaNavigate: " + error.Message);
-			//	                        }
-			//	                    };
-			//
 			request.BeginGetResponse(req.Serialize(), OSDFormat.Xml, Client.settings.CAPS_TIMEOUT);
 		}
 		else
@@ -2095,13 +2081,6 @@ public class ObjectManager {
 			req.Verb = "UPDATE";
 
 			CapsHttpClient request = new CapsHttpClient(url);
-			//	                request.OnComplete += (CapsClient client, OSD result, Exception error) =>
-			//	                    {
-			//	                        if (error != null)
-			//	                        {
-			//	                            JLogger.error("ObjectMediaUpdate: " + error.Message);
-			//	                        }
-			//	                    };
 			request.addRequestCompleteObserver(new EventObserver<CapsHttpRequestCompletedArg>()
 			{
 				public void handleEvent(Observable arg0, CapsHttpRequestCompletedArg arg1) {
@@ -2192,43 +2171,6 @@ public class ObjectManager {
 					}
 				}
 			});
-
-			//	                request.OnComplete += (CapsClient client, OSD result, Exception error) =>
-			//	                    {
-			//	                        if (result == null)
-			//	                        {
-			//	                            JLogger.error("Failed retrieving ObjectMedia data");
-			//	                            try { callback(false, "", null); }
-			//	                            catch (Exception ex) { JLogger.error(ex.Message); }
-			//	                            return;
-			//	                        }
-			//
-			//	                        ObjectMediaMessage msg = new ObjectMediaMessage();
-			//	                        msg.Deserialize((OSDMap)result);
-			//
-			//	                        if (msg.Request is ObjectMediaResponse)
-			//	                        {
-			//	                            ObjectMediaResponse response = (ObjectMediaResponse)msg.Request;
-			//
-			//	                            if (Client.settings.OBJECT_TRACKING)
-			//	                            {
-			//	                                Primitive prim = sim.ObjectsPrimitives.Find((Primitive p) => { return p.ID == primID; });
-			//	                                if (prim != null)
-			//	                                {
-			//	                                    prim.MediaVersion = response.Version;
-			//	                                    prim.FaceMedia = response.FaceMedia;
-			//	                                }
-			//	                            }
-			//
-			//	                            try { callback(true, response.Version, response.FaceMedia); }
-			//	                            catch (Exception ex) { JLogger.error(ex.Message); }
-			//	                        }
-			//	                        else
-			//	                        {
-			//	                            try { callback(false, "", null); }
-			//	                            catch (Exception ex) { JLogger.error(ex.Message); }
-			//	                        }
-			//	                    };
 
 			request.BeginGetResponse(req.Serialize(), OSDFormat.Xml, Client.settings.CAPS_TIMEOUT);
 		}

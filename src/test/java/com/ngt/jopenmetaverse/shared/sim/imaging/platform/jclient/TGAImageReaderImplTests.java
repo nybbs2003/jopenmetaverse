@@ -11,6 +11,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.ngt.jopenmetaverse.shared.sim.imaging.LoadTGAClass;
 import com.ngt.jopenmetaverse.shared.sim.imaging.ManagedImage;
 import com.ngt.jopenmetaverse.shared.sim.imaging.platform.jclient.tga.TGADecoder2;
 import com.ngt.jopenmetaverse.shared.util.FileUtils;
@@ -57,37 +58,71 @@ public class TGAImageReaderImplTests {
 	{
 		try
 		{
-//			File[] files = FileUtils.getFileList(fileLocation.getPath(), ".*\\.tga$", true);
-			
-			File[] files = FileUtils.getFileList(fileLocation.getPath(), "head_color.tga$", true);
+			File[] files = FileUtils.getFileList(fileLocation.getPath(), ".*\\.tga$", true);
+
+			//			File[] files = FileUtils.getFileList(fileLocation.getPath(), "head_color.tga$", true);
 
 			for(File f: files)
 			{
 				JLogger.debug("Reading from File: " + f.getAbsolutePath());
 				InputStream is = new FileInputStream(f);
-				BitmapBufferedImageImpl bitmap = (BitmapBufferedImageImpl)new TGAImageReaderImpl().read(is);
+				BitmapBufferedImageImpl bitmap = (BitmapBufferedImageImpl)LoadTGAClass.LoadTGA(is);
 				is.close();
 				int width = bitmap.getWidth();
 				int height = bitmap.getHeight();
+				
 				ManagedImage inputImage = new ManagedImage(bitmap);
 				byte[] inputImagePixels = inputImage.ExportRaw();
 
-				File[] compiledfiles = FileUtils.getFileList(fileLocation.getPath() + "/compiled", f.getName() + ".*", true);
+				File[] compiledfiles = FileUtils.getFileList(fileLocation.getPath() + "/compiled", f.getName() + ".bin", true);
 				Assert.assertTrue("No File or Multiple files exists with name: " + f.getName()  + " on path: " + fileLocation.getPath() + "/compiled", 
 						compiledfiles.length == 1 );
-				
-//				byte[] compiledImagePixels = FileUtils.readBytes(compiledfiles[0]);
-				byte[] compiledImagePixels =  new ManagedImage(new BitmapBufferedImageImpl(TGADecoder2.loadImage(new FileInputStream(f)))).ExportRaw(); 
-				
-				JLogger.debug("inputImagePixels");
-				printPixels(inputImagePixels, width, height);
-				JLogger.debug("compiledImagePixels");
-				printPixels(compiledImagePixels, width, height);
-				
+
+				byte[] compiledImagePixels = FileUtils.readBytes(compiledfiles[0]);
+				//				byte[] compiledImagePixels =  new ManagedImage(new BitmapBufferedImageImpl(TGADecoder2.loadImage(new FileInputStream(f)))).ExportRaw(); 
+
+//				JLogger.debug("inputImagePixels");
+//				printPixels(inputImagePixels, width, height);
+//				JLogger.debug("compiledImagePixels");
+//				printPixels(compiledImagePixels, width, height);
+
 				Assert.assertEquals("No of image pixels differ" , inputImagePixels.length, compiledImagePixels.length);
+
+				//				JLogger.debug(String.format("Compiled Image \n%s"
+				//						, Utils.bytesToHexDebugString(compiledImagePixels, "")));
+
 				
-//				JLogger.debug(String.format("Compiled Image \n%s"
-//						, Utils.bytesToHexDebugString(compiledImagePixels, "")));
+				 // RGBA
+	            int Height = bitmap.getHeight();
+	            int Width = bitmap.getWidth();
+				for (int h = 0; h < Height; h++)
+				{
+					for (int w = 0; w < Width; w++)
+					{
+						int pos = (Height - 1 - h) * Width + w;
+						int srcPos = h * Width + w;
+
+						int origColor = bitmap.getRGB(w, h); 
+						
+						int origColor2 = Utils.ubyteToInt(inputImage.Red[srcPos]) << 16 | 
+								Utils.ubyteToInt(inputImage.Green[srcPos]) << 8 |
+								Utils.ubyteToInt(inputImage.Blue[srcPos]) |
+								Utils.ubyteToInt(inputImage.Alpha[srcPos]) << 24;
+						
+						int newColor = Utils.ubyteToInt(compiledImagePixels[pos * 4 + 0]) << 16 | 
+						Utils.ubyteToInt(compiledImagePixels[pos * 4 + 1]) << 8 |
+						Utils.ubyteToInt(compiledImagePixels[pos * 4 + 2]) |
+						Utils.ubyteToInt(compiledImagePixels[pos * 4 + 3]) << 24;
+												
+						Assert.assertEquals(origColor, origColor2);
+
+						Assert.assertEquals(origColor, newColor);
+						
+						if(origColor != newColor)
+							System.out.println(String.format("X %d Y %d orig color %d New color %d", w, h, origColor, bitmap.getRGB(w, h)));
+					}
+				}
+				
 				
 				int length = 32;
 				for(int i = 0; i < compiledImagePixels.length; i+= length)
@@ -95,15 +130,15 @@ public class TGAImageReaderImplTests {
 					int actuallength = Math.min(length, compiledImagePixels.length - i);
 					byte[] inputPixelsSubArray = Arrays.copyOfRange(inputImagePixels, i, i + actuallength);
 					byte[] compiledPixelsSubArray = Arrays.copyOfRange(compiledImagePixels, i, i + actuallength);
-					
-					JLogger.debug(String.format("Comparing Pixel Index: %d <X= %d Y= %d> original: \n\t%s\n Compiled: \n\t%s\n"
-							,i, (int)(i/(4*width)),  (int)((i/4)%width) 
-							, Utils.bytesToHexDebugString(compiledPixelsSubArray, "")
-							, Utils.bytesToHexDebugString(inputPixelsSubArray, "")
-							));
-					
+
+//					JLogger.debug(String.format("Comparing Pixel Index: %d <X= %d Y= %d> original: \n\t%s\n Compiled: \n\t%s\n"
+//							,i, (int)(i/(4*width)),  (int)((i/4)%width) 
+//							, Utils.bytesToHexDebugString(compiledPixelsSubArray, "")
+//							, Utils.bytesToHexDebugString(inputPixelsSubArray, "")
+//							));
+
 					Assert.assertArrayEquals(String.format("Error at Pixel Index: %d <X= %d Y= %d> ",i, (int)(i/(4*width)),  (int)((i/4)%width) ), compiledPixelsSubArray, inputPixelsSubArray);
-					
+
 				}
 			}
 		}
@@ -112,8 +147,8 @@ public class TGAImageReaderImplTests {
 			Assert.fail(Utils.getExceptionStackTraceAsString(e));			
 		}
 	}
-	
-	
+
+
 	void printPixels(byte[] bytes, int w, int h)
 	{
 		StringBuilder sb2 = new StringBuilder();
@@ -129,8 +164,6 @@ public class TGAImageReaderImplTests {
 				{
 					sb.append(String.format("<X = %d,  Y = %d, %s>\n", x, y, Utils.bytesToHexDebugString(next4bytes, ""))) ;
 				}
-				if(x>180 && x < 310 && y > 180 && y < 350)
-				{
 				if(Utils.bytesToUInt(next4bytes) > 0)
 				{
 					sb2.append("1");
@@ -139,12 +172,10 @@ public class TGAImageReaderImplTests {
 				{
 					sb2.append("0");
 				}
-				}
 			}
 			sb2.append("\n");
 		}
 		JLogger.debug(sb.toString());
 		JLogger.debug(sb2.toString());
 	}
-
 }

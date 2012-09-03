@@ -703,10 +703,10 @@ public class OarFile
         static void WriteColor4(Document doc, Element writer, String name, Color4 color)
         {
         	Element ele = doc.createElement(name);
-        	ele.appendChild(doc.createElement("R").appendChild(doc.createTextNode(Float.toString(color.R))));
-        	ele.appendChild(doc.createElement("B").appendChild(doc.createTextNode(Float.toString(color.B))));
-        	ele.appendChild(doc.createElement("G").appendChild(doc.createTextNode(Float.toString(color.G))));
-        	ele.appendChild(doc.createElement("A").appendChild(doc.createTextNode(Float.toString(color.A))));
+        	ele.appendChild(doc.createElement("R").appendChild(doc.createTextNode(Float.toString(color.getR()))));
+        	ele.appendChild(doc.createElement("B").appendChild(doc.createTextNode(Float.toString(color.getB()))));
+        	ele.appendChild(doc.createElement("G").appendChild(doc.createTextNode(Float.toString(color.getG()))));
+        	ele.appendChild(doc.createElement("A").appendChild(doc.createTextNode(Float.toString(color.getA()))));
         	writer.appendChild(ele);
 
 //            writer.WriteStartElement(name);

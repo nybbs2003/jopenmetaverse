@@ -1,5 +1,6 @@
 package com.ngt.jopenmetaverse.shared.sim;
 
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -62,6 +63,7 @@ import com.ngt.jopenmetaverse.shared.types.Enums.WearableType;
 import com.ngt.jopenmetaverse.shared.types.EnumsPrimitive.AttachmentPoint;
 import com.ngt.jopenmetaverse.shared.types.UUID;
 import com.ngt.jopenmetaverse.shared.types.Vector3;
+import com.ngt.jopenmetaverse.shared.util.FileUtils;
 import com.ngt.jopenmetaverse.shared.util.JLogger;
 import com.ngt.jopenmetaverse.shared.util.Utils;
 import com.ngt.jopenmetaverse.shared.sim.visual.VisualParams;
@@ -334,7 +336,6 @@ public class AppearanceManager {
 		onRebakeAvatarRequested.deleteObserver(o);
 	}	      
 
-
 	//region Event delegates, Raise Events
 
 	//	        /// <summary>The event subscribers. null if no subcribers</summary>
@@ -486,7 +487,7 @@ public class AppearanceManager {
 	/// <summary>
 	/// Main appearance thread
 	/// </summary>
-//	private Thread AppearanceThread;
+	//	private Thread AppearanceThread;
 	//endregion Private Members
 
 	/// <summary>
@@ -499,7 +500,7 @@ public class AppearanceManager {
 
 		for(int i=0; i< Textures.length; i++)
 			Textures[i] = new TextureData();
-		
+
 		// Client.network.RegisterCallback(PacketType.AgentWearablesUpdate, AgentWearablesUpdateHandler);
 		Client.network.RegisterCallback(PacketType.AgentWearablesUpdate, new EventObserver<PacketReceivedEventArgs>()
 				{ 
@@ -532,24 +533,24 @@ public class AppearanceManager {
 
 		//				            Client.network.EventQueueRunning += Network_OnEventQueueRunning;
 		EventObserver<EventQueueRunningEventArgs> queueCallback = new EventObserver<EventQueueRunningEventArgs>()
-		{ 
+				{ 
 			@Override
 			public void handleEvent(Observable o, EventQueueRunningEventArgs e) 
-				{
-					Network_OnEventQueueRunning(o, e);
-				}
-		};
-		Client.network.RegisterOnEventQueueRunningCallback(queueCallback);
+			{
+				Network_OnEventQueueRunning(o, e);
+			}
+				};
+				Client.network.RegisterOnEventQueueRunningCallback(queueCallback);
 
 				//				            Client.network.Disconnected += Network_OnDisconnected;
-		Client.network.RegisterOnDisconnectedCallback(new EventObserver<DisconnectedEventArgs>()
-		{
-			@Override
-			public void handleEvent(Observable o, DisconnectedEventArgs arg) 
-			{
-				Network_OnDisconnected(o, arg);
-			}
-		});
+				Client.network.RegisterOnDisconnectedCallback(new EventObserver<DisconnectedEventArgs>()
+						{
+					@Override
+					public void handleEvent(Observable o, DisconnectedEventArgs arg) 
+					{
+						Network_OnDisconnected(o, arg);
+					}
+						});
 	}
 
 	//region Publics Methods
@@ -605,10 +606,10 @@ public class AppearanceManager {
 							throw new Exception("Failed to retrieve a list of current agent wearables, appearance cannot be set");
 						}
 					}
-					
+
 					JLogger.debug("Got Agent Wearable .. going to download wearables");
 
-					
+
 					// Download and parse all of the agent wearables
 					if (!DownloadWearables())
 					{
@@ -697,7 +698,7 @@ public class AppearanceManager {
 						hash = UUID.xor(hash, wearable.AssetID);
 				}
 
-				if (hash != UUID.Zero)
+				if (!hash.equals(UUID.Zero))
 				{
 					// Hash with our secret value for this baked layer
 					hash = UUID.xor(hash,  BAKED_TEXTURE_HASH[bakedIndex]);
@@ -1318,12 +1319,12 @@ public class AppearanceManager {
 		EventObserver<AgentWearablesReplyEventArgs> wearablesCallback =
 				new EventObserver<AgentWearablesReplyEventArgs>()
 				{
-					@Override
-					public void handleEvent(Observable s,
-							AgentWearablesReplyEventArgs e) 
-					{
-						wearablesEvent.set();											
-					}
+			@Override
+			public void handleEvent(Observable s,
+					AgentWearablesReplyEventArgs e) 
+			{
+				wearablesEvent.set();											
+			}
 				};
 
 				this.registerOnAgentWearablesReply(wearablesCallback);			
@@ -1659,7 +1660,7 @@ public class AppearanceManager {
 			Runnable runnable = new Runnable(){
 				public void run() {
 					try{
-						AutoResetEvent downloadEvent = new AutoResetEvent(false);
+						final AutoResetEvent downloadEvent = new AutoResetEvent(false);
 
 						MethodDelegate<Void, TextureDownloadCallbackArgs> textureDownloadCallback = 
 								new MethodDelegate<Void, TextureDownloadCallbackArgs>()
@@ -1674,14 +1675,14 @@ public class AppearanceManager {
 										JLogger.info("Downloaded Texture " + textureID + " Proceeding for backing...");
 										if(assetTexture.Decode())
 										{
-										for (int i = 0; i < Textures.length; i++)
-										{
-											if (Textures[i].TextureID.equals(textureID))
+											for (int i = 0; i < Textures.length; i++)
 											{
-												JLogger.info("Setting AssetTextureIndex " + i + " to "+ textureID );
-												Textures[i].Texture = assetTexture;
+												if (Textures[i].TextureID.equals(textureID))
+												{
+													JLogger.info("Setting AssetTextureIndex " + i + " to "+ textureID );
+													Textures[i].Texture = assetTexture;
+												}
 											}
-										}
 										}
 										else
 											throw new Exception("Failed to decode Asset texture: " + textureID );
@@ -1690,18 +1691,18 @@ public class AppearanceManager {
 									{
 										JLogger.warn("Texture " + textureID + " failed to download, one or more bakes will be incomplete");
 									}
+
 								}
 								catch(Exception ex)
 								{JLogger.warn("Texture " + textureID + " failed to download or parsed one or more bakes will be incomplete\n" + Utils.getExceptionStackTraceAsString(ex));}
+								finally
+								{ downloadEvent.set();}
 								return null;
-							}
+							}};
 
-								};
+							Client.assets.RequestImage(textureID, textureDownloadCallback);
 
-								Client.assets.RequestImage(textureID, textureDownloadCallback);
-
-
-								downloadEvent.waitOne(TEXTURE_TIMEOUT);
+							downloadEvent.waitOne(TEXTURE_TIMEOUT);
 					}
 					catch(Exception e)
 					{
@@ -1769,7 +1770,7 @@ public class AppearanceManager {
 
 		if(!success.get())
 			JLogger.debug("One or more Baking of textures has failed");
-		
+
 		// Free up all the textures we're holding on to
 		for (int i = 0; i < Textures.length; i++)
 		{
@@ -1820,7 +1821,6 @@ public class AppearanceManager {
 
 		while (newAssetID.equals(UUID.Zero) && retries > 0)
 		{
-			JLogger.debug(String.format("Uploading Bake ID: %s to Server retry no %d", oven.getBakedTexture().getAssetID(), retries));
 			newAssetID = UploadBake(oven.getBakedTexture().AssetData);
 			--retries;
 		}
@@ -1833,6 +1833,12 @@ public class AppearanceManager {
 			return false;
 		}
 
+		JLogger.debug(String.format("Uploaded Bake ID: %s to Server retry no %d", newAssetID, retries));
+
+		//TODO Need to remove only for testing
+        String filepath = "openmetaverse_data/logs/" + newAssetID;
+        FileUtils.writeBytes(new File(filepath+".j2k"), oven.getBakedTexture().AssetData);
+//		Client.assets.Cache.saveAssetToCache(newAssetID, oven.getBakedTexture().AssetData);
 		return true;
 	}
 

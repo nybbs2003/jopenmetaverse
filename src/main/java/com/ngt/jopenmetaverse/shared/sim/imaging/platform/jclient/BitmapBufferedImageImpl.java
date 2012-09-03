@@ -46,6 +46,22 @@ public class BitmapBufferedImageImpl  implements IBitmap
 		img = new BufferedImage( w, h, BufferedImage.TYPE_INT_ARGB );
 		final int[] a = ( (DataBufferInt) img.getRaster().getDataBuffer() ).getData();
 		System.arraycopy(pixels, 0, a, 0, pixels.length);
+		
+//		int k =0;
+//		for(int j =0; j< h; j++)
+//		{
+//			for(int i =0; i< w; i++)
+//			{
+//				k = j*w + i;
+//				if(pixels[k] != img.getRGB(i,j))
+//				{
+//					System.out.println(String.format("Mistach while coping pixels <%d %d> <%d, %d>", i, j, pixels[k], img.getRGB(i,j)));
+//				}
+//				else
+//					System.out.println(String.format("Pixels @ <%d %d> <%d, %d>", i, j, pixels[k], img.getRGB(i,j)));
+//			}
+//		}
+		
 //		
 //		
 //        Image piximg =  Toolkit.getDefaultToolkit().createImage(new MemoryImageSource(w, h, pixels, 0, w));
@@ -65,6 +81,11 @@ public class BitmapBufferedImageImpl  implements IBitmap
 		return img.getRGB(x, y);
 	}
 
+	 public void setRGB(int x, int y, int rgb)
+	{
+		img.setRGB(x, y, rgb);
+	}
+	 
 	public String getPixelFormatAsString() {
 		if(PixelFormatMapReverse.containsKey(img.getType()))
 			return PixelFormatMapReverse.get(img.getType()).toString();

@@ -515,9 +515,9 @@ public class TGADecoder2 {
 				for(int k = 0; k < 4; k++)
 				{
 					if(k < byp)
-						b[linep2 + (i)*4 + 4 - k] = data[(i)*byp + k];
+						b[linep2 + (i)*4 + 3 - k] = data[(i)*byp + k];
 					else
-						b[linep2 + (i)*4 + 4 - k] = (byte)0x00;
+						b[linep2 + (i)*4 + 3 - k] = (byte)0x00;
 					
 				}
 //				System.out.println(String.format("Stored <X = %d,  Y = %d, %d %s>", i, line, linep2 + (i)*4,

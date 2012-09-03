@@ -3,11 +3,16 @@ package com.ngt.jopenmetaverse.shared.sim.imaging.platform.jclient;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.nio.ByteOrder;
 
 import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
+import javax.imageio.ImageTypeSpecifier;
+import javax.imageio.ImageWriteParam;
 import javax.imageio.ImageWriter;
+import javax.imageio.metadata.IIOMetadata;
 import javax.imageio.stream.FileCacheImageInputStream;
 import javax.imageio.stream.FileCacheImageOutputStream;
 
@@ -15,7 +20,10 @@ import com.ngt.jopenmetaverse.shared.sim.imaging.IBitmap;
 import com.ngt.jopenmetaverse.shared.sim.imaging.IBitmapFactory;
 import com.ngt.jopenmetaverse.shared.sim.imaging.IOpenJPEG;
 import com.ngt.jopenmetaverse.shared.sim.imaging.ManagedImage;
+import com.ngt.jopenmetaverse.shared.util.FileUtils;
 import com.sun.media.imageio.plugins.jpeg2000.J2KImageWriteParam;
+import com.sun.media.imageioimpl.plugins.jpeg2000.J2KImageWriter;
+import com.sun.media.imageioimpl.plugins.jpeg2000.J2KMetadata;
 
 public class OpenJPEGImpl implements IOpenJPEG {
 
@@ -63,10 +71,26 @@ public class OpenJPEGImpl implements IOpenJPEG {
 		return DecodeToImage2(encoded).getManagedImage();
 	}
 
-	public byte[] EncodeFromImage(IBitmap bitmap, boolean lossless) throws Exception {
+	public BufferedImage pngTransformation(BufferedImage bitmap) throws IOException
+	{
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		ImageIO.write( bitmap, "png",  baos );
+		ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+		FileUtils.closeStream(baos);
+		BufferedImage pngbitmap = ImageIO.read( bais );
+		FileUtils.closeStream(bais);
+		return pngbitmap;
+	}
+	
+	public byte[] EncodeFromImage(IBitmap inputbitmap, boolean lossless) throws Exception {
 		
-		ImageWriter writer = (ImageWriter) ImageIO.getImageWritersByFormatName("jpeg2000").next();
+		//First convert to png and then read back. This is currently a BUG as Jpeg2000 conversion is 
+		//adding a phatom dirty green background color to textures
+		BufferedImage bitmap = pngTransformation(((BitmapBufferedImageImpl)inputbitmap).getImage());
+//		BufferedImage bitmap = ((BitmapBufferedImageImpl)inputbitmap).getImage();
+		
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		J2KImageWriter writer = (J2KImageWriter) ImageIO.getImageWritersByFormatName("jpeg2000").next();
 		J2KImageWriteParam iwp = (J2KImageWriteParam)writer.getDefaultWriteParam();
 		
 		iwp.setLossless(lossless);
@@ -75,17 +99,30 @@ public class OpenJPEGImpl implements IOpenJPEG {
 //		for(int i=0;i < ct.length; i++)
 //			System.out.println("compression type : "+ct[0]);
 //		
-//		iwp.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
+		iwp.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
 //		iwp.setCompressionType(ct[0]);
 //		iwp.setCompressionQuality(0.01f);
 ////		iwp.setEncodingRate(0.01);
-////		jwp.setFilter(jwp.FILTER_97);
+		//TODO Experiment
+		iwp.setFilter(J2KImageWriteParam.FILTER_97);
+		iwp.setProgressionType("layer");
+		//Following is must to generate j2k JPEG 2000 stream
+		iwp.setWriteCodeStreamOnly(true);
 		
+		iwp.setNumDecompositionLevels(5);
 		FileCacheImageOutputStream fileImageOutputStream = new FileCacheImageOutputStream(baos, null); 
-		
 		writer.setOutput(fileImageOutputStream);
-		writer.write(null, new IIOImage(((BitmapBufferedImageImpl)bitmap).getImage(), null, null), iwp);
+
+		//TODO changed
+//		writer.write(null, new IIOImage(bitmap, null, null), iwp);
+//		IIOMetadata metadata = writer.getDefaultImageMetadata(new ImageTypeSpecifier(bitmap), iwp);
+		J2KMetadata metadata = new J2KMetadata(bitmap.getColorModel(), 
+				bitmap.getSampleModel(), bitmap.getWidth(), bitmap.getHeight(), iwp, writer);
+		writer.write(metadata, new IIOImage(bitmap, null, null), iwp);
+//		writer.write(bitmap);
+		
 		fileImageOutputStream.flush();
+		fileImageOutputStream.close();
 //		ImageIO.write((BitmapBufferedImageImpl)bitmap, "jpg2000", baos);
 		byte[] bytes = baos.toByteArray();
 		baos.close();

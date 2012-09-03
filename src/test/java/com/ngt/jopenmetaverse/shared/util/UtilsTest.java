@@ -120,7 +120,38 @@ public class UtilsTest {
 		}
 		catch(Exception e)
 		{ Assert.fail(Utils.getExceptionStackTraceAsString(e));}
+	}
+	
+	@Test
+	public void byteToFloatTests()
+	{
+		byte b1 = (byte)0xfe;
+		float f1 = Utils.byteToFloat(b1, 0.0f, 1.0f);
+		Assert.assertEquals(0xfe/(float)255, f1, .01);
 		
+		b1 = 0;
+		f1 = Utils.byteToFloat(b1, 0.0f, 1.0f);
+		Assert.assertEquals(0/(float)255, f1, 0.0);
+
+		b1 = (byte)255;
+		f1 = Utils.byteToFloat(b1, 0.0f, 1.0f);
+		Assert.assertEquals(1.0, f1, 0.0);
+	}
+	
+	@Test
+	public void floatToByteTests()
+	{
+		float val1 = (float)0.5;
+		byte b1 = Utils.floatToByte(val1, 0, 1);
+		Assert.assertEquals(((short)(0.5*Utils.UByteMaxValue)) , b1);
+
+		val1 = (float)1.0;
+		b1 = Utils.floatToByte(val1, 0, 1);
+		Assert.assertEquals((byte)0xff , b1);
+		
+		val1 = (float)0.0;
+		b1 = Utils.floatToByte(val1, 0, 1);
+		Assert.assertEquals((byte)0x00 , b1);
 	}
 	
 }

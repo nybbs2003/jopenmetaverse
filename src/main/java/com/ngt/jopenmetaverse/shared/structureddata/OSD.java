@@ -118,10 +118,10 @@ public class OSD
     public static OSD FromColor4(Color4 value)
     {
         OSDArray array = new OSDArray();
-        array.add(OSD.FromReal(value.R));
-        array.add(OSD.FromReal(value.G));
-        array.add(OSD.FromReal(value.B));
-        array.add(OSD.FromReal(value.A));
+        array.add(OSD.FromReal(value.getR()));
+        array.add(OSD.FromReal(value.getG()));
+        array.add(OSD.FromReal(value.getB()));
+        array.add(OSD.FromReal(value.getA()));
         return array;
     }
 

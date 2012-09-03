@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 
 import com.ngt.jopenmetaverse.shared.exception.NotImplementedException;
 import com.ngt.jopenmetaverse.shared.exception.NotSupportedException;
+import com.ngt.jopenmetaverse.shared.util.Utils;
 
 public class ManagedImage {
 
@@ -198,7 +199,7 @@ public class ManagedImage {
 			for(int x = 0; x < Width; x++)
 				for(int y = 0; y< Height; y++)
 				{
-					i = x*Height + y;
+					i = y* Width + x;
 					int pixel = bitmap.getRGB(x, y);
 					 	Alpha[i] = (byte) ((pixel >> 24) & 0xff);
 				        Red[i] = (byte) ((pixel >> 16) & 0xff);
@@ -238,7 +239,7 @@ public class ManagedImage {
 			for(int x = 0; x < Width; x++)
 				for(int y = 0; y< Height; y++)
 				{
-					i = x*Height + y;
+					i = y* Width + x;
 					int pixel = bitmap.getRGB(x, y);
 				     Red[i] = Green[i] = Blue[i] = (byte) ((pixel >> 0) & 0xff);
 				     Alpha[i] = (byte) ((pixel >> 24) & 0xff);
@@ -255,7 +256,7 @@ public class ManagedImage {
 			for(int x = 0; x < Width; x++)
 				for(int y = 0; y< Height; y++)
 				{
-					i = x*Height + y;
+					i = y* Width + x;
 					int pixel = bitmap.getRGB(x, y);
 //					 	Alpha[i] = (byte) ((pixel >> 24) & 0xff);
 				        Red[i] = (byte) ((pixel >> 16) & 0xff);
@@ -292,7 +293,7 @@ public class ManagedImage {
 			for(int x = 0; x < Width; x++)
 				for(int y = 0; y< Height; y++)
 				{
-					i = x*Height + y;
+					i = y* Width + x;
 					int pixel = bitmap.getRGB(x, y);
 //					 	Alpha[i] = (byte) ((pixel >> 24) & 0xff);
 				        Red[i] = (byte) ((pixel >> 16) & 0xff);
@@ -332,7 +333,7 @@ public class ManagedImage {
 	/// <param name="channels">new channel flags</param>
 	public void ConvertChannels(EnumSet<ImageChannels> channels)
 	{
-		if (Channels == channels)
+		if (ImageChannels.getIndex(Channels) == ImageChannels.getIndex(channels))
 			return;
 
 		int n = Width * Height;
@@ -475,8 +476,6 @@ public class ManagedImage {
 					raw[pos * 4 + 0] = Red[srcPos];
 					raw[pos * 4 + 1] = Green[srcPos];
 					raw[pos * 4 + 2] = Blue[srcPos];
-					//TODO need to verify
-//					raw[pos * 4 + 3] = Byte.MAX_VALUE;
 					raw[pos * 4 + 3] = (byte)0xFF;
 
 				}
@@ -507,8 +506,10 @@ public class ManagedImage {
 					{
 						int srcPos = h * Width + w;
 
-						raw[index++] = Alpha[srcPos] << 24 | Red[srcPos] << 16 | Green[srcPos] << 8| Blue[srcPos];
-
+						raw[index++] = Utils.ubyteToInt(Alpha[srcPos]) << 24 
+								| Utils.ubyteToInt(Red[srcPos]) << 16 
+								| Utils.ubyteToInt(Green[srcPos]) << 8
+								| Utils.ubyteToInt(Blue[srcPos]);
 					}
 				}
 			}
@@ -526,7 +527,10 @@ public class ManagedImage {
 //						raw[pos * 4 + 1] = Alpha[srcPos];
 //						raw[pos * 4 + 2] = Alpha[srcPos];
 //						raw[pos * 4 + 3] = (byte)0xFF;
-						raw[index++] = (byte)0xFF << 24| Alpha[srcPos] << 16 | Alpha[srcPos] << 8| Alpha[srcPos];
+						raw[index++] = 0xFF << 24
+								| Utils.ubyteToInt(Alpha[srcPos]) << 16 
+								| Utils.ubyteToInt(Alpha[srcPos]) << 8
+								| Utils.ubyteToInt(Alpha[srcPos]);
 
 					}
 				}
@@ -548,7 +552,10 @@ public class ManagedImage {
 //					//TODO need to verify
 ////					raw[pos * 4 + 3] = Byte.MAX_VALUE;
 //					raw[pos * 4 + 3] = (byte)0xFF;
-					raw[index++] = (byte)0xFF << 24| Red[srcPos] << 16 | Green[srcPos] << 8| Blue[srcPos];
+					raw[index++] = 0xFF << 24
+							| Utils.ubyteToInt(Red[srcPos]) << 16 
+							| Utils.ubyteToInt(Green[srcPos]) << 8
+							| Utils.ubyteToInt(Blue[srcPos]);
 
 				}
 			}

@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 
@@ -63,10 +64,14 @@ public class OpenJPEGImplTest {
 //			printByeArray(bitmap.getImage());
 //			File f1 = new File(fileLocation.getPath() + "/" + "test1" + ".jpg");
 //			f1.createNewFile();
+			//TODO should we convert to png instead to jpg
+			FileOutputStream is = new FileOutputStream(fileLocation.getPath() + "/" + imageName + ".jpg");
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
 			ImageIO.write( bitmap.getImage(), "jpg",  bos );
 			bos.flush();
 			BufferedImage bimage = ImageIO.read( new ByteArrayInputStream(bos.toByteArray()));
+			is.write(bos.toByteArray());
+			FileUtils.closeStream(is);
 			System.out.println(String.format("Original Image %s Type %d, and size %d, jpeg conversion image type %d and size %d", 
 					imageName, bitmap.getImage().getType(), 56, bimage.getType(), 56));
 		} 

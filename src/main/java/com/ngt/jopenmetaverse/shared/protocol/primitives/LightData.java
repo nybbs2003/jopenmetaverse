@@ -45,8 +45,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 Falloff = Utils.bytesToFloatLit(data, pos + 12);
 
                 // Alpha in color is actually intensity
-                Intensity = Color.A;
-                Color.A = 1f;
+                Intensity = Color.getA();
+                Color.setA(1f);
             }
             else
             {
@@ -68,7 +68,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 
             // Alpha channel in color is intensity
             Color4 tmpColor = Color;
-            tmpColor.A = Intensity;
+            tmpColor.setA(Intensity);
             System.arraycopy(tmpColor.getBytes(), 0, data, 0, 4);
             System.arraycopy(Utils.floatToBytesLit(Radius), 0, data, 4, 4);
             System.arraycopy(Utils.floatToBytesLit(Cutoff), 0, data, 8, 4);
