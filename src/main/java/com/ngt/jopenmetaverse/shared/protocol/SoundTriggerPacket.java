@@ -9,7 +9,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 public final class SoundTriggerPacket extends Packet
 {
     /// <exclude/>
-    public final class SoundDataBlock extends PacketBlock
+    public static final class SoundDataBlock extends PacketBlock
     {
         public UUID SoundID = new UUID();
         public UUID OwnerID = new UUID();
