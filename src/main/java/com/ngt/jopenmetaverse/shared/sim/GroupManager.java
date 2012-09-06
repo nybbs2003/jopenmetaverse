@@ -1,18 +1,72 @@
 package com.ngt.jopenmetaverse.shared.sim;
 
+import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Observable;
 
-import com.ngt.jopenmetaverse.shared.sim.AgentManager.TeleportFlags;
+import com.ngt.jopenmetaverse.shared.protocol.ActivateGroupPacket;
+import com.ngt.jopenmetaverse.shared.protocol.AgentDataUpdateRequestPacket;
+import com.ngt.jopenmetaverse.shared.protocol.AgentDropGroupPacket;
+import com.ngt.jopenmetaverse.shared.protocol.CreateGroupReplyPacket;
+import com.ngt.jopenmetaverse.shared.protocol.CreateGroupRequestPacket;
+import com.ngt.jopenmetaverse.shared.protocol.EjectGroupMemberReplyPacket;
+import com.ngt.jopenmetaverse.shared.protocol.EjectGroupMemberRequestPacket;
+import com.ngt.jopenmetaverse.shared.protocol.GroupAccountSummaryReplyPacket;
+import com.ngt.jopenmetaverse.shared.protocol.GroupAccountSummaryRequestPacket;
+import com.ngt.jopenmetaverse.shared.protocol.GroupMembersReplyPacket;
+import com.ngt.jopenmetaverse.shared.protocol.GroupMembersRequestPacket;
+import com.ngt.jopenmetaverse.shared.protocol.GroupNoticeRequestPacket;
+import com.ngt.jopenmetaverse.shared.protocol.GroupNoticesListReplyPacket;
+import com.ngt.jopenmetaverse.shared.protocol.GroupNoticesListRequestPacket;
+import com.ngt.jopenmetaverse.shared.protocol.GroupProfileReplyPacket;
+import com.ngt.jopenmetaverse.shared.protocol.GroupProfileRequestPacket;
+import com.ngt.jopenmetaverse.shared.protocol.GroupRoleChangesPacket;
+import com.ngt.jopenmetaverse.shared.protocol.GroupRoleDataReplyPacket;
+import com.ngt.jopenmetaverse.shared.protocol.GroupRoleDataRequestPacket;
+import com.ngt.jopenmetaverse.shared.protocol.GroupRoleMembersReplyPacket;
+import com.ngt.jopenmetaverse.shared.protocol.GroupRoleMembersRequestPacket;
+import com.ngt.jopenmetaverse.shared.protocol.GroupRoleUpdatePacket;
+import com.ngt.jopenmetaverse.shared.protocol.GroupTitleUpdatePacket;
+import com.ngt.jopenmetaverse.shared.protocol.GroupTitlesReplyPacket;
+import com.ngt.jopenmetaverse.shared.protocol.GroupTitlesRequestPacket;
+import com.ngt.jopenmetaverse.shared.protocol.InviteGroupRequestPacket;
+import com.ngt.jopenmetaverse.shared.protocol.JoinGroupReplyPacket;
+import com.ngt.jopenmetaverse.shared.protocol.JoinGroupRequestPacket;
+import com.ngt.jopenmetaverse.shared.protocol.LeaveGroupReplyPacket;
+import com.ngt.jopenmetaverse.shared.protocol.LeaveGroupRequestPacket;
+import com.ngt.jopenmetaverse.shared.protocol.Packet;
+import com.ngt.jopenmetaverse.shared.protocol.PacketType;
+import com.ngt.jopenmetaverse.shared.protocol.SetGroupAcceptNoticesPacket;
+import com.ngt.jopenmetaverse.shared.protocol.SetGroupContributionPacket;
+import com.ngt.jopenmetaverse.shared.protocol.StartGroupProposalPacket;
+import com.ngt.jopenmetaverse.shared.protocol.UUIDGroupNameReplyPacket;
+import com.ngt.jopenmetaverse.shared.protocol.UUIDGroupNameRequestPacket;
+import com.ngt.jopenmetaverse.shared.protocol.UpdateGroupInfoPacket;
+import com.ngt.jopenmetaverse.shared.sim.AgentManager.InstantMessageDialog;
+import com.ngt.jopenmetaverse.shared.sim.AgentManager.InstantMessageOnline;
+import com.ngt.jopenmetaverse.shared.sim.events.CapsEventObservableArg;
+import com.ngt.jopenmetaverse.shared.sim.events.EventObservable;
+import com.ngt.jopenmetaverse.shared.sim.events.EventObserver;
+import com.ngt.jopenmetaverse.shared.sim.events.PacketReceivedEventArgs;
+import com.ngt.jopenmetaverse.shared.sim.events.am.InstantMessageEventArgs;
+import com.ngt.jopenmetaverse.shared.sim.events.group.*;
+import com.ngt.jopenmetaverse.shared.sim.interfaces.IMessage;
+import com.ngt.jopenmetaverse.shared.sim.message.LindenMessages.AgentDropGroupMessage;
+import com.ngt.jopenmetaverse.shared.sim.message.LindenMessages.AgentGroupDataUpdateMessage;
 import com.ngt.jopenmetaverse.shared.structureddata.OSD;
 import com.ngt.jopenmetaverse.shared.structureddata.OSDMap;
-import com.ngt.jopenmetaverse.shared.structureddata.OSDParser;
 import com.ngt.jopenmetaverse.shared.structureddata.llsd.XmlLLSDOSDParser;
 import com.ngt.jopenmetaverse.shared.types.Enums;
+import com.ngt.jopenmetaverse.shared.types.Enums.AssetType;
 import com.ngt.jopenmetaverse.shared.types.UUID;
-import com.ngt.jopenmetaverse.shared.types.EnumsPrimitive.PrimFlags;
+import com.ngt.jopenmetaverse.shared.types.Vector3;
+import com.ngt.jopenmetaverse.shared.util.JLogger;
 import com.ngt.jopenmetaverse.shared.util.Utils;
 
 ///// <summary>
@@ -20,11 +74,6 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 ///// information
 ///// </summary>
 public class GroupManager {
-    public GroupManager(GridClient client)
-    {
-    	//TODO Need to implement
-    }
-        
     //region Structs
 
     /// <summary>
@@ -39,7 +88,7 @@ public class GroupManager {
         /// <summary>Online status information</summary>
         public String OnlineStatus;
         /// <summary>Abilities that the Group Member has</summary>
-        public GroupPowers Powers;
+        public EnumSet<GroupPowers> Powers;
         /// <summary>Current group title</summary>
         public String Title;
         /// <summary>Is a group owner</summary>
@@ -62,7 +111,7 @@ public class GroupManager {
         /// <summary>Description of Role</summary>
         public String Description;
         /// <summary>Abilities Associated with Role</summary>
-        public GroupPowers Powers;
+        public EnumSet<GroupPowers> Powers;
         /// <summary>Returns the role's title</summary>
         /// <returns>The role's title</returns>
         @Override
@@ -118,7 +167,7 @@ public class GroupManager {
         /// <summary>Will group show up in search</summary>
         public boolean ShowInList;
         /// <summary></summary>
-        public GroupPowers Powers;
+        public EnumSet<GroupPowers> Powers;
         /// <summary></summary>
         public boolean AcceptNotices;
         /// <summary></summary>
@@ -139,7 +188,7 @@ public class GroupManager {
         public boolean ListInProfile;
 
         /// <summary>Returns the name of the group</summary>
-        /// <returns>A string containing the name of the group</returns>
+        /// <returns>A String containing the name of the group</returns>
         @Override
         public String toString()
         {
@@ -253,9 +302,9 @@ public class GroupManager {
 
             /*
             //I guess this is how this works, no gaurentees
-            string lsd = "<llsd><item_id>" + AttachmentID.ToString() + "</item_id><owner_id>"
+            String lsd = "<llsd><item_id>" + AttachmentID.ToString() + "</item_id><owner_id>"
                 + OwnerID.ToString() + "</owner_id></llsd>";
-            return Utils.StringToBytes(lsd);
+            return Utils.stringToBytesWithTrailingNullByte(lsd);
              */
         }
     }
@@ -516,7 +565,145 @@ public class GroupManager {
     //endregion Enums
 
 //        //region Delegates
-//
+
+
+    private EventObservable<CurrentGroupsEventArgs> onCurrentGroups = new EventObservable<CurrentGroupsEventArgs>();
+    public void registerOnCurrentGroups(EventObserver<CurrentGroupsEventArgs> o)
+    {
+    	onCurrentGroups.addObserver(o);
+    }
+    public void unregisterOnCurrentGroups(EventObserver<CurrentGroupsEventArgs> o) 
+    {
+    	onCurrentGroups.deleteObserver(o);
+    }
+    private EventObservable<GroupNamesEventArgs> onGroupNamesReply = new EventObservable<GroupNamesEventArgs>();
+    public void registerOnGroupNamesReply(EventObserver<GroupNamesEventArgs> o)
+    {
+    	onGroupNamesReply.addObserver(o);
+    }
+    public void unregisterOnGroupNamesReply(EventObserver<GroupNamesEventArgs> o) 
+    {
+    	onGroupNamesReply.deleteObserver(o);
+    }
+    private EventObservable<GroupProfileEventArgs> onGroupProfile = new EventObservable<GroupProfileEventArgs>();
+    public void registerOnGroupProfile(EventObserver<GroupProfileEventArgs> o)
+    {
+    	onGroupProfile.addObserver(o);
+    }
+    public void unregisterOnGroupProfile(EventObserver<GroupProfileEventArgs> o) 
+    {
+    	onGroupProfile.deleteObserver(o);
+    }
+    private EventObservable<GroupMembersReplyEventArgs> onGroupMembersReply = new EventObservable<GroupMembersReplyEventArgs>();
+    public void registerOnGroupMembersReply(EventObserver<GroupMembersReplyEventArgs> o)
+    {
+    	onGroupMembersReply.addObserver(o);
+    }
+    public void unregisterOnGroupMembersReply(EventObserver<GroupMembersReplyEventArgs> o) 
+    {
+    	onGroupMembersReply.deleteObserver(o);
+    }
+    private EventObservable<GroupRolesDataReplyEventArgs> onGroupRoleDataReply = new EventObservable<GroupRolesDataReplyEventArgs>();
+    public void registerOnGroupRoleDataReply(EventObserver<GroupRolesDataReplyEventArgs> o)
+    {
+    	onGroupRoleDataReply.addObserver(o);
+    }
+    public void unregisterOnGroupRoleDataReply(EventObserver<GroupRolesDataReplyEventArgs> o) 
+    {
+    	onGroupRoleDataReply.deleteObserver(o);
+    }
+    private EventObservable<GroupRolesMembersReplyEventArgs> onGroupRoleMembersReply = new EventObservable<GroupRolesMembersReplyEventArgs>();
+    public void registerOnGroupRoleMembersReply(EventObserver<GroupRolesMembersReplyEventArgs> o)
+    {
+    	onGroupRoleMembersReply.addObserver(o);
+    }
+    public void unregisterOnGroupRoleMembersReply(EventObserver<GroupRolesMembersReplyEventArgs> o) 
+    {
+    	onGroupRoleMembersReply.deleteObserver(o);
+    }
+    private EventObservable<GroupTitlesReplyEventArgs> onGroupTitlesReply = new EventObservable<GroupTitlesReplyEventArgs>();
+    public void registerOnGroupTitlesReply(EventObserver<GroupTitlesReplyEventArgs> o)
+    {
+    	onGroupTitlesReply.addObserver(o);
+    }
+    public void unregisterOnGroupTitlesReply(EventObserver<GroupTitlesReplyEventArgs> o) 
+    {
+    	onGroupTitlesReply.deleteObserver(o);
+    }
+    private EventObservable<GroupAccountSummaryReplyEventArgs> onGroupAccountSummaryReply = new EventObservable<GroupAccountSummaryReplyEventArgs>();
+    public void registerOnGroupAccountSummaryReply(EventObserver<GroupAccountSummaryReplyEventArgs> o)
+    {
+    	onGroupAccountSummaryReply.addObserver(o);
+    }
+    public void unregisterOnGroupAccountSummaryReply(EventObserver<GroupAccountSummaryReplyEventArgs> o) 
+    {
+    	onGroupAccountSummaryReply.deleteObserver(o);
+    }
+    private EventObservable<GroupCreatedReplyEventArgs> onGroupCreatedReply = new EventObservable<GroupCreatedReplyEventArgs>();
+    public void registerOnGroupCreatedReply(EventObserver<GroupCreatedReplyEventArgs> o)
+    {
+    	onGroupCreatedReply.addObserver(o);
+    }
+    public void unregisterOnGroupCreatedReply(EventObserver<GroupCreatedReplyEventArgs> o) 
+    {
+    	onGroupCreatedReply.deleteObserver(o);
+    }
+    private EventObservable<GroupOperationEventArgs> onGroupJoinedReply = new EventObservable<GroupOperationEventArgs>();
+    public void registerOnGroupJoinedReply(EventObserver<GroupOperationEventArgs> o)
+    {
+    	onGroupJoinedReply.addObserver(o);
+    }
+    public void unregisterOnGroupJoinedReply(EventObserver<GroupOperationEventArgs> o) 
+    {
+    	onGroupJoinedReply.deleteObserver(o);
+    }
+    private EventObservable<GroupOperationEventArgs> onGroupLeaveReply = new EventObservable<GroupOperationEventArgs>();
+    public void registerOnGroupLeaveReply(EventObserver<GroupOperationEventArgs> o)
+    {
+    	onGroupLeaveReply.addObserver(o);
+    }
+    public void unregisterOnGroupLeaveReply(EventObserver<GroupOperationEventArgs> o) 
+    {
+    	onGroupLeaveReply.deleteObserver(o);
+    }
+    private EventObservable<GroupDroppedEventArgs> onGroupDropped = new EventObservable<GroupDroppedEventArgs>();
+    public void registerOnGroupDropped(EventObserver<GroupDroppedEventArgs> o)
+    {
+    	onGroupDropped.addObserver(o);
+    }
+    public void unregisterOnGroupDropped(EventObserver<GroupDroppedEventArgs> o) 
+    {
+    	onGroupDropped.deleteObserver(o);
+    }
+    private EventObservable<GroupOperationEventArgs> onGroupMemberEjected = new EventObservable<GroupOperationEventArgs>();
+    public void registerOnGroupMemberEjected(EventObserver<GroupOperationEventArgs> o)
+    {
+    	onGroupMemberEjected.addObserver(o);
+    }
+    public void unregisterOnGroupMemberEjected(EventObserver<GroupOperationEventArgs> o) 
+    {
+    	onGroupMemberEjected.deleteObserver(o);
+    }
+    private EventObservable<GroupNoticesListReplyEventArgs> onGroupNoticesListReply = new EventObservable<GroupNoticesListReplyEventArgs>();
+    public void registerOnGroupNoticesListReply(EventObserver<GroupNoticesListReplyEventArgs> o)
+    {
+    	onGroupNoticesListReply.addObserver(o);
+    }
+    public void unregisterOnGroupNoticesListReply(EventObserver<GroupNoticesListReplyEventArgs> o) 
+    {
+    	onGroupNoticesListReply.deleteObserver(o);
+    }
+    private EventObservable<GroupInvitationEventArgs> onGroupInvitation = new EventObservable<GroupInvitationEventArgs>();
+    public void registerOnGroupInvitation(EventObserver<GroupInvitationEventArgs> o)
+    {
+    	onGroupInvitation.addObserver(o);
+    }
+    public void unregisterOnGroupInvitation(EventObserver<GroupInvitationEventArgs> o) 
+    {
+    	onGroupInvitation.deleteObserver(o);
+    }
+    
+    
 //        /// <summary>The event subscribers. null if no subcribers</summary>
 //        private EventHandler<CurrentGroupsEventArgs> m_CurrentGroups;
 //
@@ -535,7 +722,7 @@ public class GroupManager {
 //
 //        /// <summary>Raised when the simulator sends us data containing
 //        /// our current group membership</summary>
-//        public event EventHandler<CurrentGroupsEventArgs> CurrentGroups
+//        public event EventHandler<CurrentGroupsEventArgs> CurrentGroups 
 //        {
 //            add { lock (m_CurrentGroupsLock) { m_CurrentGroups += value; } }
 //            remove { lock (m_CurrentGroupsLock) { m_CurrentGroups -= value; } }
@@ -559,7 +746,7 @@ public class GroupManager {
 //
 //        /// <summary>Raised when the simulator responds to a RequestGroupName 
 //        /// or RequestGroupNames request</summary>
-//        public event EventHandler<GroupNamesEventArgs> GroupNamesReply
+//        public event EventHandler<GroupNamesEventArgs> GroupNamesReply 
 //        {
 //            add { lock (m_GroupNamesLock) { m_GroupNames += value; } }
 //            remove { lock (m_GroupNamesLock) { m_GroupNames -= value; } }
@@ -582,7 +769,7 @@ public class GroupManager {
 //        private readonly object m_GroupProfileLock = new object();
 //
 //        /// <summary>Raised when the simulator responds to a <see cref="RequestGroupProfile"/> request</summary>
-//        public event EventHandler<GroupProfileEventArgs> GroupProfile
+//        public event EventHandler<GroupProfileEventArgs> GroupProfile 
 //        {
 //            add { lock (m_GroupProfileLock) { m_GroupProfile += value; } }
 //            remove { lock (m_GroupProfileLock) { m_GroupProfile -= value; } }
@@ -605,7 +792,7 @@ public class GroupManager {
 //        private readonly object m_GroupMembersLock = new object();
 //
 //        /// <summary>Raised when the simulator responds to a <see cref="RequestGroupMembers"/> request</summary>
-//        public event EventHandler<GroupMembersReplyEventArgs> GroupMembersReply
+//        public event EventHandler<GroupMembersReplyEventArgs> GroupMembersReply 
 //        {
 //            add { lock (m_GroupMembersLock) { m_GroupMembers += value; } }
 //            remove { lock (m_GroupMembersLock) { m_GroupMembers -= value; } }
@@ -628,7 +815,7 @@ public class GroupManager {
 //        private readonly object m_GroupRolesLock = new object();
 //
 //        /// <summary>Raised when the simulator responds to a <see cref="RequestGroupRoleData"/> request</summary>
-//        public event EventHandler<GroupRolesDataReplyEventArgs> GroupRoleDataReply
+//        public event EventHandler<GroupRolesDataReplyEventArgs> GroupRoleDataReply 
 //        {
 //            add { lock (m_GroupRolesLock) { m_GroupRoles += value; } }
 //            remove { lock (m_GroupRolesLock) { m_GroupRoles -= value; } }
@@ -651,7 +838,7 @@ public class GroupManager {
 //        private readonly object m_GroupRolesMembersLock = new object();
 //
 //        /// <summary>Raised when the simulator responds to a <see cref="RequestGroupRolesMembers"/> request</summary>
-//        public event EventHandler<GroupRolesMembersReplyEventArgs> GroupRoleMembersReply
+//        public event EventHandler<GroupRolesMembersReplyEventArgs> GroupRoleMembersReply 
 //        {
 //            add { lock (m_GroupRolesMembersLock) { m_GroupRoleMembers += value; } }
 //            remove { lock (m_GroupRolesMembersLock) { m_GroupRoleMembers -= value; } }
@@ -675,7 +862,7 @@ public class GroupManager {
 //        private readonly object m_GroupTitlesLock = new object();
 //
 //        /// <summary>Raised when the simulator responds to a <see cref="RequestGroupTitles"/> request</summary>
-//        public event EventHandler<GroupTitlesReplyEventArgs> GroupTitlesReply
+//        public event EventHandler<GroupTitlesReplyEventArgs> GroupTitlesReply 
 //        {
 //            add { lock (m_GroupTitlesLock) { m_GroupTitles += value; } }
 //            remove { lock (m_GroupTitlesLock) { m_GroupTitles -= value; } }
@@ -699,7 +886,7 @@ public class GroupManager {
 //
 //        /// <summary>Raised when a response to a RequestGroupAccountSummary is returned
 //        /// by the simulator</summary>
-//        public event EventHandler<GroupAccountSummaryReplyEventArgs> GroupAccountSummaryReply
+//        public event EventHandler<GroupAccountSummaryReplyEventArgs> GroupAccountSummaryReply 
 //        {
 //            add { lock (m_GroupAccountSummaryLock) { m_GroupAccountSummary += value; } }
 //            remove { lock (m_GroupAccountSummaryLock) { m_GroupAccountSummary -= value; } }
@@ -721,7 +908,7 @@ public class GroupManager {
 //        private readonly object m_GroupCreatedLock = new object();
 //
 //        /// <summary>Raised when a request to create a group is successful</summary>
-//        public event EventHandler<GroupCreatedReplyEventArgs> GroupCreatedReply
+//        public event EventHandler<GroupCreatedReplyEventArgs> GroupCreatedReply 
 //        {
 //            add { lock (m_GroupCreatedLock) { m_GroupCreated += value; } }
 //            remove { lock (m_GroupCreatedLock) { m_GroupCreated -= value; } }
@@ -744,7 +931,7 @@ public class GroupManager {
 //
 //        /// <summary>Raised when a request to join a group either
 //        /// fails or succeeds</summary>
-//        public event EventHandler<GroupOperationEventArgs> GroupJoinedReply
+//        public event EventHandler<GroupOperationEventArgs> GroupJoinedReply 
 //        {
 //            add { lock (m_GroupJoinedLock) { m_GroupJoined += value; } }
 //            remove { lock (m_GroupJoinedLock) { m_GroupJoined -= value; } }
@@ -767,7 +954,7 @@ public class GroupManager {
 //
 //        /// <summary>Raised when a request to leave a group either
 //        /// fails or succeeds</summary>
-//        public event EventHandler<GroupOperationEventArgs> GroupLeaveReply
+//        public event EventHandler<GroupOperationEventArgs> GroupLeaveReply 
 //        {
 //            add { lock (m_GroupLeftLock) { m_GroupLeft += value; } }
 //            remove { lock (m_GroupLeftLock) { m_GroupLeft -= value; } }
@@ -789,7 +976,7 @@ public class GroupManager {
 //        private readonly object m_GroupDroppedLock = new object();
 //
 //        /// <summary>Raised when A group is removed from the group server</summary>
-//        public event EventHandler<GroupDroppedEventArgs> GroupDropped
+//        public event EventHandler<GroupDroppedEventArgs> GroupDropped 
 //        {
 //            add { lock (m_GroupDroppedLock) { m_GroupDropped += value; } }
 //            remove { lock (m_GroupDroppedLock) { m_GroupDropped -= value; } }
@@ -812,7 +999,7 @@ public class GroupManager {
 //
 //        /// <summary>Raised when a request to eject a member from a group either
 //        /// fails or succeeds</summary>
-//        public event EventHandler<GroupOperationEventArgs> GroupMemberEjected
+//        public event EventHandler<GroupOperationEventArgs> GroupMemberEjected 
 //        {
 //            add { lock (m_GroupMemberEjectedLock) { m_GroupMemberEjected += value; } }
 //            remove { lock (m_GroupMemberEjectedLock) { m_GroupMemberEjected -= value; } }
@@ -836,7 +1023,7 @@ public class GroupManager {
 //
 //        /// <summary>Raised when the simulator sends us group notices</summary>
 //        /// <seealso cref="RequestGroupNoticesList"/>
-//        public event EventHandler<GroupNoticesListReplyEventArgs> GroupNoticesListReply
+//        public event EventHandler<GroupNoticesListReplyEventArgs> GroupNoticesListReply 
 //        {
 //            add { lock (m_GroupNoticesListReplyLock) { m_GroupNoticesListReply += value; } }
 //            remove { lock (m_GroupNoticesListReplyLock) { m_GroupNoticesListReply -= value; } }
@@ -859,7 +1046,7 @@ public class GroupManager {
 //        private readonly object m_GroupInvitationLock = new object();
 //
 //        /// <summary>Raised when another agent invites our avatar to join a group</summary>
-//        public event EventHandler<GroupInvitationEventArgs> GroupInvitation
+//        public event EventHandler<GroupInvitationEventArgs> GroupInvitation 
 //        {
 //            add { lock (m_GroupInvitationLock) { m_GroupInvitation += value; } }
 //            remove { lock (m_GroupInvitationLock) { m_GroupInvitation -= value; } }
@@ -870,1348 +1057,1207 @@ public class GroupManager {
 //
 //        //endregion Events
 //
-//        /// <summary>A reference to the current <seealso cref="GridClient"/> instance</summary>
-//        private GridClient Client;
-//        /// <summary>Currently-active group members requests</summary>
-//        private List<UUID> GroupMembersRequests;
-//        /// <summary>Currently-active group roles requests</summary>
-//        private List<UUID> GroupRolesRequests;
-//        /// <summary>Currently-active group role-member requests</summary>
-//        private List<UUID> GroupRolesMembersRequests;
-//        /// <summary>Dictionary keeping group members while request is in progress</summary>
-//        private InternalDictionary<UUID, Dictionary<UUID, GroupMember>> TempGroupMembers;
-//        /// <summary>Dictionary keeping mebmer/role mapping while request is in progress</summary>
-//        private InternalDictionary<UUID, List<KeyValuePair<UUID, UUID>>> TempGroupRolesMembers;
-//        /// <summary>Dictionary keeping GroupRole information while request is in progress</summary>
-//        private InternalDictionary<UUID, Dictionary<UUID, GroupRole>> TempGroupRoles;
-//        /// <summary>Caches group name lookups</summary>
-//        public InternalDictionary<UUID, string> GroupName2KeyCache;
-//
-//        /// <summary>
-//        /// Construct a new instance of the GroupManager class
-//        /// </summary>
-//        /// <param name="client">A reference to the current <seealso cref="GridClient"/> instance</param>
-//        public GroupManager(GridClient client)
-//        {
-//            Client = client;
-//
-//            TempGroupMembers = new InternalDictionary<UUID, Dictionary<UUID, GroupMember>>();
-//            GroupMembersRequests = new List<UUID>();
-//            TempGroupRoles = new InternalDictionary<UUID, Dictionary<UUID, GroupRole>>();
-//            GroupRolesRequests = new List<UUID>();
-//            TempGroupRolesMembers = new InternalDictionary<UUID, List<KeyValuePair<UUID, UUID>>>();
-//            GroupRolesMembersRequests = new List<UUID>();
-//            GroupName2KeyCache = new InternalDictionary<UUID, string>();
-//
-//            Client.Self.IM += Self_IM;
-//
-//            Client.Network.RegisterEventCallback("AgentGroupDataUpdate", new Caps.EventQueueCallback(AgentGroupDataUpdateMessageHandler));            
-//            // deprecated in simulator v1.27
-//            Client.Network.RegisterCallback(PacketType.AgentDropGroup, AgentDropGroupHandler);
-//            Client.Network.RegisterCallback(PacketType.GroupTitlesReply, GroupTitlesReplyHandler);
-//            Client.Network.RegisterCallback(PacketType.GroupProfileReply, GroupProfileReplyHandler);
-//            Client.Network.RegisterCallback(PacketType.GroupMembersReply, GroupMembersHandler);
-//            Client.Network.RegisterCallback(PacketType.GroupRoleDataReply, GroupRoleDataReplyHandler);
-//            Client.Network.RegisterCallback(PacketType.GroupRoleMembersReply, GroupRoleMembersReplyHandler);
-//            Client.Network.RegisterCallback(PacketType.GroupActiveProposalItemReply, GroupActiveProposalItemHandler);
-//            Client.Network.RegisterCallback(PacketType.GroupVoteHistoryItemReply, GroupVoteHistoryItemHandler);
-//            Client.Network.RegisterCallback(PacketType.GroupAccountSummaryReply, GroupAccountSummaryReplyHandler);
-//            Client.Network.RegisterCallback(PacketType.CreateGroupReply, CreateGroupReplyHandler);
-//            Client.Network.RegisterCallback(PacketType.JoinGroupReply, JoinGroupReplyHandler);
-//            Client.Network.RegisterCallback(PacketType.LeaveGroupReply, LeaveGroupReplyHandler);
-//            Client.Network.RegisterCallback(PacketType.UUIDGroupNameReply, UUIDGroupNameReplyHandler);
-//            Client.Network.RegisterCallback(PacketType.EjectGroupMemberReply, EjectGroupMemberReplyHandler);
-//            Client.Network.RegisterCallback(PacketType.GroupNoticesListReply, GroupNoticesListReplyHandler);            
-//
-//            Client.Network.RegisterEventCallback("AgentDropGroup", new Caps.EventQueueCallback(AgentDropGroupMessageHandler));
-//        }
-//
-//        void Self_IM(object sender, InstantMessageEventArgs e)
-//        {
-//            if(m_GroupInvitation != null && e.IM.Dialog == InstantMessageDialog.GroupInvitation)
-//            {
-//                GroupInvitationEventArgs args = new GroupInvitationEventArgs(e.Simulator, e.IM.FromAgentID, e.IM.FromAgentName, e.IM.Message);
-//                OnGroupInvitation(args);
-//
-//                if (args.Accept)
-//                {
-//                    Client.Self.InstantMessage("name", e.IM.FromAgentID, "message", e.IM.IMSessionID, InstantMessageDialog.GroupInvitationAccept,
-//                         InstantMessageOnline.Online, Client.Self.SimPosition, UUID.Zero, Utils.EmptyBytes);
-//                }
-//                else
-//                {
-//                    Client.Self.InstantMessage("name", e.IM.FromAgentID, "message", e.IM.IMSessionID, InstantMessageDialog.GroupInvitationDecline,
-//                         InstantMessageOnline.Online, Client.Self.SimPosition, UUID.Zero, new byte[1] { 0 });
-//                }            
-//            }
-//        }
-//
-//
-//        //region Public Methods
-//
-//        /// <summary>
-//        /// Request a current list of groups the avatar is a member of.
-//        /// </summary>
-//        /// <remarks>CAPS Event Queue must be running for this to work since the results
-//        /// come across CAPS.</remarks>
-//        public void RequestCurrentGroups()
-//        {
-//            AgentDataUpdateRequestPacket request = new AgentDataUpdateRequestPacket();
-//
-//            request.AgentData.AgentID = Client.Self.AgentID;
-//            request.AgentData.SessionID = Client.Self.SessionID;
-//
-//            Client.Network.SendPacket(request);
-//        }
-//
-//        /// <summary>
-//        /// Lookup name of group based on groupID
-//        /// </summary>
-//        /// <param name="groupID">groupID of group to lookup name for.</param>
-//        public void RequestGroupName(UUID groupID)
-//        {
-//            // if we already have this in the cache, return from cache instead of making a request
-//            if (GroupName2KeyCache.ContainsKey(groupID))
-//            {
-//                Dictionary<UUID, string> groupNames = new Dictionary<UUID, string>();
-//                lock (GroupName2KeyCache.Dictionary)
-//                    groupNames.Add(groupID, GroupName2KeyCache.Dictionary[groupID]);
-//
-//                if (m_GroupNames != null)
-//                {
-//                    OnGroupNamesReply(new GroupNamesEventArgs(groupNames));
-//                }
-//            }
-//
-//            else
-//            {
-//                UUIDGroupNameRequestPacket req = new UUIDGroupNameRequestPacket();
-//                UUIDGroupNameRequestPacket.UUIDNameBlockBlock[] block = new UUIDGroupNameRequestPacket.UUIDNameBlockBlock[1];
-//                block[0] = new UUIDGroupNameRequestPacket.UUIDNameBlockBlock();
-//                block[0].ID = groupID;
-//                req.UUIDNameBlock = block;
-//                Client.Network.SendPacket(req);
-//            }
-//        }
-//
-//        /// <summary>
-//        /// Request lookup of multiple group names
-//        /// </summary>
-//        /// <param name="groupIDs">List of group IDs to request.</param>
-//        public void RequestGroupNames(List<UUID> groupIDs)
-//        {
-//            Dictionary<UUID, string> groupNames = new Dictionary<UUID, string>();
-//            lock (GroupName2KeyCache.Dictionary)
-//            {
-//                foreach (UUID groupID in groupIDs)
-//                {
-//                    if (GroupName2KeyCache.ContainsKey(groupID))
-//                        groupNames[groupID] = GroupName2KeyCache.Dictionary[groupID];
-//                }
-//            }
-//
-//            if (groupIDs.Count > 0)
-//            {
-//                UUIDGroupNameRequestPacket req = new UUIDGroupNameRequestPacket();
-//                UUIDGroupNameRequestPacket.UUIDNameBlockBlock[] block = new UUIDGroupNameRequestPacket.UUIDNameBlockBlock[groupIDs.Count];
-//
-//                for (int i = 0; i < groupIDs.Count; i++)
-//                {
-//                    block[i] = new UUIDGroupNameRequestPacket.UUIDNameBlockBlock();
-//                    block[i].ID = groupIDs[i];
-//                }
-//
-//                req.UUIDNameBlock = block;
-//                Client.Network.SendPacket(req);
-//            }
-//
-//            // fire handler from cache
-//            if (groupNames.Count > 0 && m_GroupNames != null)
-//            {
-//                OnGroupNamesReply(new GroupNamesEventArgs(groupNames));
-//            }
-//        }
-//
-//        /// <summary>Lookup group profile data such as name, enrollment, founder, logo, etc</summary>
-//        /// <remarks>Subscribe to <code>OnGroupProfile</code> event to receive the results.</remarks>
-//        /// <param name="group">group ID (UUID)</param>
-//        public void RequestGroupProfile(UUID group)
-//        {
-//            GroupProfileRequestPacket request = new GroupProfileRequestPacket();
-//
-//            request.AgentData.AgentID = Client.Self.AgentID;
-//            request.AgentData.SessionID = Client.Self.SessionID;
-//            request.GroupData.GroupID = group;
-//
-//            Client.Network.SendPacket(request);
-//        }
-//
-//        /// <summary>Request a list of group members.</summary>
-//        /// <remarks>Subscribe to <code>OnGroupMembers</code> event to receive the results.</remarks>
-//        /// <param name="group">group ID (UUID)</param>
-//        /// <returns>UUID of the request, use to index into cache</returns>
-//        public UUID RequestGroupMembers(UUID group)
-//        {
-//            UUID requestID = UUID.Random();
-//            lock (GroupMembersRequests) GroupMembersRequests.Add(requestID);
-//
-//            GroupMembersRequestPacket request = new GroupMembersRequestPacket();
-//
-//            request.AgentData.AgentID = Client.Self.AgentID;
-//            request.AgentData.SessionID = Client.Self.SessionID;
-//            request.GroupData.GroupID = group;
-//            request.GroupData.RequestID = requestID;
-//
-//            Client.Network.SendPacket(request);
-//            return requestID;
-//        }
-//
-//        /// <summary>Request group roles</summary>
-//        /// <remarks>Subscribe to <code>OnGroupRoles</code> event to receive the results.</remarks>
-//        /// <param name="group">group ID (UUID)</param>
-//        /// <returns>UUID of the request, use to index into cache</returns>
-//        public UUID RequestGroupRoles(UUID group)
-//        {
-//            UUID requestID = UUID.Random();
-//            lock (GroupRolesRequests) GroupRolesRequests.Add(requestID);
-//
-//            GroupRoleDataRequestPacket request = new GroupRoleDataRequestPacket();
-//
-//            request.AgentData.AgentID = Client.Self.AgentID;
-//            request.AgentData.SessionID = Client.Self.SessionID;
-//            request.GroupData.GroupID = group;
-//            request.GroupData.RequestID = requestID;
-//
-//            Client.Network.SendPacket(request);
-//            return requestID;
-//        }
-//
-//        /// <summary>Request members (members,role) role mapping for a group.</summary>
-//        /// <remarks>Subscribe to <code>OnGroupRolesMembers</code> event to receive the results.</remarks>
-//        /// <param name="group">group ID (UUID)</param>
-//        /// <returns>UUID of the request, use to index into cache</returns>
-//        public UUID RequestGroupRolesMembers(UUID group)
-//        {
-//            UUID requestID = UUID.Random();
-//            lock (GroupRolesRequests) GroupRolesMembersRequests.Add(requestID);
-//
-//            GroupRoleMembersRequestPacket request = new GroupRoleMembersRequestPacket();
-//            request.AgentData.AgentID = Client.Self.AgentID;
-//            request.AgentData.SessionID = Client.Self.SessionID;
-//            request.GroupData.GroupID = group;
-//            request.GroupData.RequestID = requestID;
-//            Client.Network.SendPacket(request);
-//            return requestID;
-//        }
-//
-//        /// <summary>Request a groups Titles</summary>
-//        /// <remarks>Subscribe to <code>OnGroupTitles</code> event to receive the results.</remarks>
-//        /// <param name="group">group ID (UUID)</param>
-//        /// <returns>UUID of the request, use to index into cache</returns>
-//        public UUID RequestGroupTitles(UUID group)
-//        {
-//            UUID requestID = UUID.Random();
-//
-//            GroupTitlesRequestPacket request = new GroupTitlesRequestPacket();
-//
-//            request.AgentData.AgentID = Client.Self.AgentID;
-//            request.AgentData.SessionID = Client.Self.SessionID;
-//            request.AgentData.GroupID = group;
-//            request.AgentData.RequestID = requestID;
-//
-//            Client.Network.SendPacket(request);
-//            return requestID;
-//        }
-//
-//        /// <summary>Begin to get the group account summary</summary>
-//        /// <remarks>Subscribe to the <code>OnGroupAccountSummary</code> event to receive the results.</remarks>
-//        /// <param name="group">group ID (UUID)</param>
-//        /// <param name="intervalDays">How long of an interval</param>
-//        /// <param name="currentInterval">Which interval (0 for current, 1 for last)</param>
-//        public void RequestGroupAccountSummary(UUID group, int intervalDays, int currentInterval)
-//        {
-//            GroupAccountSummaryRequestPacket p = new GroupAccountSummaryRequestPacket();
-//            p.AgentData.AgentID = Client.Self.AgentID;
-//            p.AgentData.SessionID = Client.Self.SessionID;
-//            p.AgentData.GroupID = group;
-//            p.MoneyData.RequestID = UUID.Random();
-//            p.MoneyData.CurrentInterval = currentInterval;
-//            p.MoneyData.IntervalDays = intervalDays;
-//            Client.Network.SendPacket(p);
-//        }
-//
-//        /// <summary>Invites a user to a group</summary>
-//        /// <param name="group">The group to invite to</param>
-//        /// <param name="roles">A list of roles to invite a person to</param>
-//        /// <param name="personkey">Key of person to invite</param>
-//        public void Invite(UUID group, List<UUID> roles, UUID personkey)
-//        {
-//            InviteGroupRequestPacket igp = new InviteGroupRequestPacket();
-//
-//            igp.AgentData = new InviteGroupRequestPacket.AgentDataBlock();
-//            igp.AgentData.AgentID = Client.Self.AgentID;
-//            igp.AgentData.SessionID = Client.Self.SessionID;
-//
-//            igp.GroupData = new InviteGroupRequestPacket.GroupDataBlock();
-//            igp.GroupData.GroupID = group;
-//
-//            igp.InviteData = new InviteGroupRequestPacket.InviteDataBlock[roles.Count];
-//
-//            for (int i = 0; i < roles.Count; i++)
-//            {
-//                igp.InviteData[i] = new InviteGroupRequestPacket.InviteDataBlock();
-//                igp.InviteData[i].InviteeID = personkey;
-//                igp.InviteData[i].RoleID = roles[i];
-//            }
-//
-//            Client.Network.SendPacket(igp);
-//        }
-//
-//        /// <summary>Set a group as the current active group</summary>
-//        /// <param name="id">group ID (UUID)</param>
-//        public void ActivateGroup(UUID id)
-//        {
-//            ActivateGroupPacket activate = new ActivateGroupPacket();
-//            activate.AgentData.AgentID = Client.Self.AgentID;
-//            activate.AgentData.SessionID = Client.Self.SessionID;
-//            activate.AgentData.GroupID = id;
-//
-//            Client.Network.SendPacket(activate);
-//        }
-//
-//        /// <summary>Change the role that determines your active title</summary>
-//        /// <param name="group">Group ID to use</param>
-//        /// <param name="role">Role ID to change to</param>
-//        public void ActivateTitle(UUID group, UUID role)
-//        {
-//            GroupTitleUpdatePacket gtu = new GroupTitleUpdatePacket();
-//            gtu.AgentData.AgentID = Client.Self.AgentID;
-//            gtu.AgentData.SessionID = Client.Self.SessionID;
-//            gtu.AgentData.TitleRoleID = role;
-//            gtu.AgentData.GroupID = group;
-//
-//            Client.Network.SendPacket(gtu);
-//        }
-//
-//        /// <summary>Set this avatar's tier contribution</summary>
-//        /// <param name="group">Group ID to change tier in</param>
-//        /// <param name="contribution">amount of tier to donate</param>
-//        public void SetGroupContribution(UUID group, int contribution)
-//        {
-//            SetGroupContributionPacket sgp = new SetGroupContributionPacket();
-//            sgp.AgentData.AgentID = Client.Self.AgentID;
-//            sgp.AgentData.SessionID = Client.Self.SessionID;
-//            sgp.Data.GroupID = group;
-//            sgp.Data.Contribution = contribution;
-//
-//            Client.Network.SendPacket(sgp);
-//        }
-//
-//        /// <summary>
-//        /// Save wheather agent wants to accept group notices and list this group in their profile
-//        /// </summary>
-//        /// <param name="groupID">Group <see cref="UUID"/></param>
-//        /// <param name="acceptNotices">Accept notices from this group</param>
-//        /// <param name="listInProfile">List this group in the profile</param>
-//        public void SetGroupAcceptNotices(UUID groupID, bool acceptNotices, bool listInProfile)
-//        {
-//            SetGroupAcceptNoticesPacket p = new SetGroupAcceptNoticesPacket();
-//            p.AgentData.AgentID = Client.Self.AgentID;
-//            p.AgentData.SessionID = Client.Self.SessionID;
-//            p.Data.GroupID = groupID;
-//            p.Data.AcceptNotices = acceptNotices;
-//            p.NewData.ListInProfile = listInProfile;
-//
-//            Client.Network.SendPacket(p);
-//        }
-//
-//        /// <summary>Request to join a group</summary>
-//        /// <remarks>Subscribe to <code>OnGroupJoined</code> event for confirmation.</remarks>
-//        /// <param name="id">group ID (UUID) to join.</param>
-//        public void RequestJoinGroup(UUID id)
-//        {
-//            JoinGroupRequestPacket join = new JoinGroupRequestPacket();
-//            join.AgentData.AgentID = Client.Self.AgentID;
-//            join.AgentData.SessionID = Client.Self.SessionID;
-//
-//            join.GroupData.GroupID = id;
-//
-//            Client.Network.SendPacket(join);
-//        }
-//
-//        /// <summary>
-//        /// Request to create a new group. If the group is successfully
-//        /// created, L$100 will automatically be deducted
-//        /// </summary>
-//        /// <remarks>Subscribe to <code>OnGroupCreated</code> event to receive confirmation.</remarks>
-//        /// <param name="group">Group struct containing the new group info</param>
-//        public void RequestCreateGroup(Group group)
-//        {
-//            OpenMetaverse.Packets.CreateGroupRequestPacket cgrp = new CreateGroupRequestPacket();
-//            cgrp.AgentData = new CreateGroupRequestPacket.AgentDataBlock();
-//            cgrp.AgentData.AgentID = Client.Self.AgentID;
-//            cgrp.AgentData.SessionID = Client.Self.SessionID;
-//
-//            cgrp.GroupData = new CreateGroupRequestPacket.GroupDataBlock();
-//            cgrp.GroupData.AllowPublish = group.AllowPublish;
-//            cgrp.GroupData.Charter = Utils.StringToBytes(group.Charter);
-//            cgrp.GroupData.InsigniaID = group.InsigniaID;
-//            cgrp.GroupData.MaturePublish = group.MaturePublish;
-//            cgrp.GroupData.MembershipFee = group.MembershipFee;
-//            cgrp.GroupData.Name = Utils.StringToBytes(group.Name);
-//            cgrp.GroupData.OpenEnrollment = group.OpenEnrollment;
-//            cgrp.GroupData.ShowInList = group.ShowInList;
-//
-//            Client.Network.SendPacket(cgrp);
-//        }
-//
-//        /// <summary>Update a group's profile and other information</summary>
-//        /// <param name="id">Groups ID (UUID) to update.</param>
-//        /// <param name="group">Group struct to update.</param>
-//        public void UpdateGroup(UUID id, Group group)
-//        {
-//            OpenMetaverse.Packets.UpdateGroupInfoPacket cgrp = new UpdateGroupInfoPacket();
-//            cgrp.AgentData = new UpdateGroupInfoPacket.AgentDataBlock();
-//            cgrp.AgentData.AgentID = Client.Self.AgentID;
-//            cgrp.AgentData.SessionID = Client.Self.SessionID;
-//
-//            cgrp.GroupData = new UpdateGroupInfoPacket.GroupDataBlock();
-//            cgrp.GroupData.GroupID = id;
-//            cgrp.GroupData.AllowPublish = group.AllowPublish;
-//            cgrp.GroupData.Charter = Utils.StringToBytes(group.Charter);
-//            cgrp.GroupData.InsigniaID = group.InsigniaID;
-//            cgrp.GroupData.MaturePublish = group.MaturePublish;
-//            cgrp.GroupData.MembershipFee = group.MembershipFee;
-//            cgrp.GroupData.OpenEnrollment = group.OpenEnrollment;
-//            cgrp.GroupData.ShowInList = group.ShowInList;
-//
-//            Client.Network.SendPacket(cgrp);
-//        }
-//
-//        /// <summary>Eject a user from a group</summary>
-//        /// <param name="group">Group ID to eject the user from</param>
-//        /// <param name="member">Avatar's key to eject</param>
-//        public void EjectUser(UUID group, UUID member)
-//        {
-//            OpenMetaverse.Packets.EjectGroupMemberRequestPacket eject = new EjectGroupMemberRequestPacket();
-//            eject.AgentData = new EjectGroupMemberRequestPacket.AgentDataBlock();
-//            eject.AgentData.AgentID = Client.Self.AgentID;
-//            eject.AgentData.SessionID = Client.Self.SessionID;
-//
-//            eject.GroupData = new EjectGroupMemberRequestPacket.GroupDataBlock();
-//            eject.GroupData.GroupID = group;
-//
-//            eject.EjectData = new EjectGroupMemberRequestPacket.EjectDataBlock[1];
-//            eject.EjectData[0] = new EjectGroupMemberRequestPacket.EjectDataBlock();
-//            eject.EjectData[0].EjecteeID = member;
-//
-//            Client.Network.SendPacket(eject);
-//        }
-//
-//        /// <summary>Update role information</summary>
-//        /// <param name="role">Modified role to be updated</param>
-//        public void UpdateRole(GroupRole role)
-//        {
-//            OpenMetaverse.Packets.GroupRoleUpdatePacket gru = new GroupRoleUpdatePacket();
-//            gru.AgentData.AgentID = Client.Self.AgentID;
-//            gru.AgentData.SessionID = Client.Self.SessionID;
-//            gru.AgentData.GroupID = role.GroupID;
-//            gru.RoleData = new GroupRoleUpdatePacket.RoleDataBlock[1];
-//            gru.RoleData[0] = new GroupRoleUpdatePacket.RoleDataBlock();
-//            gru.RoleData[0].Name = Utils.StringToBytes(role.Name);
-//            gru.RoleData[0].Description = Utils.StringToBytes(role.Description);
-//            gru.RoleData[0].Powers = (ulong)role.Powers;
-//            gru.RoleData[0].RoleID = role.ID;
-//            gru.RoleData[0].Title = Utils.StringToBytes(role.Title);
-//            gru.RoleData[0].UpdateType = (byte)GroupRoleUpdate.UpdateAll;
-//            Client.Network.SendPacket(gru);
-//        }
-//
-//        /// <summary>Create a new group role</summary>
-//        /// <param name="group">Group ID to update</param>
-//        /// <param name="role">Role to create</param>
-//        public void CreateRole(UUID group, GroupRole role)
-//        {
-//            OpenMetaverse.Packets.GroupRoleUpdatePacket gru = new GroupRoleUpdatePacket();
-//            gru.AgentData.AgentID = Client.Self.AgentID;
-//            gru.AgentData.SessionID = Client.Self.SessionID;
-//            gru.AgentData.GroupID = group;
-//            gru.RoleData = new GroupRoleUpdatePacket.RoleDataBlock[1];
-//            gru.RoleData[0] = new GroupRoleUpdatePacket.RoleDataBlock();
-//            gru.RoleData[0].RoleID = UUID.Random();
-//            gru.RoleData[0].Name = Utils.StringToBytes(role.Name);
-//            gru.RoleData[0].Description = Utils.StringToBytes(role.Description);
-//            gru.RoleData[0].Powers = (ulong)role.Powers;
-//            gru.RoleData[0].Title = Utils.StringToBytes(role.Title);
-//            gru.RoleData[0].UpdateType = (byte)GroupRoleUpdate.Create;
-//            Client.Network.SendPacket(gru);
-//        }
-//
-//        /// <summary>Delete a group role</summary>
-//        /// <param name="group">Group ID to update</param>
-//        /// <param name="roleID">Role to delete</param>
-//        public void DeleteRole(UUID group, UUID roleID)
-//        {
-//            OpenMetaverse.Packets.GroupRoleUpdatePacket gru = new GroupRoleUpdatePacket();
-//            gru.AgentData.AgentID = Client.Self.AgentID;
-//            gru.AgentData.SessionID = Client.Self.SessionID;
-//            gru.AgentData.GroupID = group;
-//            gru.RoleData = new GroupRoleUpdatePacket.RoleDataBlock[1];
-//            gru.RoleData[0] = new GroupRoleUpdatePacket.RoleDataBlock();
-//            gru.RoleData[0].RoleID = roleID;
-//            gru.RoleData[0].Name = Utils.StringToBytes(string.Empty);
-//            gru.RoleData[0].Description = Utils.StringToBytes(string.Empty);
-//            gru.RoleData[0].Powers = 0u;
-//            gru.RoleData[0].Title = Utils.StringToBytes(string.Empty);
-//            gru.RoleData[0].UpdateType = (byte)GroupRoleUpdate.Delete;
-//            Client.Network.SendPacket(gru);
-//        }
-//
-//        /// <summary>Remove an avatar from a role</summary>
-//        /// <param name="group">Group ID to update</param>
-//        /// <param name="role">Role ID to be removed from</param>
-//        /// <param name="member">Avatar's Key to remove</param>
-//        public void RemoveFromRole(UUID group, UUID role, UUID member)
-//        {
-//            OpenMetaverse.Packets.GroupRoleChangesPacket grc = new GroupRoleChangesPacket();
-//            grc.AgentData.AgentID = Client.Self.AgentID;
-//            grc.AgentData.SessionID = Client.Self.SessionID;
-//            grc.AgentData.GroupID = group;
-//            grc.RoleChange = new GroupRoleChangesPacket.RoleChangeBlock[1];
-//            grc.RoleChange[0] = new GroupRoleChangesPacket.RoleChangeBlock();
-//            //Add to members and role
-//            grc.RoleChange[0].MemberID = member;
-//            grc.RoleChange[0].RoleID = role;
-//            //1 = Remove From Role TODO: this should be in an enum
-//            grc.RoleChange[0].Change = 1;
-//            Client.Network.SendPacket(grc);
-//        }
-//
-//        /// <summary>Assign an avatar to a role</summary>
-//        /// <param name="group">Group ID to update</param>
-//        /// <param name="role">Role ID to assign to</param>
-//        /// <param name="member">Avatar's ID to assign to role</param>
-//        public void AddToRole(UUID group, UUID role, UUID member)
-//        {
-//            OpenMetaverse.Packets.GroupRoleChangesPacket grc = new GroupRoleChangesPacket();
-//            grc.AgentData.AgentID = Client.Self.AgentID;
-//            grc.AgentData.SessionID = Client.Self.SessionID;
-//            grc.AgentData.GroupID = group;
-//            grc.RoleChange = new GroupRoleChangesPacket.RoleChangeBlock[1];
-//            grc.RoleChange[0] = new GroupRoleChangesPacket.RoleChangeBlock();
-//            //Add to members and role
-//            grc.RoleChange[0].MemberID = member;
-//            grc.RoleChange[0].RoleID = role;
-//            //0 = Add to Role TODO: this should be in an enum
-//            grc.RoleChange[0].Change = 0;
-//            Client.Network.SendPacket(grc);
-//        }
-//
-//        /// <summary>Request the group notices list</summary>
-//        /// <param name="group">Group ID to fetch notices for</param>
-//        public void RequestGroupNoticesList(UUID group)
-//        {
-//            OpenMetaverse.Packets.GroupNoticesListRequestPacket gnl = new GroupNoticesListRequestPacket();
-//            gnl.AgentData.AgentID = Client.Self.AgentID;
-//            gnl.AgentData.SessionID = Client.Self.SessionID;
-//            gnl.Data.GroupID = group;
-//            Client.Network.SendPacket(gnl);
-//        }
-//
-//        /// <summary>Request a group notice by key</summary>
-//        /// <param name="noticeID">ID of group notice</param>
-//        public void RequestGroupNotice(UUID noticeID)
-//        {
-//            OpenMetaverse.Packets.GroupNoticeRequestPacket gnr = new GroupNoticeRequestPacket();
-//            gnr.AgentData.AgentID = Client.Self.AgentID;
-//            gnr.AgentData.SessionID = Client.Self.SessionID;
-//            gnr.Data.GroupNoticeID = noticeID;
-//            Client.Network.SendPacket(gnr);
-//        }
-//        
-//        /// <summary>Send out a group notice</summary>
-//        /// <param name="group">Group ID to update</param>
-//        /// <param name="notice"><code>GroupNotice</code> structure containing notice data</param>
-//        public void SendGroupNotice(UUID group, GroupNotice notice)
-//        {
-//            Client.Self.InstantMessage(Client.Self.Name, group, notice.Subject + "|" + notice.Message,
-//                UUID.Zero, InstantMessageDialog.GroupNotice, InstantMessageOnline.Online,
-//                Vector3.Zero, UUID.Zero, notice.SerializeAttachment());
-//        }
-//
-//        /// <summary>Start a group proposal (vote)</summary>
-//        /// <param name="group">The Group ID to send proposal to</param>
-//        /// <param name="prop"><code>GroupProposal</code> structure containing the proposal</param>
-//        public void StartProposal(UUID group, GroupProposal prop)
-//        {
-//            StartGroupProposalPacket p = new StartGroupProposalPacket();
-//            p.AgentData.AgentID = Client.Self.AgentID;
-//            p.AgentData.SessionID = Client.Self.SessionID;
-//            p.ProposalData.GroupID = group;
-//            p.ProposalData.ProposalText = Utils.StringToBytes(prop.VoteText);
-//            p.ProposalData.Quorum = prop.Quorum;
-//            p.ProposalData.Majority = prop.Majority;
-//            p.ProposalData.Duration = prop.Duration;
-//            Client.Network.SendPacket(p);
-//        }
-//
-//        /// <summary>Request to leave a group</summary>
-//        /// <remarks>Subscribe to <code>OnGroupLeft</code> event to receive confirmation</remarks>
-//        /// <param name="groupID">The group to leave</param>
-//        public void LeaveGroup(UUID groupID)
-//        {
-//            LeaveGroupRequestPacket p = new LeaveGroupRequestPacket();
-//            p.AgentData.AgentID = Client.Self.AgentID;
-//            p.AgentData.SessionID = Client.Self.SessionID;
-//            p.GroupData.GroupID = groupID;
-//
-//            Client.Network.SendPacket(p);
-//        }
-////endregion
-//
-//        //region Packet Handlers
-//        
-//        protected void AgentGroupDataUpdateMessageHandler(string capsKey, IMessage message, Simulator simulator)
-//        {      
-//            if (m_CurrentGroups != null)
-//            {
-//                AgentGroupDataUpdateMessage msg = (AgentGroupDataUpdateMessage)message;
-//
-//                Dictionary<UUID, Group> currentGroups = new Dictionary<UUID, Group>();
-//                for (int i = 0; i < msg.GroupDataBlock.Length; i++)
-//                {
-//                    Group group = new Group();
-//                    group.ID = msg.GroupDataBlock[i].GroupID;
-//                    group.InsigniaID = msg.GroupDataBlock[i].GroupInsigniaID;
-//                    group.Name = msg.GroupDataBlock[i].GroupName;
-//                    group.Contribution = msg.GroupDataBlock[i].Contribution;
-//                    group.AcceptNotices = msg.GroupDataBlock[i].AcceptNotices;
-//                    group.Powers = msg.GroupDataBlock[i].GroupPowers;
-//                    group.ListInProfile = msg.NewGroupDataBlock[i].ListInProfile;
-//
-//                    currentGroups.Add(group.ID, group);
-//
-//                    lock (GroupName2KeyCache.Dictionary)
-//                    {
-//                        if (!GroupName2KeyCache.Dictionary.ContainsKey(group.ID))
-//                            GroupName2KeyCache.Dictionary.Add(group.ID, group.Name);
-//                    }
-//                }
-//                OnCurrentGroups(new CurrentGroupsEventArgs(currentGroups));
-//            }
-//        }
-//
-//        /// <summary>Process an incoming packet and raise the appropriate events</summary>
-//        /// <param name="sender">The sender</param>
-//        /// <param name="e">The EventArgs object containing the packet data</param>
-//        protected void AgentDropGroupHandler(object sender, PacketReceivedEventArgs e)
-//        {
-//            if (m_GroupDropped != null)
-//            {
-//                Packet packet = e.Packet;
-//                OnGroupDropped(new GroupDroppedEventArgs(((AgentDropGroupPacket)packet).AgentData.GroupID));
-//            }
-//        }
-//
-//        protected void AgentDropGroupMessageHandler(string capsKey, IMessage message, Simulator simulator)
-//        {
-//            
-//            if (m_GroupDropped != null)
-//            {
-//                AgentDropGroupMessage msg = (AgentDropGroupMessage)message;
-//                for (int i = 0; i < msg.AgentDataBlock.Length; i++)
-//                {
-//                    OnGroupDropped(new GroupDroppedEventArgs(msg.AgentDataBlock[i].GroupID));
-//                }
-//            }
-//        }
-//
-//        /// <summary>Process an incoming packet and raise the appropriate events</summary>
-//        /// <param name="sender">The sender</param>
-//        /// <param name="e">The EventArgs object containing the packet data</param>
-//        protected void GroupProfileReplyHandler(object sender, PacketReceivedEventArgs e)
-//        {            
-//            if (m_GroupProfile != null)
-//            {
-//                Packet packet = e.Packet;
-//                GroupProfileReplyPacket profile = (GroupProfileReplyPacket)packet;
-//                Group group = new Group();
-//
-//                group.ID = profile.GroupData.GroupID;
-//                group.AllowPublish = profile.GroupData.AllowPublish;
-//                group.Charter = Utils.BytesToString(profile.GroupData.Charter);
-//                group.FounderID = profile.GroupData.FounderID;
-//                group.GroupMembershipCount = profile.GroupData.GroupMembershipCount;
-//                group.GroupRolesCount = profile.GroupData.GroupRolesCount;
-//                group.InsigniaID = profile.GroupData.InsigniaID;
-//                group.MaturePublish = profile.GroupData.MaturePublish;
-//                group.MembershipFee = profile.GroupData.MembershipFee;
-//                group.MemberTitle = Utils.BytesToString(profile.GroupData.MemberTitle);
-//                group.Money = profile.GroupData.Money;
-//                group.Name = Utils.BytesToString(profile.GroupData.Name);
-//                group.OpenEnrollment = profile.GroupData.OpenEnrollment;
-//                group.OwnerRole = profile.GroupData.OwnerRole;
-//                group.Powers = (GroupPowers)profile.GroupData.PowersMask;
-//                group.ShowInList = profile.GroupData.ShowInList;
-//
-//                OnGroupProfile(new GroupProfileEventArgs(group));
-//            }
-//        }
-//
-//        /// <summary>Process an incoming packet and raise the appropriate events</summary>
-//        /// <param name="sender">The sender</param>
-//        /// <param name="e">The EventArgs object containing the packet data</param>
-//        protected void GroupNoticesListReplyHandler(object sender, PacketReceivedEventArgs e)
-//        {
-//            if (m_GroupNoticesListReply != null)
-//            {
-//                Packet packet = e.Packet;
-//                GroupNoticesListReplyPacket reply = (GroupNoticesListReplyPacket)packet;
-//
-//                List<GroupNoticesListEntry> notices = new List<GroupNoticesListEntry>();
-//
-//                foreach (GroupNoticesListReplyPacket.DataBlock entry in reply.Data)
-//                {
-//                    GroupNoticesListEntry notice = new GroupNoticesListEntry();
-//                    notice.FromName = Utils.BytesToString(entry.FromName);
-//                    notice.Subject = Utils.BytesToString(entry.Subject);
-//                    notice.NoticeID = entry.NoticeID;
-//                    notice.Timestamp = entry.Timestamp;
-//                    notice.HasAttachment = entry.HasAttachment;
-//                    notice.AssetType = (AssetType)entry.AssetType;
-//
-//                    notices.Add(notice);
-//                }
-//
-//                OnGroupNoticesListReply(new GroupNoticesListReplyEventArgs(reply.AgentData.GroupID, notices));
-//            }
-//        }
-//
-//        /// <summary>Process an incoming packet and raise the appropriate events</summary>
-//        /// <param name="sender">The sender</param>
-//        /// <param name="e">The EventArgs object containing the packet data</param>
-//        protected void GroupTitlesReplyHandler(object sender, PacketReceivedEventArgs e)
-//        {
-//            if (m_GroupTitles != null)
-//            {
-//                Packet packet = e.Packet;
-//                GroupTitlesReplyPacket titles = (GroupTitlesReplyPacket)packet;
-//                Dictionary<UUID, GroupTitle> groupTitleCache = new Dictionary<UUID, GroupTitle>();
-//
-//                foreach (GroupTitlesReplyPacket.GroupDataBlock block in titles.GroupData)
-//                {
-//                    GroupTitle groupTitle = new GroupTitle();
-//
-//                    groupTitle.GroupID = titles.AgentData.GroupID;
-//                    groupTitle.RoleID = block.RoleID;
-//                    groupTitle.Title = Utils.BytesToString(block.Title);
-//                    groupTitle.Selected = block.Selected;
-//
-//                    groupTitleCache[block.RoleID] = groupTitle;
-//                }
-//                OnGroupTitles(new GroupTitlesReplyEventArgs(titles.AgentData.RequestID, titles.AgentData.GroupID, groupTitleCache));
-//            }
-//        }
-//
-//        /// <summary>Process an incoming packet and raise the appropriate events</summary>
-//        /// <param name="sender">The sender</param>
-//        /// <param name="e">The EventArgs object containing the packet data</param>
-//        protected void GroupMembersHandler(object sender, PacketReceivedEventArgs e)
-//        {
-//            Packet packet = e.Packet;
-//            GroupMembersReplyPacket members = (GroupMembersReplyPacket)packet;
-//            Dictionary<UUID, GroupMember> groupMemberCache = null;
-//
-//            lock (GroupMembersRequests)
-//            {
-//                // If nothing is registered to receive this RequestID drop the data
-//                if (GroupMembersRequests.Contains(members.GroupData.RequestID))
-//                {
-//                    lock (TempGroupMembers.Dictionary)
-//                    {
-//                        if (!TempGroupMembers.TryGetValue(members.GroupData.RequestID, out groupMemberCache))
-//                        {
-//                            groupMemberCache = new Dictionary<UUID, GroupMember>();
-//                            TempGroupMembers[members.GroupData.RequestID] = groupMemberCache;
-//                        }
-//
-//                        foreach (GroupMembersReplyPacket.MemberDataBlock block in members.MemberData)
-//                        {
-//                            GroupMember groupMember = new GroupMember();
-//
-//                            groupMember.ID = block.AgentID;
-//                            groupMember.Contribution = block.Contribution;
-//                            groupMember.IsOwner = block.IsOwner;
-//                            groupMember.OnlineStatus = Utils.BytesToString(block.OnlineStatus);
-//                            groupMember.Powers = (GroupPowers)block.AgentPowers;
-//                            groupMember.Title = Utils.BytesToString(block.Title);
-//
-//                            groupMemberCache[block.AgentID] = groupMember;
-//                        }
-//
-//                        if (groupMemberCache.Count >= members.GroupData.MemberCount)
-//                        {
-//                            GroupMembersRequests.Remove(members.GroupData.RequestID);
-//                            TempGroupMembers.Remove(members.GroupData.RequestID);
-//                        }
-//                    }
-//                }
-//            }
-//
-//            if (m_GroupMembers != null && groupMemberCache != null && groupMemberCache.Count >= members.GroupData.MemberCount)
-//            {
-//                OnGroupMembersReply(new GroupMembersReplyEventArgs(members.GroupData.RequestID, members.GroupData.GroupID, groupMemberCache));
-//            }
-//        }
-//
-//        /// <summary>Process an incoming packet and raise the appropriate events</summary>
-//        /// <param name="sender">The sender</param>
-//        /// <param name="e">The EventArgs object containing the packet data</param>
-//        protected void GroupRoleDataReplyHandler(object sender, PacketReceivedEventArgs e)
-//        {
-//            Packet packet = e.Packet;
-//            GroupRoleDataReplyPacket roles = (GroupRoleDataReplyPacket)packet;
-//            Dictionary<UUID, GroupRole> groupRoleCache = null;
-//
-//            lock (GroupRolesRequests)
-//            {
-//                // If nothing is registered to receive this RequestID drop the data
-//                if (GroupRolesRequests.Contains(roles.GroupData.RequestID))
-//                {
-//                    GroupRolesRequests.Remove(roles.GroupData.RequestID);
-//
-//                    lock (TempGroupRoles.Dictionary)
-//                    {
-//                        if (!TempGroupRoles.TryGetValue(roles.GroupData.RequestID, out groupRoleCache))
-//                        {
-//                            groupRoleCache = new Dictionary<UUID, GroupRole>();
-//                            TempGroupRoles[roles.GroupData.RequestID] = groupRoleCache;
-//                        }
-//
-//                        foreach (GroupRoleDataReplyPacket.RoleDataBlock block in roles.RoleData)
-//                        {
-//                            GroupRole groupRole = new GroupRole();
-//
-//                            groupRole.GroupID = roles.GroupData.GroupID;
-//                            groupRole.ID = block.RoleID;
-//                            groupRole.Description = Utils.BytesToString(block.Description);
-//                            groupRole.Name = Utils.BytesToString(block.Name);
-//                            groupRole.Powers = (GroupPowers)block.Powers;
-//                            groupRole.Title = Utils.BytesToString(block.Title);
-//
-//                            groupRoleCache[block.RoleID] = groupRole;
-//                        }
-//
-//                        if (groupRoleCache.Count >= roles.GroupData.RoleCount)
-//                        {
-//                            GroupRolesRequests.Remove(roles.GroupData.RequestID);
-//                            TempGroupRoles.Remove(roles.GroupData.RequestID);
-//                        }
-//                    }
-//                }
-//            }
-//
-//            if (m_GroupRoles != null && groupRoleCache != null && groupRoleCache.Count >= roles.GroupData.RoleCount)
-//            {
-//                OnGroupRoleDataReply(new GroupRolesDataReplyEventArgs(roles.GroupData.RequestID, roles.GroupData.GroupID, groupRoleCache));
-//            }
-//        }
-//
-//        /// <summary>Process an incoming packet and raise the appropriate events</summary>
-//        /// <param name="sender">The sender</param>
-//        /// <param name="e">The EventArgs object containing the packet data</param>
-//        protected void GroupRoleMembersReplyHandler(object sender, PacketReceivedEventArgs e)
-//        {
-//            Packet packet = e.Packet;
-//            GroupRoleMembersReplyPacket members = (GroupRoleMembersReplyPacket)packet;
-//            List<KeyValuePair<UUID, UUID>> groupRoleMemberCache = null;
-//
-//            try
-//            {
-//                lock (GroupRolesMembersRequests)
-//                {
-//                    // If nothing is registered to receive this RequestID drop the data
-//                    if (GroupRolesMembersRequests.Contains(members.AgentData.RequestID))
-//                    {
-//                        lock (TempGroupRolesMembers.Dictionary)
-//                        {
-//                            if (!TempGroupRolesMembers.TryGetValue(members.AgentData.RequestID, out groupRoleMemberCache))
-//                            {
-//                                groupRoleMemberCache = new List<KeyValuePair<UUID, UUID>>();
-//                                TempGroupRolesMembers[members.AgentData.RequestID] = groupRoleMemberCache;
-//                            }
-//
-//                            foreach (GroupRoleMembersReplyPacket.MemberDataBlock block in members.MemberData)
-//                            {
-//                                KeyValuePair<UUID, UUID> rolemember =
-//                                    new KeyValuePair<UUID, UUID>(block.RoleID, block.MemberID);
-//
-//                                groupRoleMemberCache.Add(rolemember);
-//                            }
-//
-//                            if (groupRoleMemberCache.Count >= members.AgentData.TotalPairs)
-//                            {
-//                                GroupRolesMembersRequests.Remove(members.AgentData.RequestID);
-//                                TempGroupRolesMembers.Remove(members.AgentData.RequestID);
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//            catch (Exception ex)
-//            {
-//                Logger.Log(ex.Message, Helpers.LogLevel.Error, Client, ex);
-//            }
-//
-//            if (m_GroupRoleMembers != null && groupRoleMemberCache != null && groupRoleMemberCache.Count >= members.AgentData.TotalPairs)
-//            {
-//                OnGroupRoleMembers(new GroupRolesMembersReplyEventArgs(members.AgentData.RequestID, members.AgentData.GroupID, groupRoleMemberCache));
-//            }
-//        }
-//
-//        /// <summary>Process an incoming packet and raise the appropriate events</summary>
-//        /// <param name="sender">The sender</param>
-//        /// <param name="e">The EventArgs object containing the packet data</param>
-//        protected void GroupActiveProposalItemHandler(object sender, PacketReceivedEventArgs e)
-//        {
-//            //GroupActiveProposalItemReplyPacket proposal = (GroupActiveProposalItemReplyPacket)packet;
-//
-//            // TODO: Create a proposal struct to represent the fields in a proposal item
-//        }
-//
-//        /// <summary>Process an incoming packet and raise the appropriate events</summary>
-//        /// <param name="sender">The sender</param>
-//        /// <param name="e">The EventArgs object containing the packet data</param>
-//        protected void GroupVoteHistoryItemHandler(object sender, PacketReceivedEventArgs e)
-//        {
-//            //GroupVoteHistoryItemReplyPacket history = (GroupVoteHistoryItemReplyPacket)packet;
-//
-//            // TODO: This was broken in the official viewer when I was last trying to work  on it
-//        }
-//
-//        /// <summary>Process an incoming packet and raise the appropriate events</summary>
-//        /// <param name="sender">The sender</param>
-//        /// <param name="e">The EventArgs object containing the packet data</param>
-//        protected void GroupAccountSummaryReplyHandler(object sender, PacketReceivedEventArgs e)
-//        {
-//            if (m_GroupAccountSummary != null)
-//            {
-//                Packet packet = e.Packet;
-//                GroupAccountSummaryReplyPacket summary = (GroupAccountSummaryReplyPacket)packet;
-//                GroupAccountSummary account = new GroupAccountSummary();
-//
-//                account.Balance = summary.MoneyData.Balance;
-//                account.CurrentInterval = summary.MoneyData.CurrentInterval;
-//                account.GroupTaxCurrent = summary.MoneyData.GroupTaxCurrent;
-//                account.GroupTaxEstimate = summary.MoneyData.GroupTaxEstimate;
-//                account.IntervalDays = summary.MoneyData.IntervalDays;
-//                account.LandTaxCurrent = summary.MoneyData.LandTaxCurrent;
-//                account.LandTaxEstimate = summary.MoneyData.LandTaxEstimate;
-//                account.LastTaxDate = Utils.BytesToString(summary.MoneyData.LastTaxDate);
-//                account.LightTaxCurrent = summary.MoneyData.LightTaxCurrent;
-//                account.LightTaxEstimate = summary.MoneyData.LightTaxEstimate;
-//                account.NonExemptMembers = summary.MoneyData.NonExemptMembers;
-//                account.ObjectTaxCurrent = summary.MoneyData.ObjectTaxCurrent;
-//                account.ObjectTaxEstimate = summary.MoneyData.ObjectTaxEstimate;
-//                account.ParcelDirFeeCurrent = summary.MoneyData.ParcelDirFeeCurrent;
-//                account.ParcelDirFeeEstimate = summary.MoneyData.ParcelDirFeeEstimate;
-//                account.StartDate = Utils.BytesToString(summary.MoneyData.StartDate);
-//                account.TaxDate = Utils.BytesToString(summary.MoneyData.TaxDate);
-//                account.TotalCredits = summary.MoneyData.TotalCredits;
-//                account.TotalDebits = summary.MoneyData.TotalDebits;
-//
-//                OnGroupAccountSummaryReply(new GroupAccountSummaryReplyEventArgs(summary.AgentData.GroupID, account));
-//            }
-//        }
-//
-//        /// <summary>Process an incoming packet and raise the appropriate events</summary>
-//        /// <param name="sender">The sender</param>
-//        /// <param name="e">The EventArgs object containing the packet data</param>
-//        protected void CreateGroupReplyHandler(object sender, PacketReceivedEventArgs e)
-//        {
-//            if (m_GroupCreated != null)
-//            {
-//                Packet packet = e.Packet;
-//                CreateGroupReplyPacket reply = (CreateGroupReplyPacket)packet;
-//
-//                string message = Utils.BytesToString(reply.ReplyData.Message);
-//
-//                OnGroupCreatedReply(new GroupCreatedReplyEventArgs(reply.ReplyData.GroupID, reply.ReplyData.Success, message));
-//            }
-//        }
-//
-//        /// <summary>Process an incoming packet and raise the appropriate events</summary>
-//        /// <param name="sender">The sender</param>
-//        /// <param name="e">The EventArgs object containing the packet data</param>
-//        protected void JoinGroupReplyHandler(object sender, PacketReceivedEventArgs e)
-//        {
-//            if (m_GroupJoined != null)
-//            {
-//                Packet packet = e.Packet;
-//                JoinGroupReplyPacket reply = (JoinGroupReplyPacket)packet;
-//
-//                OnGroupJoinedReply(new GroupOperationEventArgs(reply.GroupData.GroupID, reply.GroupData.Success));
-//            }
-//        }
-//
-//        /// <summary>Process an incoming packet and raise the appropriate events</summary>
-//        /// <param name="sender">The sender</param>
-//        /// <param name="e">The EventArgs object containing the packet data</param>
-//        protected void LeaveGroupReplyHandler(object sender, PacketReceivedEventArgs e)
-//        {
-//            if (m_GroupLeft != null)
-//            {
-//                Packet packet = e.Packet;
-//                LeaveGroupReplyPacket reply = (LeaveGroupReplyPacket)packet;
-//
-//                OnGroupLeaveReply(new GroupOperationEventArgs(reply.GroupData.GroupID, reply.GroupData.Success));
-//            }
-//        }
-//
-//        /// <summary>Process an incoming packet and raise the appropriate events</summary>
-//        /// <param name="sender">The sender</param>
-//        /// <param name="e">The EventArgs object containing the packet data</param>
-//        private void UUIDGroupNameReplyHandler(object sender, PacketReceivedEventArgs e)
-//        {
-//            Packet packet = e.Packet;
-//            UUIDGroupNameReplyPacket reply = (UUIDGroupNameReplyPacket)packet;
-//            UUIDGroupNameReplyPacket.UUIDNameBlockBlock[] blocks = reply.UUIDNameBlock;
-//
-//            Dictionary<UUID, string> groupNames = new Dictionary<UUID, string>();
-//
-//            foreach (UUIDGroupNameReplyPacket.UUIDNameBlockBlock block in blocks)
-//            {
-//                groupNames.Add(block.ID, Utils.BytesToString(block.GroupName));
-//                if (!GroupName2KeyCache.ContainsKey(block.ID))
-//                    GroupName2KeyCache.Add(block.ID, Utils.BytesToString(block.GroupName));
-//            }
-//
-//            if (m_GroupNames != null)
-//            {
-//                OnGroupNamesReply(new GroupNamesEventArgs(groupNames));
-//            }
-//        }
-//
-//        /// <summary>Process an incoming packet and raise the appropriate events</summary>
-//        /// <param name="sender">The sender</param>
-//        /// <param name="e">The EventArgs object containing the packet data</param>
-//        protected void EjectGroupMemberReplyHandler(object sender, PacketReceivedEventArgs e)
-//        {
-//            Packet packet = e.Packet;
-//            EjectGroupMemberReplyPacket reply = (EjectGroupMemberReplyPacket)packet;
-//
-//            // TODO: On Success remove the member from the cache(s)
-//
-//            if (m_GroupMemberEjected != null)
-//            {
-//                OnGroupMemberEjected(new GroupOperationEventArgs(reply.GroupData.GroupID, reply.EjectData.Success));
-//            }
-//        }        
-//
-//        //endregion Packet Handlers
-//    }
-//
-//    //region EventArgs
-//    
-//    /// <summary>Contains the current groups your agent is a member of</summary>
-//    public class CurrentGroupsEventArgs : EventArgs
-//    {
-//        private readonly Dictionary<UUID, Group> m_Groups;
-//
-//        /// <summary>Get the current groups your agent is a member of</summary>
-//        public Dictionary<UUID, Group> Groups { get { return m_Groups; } }
-//
-//        /// <summary>Construct a new instance of the CurrentGroupsEventArgs class</summary>
-//        /// <param name="groups">The current groups your agent is a member of</param>
-//        public CurrentGroupsEventArgs(Dictionary<UUID, Group> groups)
-//        {
-//            this.m_Groups = groups;
-//        }
-//    }
-//    
-//    /// <summary>A Dictionary of group names, where the Key is the groups ID and the value is the groups name</summary>
-//    public class GroupNamesEventArgs : EventArgs
-//    {
-//        private readonly Dictionary<UUID, string> m_GroupNames;
-//
-//        /// <summary>Get the Group Names dictionary</summary>
-//        public Dictionary<UUID, string> GroupNames { get { return m_GroupNames; } }
-//
-//        /// <summary>Construct a new instance of the GroupNamesEventArgs class</summary>
-//        /// <param name="groupNames">The Group names dictionary</param>
-//        public GroupNamesEventArgs(Dictionary<UUID, string> groupNames)
-//        {
-//            this.m_GroupNames = groupNames;
-//        }
-//    }
-//
-//    /// <summary>Represents the members of a group</summary>
-//    public class GroupMembersReplyEventArgs : EventArgs
-//    {
-//        private readonly UUID m_RequestID;
-//        private readonly UUID m_GroupID;
-//        private readonly Dictionary<UUID, GroupMember> m_Members;
-//
-//        /// <summary>Get the ID as returned by the request to correlate
-//        /// this result set and the request</summary>
-//        public UUID RequestID { get { return m_RequestID; } }
-//        /// <summary>Get the ID of the group</summary>
-//        public UUID GroupID { get { return m_GroupID; } }
-//        /// <summary>Get the dictionary of members</summary>
-//        public Dictionary<UUID, GroupMember> Members { get { return m_Members; } }
-//
-//        /// <summary>
-//        /// Construct a new instance of the GroupMembersReplyEventArgs class
-//        /// </summary>
-//        /// <param name="requestID">The ID of the request</param>
-//        /// <param name="groupID">The ID of the group</param>
-//        /// <param name="members">The membership list of the group</param>
-//        public GroupMembersReplyEventArgs(UUID requestID, UUID groupID, Dictionary<UUID, GroupMember> members)
-//        {
-//            this.m_RequestID = requestID;
-//            this.m_GroupID = groupID;
-//            this.m_Members = members;
-//        }
-//    }
-//    
-//    /// <summary>Represents the roles associated with a group</summary>
-//    public class GroupRolesDataReplyEventArgs : EventArgs
-//    {
-//        private readonly UUID m_RequestID;
-//        private readonly UUID m_GroupID;
-//        private readonly Dictionary<UUID, GroupRole> m_Roles;
-//
-//        /// <summary>Get the ID as returned by the request to correlate
-//        /// this result set and the request</summary>
-//        public UUID RequestID { get { return m_RequestID; } }
-//        /// <summary>Get the ID of the group</summary>
-//        public UUID GroupID { get { return m_GroupID; } }
-//        /// <summary>Get the dictionary containing the roles</summary>
-//        public Dictionary<UUID, GroupRole> Roles { get { return m_Roles; } }
-//
-//        /// <summary>Construct a new instance of the GroupRolesDataReplyEventArgs class</summary>
-//        /// <param name="requestID">The ID as returned by the request to correlate
-//        /// this result set and the request</param>
-//        /// <param name="groupID">The ID of the group</param>
-//        /// <param name="roles">The dictionary containing the roles</param>
-//        public GroupRolesDataReplyEventArgs(UUID requestID, UUID groupID, Dictionary<UUID, GroupRole> roles)
-//        {
-//            this.m_RequestID = requestID;
-//            this.m_GroupID = groupID;
-//            this.m_Roles = roles;
-//        }
-//    }
-//
-//    /// <summary>Represents the Role to Member mappings for a group</summary>
-//    public class GroupRolesMembersReplyEventArgs : EventArgs
-//    {
-//        private readonly UUID m_RequestID;
-//        private readonly UUID m_GroupID;
-//        private readonly List<KeyValuePair<UUID, UUID>> m_RolesMembers;
-//
-//        /// <summary>Get the ID as returned by the request to correlate
-//        /// this result set and the request</summary>
-//        public UUID RequestID { get { return m_RequestID; } }
-//        /// <summary>Get the ID of the group</summary>
-//        public UUID GroupID { get { return m_GroupID; } }
-//        /// <summary>Get the member to roles map</summary>
-//        public List<KeyValuePair<UUID, UUID>> RolesMembers { get { return m_RolesMembers; } }
-//
-//        /// <summary>Construct a new instance of the GroupRolesMembersReplyEventArgs class</summary>
-//        /// <param name="requestID">The ID as returned by the request to correlate
-//        /// this result set and the request</param>
-//        /// <param name="groupID">The ID of the group</param>
-//        /// <param name="rolesMembers">The member to roles map</param>
-//        public GroupRolesMembersReplyEventArgs(UUID requestID, UUID groupID, List<KeyValuePair<UUID, UUID>> rolesMembers)
-//        {
-//            this.m_RequestID = requestID;
-//            this.m_GroupID = groupID;
-//            this.m_RolesMembers = rolesMembers;
-//        }
-//    }
-//
-//    /// <summary>Represents the titles for a group</summary>
-//    public class GroupTitlesReplyEventArgs : EventArgs
-//    {
-//        private readonly UUID m_RequestID;
-//        private readonly UUID m_GroupID;
-//        private readonly Dictionary<UUID, GroupTitle> m_Titles;
-//
-//        /// <summary>Get the ID as returned by the request to correlate
-//        /// this result set and the request</summary>
-//        public UUID RequestID { get { return m_RequestID; } }
-//        /// <summary>Get the ID of the group</summary>
-//        public UUID GroupID { get { return m_GroupID; } }
-//        /// <summary>Get the titles</summary>
-//        public Dictionary<UUID, GroupTitle> Titles { get { return m_Titles; } }
-//
-//        /// <summary>Construct a new instance of the GroupTitlesReplyEventArgs class</summary>
-//        /// <param name="requestID">The ID as returned by the request to correlate
-//        /// this result set and the request</param>
-//        /// <param name="groupID">The ID of the group</param>
-//        /// <param name="titles">The titles</param>
-//        public GroupTitlesReplyEventArgs(UUID requestID, UUID groupID, Dictionary<UUID, GroupTitle> titles)
-//        {
-//            this.m_RequestID = requestID;
-//            this.m_GroupID = groupID;
-//            this.m_Titles = titles;
-//        }
-//    }
-//
-//    /// <summary>Represents the summary data for a group</summary>
-//    public class GroupAccountSummaryReplyEventArgs : EventArgs
-//    {
-//        private readonly UUID m_GroupID;
-//        private readonly GroupAccountSummary m_Summary;
-//
-//        /// <summary>Get the ID of the group</summary>
-//        public UUID GroupID { get { return m_GroupID; } }
-//        /// <summary>Get the summary data</summary>
-//        public GroupAccountSummary Summary { get { return m_Summary; } }
-//
-//        /// <summary>Construct a new instance of the GroupAccountSummaryReplyEventArgs class</summary>
-//        /// <param name="groupID">The ID of the group</param>
-//        /// <param name="summary">The summary data</param>
-//        public GroupAccountSummaryReplyEventArgs(UUID groupID, GroupAccountSummary summary)
-//        {
-//            this.m_GroupID = groupID;
-//            this.m_Summary = summary;
-//        }
-//    }
-//    
-//    /// <summary>A response to a group create request</summary>
-//    public class GroupCreatedReplyEventArgs : EventArgs
-//    {
-//        private readonly UUID m_GroupID;
-//        private readonly bool m_Success;
-//        private readonly string m_Message;
-//
-//        /// <summary>Get the ID of the group</summary>
-//        public UUID GroupID { get { return m_GroupID; } }
-//        /// <summary>true of the  group was created successfully</summary>
-//        public boolean Success { get { return m_Success; } }
-//        /// <summary>A string containing the message</summary>
-//        public string Message { get { return m_Message; } }
-//
-//        /// <summary>Construct a new instance of the GroupCreatedReplyEventArgs class</summary>
-//        /// <param name="groupID">The ID of the group</param>
-//        /// <param name="success">the success or faulure of the request</param>
-//        /// <param name="messsage">A string containing additional information</param>
-//        public GroupCreatedReplyEventArgs(UUID groupID, bool success, string messsage)
-//        {
-//            this.m_GroupID = groupID;
-//            this.m_Success = success;
-//            this.m_Message = messsage;
-//        }
-//    }
-//    
-//    /// <summary>Represents a response to a request</summary>
-//    public class GroupOperationEventArgs : EventArgs
-//    {
-//        private readonly UUID m_GroupID;
-//        private readonly bool m_Success;
-//
-//        /// <summary>Get the ID of the group</summary>
-//        public UUID GroupID { get { return m_GroupID; } }
-//        /// <summary>true of the request was successful</summary>
-//        public boolean Success { get { return m_Success; } }
-//
-//        /// <summary>Construct a new instance of the GroupOperationEventArgs class</summary>
-//        /// <param name="groupID">The ID of the group</param>
-//        /// <param name="success">true of the request was successful</param>
-//        public GroupOperationEventArgs(UUID groupID, bool success)
-//        {
-//            this.m_GroupID = groupID;
-//            this.m_Success = success;
-//        }
-//    }
-//    
-//    /// <summary>Represents your agent leaving a group</summary>
-//    public class GroupDroppedEventArgs : EventArgs
-//    {
-//        private readonly UUID m_GroupID;
-//        /// <summary>Get the ID of the group</summary>
-//        public UUID GroupID { get { return m_GroupID; } }
-//
-//        /// <summary>Construct a new instance of the GroupDroppedEventArgs class</summary>
-//        /// <param name="groupID">The ID of the group</param>
-//        public GroupDroppedEventArgs(UUID groupID)
-//        {
-//            m_GroupID = groupID;
-//        }
-//    }
-//
-//    /// <summary>Represents a list of active group notices</summary>
-//    public class GroupNoticesListReplyEventArgs : EventArgs
-//    {
-//        private readonly UUID m_GroupID;
-//        private readonly List<GroupNoticesListEntry> m_Notices;
-//
-//        /// <summary>Get the ID of the group</summary>
-//        public UUID GroupID { get { return m_GroupID; } }
-//        /// <summary>Get the notices list</summary>
-//        public List<GroupNoticesListEntry> Notices { get { return m_Notices; } }
-//
-//        /// <summary>Construct a new instance of the GroupNoticesListReplyEventArgs class</summary>
-//        /// <param name="groupID">The ID of the group</param>
-//        /// <param name="notices">The list containing active notices</param>
-//        public GroupNoticesListReplyEventArgs(UUID groupID, List<GroupNoticesListEntry> notices)
-//        {
-//            m_GroupID = groupID;
-//            m_Notices = notices;
-//        }
-//    }
-//    
-//    /// <summary>Represents the profile of a group</summary>
-//    public class GroupProfileEventArgs : EventArgs
-//    {
-//        private readonly Group m_Group;
-//
-//        /// <summary>Get the group profile</summary>
-//        public Group Group { get { return m_Group; } }
-//
-//        /// <summary>Construct a new instance of the GroupProfileEventArgs class</summary>
-//        /// <param name="group">The group profile</param>
-//        public GroupProfileEventArgs(Group group)
-//        {
-//            this.m_Group = group;
-//        }
-//    }
-//
-//    /// <summary>
-//    /// Provides notification of a group invitation request sent by another Avatar
-//    /// </summary>
-//    /// <remarks>The <see cref="GroupInvitation"/> invitation is raised when another avatar makes an offer for our avatar
-//    /// to join a group.</remarks>
-//    public class GroupInvitationEventArgs : EventArgs
-//    {
-//        private readonly UUID m_FromAgentID;
-//        private readonly string m_FromAgentName;
-//        private readonly string m_Message;
-//        private readonly Simulator m_Simulator;
-//     
-//        /// <summary>The ID of the Avatar sending the group invitation</summary>
-//        public UUID AgentID { get { return m_FromAgentID; } }
-//        /// <summary>The name of the Avatar sending the group invitation</summary>
-//        public string FromName { get { return m_FromAgentName; } }
-//        /// <summary>A message containing the request information which includes
-//        /// the name of the group, the groups charter and the fee to join details</summary>
-//        public string Message { get { return m_Message; } }
-//        /// <summary>The Simulator</summary>
-//        public Simulator Simulator { get { return m_Simulator; } }
-//
-//        /// <summary>Set to true to accept invitation, false to decline</summary>
-//        public boolean Accept { get; set; }
-//
-//        public GroupInvitationEventArgs(Simulator simulator, UUID agentID, string agentName, string message)
-//        {
-//            this.m_Simulator = simulator;
-//            this.m_FromAgentID = agentID;
-//            this.m_FromAgentName = agentName;
-//            this.m_Message = message;
-//        }
-//    }
-//
-//    //endregion
-    
+        /// <summary>A reference to the current <seealso cref="GridClient"/> instance</summary>
+        private GridClient Client;
+        /// <summary>Currently-active group members requests</summary>
+        private List<UUID> GroupMembersRequests;
+        /// <summary>Currently-active group roles requests</summary>
+        private List<UUID> GroupRolesRequests;
+        /// <summary>Currently-active group role-member requests</summary>
+        private List<UUID> GroupRolesMembersRequests;
+        /// <summary>Dictionary keeping group members while request is in progress</summary>
+        private InternalDictionary<UUID, Map<UUID, GroupMember>> TempGroupMembers;
+        /// <summary>Dictionary keeping mebmer/role mapping while request is in progress</summary>
+        private InternalDictionary<UUID, List<KeyValuePair<UUID, UUID>>> TempGroupRolesMembers;
+        /// <summary>Dictionary keeping GroupRole information while request is in progress</summary>
+        private InternalDictionary<UUID, Map<UUID, GroupRole>> TempGroupRoles;
+        /// <summary>Caches group name lookups</summary>
+        public InternalDictionary<UUID, String> GroupName2KeyCache;
+
+        /// <summary>
+        /// Construct a new instance of the GroupManager class
+        /// </summary>
+        /// <param name="client">A reference to the current <seealso cref="GridClient"/> instance</param>
+        public GroupManager(GridClient client)
+        {
+            Client = client;
+
+            TempGroupMembers = new InternalDictionary<UUID, Map<UUID, GroupMember>>();
+            GroupMembersRequests = new ArrayList<UUID>();
+            TempGroupRoles = new InternalDictionary<UUID, Map<UUID, GroupRole>>();
+            GroupRolesRequests = new ArrayList<UUID>();
+            TempGroupRolesMembers = new InternalDictionary<UUID, List<KeyValuePair<UUID, UUID>>>();
+            GroupRolesMembersRequests = new ArrayList<UUID>();
+            GroupName2KeyCache = new InternalDictionary<UUID, String>();
+
+            // Client.Self.IM += Self_IM;
+        	Client.self.registerIM(new EventObserver<InstantMessageEventArgs>()
+        			{
+        		@Override
+        		public void handleEvent(Observable o,
+        				InstantMessageEventArgs arg) {
+        			try {
+        				Self_IM(o, arg);}
+        			catch(Exception e) {JLogger.warn(Utils.getExceptionStackTraceAsString(e));}
+        		}
+        			});
+                        
+            //Client.network.RegisterEventCallback("AgentGroupDataUpdate", new Caps.EventQueueCallback(AgentGroupDataUpdateMessageHandler);
+        	Client.network.RegisterEventCallback("AgentGroupDataUpdate", new EventObserver<CapsEventObservableArg>()
+        			{ 
+        		@Override
+        		public void handleEvent(Observable o,CapsEventObservableArg arg) {
+        			try{ AgentGroupDataUpdateMessageHandler(arg.getCapsKey(), arg.getMessage(), arg.getSimulator());}
+        			catch(Exception e) {JLogger.warn(Utils.getExceptionStackTraceAsString(e));}
+        		}}
+        			);
+        	
+        	//deprecated in simulator v1.27
+            //Client.network.RegisterCallback(PacketType.AgentDropGroup, AgentDropGroupHandler);
+            Client.network.RegisterCallback(PacketType.AgentDropGroup, new EventObserver<PacketReceivedEventArgs>()
+            		{ 
+            	@Override
+            	public void handleEvent(Observable o,PacketReceivedEventArgs arg) {
+            		try{ AgentDropGroupHandler(o, arg);}
+            		catch(Exception e) {JLogger.warn(Utils.getExceptionStackTraceAsString(e));}
+            	}}
+            		);
+            //Client.network.RegisterCallback(PacketType.GroupTitlesReply, GroupTitlesReplyHandler);
+
+            Client.network.RegisterCallback(PacketType.GroupTitlesReply, new EventObserver<PacketReceivedEventArgs>()
+            		{ 
+            	@Override
+            	public void handleEvent(Observable o,PacketReceivedEventArgs arg) {
+            		try{ GroupTitlesReplyHandler(o, arg);}
+            		catch(Exception e) {JLogger.warn(Utils.getExceptionStackTraceAsString(e));}
+            	}}
+            		);
+            //Client.network.RegisterCallback(PacketType.GroupProfileReply, GroupProfileReplyHandler);
+
+            Client.network.RegisterCallback(PacketType.GroupProfileReply, new EventObserver<PacketReceivedEventArgs>()
+            		{ 
+            	@Override
+            	public void handleEvent(Observable o,PacketReceivedEventArgs arg) {
+            		try{ GroupProfileReplyHandler(o, arg);}
+            		catch(Exception e) {JLogger.warn(Utils.getExceptionStackTraceAsString(e));}
+            	}}
+            		);
+            //Client.network.RegisterCallback(PacketType.GroupMembersReply, GroupMembersHandler);
+
+            Client.network.RegisterCallback(PacketType.GroupMembersReply, new EventObserver<PacketReceivedEventArgs>()
+            		{ 
+            	@Override
+            	public void handleEvent(Observable o,PacketReceivedEventArgs arg) {
+            		try{ GroupMembersHandler(o, arg);}
+            		catch(Exception e) {JLogger.warn(Utils.getExceptionStackTraceAsString(e));}
+            	}}
+            		);
+            //Client.network.RegisterCallback(PacketType.GroupRoleDataReply, GroupRoleDataReplyHandler);
+
+            Client.network.RegisterCallback(PacketType.GroupRoleDataReply, new EventObserver<PacketReceivedEventArgs>()
+            		{ 
+            	@Override
+            	public void handleEvent(Observable o,PacketReceivedEventArgs arg) {
+            		try{ GroupRoleDataReplyHandler(o, arg);}
+            		catch(Exception e) {JLogger.warn(Utils.getExceptionStackTraceAsString(e));}
+            	}}
+            		);
+            //Client.network.RegisterCallback(PacketType.GroupRoleMembersReply, GroupRoleMembersReplyHandler);
+
+            Client.network.RegisterCallback(PacketType.GroupRoleMembersReply, new EventObserver<PacketReceivedEventArgs>()
+            		{ 
+            	@Override
+            	public void handleEvent(Observable o,PacketReceivedEventArgs arg) {
+            		try{ GroupRoleMembersReplyHandler(o, arg);}
+            		catch(Exception e) {JLogger.warn(Utils.getExceptionStackTraceAsString(e));}
+            	}}
+            		);
+            //Client.network.RegisterCallback(PacketType.GroupActiveProposalItemReply, GroupActiveProposalItemHandler);
+
+            Client.network.RegisterCallback(PacketType.GroupActiveProposalItemReply, new EventObserver<PacketReceivedEventArgs>()
+            		{ 
+            	@Override
+            	public void handleEvent(Observable o,PacketReceivedEventArgs arg) {
+            		try{ GroupActiveProposalItemHandler(o, arg);}
+            		catch(Exception e) {JLogger.warn(Utils.getExceptionStackTraceAsString(e));}
+            	}}
+            		);
+            //Client.network.RegisterCallback(PacketType.GroupVoteHistoryItemReply, GroupVoteHistoryItemHandler);
+
+            Client.network.RegisterCallback(PacketType.GroupVoteHistoryItemReply, new EventObserver<PacketReceivedEventArgs>()
+            		{ 
+            	@Override
+            	public void handleEvent(Observable o,PacketReceivedEventArgs arg) {
+            		try{ GroupVoteHistoryItemHandler(o, arg);}
+            		catch(Exception e) {JLogger.warn(Utils.getExceptionStackTraceAsString(e));}
+            	}}
+            		);
+            //Client.network.RegisterCallback(PacketType.GroupAccountSummaryReply, GroupAccountSummaryReplyHandler);
+
+            Client.network.RegisterCallback(PacketType.GroupAccountSummaryReply, new EventObserver<PacketReceivedEventArgs>()
+            		{ 
+            	@Override
+            	public void handleEvent(Observable o,PacketReceivedEventArgs arg) {
+            		try{ GroupAccountSummaryReplyHandler(o, arg);}
+            		catch(Exception e) {JLogger.warn(Utils.getExceptionStackTraceAsString(e));}
+            	}}
+            		);
+            //Client.network.RegisterCallback(PacketType.CreateGroupReply, CreateGroupReplyHandler);
+
+            Client.network.RegisterCallback(PacketType.CreateGroupReply, new EventObserver<PacketReceivedEventArgs>()
+            		{ 
+            	@Override
+            	public void handleEvent(Observable o,PacketReceivedEventArgs arg) {
+            		try{ CreateGroupReplyHandler(o, arg);}
+            		catch(Exception e) {JLogger.warn(Utils.getExceptionStackTraceAsString(e));}
+            	}}
+            		);
+            //Client.network.RegisterCallback(PacketType.JoinGroupReply, JoinGroupReplyHandler);
+
+            Client.network.RegisterCallback(PacketType.JoinGroupReply, new EventObserver<PacketReceivedEventArgs>()
+            		{ 
+            	@Override
+            	public void handleEvent(Observable o,PacketReceivedEventArgs arg) {
+            		try{ JoinGroupReplyHandler(o, arg);}
+            		catch(Exception e) {JLogger.warn(Utils.getExceptionStackTraceAsString(e));}
+            	}}
+            		);
+            //Client.network.RegisterCallback(PacketType.LeaveGroupReply, LeaveGroupReplyHandler);
+
+            Client.network.RegisterCallback(PacketType.LeaveGroupReply, new EventObserver<PacketReceivedEventArgs>()
+            		{ 
+            	@Override
+            	public void handleEvent(Observable o,PacketReceivedEventArgs arg) {
+            		try{ LeaveGroupReplyHandler(o, arg);}
+            		catch(Exception e) {JLogger.warn(Utils.getExceptionStackTraceAsString(e));}
+            	}}
+            		);
+            //Client.network.RegisterCallback(PacketType.UUIDGroupNameReply, UUIDGroupNameReplyHandler);
+
+            Client.network.RegisterCallback(PacketType.UUIDGroupNameReply, new EventObserver<PacketReceivedEventArgs>()
+            		{ 
+            	@Override
+            	public void handleEvent(Observable o,PacketReceivedEventArgs arg) {
+            		try{ UUIDGroupNameReplyHandler(o, arg);}
+            		catch(Exception e) {JLogger.warn(Utils.getExceptionStackTraceAsString(e));}
+            	}}
+            		);
+            //Client.network.RegisterCallback(PacketType.EjectGroupMemberReply, EjectGroupMemberReplyHandler);
+
+            Client.network.RegisterCallback(PacketType.EjectGroupMemberReply, new EventObserver<PacketReceivedEventArgs>()
+            		{ 
+            	@Override
+            	public void handleEvent(Observable o,PacketReceivedEventArgs arg) {
+            		try{ EjectGroupMemberReplyHandler(o, arg);}
+            		catch(Exception e) {JLogger.warn(Utils.getExceptionStackTraceAsString(e));}
+            	}}
+            		);
+            //Client.network.RegisterCallback(PacketType.GroupNoticesListReply, GroupNoticesListReplyHandler);
+
+            Client.network.RegisterCallback(PacketType.GroupNoticesListReply, new EventObserver<PacketReceivedEventArgs>()
+            		{ 
+            	@Override
+            	public void handleEvent(Observable o,PacketReceivedEventArgs arg) {
+            		try{ GroupNoticesListReplyHandler(o, arg);}
+            		catch(Exception e) {JLogger.warn(Utils.getExceptionStackTraceAsString(e));}
+            	}}
+            		);
+            
+            //Client.network.RegisterEventCallback("AgentDropGroup", new Caps.EventQueueCallback(AgentDropGroupMessageHandler);
+            Client.network.RegisterEventCallback("AgentDropGroup", new EventObserver<CapsEventObservableArg>()
+            		{ 
+            	@Override
+            	public void handleEvent(Observable o,CapsEventObservableArg arg) {
+            		try{ AgentDropGroupMessageHandler(arg.getCapsKey(), arg.getMessage(), arg.getSimulator());}
+            		catch(Exception e) {JLogger.warn(Utils.getExceptionStackTraceAsString(e));}
+            	}}
+            		);
+        }
+
+        void Self_IM(Object sender, InstantMessageEventArgs e)
+        {
+        	if(onGroupInvitation != null && e.getIM().Dialog == InstantMessageDialog.GroupInvitation)
+        	{
+        		GroupInvitationEventArgs args = new GroupInvitationEventArgs(e.getSimulator()
+                		, e.getIM().FromAgentID, e.getIM().FromAgentName, e.getIM().Message);
+                onGroupInvitation.raiseEvent(args);
+
+                if (args.getAccept())
+                {
+                    Client.self.InstantMessage("name", e.getIM().FromAgentID, "message", e.getIM().IMSessionID, InstantMessageDialog.GroupInvitationAccept,
+                         InstantMessageOnline.Online, Client.self.getSimPosition(), UUID.Zero, Utils.EmptyBytes);
+                }
+                else
+                {
+                    Client.self.InstantMessage("name", e.getIM().FromAgentID, "message", e.getIM().IMSessionID, InstantMessageDialog.GroupInvitationDecline,
+                         InstantMessageOnline.Online, Client.self.getSimPosition(), UUID.Zero, new byte[] { 0 });
+                }            
+            }
+        }
+
+
+        //region Public Methods
+
+        /// <summary>
+        /// Request a current list of groups the avatar is a member of.
+        /// </summary>
+        /// <remarks>CAPS Event Queue must be running for this to work since the results
+        /// come across CAPS.</remarks>
+        public void RequestCurrentGroups()
+        {
+            AgentDataUpdateRequestPacket request = new AgentDataUpdateRequestPacket();
+
+            request.AgentData.AgentID = Client.self.getAgentID();
+            request.AgentData.SessionID = Client.self.getSessionID();
+
+            Client.network.SendPacket(request);
+        }
+
+        /// <summary>
+        /// Lookup name of group based on groupID
+        /// </summary>
+        /// <param name="groupID">groupID of group to lookup name for.</param>
+        public void RequestGroupName(UUID groupID)
+        {
+            // if we already have this in the cache, return from cache instead of making a request
+            if (GroupName2KeyCache.containsKey(groupID))
+            {
+                Map<UUID, String> groupNames = new HashMap<UUID, String>();
+                groupNames.put(groupID, GroupName2KeyCache.get(groupID));
+
+                if (onGroupNamesReply != null)
+                {
+                    onGroupNamesReply.raiseEvent(new GroupNamesEventArgs(groupNames));
+                }
+            }
+
+            else
+            {
+                UUIDGroupNameRequestPacket req = new UUIDGroupNameRequestPacket();
+                UUIDGroupNameRequestPacket.UUIDNameBlockBlock[] block = new UUIDGroupNameRequestPacket.UUIDNameBlockBlock[1];
+                block[0] = new UUIDGroupNameRequestPacket.UUIDNameBlockBlock();
+                block[0].ID = groupID;
+                req.UUIDNameBlock = block;
+                Client.network.SendPacket(req);
+            }
+        }
+
+        /// <summary>
+        /// Request lookup of multiple group names
+        /// </summary>
+        /// <param name="groupIDs">List of group IDs to request.</param>
+        public void RequestGroupNames(List<UUID> groupIDs)
+        {
+            Map<UUID, String> groupNames = new HashMap<UUID, String>();
+            synchronized (GroupName2KeyCache.getDictionary())
+            {
+                for(UUID groupID : groupIDs)
+                {
+                    if (GroupName2KeyCache.containsKey(groupID))
+                        groupNames.put(groupID, GroupName2KeyCache.get(groupID));
+                }
+            }
+
+            if (groupIDs.size() > 0)
+            {
+                UUIDGroupNameRequestPacket req = new UUIDGroupNameRequestPacket();
+                UUIDGroupNameRequestPacket.UUIDNameBlockBlock[] block = new UUIDGroupNameRequestPacket.UUIDNameBlockBlock[groupIDs.size()];
+
+                for (int i = 0; i < groupIDs.size(); i++)
+                {
+                    block[i] = new UUIDGroupNameRequestPacket.UUIDNameBlockBlock();
+                    block[i].ID = groupIDs.get(i);
+                }
+
+                req.UUIDNameBlock = block;
+                Client.network.SendPacket(req);
+            }
+
+            // fire handler from cache
+            if (groupNames.size() > 0 && onGroupNamesReply != null)
+            {
+                onGroupNamesReply.raiseEvent(new GroupNamesEventArgs(groupNames));
+            }
+        }
+
+        /// <summary>Lookup group profile data such as name, enrollment, founder, logo, etc</summary>
+        /// <remarks>Subscribe to <code>OnGroupProfile</code> event to receive the results.</remarks>
+        /// <param name="group">group ID (UUID)</param>
+        public void RequestGroupProfile(UUID group)
+        {
+            GroupProfileRequestPacket request = new GroupProfileRequestPacket();
+
+            request.AgentData.AgentID = Client.self.getAgentID();
+            request.AgentData.SessionID = Client.self.getSessionID();
+            request.GroupData.GroupID = group;
+
+            Client.network.SendPacket(request);
+        }
+
+        /// <summary>Request a list of group members.</summary>
+        /// <remarks>Subscribe to <code>OnGroupMembers</code> event to receive the results.</remarks>
+        /// <param name="group">group ID (UUID)</param>
+        /// <returns>UUID of the request, use to index into cache</returns>
+        public UUID RequestGroupMembers(UUID group)
+        {
+            UUID requestID = UUID.Random();
+            synchronized (GroupMembersRequests) 
+            {GroupMembersRequests.add(requestID);}
+
+            GroupMembersRequestPacket request = new GroupMembersRequestPacket();
+
+            request.AgentData.AgentID = Client.self.getAgentID();
+            request.AgentData.SessionID = Client.self.getSessionID();
+            request.GroupData.GroupID = group;
+            request.GroupData.RequestID = requestID;
+
+            Client.network.SendPacket(request);
+            return requestID;
+        }
+
+        /// <summary>Request group roles</summary>
+        /// <remarks>Subscribe to <code>OnGroupRoles</code> event to receive the results.</remarks>
+        /// <param name="group">group ID (UUID)</param>
+        /// <returns>UUID of the request, use to index into cache</returns>
+        public UUID RequestGroupRoles(UUID group)
+        {
+            UUID requestID = UUID.Random();
+            synchronized (GroupRolesRequests)
+            {GroupRolesRequests.add(requestID);}
+
+            GroupRoleDataRequestPacket request = new GroupRoleDataRequestPacket();
+
+            request.AgentData.AgentID = Client.self.getAgentID();
+            request.AgentData.SessionID = Client.self.getSessionID();
+            request.GroupData.GroupID = group;
+            request.GroupData.RequestID = requestID;
+
+            Client.network.SendPacket(request);
+            return requestID;
+        }
+
+        /// <summary>Request members (members,role) role mapping for a group.</summary>
+        /// <remarks>Subscribe to <code>OnGroupRolesMembers</code> event to receive the results.</remarks>
+        /// <param name="group">group ID (UUID)</param>
+        /// <returns>UUID of the request, use to index into cache</returns>
+        public UUID RequestGroupRolesMembers(UUID group)
+        {
+            UUID requestID = UUID.Random();
+            synchronized (GroupRolesRequests) 
+            {GroupRolesMembersRequests.add(requestID);}
+
+            GroupRoleMembersRequestPacket request = new GroupRoleMembersRequestPacket();
+            request.AgentData.AgentID = Client.self.getAgentID();
+            request.AgentData.SessionID = Client.self.getSessionID();
+            request.GroupData.GroupID = group;
+            request.GroupData.RequestID = requestID;
+            Client.network.SendPacket(request);
+            return requestID;
+        }
+
+        /// <summary>Request a groups Titles</summary>
+        /// <remarks>Subscribe to <code>OnGroupTitles</code> event to receive the results.</remarks>
+        /// <param name="group">group ID (UUID)</param>
+        /// <returns>UUID of the request, use to index into cache</returns>
+        public UUID RequestGroupTitles(UUID group)
+        {
+            UUID requestID = UUID.Random();
+
+            GroupTitlesRequestPacket request = new GroupTitlesRequestPacket();
+
+            request.AgentData.AgentID = Client.self.getAgentID();
+            request.AgentData.SessionID = Client.self.getSessionID();
+            request.AgentData.GroupID = group;
+            request.AgentData.RequestID = requestID;
+
+            Client.network.SendPacket(request);
+            return requestID;
+        }
+
+        /// <summary>Begin to get the group account summary</summary>
+        /// <remarks>Subscribe to the <code>OnGroupAccountSummary</code> event to receive the results.</remarks>
+        /// <param name="group">group ID (UUID)</param>
+        /// <param name="intervalDays">How long of an interval</param>
+        /// <param name="currentInterval">Which interval (0 for current, 1 for last)</param>
+        public void RequestGroupAccountSummary(UUID group, int intervalDays, int currentInterval)
+        {
+            GroupAccountSummaryRequestPacket p = new GroupAccountSummaryRequestPacket();
+            p.AgentData.AgentID = Client.self.getAgentID();
+            p.AgentData.SessionID = Client.self.getSessionID();
+            p.AgentData.GroupID = group;
+            p.MoneyData.RequestID = UUID.Random();
+            p.MoneyData.CurrentInterval = currentInterval;
+            p.MoneyData.IntervalDays = intervalDays;
+            Client.network.SendPacket(p);
+        }
+
+        /// <summary>Invites a user to a group</summary>
+        /// <param name="group">The group to invite to</param>
+        /// <param name="roles">A list of roles to invite a person to</param>
+        /// <param name="personkey">Key of person to invite</param>
+        public void Invite(UUID group, List<UUID> roles, UUID personkey)
+        {
+            InviteGroupRequestPacket igp = new InviteGroupRequestPacket();
+
+            igp.AgentData = new InviteGroupRequestPacket.AgentDataBlock();
+            igp.AgentData.AgentID = Client.self.getAgentID();
+            igp.AgentData.SessionID = Client.self.getSessionID();
+
+            igp.GroupData = new InviteGroupRequestPacket.GroupDataBlock();
+            igp.GroupData.GroupID = group;
+
+            igp.InviteData = new InviteGroupRequestPacket.InviteDataBlock[roles.size()];
+
+            for (int i = 0; i < roles.size(); i++)
+            {
+                igp.InviteData[i] = new InviteGroupRequestPacket.InviteDataBlock();
+                igp.InviteData[i].InviteeID = personkey;
+                igp.InviteData[i].RoleID = roles.get(i);
+            }
+
+            Client.network.SendPacket(igp);
+        }
+
+        /// <summary>Set a group as the current active group</summary>
+        /// <param name="id">group ID (UUID)</param>
+        public void ActivateGroup(UUID id)
+        {
+            ActivateGroupPacket activate = new ActivateGroupPacket();
+            activate.AgentData.AgentID = Client.self.getAgentID();
+            activate.AgentData.SessionID = Client.self.getSessionID();
+            activate.AgentData.GroupID = id;
+
+            Client.network.SendPacket(activate);
+        }
+
+        /// <summary>Change the role that determines your active title</summary>
+        /// <param name="group">Group ID to use</param>
+        /// <param name="role">Role ID to change to</param>
+        public void ActivateTitle(UUID group, UUID role)
+        {
+            GroupTitleUpdatePacket gtu = new GroupTitleUpdatePacket();
+            gtu.AgentData.AgentID = Client.self.getAgentID();
+            gtu.AgentData.SessionID = Client.self.getSessionID();
+            gtu.AgentData.TitleRoleID = role;
+            gtu.AgentData.GroupID = group;
+
+            Client.network.SendPacket(gtu);
+        }
+
+        /// <summary>Set this avatar's tier contribution</summary>
+        /// <param name="group">Group ID to change tier in</param>
+        /// <param name="contribution">amount of tier to donate</param>
+        public void SetGroupContribution(UUID group, int contribution)
+        {
+            SetGroupContributionPacket sgp = new SetGroupContributionPacket();
+            sgp.AgentData.AgentID = Client.self.getAgentID();
+            sgp.AgentData.SessionID = Client.self.getSessionID();
+            sgp.Data.GroupID = group;
+            sgp.Data.Contribution = contribution;
+
+            Client.network.SendPacket(sgp);
+        }
+
+        /// <summary>
+        /// Save wheather agent wants to accept group notices and list this group in their profile
+        /// </summary>
+        /// <param name="groupID">Group <see cref="UUID"/></param>
+        /// <param name="acceptNotices">Accept notices from this group</param>
+        /// <param name="listInProfile">List this group in the profile</param>
+        public void SetGroupAcceptNotices(UUID groupID, boolean acceptNotices, boolean listInProfile)
+        {
+            SetGroupAcceptNoticesPacket p = new SetGroupAcceptNoticesPacket();
+            p.AgentData.AgentID = Client.self.getAgentID();
+            p.AgentData.SessionID = Client.self.getSessionID();
+            p.Data.GroupID = groupID;
+            p.Data.AcceptNotices = acceptNotices;
+            p.NewData.ListInProfile = listInProfile;
+
+            Client.network.SendPacket(p);
+        }
+
+        /// <summary>Request to join a group</summary>
+        /// <remarks>Subscribe to <code>OnGroupJoined</code> event for confirmation.</remarks>
+        /// <param name="id">group ID (UUID) to join.</param>
+        public void RequestJoinGroup(UUID id)
+        {
+            JoinGroupRequestPacket join = new JoinGroupRequestPacket();
+            join.AgentData.AgentID = Client.self.getAgentID();
+            join.AgentData.SessionID = Client.self.getSessionID();
+
+            join.GroupData.GroupID = id;
+
+            Client.network.SendPacket(join);
+        }
+
+        /// <summary>
+        /// Request to create a new group. If the group is successfully
+        /// created, L$100 will automatically be deducted
+        /// </summary>
+        /// <remarks>Subscribe to <code>OnGroupCreated</code> event to receive confirmation.</remarks>
+        /// <param name="group">Group struct containing the new group info</param>
+        public void RequestCreateGroup(Group group)
+        {
+            CreateGroupRequestPacket cgrp = new CreateGroupRequestPacket();
+            cgrp.AgentData = new CreateGroupRequestPacket.AgentDataBlock();
+            cgrp.AgentData.AgentID = Client.self.getAgentID();
+            cgrp.AgentData.SessionID = Client.self.getSessionID();
+
+            cgrp.GroupData = new CreateGroupRequestPacket.GroupDataBlock();
+            cgrp.GroupData.AllowPublish = group.AllowPublish;
+            cgrp.GroupData.Charter = Utils.stringToBytesWithTrailingNullByte(group.Charter);
+            cgrp.GroupData.InsigniaID = group.InsigniaID;
+            cgrp.GroupData.MaturePublish = group.MaturePublish;
+            cgrp.GroupData.MembershipFee = group.MembershipFee;
+            cgrp.GroupData.Name = Utils.stringToBytesWithTrailingNullByte(group.Name);
+            cgrp.GroupData.OpenEnrollment = group.OpenEnrollment;
+            cgrp.GroupData.ShowInList = group.ShowInList;
+
+            Client.network.SendPacket(cgrp);
+        }
+
+        /// <summary>Update a group's profile and other information</summary>
+        /// <param name="id">Groups ID (UUID) to update.</param>
+        /// <param name="group">Group struct to update.</param>
+        public void UpdateGroup(UUID id, Group group)
+        {
+            UpdateGroupInfoPacket cgrp = new UpdateGroupInfoPacket();
+            cgrp.AgentData = new UpdateGroupInfoPacket.AgentDataBlock();
+            cgrp.AgentData.AgentID = Client.self.getAgentID();
+            cgrp.AgentData.SessionID = Client.self.getSessionID();
+
+            cgrp.GroupData = new UpdateGroupInfoPacket.GroupDataBlock();
+            cgrp.GroupData.GroupID = id;
+            cgrp.GroupData.AllowPublish = group.AllowPublish;
+            cgrp.GroupData.Charter = Utils.stringToBytesWithTrailingNullByte(group.Charter);
+            cgrp.GroupData.InsigniaID = group.InsigniaID;
+            cgrp.GroupData.MaturePublish = group.MaturePublish;
+            cgrp.GroupData.MembershipFee = group.MembershipFee;
+            cgrp.GroupData.OpenEnrollment = group.OpenEnrollment;
+            cgrp.GroupData.ShowInList = group.ShowInList;
+
+            Client.network.SendPacket(cgrp);
+        }
+
+        /// <summary>Eject a user from a group</summary>
+        /// <param name="group">Group ID to eject the user from</param>
+        /// <param name="member">Avatar's key to eject</param>
+        public void EjectUser(UUID group, UUID member)
+        {
+            EjectGroupMemberRequestPacket eject = new EjectGroupMemberRequestPacket();
+            eject.AgentData = new EjectGroupMemberRequestPacket.AgentDataBlock();
+            eject.AgentData.AgentID = Client.self.getAgentID();
+            eject.AgentData.SessionID = Client.self.getSessionID();
+
+            eject.GroupData = new EjectGroupMemberRequestPacket.GroupDataBlock();
+            eject.GroupData.GroupID = group;
+
+            eject.EjectData = new EjectGroupMemberRequestPacket.EjectDataBlock[1];
+            eject.EjectData[0] = new EjectGroupMemberRequestPacket.EjectDataBlock();
+            eject.EjectData[0].EjecteeID = member;
+
+            Client.network.SendPacket(eject);
+        }
+
+        /// <summary>Update role information</summary>
+        /// <param name="role">Modified role to be updated</param>
+        public void UpdateRole(GroupRole role)
+        {
+            GroupRoleUpdatePacket gru = new GroupRoleUpdatePacket();
+            gru.AgentData.AgentID = Client.self.getAgentID();
+            gru.AgentData.SessionID = Client.self.getSessionID();
+            gru.AgentData.GroupID = role.GroupID;
+            gru.RoleData = new GroupRoleUpdatePacket.RoleDataBlock[1];
+            gru.RoleData[0] = new GroupRoleUpdatePacket.RoleDataBlock();
+            gru.RoleData[0].Name = Utils.stringToBytesWithTrailingNullByte(role.Name);
+            gru.RoleData[0].Description = Utils.stringToBytesWithTrailingNullByte(role.Description);
+            gru.RoleData[0].Powers = new BigInteger(Utils.int64ToBytes(GroupPowers.getIndex(role.Powers)));
+            gru.RoleData[0].RoleID = role.ID;
+            gru.RoleData[0].Title = Utils.stringToBytesWithTrailingNullByte(role.Title);
+            gru.RoleData[0].UpdateType = (byte)GroupRoleUpdate.UpdateAll.getIndex();
+            Client.network.SendPacket(gru);
+        }
+
+        /// <summary>Create a new group role</summary>
+        /// <param name="group">Group ID to update</param>
+        /// <param name="role">Role to create</param>
+        public void CreateRole(UUID group, GroupRole role)
+        {
+            GroupRoleUpdatePacket gru = new GroupRoleUpdatePacket();
+            gru.AgentData.AgentID = Client.self.getAgentID();
+            gru.AgentData.SessionID = Client.self.getSessionID();
+            gru.AgentData.GroupID = group;
+            gru.RoleData = new GroupRoleUpdatePacket.RoleDataBlock[1];
+            gru.RoleData[0] = new GroupRoleUpdatePacket.RoleDataBlock();
+            gru.RoleData[0].RoleID = UUID.Random();
+            gru.RoleData[0].Name = Utils.stringToBytesWithTrailingNullByte(role.Name);
+            gru.RoleData[0].Description = Utils.stringToBytesWithTrailingNullByte(role.Description);
+            gru.RoleData[0].Powers = new BigInteger(Utils.int64ToBytes(GroupPowers.getIndex(role.Powers)));
+            gru.RoleData[0].Title = Utils.stringToBytesWithTrailingNullByte(role.Title);
+            gru.RoleData[0].UpdateType = (byte)GroupRoleUpdate.Create.getIndex();
+            Client.network.SendPacket(gru);
+        }
+
+        /// <summary>Delete a group role</summary>
+        /// <param name="group">Group ID to update</param>
+        /// <param name="roleID">Role to delete</param>
+        public void DeleteRole(UUID group, UUID roleID)
+        {
+            GroupRoleUpdatePacket gru = new GroupRoleUpdatePacket();
+            gru.AgentData.AgentID = Client.self.getAgentID();
+            gru.AgentData.SessionID = Client.self.getSessionID();
+            gru.AgentData.GroupID = group;
+            gru.RoleData = new GroupRoleUpdatePacket.RoleDataBlock[1];
+            gru.RoleData[0] = new GroupRoleUpdatePacket.RoleDataBlock();
+            gru.RoleData[0].RoleID = roleID;
+            gru.RoleData[0].Name = Utils.stringToBytesWithTrailingNullByte("");
+            gru.RoleData[0].Description = Utils.stringToBytesWithTrailingNullByte("");
+            gru.RoleData[0].Powers = new BigInteger("0");
+            gru.RoleData[0].Title = Utils.stringToBytesWithTrailingNullByte("");
+            gru.RoleData[0].UpdateType = (byte)GroupRoleUpdate.Delete.getIndex();
+            Client.network.SendPacket(gru);
+        }
+
+        /// <summary>Remove an avatar from a role</summary>
+        /// <param name="group">Group ID to update</param>
+        /// <param name="role">Role ID to be removed from</param>
+        /// <param name="member">Avatar's Key to remove</param>
+        public void RemoveFromRole(UUID group, UUID role, UUID member)
+        {
+            GroupRoleChangesPacket grc = new GroupRoleChangesPacket();
+            grc.AgentData.AgentID = Client.self.getAgentID();
+            grc.AgentData.SessionID = Client.self.getSessionID();
+            grc.AgentData.GroupID = group;
+            grc.RoleChange = new GroupRoleChangesPacket.RoleChangeBlock[1];
+            grc.RoleChange[0] = new GroupRoleChangesPacket.RoleChangeBlock();
+            //Add to members and role
+            grc.RoleChange[0].MemberID = member;
+            grc.RoleChange[0].RoleID = role;
+            //1 = Remove From Role TODO: this should be in an enum
+            grc.RoleChange[0].Change = 1;
+            Client.network.SendPacket(grc);
+        }
+
+        /// <summary>Assign an avatar to a role</summary>
+        /// <param name="group">Group ID to update</param>
+        /// <param name="role">Role ID to assign to</param>
+        /// <param name="member">Avatar's ID to assign to role</param>
+        public void AddToRole(UUID group, UUID role, UUID member)
+        {
+            GroupRoleChangesPacket grc = new GroupRoleChangesPacket();
+            grc.AgentData.AgentID = Client.self.getAgentID();
+            grc.AgentData.SessionID = Client.self.getSessionID();
+            grc.AgentData.GroupID = group;
+            grc.RoleChange = new GroupRoleChangesPacket.RoleChangeBlock[1];
+            grc.RoleChange[0] = new GroupRoleChangesPacket.RoleChangeBlock();
+            //Add to members and role
+            grc.RoleChange[0].MemberID = member;
+            grc.RoleChange[0].RoleID = role;
+            //0 = Add to Role TODO: this should be in an enum
+            grc.RoleChange[0].Change = 0;
+            Client.network.SendPacket(grc);
+        }
+
+        /// <summary>Request the group notices list</summary>
+        /// <param name="group">Group ID to fetch notices for</param>
+        public void RequestGroupNoticesList(UUID group)
+        {
+            GroupNoticesListRequestPacket gnl = new GroupNoticesListRequestPacket();
+            gnl.AgentData.AgentID = Client.self.getAgentID();
+            gnl.AgentData.SessionID = Client.self.getSessionID();
+            gnl.Data.GroupID = group;
+            Client.network.SendPacket(gnl);
+        }
+
+        /// <summary>Request a group notice by key</summary>
+        /// <param name="noticeID">ID of group notice</param>
+        public void RequestGroupNotice(UUID noticeID)
+        {
+            GroupNoticeRequestPacket gnr = new GroupNoticeRequestPacket();
+            gnr.AgentData.AgentID = Client.self.getAgentID();
+            gnr.AgentData.SessionID = Client.self.getSessionID();
+            gnr.Data.GroupNoticeID = noticeID;
+            Client.network.SendPacket(gnr);
+        }
+        
+        /// <summary>Send out a group notice</summary>
+        /// <param name="group">Group ID to update</param>
+        /// <param name="notice"><code>GroupNotice</code> structure containing notice data</param>
+        public void SendGroupNotice(UUID group, GroupNotice notice) throws Exception
+        {
+            Client.self.InstantMessage(Client.self.getName(), group, notice.Subject + "|" + notice.Message,
+                UUID.Zero, InstantMessageDialog.GroupNotice, InstantMessageOnline.Online,
+                Vector3.Zero, UUID.Zero, notice.SerializeAttachment());
+        }
+
+        /// <summary>Start a group proposal (vote)</summary>
+        /// <param name="group">The Group ID to send proposal to</param>
+        /// <param name="prop"><code>GroupProposal</code> structure containing the proposal</param>
+        public void StartProposal(UUID group, GroupProposal prop)
+        {
+            StartGroupProposalPacket p = new StartGroupProposalPacket();
+            p.AgentData.AgentID = Client.self.getAgentID();
+            p.AgentData.SessionID = Client.self.getSessionID();
+            p.ProposalData.GroupID = group;
+            p.ProposalData.ProposalText = Utils.stringToBytesWithTrailingNullByte(prop.VoteText);
+            p.ProposalData.Quorum = prop.Quorum;
+            p.ProposalData.Majority = prop.Majority;
+            p.ProposalData.Duration = prop.Duration;
+            Client.network.SendPacket(p);
+        }
+
+        /// <summary>Request to leave a group</summary>
+        /// <remarks>Subscribe to <code>OnGroupLeft</code> event to receive confirmation</remarks>
+        /// <param name="groupID">The group to leave</param>
+        public void LeaveGroup(UUID groupID)
+        {
+            LeaveGroupRequestPacket p = new LeaveGroupRequestPacket();
+            p.AgentData.AgentID = Client.self.getAgentID();
+            p.AgentData.SessionID = Client.self.getSessionID();
+            p.GroupData.GroupID = groupID;
+
+            Client.network.SendPacket(p);
+        }
+//endregion
+
+        //region Packet Handlers
+        
+        protected void AgentGroupDataUpdateMessageHandler(String capsKey, IMessage message, Simulator simulator)
+        {      
+            if (onCurrentGroups != null)
+            {
+                AgentGroupDataUpdateMessage msg = (AgentGroupDataUpdateMessage)message;
+
+                Map<UUID, Group> currentGroups = new HashMap<UUID, Group>();
+                for (int i = 0; i < msg.GroupDataBlock.length; i++)
+                {
+                    Group group = new Group();
+                    group.ID = msg.GroupDataBlock[i].GroupID;
+                    group.InsigniaID = msg.GroupDataBlock[i].GroupInsigniaID;
+                    group.Name = msg.GroupDataBlock[i].GroupName;
+                    group.Contribution = msg.GroupDataBlock[i].Contribution;
+                    group.AcceptNotices = msg.GroupDataBlock[i].AcceptNotices;
+                    group.Powers = msg.GroupDataBlock[i].GroupPowers;
+                    group.ListInProfile = msg.NewGroupDataBlock[i].ListInProfile;
+
+                    currentGroups.put(group.ID, group);
+
+                    synchronized (GroupName2KeyCache.getDictionary())
+                    {
+                        if (!GroupName2KeyCache.containsKey(group.ID))
+                            GroupName2KeyCache.add(group.ID, group.Name);
+                    }
+                }
+                onCurrentGroups.raiseEvent(new CurrentGroupsEventArgs(currentGroups));
+            }
+        }
+
+        /// <summary>Process an incoming packet and raise the appropriate events</summary>
+        /// <param name="sender">The sender</param>
+        /// <param name="e">The EventArgs object containing the packet data</param>
+        protected void AgentDropGroupHandler(Object sender, PacketReceivedEventArgs e)
+        {
+            if (onGroupDropped != null)
+            {
+                Packet packet = e.getPacket();
+                onGroupDropped.raiseEvent(new GroupDroppedEventArgs(((AgentDropGroupPacket)packet).AgentData.GroupID));
+            }
+        }
+
+        protected void AgentDropGroupMessageHandler(String capsKey, IMessage message, Simulator simulator)
+        {
+            
+            if (onGroupDropped != null)
+            {
+                AgentDropGroupMessage msg = (AgentDropGroupMessage)message;
+                for (int i = 0; i < msg.AgentDataBlock.length; i++)
+                {
+                    onGroupDropped.raiseEvent(new GroupDroppedEventArgs(msg.AgentDataBlock[i].GroupID));
+                }
+            }
+        }
+
+        /// <summary>Process an incoming packet and raise the appropriate events</summary>
+        /// <param name="sender">The sender</param>
+        /// <param name="e">The EventArgs object containing the packet data</param>
+        protected void GroupProfileReplyHandler(Object sender, PacketReceivedEventArgs e) throws UnsupportedEncodingException
+        {            
+            if (onGroupProfile != null)
+            {
+                Packet packet = e.getPacket();
+                GroupProfileReplyPacket profile = (GroupProfileReplyPacket)packet;
+                Group group = new Group();
+
+                group.ID = profile.GroupData.GroupID;
+                group.AllowPublish = profile.GroupData.AllowPublish;
+                group.Charter = Utils.bytesWithTrailingNullByteToString(profile.GroupData.Charter);
+                group.FounderID = profile.GroupData.FounderID;
+                group.GroupMembershipCount = profile.GroupData.GroupMembershipCount;
+                group.GroupRolesCount = profile.GroupData.GroupRolesCount;
+                group.InsigniaID = profile.GroupData.InsigniaID;
+                group.MaturePublish = profile.GroupData.MaturePublish;
+                group.MembershipFee = profile.GroupData.MembershipFee;
+                group.MemberTitle = Utils.bytesWithTrailingNullByteToString(profile.GroupData.MemberTitle);
+                group.Money = profile.GroupData.Money;
+                group.Name = Utils.bytesWithTrailingNullByteToString(profile.GroupData.Name);
+                group.OpenEnrollment = profile.GroupData.OpenEnrollment;
+                group.OwnerRole = profile.GroupData.OwnerRole;
+                group.Powers = GroupPowers.get(profile.GroupData.PowersMask.longValue());
+                group.ShowInList = profile.GroupData.ShowInList;
+
+                onGroupProfile.raiseEvent(new GroupProfileEventArgs(group));
+            }
+        }
+
+        /// <summary>Process an incoming packet and raise the appropriate events</summary>
+        /// <param name="sender">The sender</param>
+        /// <param name="e">The EventArgs object containing the packet data</param>
+        protected void GroupNoticesListReplyHandler(Object sender, PacketReceivedEventArgs e) throws UnsupportedEncodingException
+        {
+            if (onGroupNoticesListReply != null)
+            {
+                Packet packet = e.getPacket();
+                GroupNoticesListReplyPacket reply = (GroupNoticesListReplyPacket)packet;
+
+                List<GroupNoticesListEntry> notices = new ArrayList<GroupNoticesListEntry>();
+
+                for(GroupNoticesListReplyPacket.DataBlock entry : reply.Data)
+                {
+                    GroupNoticesListEntry notice = new GroupNoticesListEntry();
+                    notice.FromName = Utils.bytesWithTrailingNullByteToString(entry.FromName);
+                    notice.Subject = Utils.bytesWithTrailingNullByteToString(entry.Subject);
+                    notice.NoticeID = entry.NoticeID;
+                    notice.Timestamp = entry.Timestamp;
+                    notice.HasAttachment = entry.HasAttachment;
+                    notice.AssetType = AssetType.get(entry.AssetType);
+
+                    notices.add(notice);
+                }
+
+               onGroupNoticesListReply.raiseEvent(new GroupNoticesListReplyEventArgs(reply.AgentData.GroupID, notices));
+            }
+        }
+
+        /// <summary>Process an incoming packet and raise the appropriate events</summary>
+        /// <param name="sender">The sender</param>
+        /// <param name="e">The EventArgs object containing the packet data</param>
+        protected void GroupTitlesReplyHandler(Object sender, PacketReceivedEventArgs e) throws UnsupportedEncodingException
+        {
+            if (onGroupTitlesReply != null)
+            {
+                Packet packet = e.getPacket();
+                GroupTitlesReplyPacket titles = (GroupTitlesReplyPacket)packet;
+                Map<UUID, GroupTitle> groupTitleCache = new HashMap<UUID, GroupTitle>();
+
+                for(GroupTitlesReplyPacket.GroupDataBlock block : titles.GroupData)
+                {
+                    GroupTitle groupTitle = new GroupTitle();
+
+                    groupTitle.GroupID = titles.AgentData.GroupID;
+                    groupTitle.RoleID = block.RoleID;
+                    groupTitle.Title = Utils.bytesWithTrailingNullByteToString(block.Title);
+                    groupTitle.Selected = block.Selected;
+
+                    groupTitleCache.put(block.RoleID, groupTitle);
+                }
+                onGroupTitlesReply.raiseEvent(new GroupTitlesReplyEventArgs(titles.AgentData.RequestID, titles.AgentData.GroupID, groupTitleCache));
+            }
+        }
+
+        /// <summary>Process an incoming packet and raise the appropriate events</summary>
+        /// <param name="sender">The sender</param>
+        /// <param name="e">The EventArgs object containing the packet data</param>
+        protected void GroupMembersHandler(Object sender, PacketReceivedEventArgs e) throws UnsupportedEncodingException
+        {
+            Packet packet = e.getPacket();
+            GroupMembersReplyPacket members = (GroupMembersReplyPacket)packet;
+            Map<UUID, GroupMember> groupMemberCache = null;
+
+            synchronized (GroupMembersRequests)
+            {
+                // If nothing is registered to receive this RequestID drop the data
+                if (GroupMembersRequests.contains(members.GroupData.RequestID))
+                {
+                    synchronized (TempGroupMembers.getDictionary())
+                    {
+                        if ((groupMemberCache = TempGroupMembers.get(members.GroupData.RequestID)) == null)
+                        {
+                            groupMemberCache = new HashMap<UUID, GroupMember>();
+                            TempGroupMembers.add(members.GroupData.RequestID, groupMemberCache);
+                        }
+
+                        for(GroupMembersReplyPacket.MemberDataBlock block : members.MemberData)
+                        {
+                            GroupMember groupMember = new GroupMember();
+
+                            groupMember.ID = block.AgentID;
+                            groupMember.Contribution = block.Contribution;
+                            groupMember.IsOwner = block.IsOwner;
+                            groupMember.OnlineStatus = Utils.bytesWithTrailingNullByteToString(block.OnlineStatus);
+                            groupMember.Powers = GroupPowers.get(block.AgentPowers.longValue());
+                            groupMember.Title = Utils.bytesWithTrailingNullByteToString(block.Title);
+
+                            groupMemberCache.put(block.AgentID, groupMember);
+                        }
+
+                        if (groupMemberCache.size() >= members.GroupData.MemberCount)
+                        {
+                            GroupMembersRequests.remove(members.GroupData.RequestID);
+                            TempGroupMembers.remove(members.GroupData.RequestID);
+                        }
+                    }
+                }
+            }
+
+            if (onGroupMembersReply != null && groupMemberCache != null && groupMemberCache.size() >= members.GroupData.MemberCount)
+            {
+                onGroupMembersReply.raiseEvent(new GroupMembersReplyEventArgs(members.GroupData.RequestID, members.GroupData.GroupID, groupMemberCache));
+            }
+        }
+
+        /// <summary>Process an incoming packet and raise the appropriate events</summary>
+        /// <param name="sender">The sender</param>
+        /// <param name="e">The EventArgs object containing the packet data</param>
+        protected void GroupRoleDataReplyHandler(Object sender, PacketReceivedEventArgs e) throws UnsupportedEncodingException
+        {
+            Packet packet = e.getPacket();
+            GroupRoleDataReplyPacket roles = (GroupRoleDataReplyPacket)packet;
+            Map<UUID, GroupRole> groupRoleCache = null;
+
+            synchronized (GroupRolesRequests)
+            {
+                // If nothing is registered to receive this RequestID drop the data
+                if (GroupRolesRequests.contains(roles.GroupData.RequestID))
+                {
+                    GroupRolesRequests.remove(roles.GroupData.RequestID);
+
+                    synchronized (TempGroupRoles.getDictionary())
+                    {
+                        if ((groupRoleCache = TempGroupRoles.get(roles.GroupData.RequestID))==null)
+                        {
+                            groupRoleCache = new HashMap<UUID, GroupRole>();
+                            TempGroupRoles.add(roles.GroupData.RequestID, groupRoleCache);
+                        }
+
+                        for(GroupRoleDataReplyPacket.RoleDataBlock block : roles.RoleData)
+                        {
+                            GroupRole groupRole = new GroupRole();
+
+                            groupRole.GroupID = roles.GroupData.GroupID;
+                            groupRole.ID = block.RoleID;
+                            groupRole.Description = Utils.bytesWithTrailingNullByteToString(block.Description);
+                            groupRole.Name = Utils.bytesWithTrailingNullByteToString(block.Name);
+                            groupRole.Powers = GroupPowers.get(block.Powers.longValue());
+                            groupRole.Title = Utils.bytesWithTrailingNullByteToString(block.Title);
+
+                            groupRoleCache.put(block.RoleID, groupRole);
+                        }
+
+                        if (groupRoleCache.size() >= roles.GroupData.RoleCount)
+                        {
+                            GroupRolesRequests.remove(roles.GroupData.RequestID);
+                            TempGroupRoles.remove(roles.GroupData.RequestID);
+                        }
+                    }
+                }
+            }
+
+            if (onGroupRoleDataReply != null && groupRoleCache != null && groupRoleCache.size() >= roles.GroupData.RoleCount)
+            {
+                onGroupRoleDataReply.raiseEvent(new GroupRolesDataReplyEventArgs(roles.GroupData.RequestID, roles.GroupData.GroupID, groupRoleCache));
+            }
+        }
+
+        /// <summary>Process an incoming packet and raise the appropriate events</summary>
+        /// <param name="sender">The sender</param>
+        /// <param name="e">The EventArgs object containing the packet data</param>
+        protected void GroupRoleMembersReplyHandler(Object sender, PacketReceivedEventArgs e)
+        {
+            Packet packet = e.getPacket();
+            GroupRoleMembersReplyPacket members = (GroupRoleMembersReplyPacket)packet;
+            List<KeyValuePair<UUID, UUID>> groupRoleMemberCache = null;
+
+            try
+            {
+                synchronized (GroupRolesMembersRequests)
+                {
+                    // If nothing is registered to receive this RequestID drop the data
+                    if (GroupRolesMembersRequests.contains(members.AgentData.RequestID))
+                    {
+                        synchronized (TempGroupRolesMembers.getDictionary())
+                        {
+                            if ((groupRoleMemberCache = TempGroupRolesMembers.get(members.AgentData.RequestID))==null)
+                            {
+                                groupRoleMemberCache = new ArrayList<KeyValuePair<UUID, UUID>>();
+                                TempGroupRolesMembers.add(members.AgentData.RequestID, groupRoleMemberCache);
+                            }
+
+                            for(GroupRoleMembersReplyPacket.MemberDataBlock block : members.MemberData)
+                            {
+                                KeyValuePair<UUID, UUID> rolemember =
+                                    new KeyValuePair<UUID, UUID>(block.RoleID, block.MemberID);
+
+                                groupRoleMemberCache.add(rolemember);
+                            }
+
+                            if (groupRoleMemberCache.size() >= members.AgentData.TotalPairs)
+                            {
+                                GroupRolesMembersRequests.remove(members.AgentData.RequestID);
+                                TempGroupRolesMembers.remove(members.AgentData.RequestID);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                JLogger.error(Utils.getExceptionStackTraceAsString(ex));
+            }
+
+            if (onGroupRoleMembersReply != null && groupRoleMemberCache != null && groupRoleMemberCache.size() >= members.AgentData.TotalPairs)
+            {
+            	onGroupRoleMembersReply.raiseEvent(new GroupRolesMembersReplyEventArgs(members.AgentData.RequestID, members.AgentData.GroupID, groupRoleMemberCache));
+            }
+        }
+
+        /// <summary>Process an incoming packet and raise the appropriate events</summary>
+        /// <param name="sender">The sender</param>
+        /// <param name="e">The EventArgs object containing the packet data</param>
+        protected void GroupActiveProposalItemHandler(Object sender, PacketReceivedEventArgs e)
+        {
+            //GroupActiveProposalItemReplyPacket proposal = (GroupActiveProposalItemReplyPacket)packet;
+
+            // TODO: Create a proposal struct to represent the fields in a proposal item
+        }
+
+        /// <summary>Process an incoming packet and raise the appropriate events</summary>
+        /// <param name="sender">The sender</param>
+        /// <param name="e">The EventArgs object containing the packet data</param>
+        protected void GroupVoteHistoryItemHandler(Object sender, PacketReceivedEventArgs e)
+        {
+            //GroupVoteHistoryItemReplyPacket history = (GroupVoteHistoryItemReplyPacket)packet;
+
+            // TODO: This was broken in the official viewer when I was last trying to work  on it
+        }
+
+        /// <summary>Process an incoming packet and raise the appropriate events</summary>
+        /// <param name="sender">The sender</param>
+        /// <param name="e">The EventArgs object containing the packet data</param>
+        protected void GroupAccountSummaryReplyHandler(Object sender, PacketReceivedEventArgs e) throws UnsupportedEncodingException
+        {
+            if (onGroupAccountSummaryReply != null)
+            {
+                Packet packet = e.getPacket();
+                GroupAccountSummaryReplyPacket summary = (GroupAccountSummaryReplyPacket)packet;
+                GroupAccountSummary account = new GroupAccountSummary();
+
+                account.Balance = summary.MoneyData.Balance;
+                account.CurrentInterval = summary.MoneyData.CurrentInterval;
+                account.GroupTaxCurrent = summary.MoneyData.GroupTaxCurrent;
+                account.GroupTaxEstimate = summary.MoneyData.GroupTaxEstimate;
+                account.IntervalDays = summary.MoneyData.IntervalDays;
+                account.LandTaxCurrent = summary.MoneyData.LandTaxCurrent;
+                account.LandTaxEstimate = summary.MoneyData.LandTaxEstimate;
+                account.LastTaxDate = Utils.bytesWithTrailingNullByteToString(summary.MoneyData.LastTaxDate);
+                account.LightTaxCurrent = summary.MoneyData.LightTaxCurrent;
+                account.LightTaxEstimate = summary.MoneyData.LightTaxEstimate;
+                account.NonExemptMembers = summary.MoneyData.NonExemptMembers;
+                account.ObjectTaxCurrent = summary.MoneyData.ObjectTaxCurrent;
+                account.ObjectTaxEstimate = summary.MoneyData.ObjectTaxEstimate;
+                account.ParcelDirFeeCurrent = summary.MoneyData.ParcelDirFeeCurrent;
+                account.ParcelDirFeeEstimate = summary.MoneyData.ParcelDirFeeEstimate;
+                account.StartDate = Utils.bytesWithTrailingNullByteToString(summary.MoneyData.StartDate);
+                account.TaxDate = Utils.bytesWithTrailingNullByteToString(summary.MoneyData.TaxDate);
+                account.TotalCredits = summary.MoneyData.TotalCredits;
+                account.TotalDebits = summary.MoneyData.TotalDebits;
+
+                onGroupAccountSummaryReply.raiseEvent(new GroupAccountSummaryReplyEventArgs(summary.AgentData.GroupID, account));
+            }
+        }
+
+        /// <summary>Process an incoming packet and raise the appropriate events</summary>
+        /// <param name="sender">The sender</param>
+        /// <param name="e">The EventArgs object containing the packet data</param>
+        protected void CreateGroupReplyHandler(Object sender, PacketReceivedEventArgs e) throws UnsupportedEncodingException
+        {
+            if (onGroupCreatedReply != null)
+            {
+                Packet packet = e.getPacket();
+                CreateGroupReplyPacket reply = (CreateGroupReplyPacket)packet;
+
+                String message = Utils.bytesWithTrailingNullByteToString(reply.ReplyData.Message);
+
+                onGroupCreatedReply.raiseEvent(new GroupCreatedReplyEventArgs(reply.ReplyData.GroupID, reply.ReplyData.Success, message));
+            }
+        }
+
+        /// <summary>Process an incoming packet and raise the appropriate events</summary>
+        /// <param name="sender">The sender</param>
+        /// <param name="e">The EventArgs object containing the packet data</param>
+        protected void JoinGroupReplyHandler(Object sender, PacketReceivedEventArgs e)
+        {
+            if (onGroupJoinedReply != null)
+            {
+                Packet packet = e.getPacket();
+                JoinGroupReplyPacket reply = (JoinGroupReplyPacket)packet;
+
+                onGroupJoinedReply.raiseEvent(new GroupOperationEventArgs(reply.GroupData.GroupID, reply.GroupData.Success));
+            }
+        }
+
+        /// <summary>Process an incoming packet and raise the appropriate events</summary>
+        /// <param name="sender">The sender</param>
+        /// <param name="e">The EventArgs object containing the packet data</param>
+        protected void LeaveGroupReplyHandler(Object sender, PacketReceivedEventArgs e)
+        {
+            if (onGroupLeaveReply != null)
+            {
+                Packet packet = e.getPacket();
+                LeaveGroupReplyPacket reply = (LeaveGroupReplyPacket)packet;
+
+                onGroupLeaveReply.raiseEvent(new GroupOperationEventArgs(reply.GroupData.GroupID, reply.GroupData.Success));
+            }
+        }
+
+        /// <summary>Process an incoming packet and raise the appropriate events</summary>
+        /// <param name="sender">The sender</param>
+        /// <param name="e">The EventArgs object containing the packet data</param>
+        private void UUIDGroupNameReplyHandler(Object sender, PacketReceivedEventArgs e) throws UnsupportedEncodingException
+        {
+            Packet packet = e.getPacket();
+            UUIDGroupNameReplyPacket reply = (UUIDGroupNameReplyPacket)packet;
+            UUIDGroupNameReplyPacket.UUIDNameBlockBlock[] blocks = reply.UUIDNameBlock;
+
+            Map<UUID, String> groupNames = new HashMap<UUID, String>();
+
+            for(UUIDGroupNameReplyPacket.UUIDNameBlockBlock block : blocks)
+            {
+                groupNames.put(block.ID, Utils.bytesWithTrailingNullByteToString(block.GroupName));
+                if (!GroupName2KeyCache.containsKey(block.ID))
+                    GroupName2KeyCache.add(block.ID, Utils.bytesWithTrailingNullByteToString(block.GroupName));
+            }
+
+            if (onGroupNamesReply != null)
+            {
+                onGroupNamesReply.raiseEvent(new GroupNamesEventArgs(groupNames));
+            }
+        }
+
+        /// <summary>Process an incoming packet and raise the appropriate events</summary>
+        /// <param name="sender">The sender</param>
+        /// <param name="e">The EventArgs object containing the packet data</param>
+        protected void EjectGroupMemberReplyHandler(Object sender, PacketReceivedEventArgs e)
+        {
+            Packet packet = e.getPacket();
+            EjectGroupMemberReplyPacket reply = (EjectGroupMemberReplyPacket)packet;
+
+            // TODO: On Success remove the member from the cache(s)
+
+            if (onGroupMemberEjected != null)
+            {
+                onGroupMemberEjected.raiseEvent(new GroupOperationEventArgs(reply.GroupData.GroupID, reply.EjectData.Success));
+            }
+        }        
+
+        //endregion Packet Handlers
 }

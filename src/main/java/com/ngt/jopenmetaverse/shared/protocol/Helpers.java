@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.lang.reflect.Field;
+import java.math.BigInteger;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -129,13 +130,13 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         /// <param name="localY">The sim-local Y position of the global Y
         /// position, a value from 0.0 to 256.0</param>
         /// <returns>A 64-bit region handle that can be used to teleport to</returns>
-        public static long GlobalPosToRegionHandle(float globalX, float globalY, float local[])
+        public static BigInteger GlobalPosToRegionHandle(float globalX, float globalY, float local[])
         {
             long x = ((long)globalX / 256) * 256;
             long y = ((long)globalY / 256) * 256;
             local[0] = globalX - (float)x;
             local[1] = globalY - (float)y;
-            return (x << 32) | y;
+            return new BigInteger(Utils.int64ToBytes((x << 32) | y));
         }
 
         /// <summary>

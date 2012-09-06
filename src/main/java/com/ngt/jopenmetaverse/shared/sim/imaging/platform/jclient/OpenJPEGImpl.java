@@ -40,6 +40,8 @@ public class OpenJPEGImpl implements IOpenJPEG {
 		return Encode(image, false);
 	}
 
+	
+	//TODO Handling Bump .. currntly it supports only ARGB colors
 	public IBitmap DecodeToIBitMap(byte[] encoded) throws Exception{
 		ByteArrayInputStream bais = new ByteArrayInputStream(encoded);
 		ImageReader reader = (ImageReader) ImageIO.getImageReadersByFormatName("jpeg2000").next();
@@ -76,6 +78,7 @@ public class OpenJPEGImpl implements IOpenJPEG {
 		return pngbitmap;
 	}
 	
+	//TODO Handling Bump .. currntly it supports only ARGB colors
 	public byte[] EncodeFromImage(IBitmap inputbitmap, boolean lossless) throws Exception {
 		
 		//First convert to png and then read back. This is currently a BUG as Jpeg2000 conversion is 
