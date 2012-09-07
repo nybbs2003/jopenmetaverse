@@ -1,0 +1,36 @@
+grep -E -R "= *bytes\[" src/
+grep -E -R 'bytes\[i\[0\]\+\+.*='
+
+//Followng regular expression will find any signed byte to (int or long or short) assignment
+grep -E -R "[[:alpha:]]+ [[:alpha:]]+ *\= *\([[:alpha:]]+\) *bytes" src/
+grep -E -R "[[:alpha:]]+ [[:alpha:]]+ *\= *bytes" src/
+grep -E -R "([[:alpha:]] )* [[:alpha:]]+ *\= *\([[:alpha:]]+\) *bytes" src/
+grep -E -R  "= *\([[:alpha:]]+\) *bytes" src/
+
+
+public event EventHandler<(.*)> (.*)(\s+)
+public event EventHandler<$1> $2 $3\n	private EventObservable<$1> $2 = new EventObservable<$1>();\n
+
+
+Client\.network\.RegisterCallback\((.+), (.+)\);(\s+)
+// Client.network.RegisterCallback($1, $2);\n$3Client.network.RegisterCallback($1, new EventObserver<PacketReceivedEventArgs>()\n{ \n@Override\npublic void handleEvent(Observable o,PacketReceivedEventArgs arg) {\n try{ $2(o, arg);}\ncatch(Exception e) {JLogger.warn(Utils.getExceptionStackTraceAsString(e));}\n}}\n);\n
+
+
+Client\.network\.RegisterEventCallback\((.+), new Caps.EventQueueCallback\((.+)\)\);(\s+)
+// Client.network.RegisterEventCallback($1, new Caps.EventQueueCallback($2);\n$3Client.network.RegisterEventCallback($1, new EventObserver<CapsEventObservableArg>()\n{ \n@Override\npublic void handleEvent(Observable o,CapsEventObservableArg arg) {\n try{ $2(arg.getCapsKey(), arg.getMessage(), arg.getSimulator());}\ncatch(Exception e) {JLogger.warn(Utils.getExceptionStackTraceAsString(e));}\n}}\n);\n
+
+
+public event EventHandler<(.*)> (.*)(\s+)
+public event EventHandler<$1> $2 $3\n   private EventObservable<$1> on$2 = new EventObservable<$1>();\n public void registerOn$2(EventObserver<$1> o)\n{\n      on$2.addObserver(o);\n}\npublic void unregisterOn$2(EventObserver<$1> o) \n{\non$2.deleteObserver(o);\n }\n
+
+
+private EventObservable<$1> $2 = new EventObservable<$1>();\n
+
+private EventObservable<(.+)> (.+) = new EventObservable<(.+)>\(\);\n
+	private EventObservable<$1> on$2 = new EventObservable<$1>();\n public void registerOn$2(EventObserver<$1> o)\n{\n	on$2.addObserver(o);\n}\npublic void unregisterOn$2(EventObserver<$1> o) \n{\non$2.deleteObserver(o);\n	}\n	
+
+public (.*) (.*)\s+\{\s+get\s+\{\s*return\s+(.*);\s*}
+public $1 get$2() {return $3;}
+
+public (.*) (.*)\s+\{\s+get\s+\{\s*return\s+(.*);\s*}\s+set\s*\{\s*(.*);\s*\}\s*}
+public $1 get$2()\R\t{return $3;}\R\tpublic void set$2($1 value)\R\t{$4;}
