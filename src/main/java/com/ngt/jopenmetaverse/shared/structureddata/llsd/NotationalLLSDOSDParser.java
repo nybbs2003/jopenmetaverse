@@ -200,7 +200,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                                  throw new OSDException("Notation LLSD parsing: Unexpected end of stream in binary.");
                              String bytes64 = GetStringDelimitedBy(reader, doubleQuotesNotationMarker);
                              
-                             bytes = Base64.decodeBase64(bytes64);
+                             bytes = Utils.decodeBase64String(bytes64);
                          }
                          else
                          {

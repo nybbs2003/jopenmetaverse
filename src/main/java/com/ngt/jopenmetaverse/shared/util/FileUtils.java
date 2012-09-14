@@ -1,10 +1,5 @@
 package com.ngt.jopenmetaverse.shared.util;
 
-import java.awt.Color;
-import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferInt;
-import java.awt.image.WritableRaster;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -14,24 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-
-import javax.imageio.IIOImage;
-import javax.imageio.ImageIO;
-import javax.imageio.ImageWriteParam;
-import javax.imageio.ImageWriter;
-import javax.imageio.stream.FileImageOutputStream;
-
-import com.ngt.jopenmetaverse.shared.exception.NotImplementedException;
-import com.ngt.jopenmetaverse.shared.exception.NotSupportedException;
-import com.ngt.jopenmetaverse.shared.sim.Settings;
-import com.ngt.jopenmetaverse.shared.sim.imaging.IBitmap;
-import com.ngt.jopenmetaverse.shared.sim.imaging.ManagedImage;
-import com.ngt.jopenmetaverse.shared.sim.imaging.platform.jclient.BitmapBufferedImageImpl;
-import com.ngt.jopenmetaverse.shared.sim.imaging.platform.jclient.BitmapFactoryImpl;
-import com.ngt.jopenmetaverse.shared.sim.imaging.platform.jclient.OpenJPEGImpl;
-import com.ngt.jopenmetaverse.shared.types.UUID;
 
 public class FileUtils {
 

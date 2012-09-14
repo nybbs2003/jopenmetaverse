@@ -51,6 +51,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         	}
         }
         
+        public static int UDP_BIND_PORT = 0;
         
         /// <summary>Login server to connect to</summary>
 //        public String LOGIN_SERVER = AGNI_LOGIN_SERVER;

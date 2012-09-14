@@ -475,7 +475,7 @@ public class XmlLLSDOSDParser
 			try
 			{
 				String s = reader.getFirstChild().getNodeValue().trim();
-				byte[] bytes = Base64.decodeBase64(s);
+				byte[] bytes = Utils.decodeBase64String(s);
 
 				ret = OSD.FromBinary(bytes);
 			}

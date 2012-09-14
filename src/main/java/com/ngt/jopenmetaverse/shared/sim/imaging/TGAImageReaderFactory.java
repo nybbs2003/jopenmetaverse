@@ -1,17 +1,21 @@
 package com.ngt.jopenmetaverse.shared.sim.imaging;
 
-import com.ngt.jopenmetaverse.shared.sim.imaging.platform.jclient.TGAImageReaderImpl;
 
 public class TGAImageReaderFactory {
-
-//	static {
-//		IIORegistry registry = IIORegistry.getDefaultInstance();
-//		registry.registerServiceProvider(new  com.ngt.jopenmetaverse.shared.sim.imaging.platform.jclient.tga.TGAImageReaderSpi());
-//		
-//	}
+	protected static TGAImageReaderMachine  tGAImageReaderMachine =null;
+	
+	public static void setTGAImageReaderMachine(TGAImageReaderMachine t)
+	{
+		tGAImageReaderMachine = t;
+	}
 	
 	public static ITGAImageReader getInstance()
 	{
-		return new TGAImageReaderImpl();
+		return tGAImageReaderMachine.createInstance();
 	}
+	
+	public abstract static class TGAImageReaderMachine
+	{
+		public abstract ITGAImageReader createInstance();
+	}	
 }

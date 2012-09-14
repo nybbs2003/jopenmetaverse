@@ -1,8 +1,7 @@
 package com.ngt.jopenmetaverse.shared.sim.asset;
 
-import com.ngt.jopenmetaverse.shared.sim.imaging.IOpenJPEGFactory;
 import com.ngt.jopenmetaverse.shared.sim.imaging.ManagedImage;
-import com.ngt.jopenmetaverse.shared.sim.imaging.SuperFactory;
+import com.ngt.jopenmetaverse.shared.sim.imaging.OpenJPEGFactory;
 import com.ngt.jopenmetaverse.shared.sim.imaging.ManagedImage.ImageChannels;
 import com.ngt.jopenmetaverse.shared.types.Enums.AssetType;
 import com.ngt.jopenmetaverse.shared.types.UUID;
@@ -10,17 +9,7 @@ import com.ngt.jopenmetaverse.shared.types.UUID;
     /// Represents a texture
     /// </summary>
     public class AssetTexture extends Asset
-    {
-    	protected IOpenJPEGFactory openJPEGFactory = SuperFactory.getIOpenJPEGFactoryInstance();    	
-    	
-        public IOpenJPEGFactory getOpenJPEGFactory() {
-			return openJPEGFactory;
-		}
-
-		public void setOpenJPEGFactory(IOpenJPEGFactory openJPEGFactory) {
-			this.openJPEGFactory = openJPEGFactory;
-		}
-
+    {    	
 		/// <summary>Override the base classes AssetType</summary>
     	@Override
         public AssetType getAssetType() { return AssetType.Texture; } 
@@ -71,7 +60,7 @@ import com.ngt.jopenmetaverse.shared.types.UUID;
         @Override
         public void Encode() throws Exception
         {
-            AssetData = openJPEGFactory.getNewIntance().Encode(Image);
+            AssetData = OpenJPEGFactory.getIntance().Encode(Image);
         }
 
         /// <summary>
@@ -86,7 +75,7 @@ import com.ngt.jopenmetaverse.shared.types.UUID;
             {
                 this.Components = 0;
 
-                if ((Image = openJPEGFactory.getNewIntance().DecodeToImage(AssetData))!=null)
+                if ((Image = OpenJPEGFactory.getIntance().DecodeToImage(AssetData))!=null)
                 {
                     if ((ImageChannels.and(Image.Channels,  ManagedImage.ImageChannels.Color) != 0))
                         Components += 3;

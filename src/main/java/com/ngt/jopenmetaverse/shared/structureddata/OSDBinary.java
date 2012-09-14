@@ -68,7 +68,7 @@ public final class OSDBinary extends OSD
       this.value = Utils.ulongToBytes(value);
   }
   
-  public  String asString() { return Base64.encodeBase64String(value); }
+  public  String asString() { return Utils.encodeBase64String(value); }
   public  byte[] asBinary() { return value; }
 
   @Override

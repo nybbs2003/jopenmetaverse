@@ -2191,12 +2191,17 @@ public class Utils {
 	
 	public static String encodeBase64String(byte[] bytes)
 	{
-		return Base64.encodeBase64String(bytes);
+		try {
+			return Utils.bytesToString(Base64.encodeBase64(bytes));
+		} catch (UnsupportedEncodingException e) {
+			JLogger.error(Utils.getExceptionStackTraceAsString(e));
+			return "";
+		}
 	}
 
 	public static byte[] decodeBase64String(String str)
 	{
-		return Base64.decodeBase64(str);
+		return Base64.decodeBase64(Utils.stringToBytes(str));
 	}
 	
 	public static short UByteMaxValue = 0x0ff;

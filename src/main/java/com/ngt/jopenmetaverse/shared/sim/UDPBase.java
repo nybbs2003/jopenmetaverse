@@ -47,7 +47,8 @@ public abstract class UDPBase {
 	public UDPBase(InetSocketAddress endPoint)
 	{
 		remoteEndPoint = endPoint;
-		udpPort = 0;
+		//FIXME Need to remove following hardcoding . Used only for testing with Android Emulator
+		udpPort = Settings.UDP_BIND_PORT;
 	}
 
 	/// <summary>

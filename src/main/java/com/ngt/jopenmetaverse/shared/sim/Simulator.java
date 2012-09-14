@@ -1096,9 +1096,9 @@ public class Simulator extends UDPBase
 	public String toString()
 	{
 		if (!Utils.isNullOrEmpty(Name))
-			return String.format("{0} ({1})", Name, remoteEndPoint);
+			return String.format("%s (%s)", Name, remoteEndPoint.toString());
 		else
-			return String.format("({0})", remoteEndPoint);
+			return String.format("(%s)", remoteEndPoint.toString());
 	}
 
 	/// <summary>

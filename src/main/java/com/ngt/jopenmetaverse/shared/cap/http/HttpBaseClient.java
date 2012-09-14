@@ -6,13 +6,21 @@ import java.io.InputStream;
 import java.net.URI;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpVersion;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.conn.scheme.PlainSocketFactory;
+import org.apache.http.conn.scheme.Scheme;
+import org.apache.http.conn.scheme.SchemeRegistry;
+import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.conn.PoolingClientConnectionManager;
+import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpParams;
+import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.util.EntityUtils;
 
 import com.ngt.jopenmetaverse.shared.sim.events.MethodDelegate;
@@ -36,7 +44,31 @@ public class HttpBaseClient {
 	static 
 	{
 		//TODO manage httpclient level resources 
-		httpclient = new DefaultHttpClient(new PoolingClientConnectionManager());
+		
+		
+		/* FIXME 
+		 * ThreadSafeClientConnManager is deprecated in latest httpclient 4.2
+		 * however android api supports only httpclient 4.0.2
+		 * as a result we have to revert back to ThreadSafeClientConnManager 
+		 */
+//		httpclient = new DefaultHttpClient(new PoolingClientConnectionManager());
+
+		  //sets up parameters
+        HttpParams params = new BasicHttpParams();
+        HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
+        HttpProtocolParams.setContentCharset(params, "utf-8");
+        params.setBooleanParameter("http.protocol.expect-continue", false);
+
+        //registers schemes for both http and https
+        SchemeRegistry registry = new SchemeRegistry();
+        registry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
+        final SSLSocketFactory sslSocketFactory = SSLSocketFactory.getSocketFactory();
+        sslSocketFactory.setHostnameVerifier(SSLSocketFactory.BROWSER_COMPATIBLE_HOSTNAME_VERIFIER);
+        registry.register(new Scheme("https", sslSocketFactory, 443));
+
+        ThreadSafeClientConnManager manager = new ThreadSafeClientConnManager(params, registry);
+		
+        httpclient = new DefaultHttpClient(manager, params);        
 
 		// When HttpClient instance is no longer needed,
 		// shut down the connection manager to ensure
@@ -132,7 +164,9 @@ public class HttpBaseClient {
 
 					byte[] bytes = readBytes(httpget, response, instream, downloadProgressObservable);
 					//release the resources
-					 EntityUtils.consume(entity);
+					
+					//FIXME following is not supported in httpclient 4.0.2
+//					 EntityUtils.(entity);
 					 
 					HttpBaseRequestCompletedArg r = new HttpBaseRequestCompletedArg(httpget, response, bytes, null);
 					if(requestCompletedObservable !=null)
