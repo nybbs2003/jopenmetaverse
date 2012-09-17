@@ -4,6 +4,9 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import com.ngt.jopenmetaverse.shared.util.JLogger;
+import com.ngt.jopenmetaverse.shared.util.Utils;
+
 public class DefaultThreadPoolExecutor implements ThreadPool {
 	int poolSize = 20;
     int maxPoolSize = 1000;
@@ -30,7 +33,13 @@ public class DefaultThreadPoolExecutor implements ThreadPool {
     //FIXME Need to find a way to catch the exception and save the thread..
     public void execute(Runnable task)
     {
+    	try{
         threadPool.execute(task);
+    	}
+    	catch(Exception e)
+    	{
+    		JLogger.debug("Exception while executing the task: " + Utils.getExceptionStackTraceAsString(e));
+    	}
     }
  
     public void execute(Runnable[] tasks)

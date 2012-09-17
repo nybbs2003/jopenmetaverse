@@ -218,7 +218,8 @@ public class TexturePipeline
 			downloadMaster = new EventTimer(new TimerTask(){
 				@Override
 				public void run() {
-					DownloadThread();
+					if(_Running)
+						DownloadThread();						
 				}
 			});
 		}
@@ -553,14 +554,16 @@ public class TexturePipeline
 	{
 		int slot;
 
-		while (_Running)
+		boolean slotAvailable = true;
+		while (slotAvailable)
 		{
+			slotAvailable = false;
 			// find free slots
 			int pending = 0;
 			int active = 0;
 
 			TaskInfo nextTask = null;
-
+			JLogger.debug("Transfer Size: " + this.getTransferCount());
 			synchronized (_Transfers)
 			{
 				for (Entry<UUID, TaskInfo> request : _Transfers.entrySet())
@@ -615,15 +618,13 @@ public class TexturePipeline
 					});
 
 					//                        ThreadPool.QueueUserWorkItem(TextureRequestDoWork, nextTask);
-					continue;
+					slotAvailable = true;
 				}
 			}
 
 			// Queue was empty or all download slots are inuse, let's give up some CPU time
 			//                Thread.Sleep(500);
 		}
-
-		JLogger.info("Texture pipeline shutting down");
 	}
 
 

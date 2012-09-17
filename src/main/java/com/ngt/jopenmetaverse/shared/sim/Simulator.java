@@ -17,6 +17,7 @@ import java.util.SortedMap;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.TreeMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
@@ -541,7 +542,7 @@ public class Simulator extends UDPBase
 	private Queue<Long> InBytes, OutBytes;
 	// ACKs that are queued up to be sent to the simulator
 	//	private LocklessQueue<uint> PendingAcks = new LocklessQueue<uint>();
-	private Queue<Long> PendingAcks = new LinkedList<Long>();
+	private Queue<Long> PendingAcks = new ConcurrentLinkedQueue<Long>();
 
 	private Timer AckTimer;
 	private Timer PingTimer;

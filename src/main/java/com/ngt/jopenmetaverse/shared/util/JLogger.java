@@ -26,22 +26,22 @@ public class JLogger {
 			f.mkdirs();
 	}
 	
-	public static void logPkt(String pktName, byte[] bytes)
-	{
-		if(logger.isLoggable(Level.INFO))
-				{
-		try {
-			long now = Utils.getUnixTime();
-			File f = new File(FileUtils.combineFilePath(loggerDirURL, pktName + "_" + now + "_" + rdm.nextInt()));
-			f.createNewFile();
-			FileOutputStream fs = new FileOutputStream(f);
-			fs.write(bytes);
-			FileUtils.closeStream(fs);
-		} catch (IOException e) {
-			JLogger.warn(Utils.getExceptionStackTraceAsString(e));
-		}
-				}
-	}
+//	public static void logPkt(String pktName, byte[] bytes)
+//	{
+//		if(logger.isLoggable(Level.INFO))
+//				{
+//		try {
+//			long now = Utils.getUnixTime();
+//			File f = new File(FileUtils.combineFilePath(loggerDirURL, pktName + "_" + now + "_" + rdm.nextInt()));
+//			f.createNewFile();
+//			FileOutputStream fs = new FileOutputStream(f);
+//			fs.write(bytes);
+//			FileUtils.closeStream(fs);
+//		} catch (IOException e) {
+//			JLogger.warn(Utils.getExceptionStackTraceAsString(e));
+//		}
+//				}
+//	}
 	
 	
 	public static void debug(String msg)

@@ -1,6 +1,7 @@
 package com.ngt.jopenmetaverse.shared.sim.imaging;
 
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
@@ -124,12 +125,19 @@ public class Baker {
 
             ManagedImage alphaWearableTexture = null;
 
+            
+            
+//            FileUtils.writeBytes(new File("openmetaverse_data/logs/initial_" + bakeType  + ".tga"), bakedTexture.Image.ExportTGA());
+            
             // Layer each texture on top of one other, applying alpha masks as we go
             for (int i = 0; i < textures.size(); i++)
             {
+            	JLogger.debug("Starting Baking: " + bakeType + " index " + i) ;
+            	            	
                 // Skip if we have no texture on this layer
                 if (textures.get(i).Texture == null) 
                 {
+                	JLogger.debug("textures.get(i).Texture is null for baketype: " + bakeType);
                 	continue;
                 }
 
@@ -142,6 +150,7 @@ public class Baker {
                     {
                         alphaWearableTexture = textures.get(i).Texture.Image.Clone();
                     }
+                	JLogger.debug("Skipping Alpha wearable and does it have an alpha channel Baking: " + bakeType + " index " + i) ;
                     continue;
                 }
 
@@ -151,7 +160,7 @@ public class Baker {
                 {
                 	continue;
                 }
-
+                
                 if(textures.get(i).Texture == null)
                 	JLogger.debug("textures.get(i).Texture is null");
 
@@ -159,8 +168,7 @@ public class Baker {
                 ManagedImage texture = textures.get(i).Texture.Image.Clone();
                 //TODO Remove Debugging statments
                
-//                FileUtils.writeBytes(new File("openmetaverse_data/logs/" + bakeType + "-texture-layer-" 
-//                		+ i  + "-" + textures.get(i).TextureID.toString() + ".tga"), texture.ExportTGA());
+//                FileUtils.writeBytes(new File("openmetaverse_data/logs/" + bakeType + "-texture-layer-" + i  + "-" + textures.get(i).TextureID.toString() + ".tga"), texture.ExportTGA());
 
                 // Resize texture to the size of baked layer
                 // FIXME: if texture is smaller than the layer, don't stretch it, tile it
@@ -280,6 +288,8 @@ public class Baker {
                     catch (Exception e) {JLogger.warn(Utils.getExceptionStackTraceAsString(e)); }
                 }
                 DrawLayer(texture, false);
+//                FileUtils.writeBytes(new File("openmetaverse_data/logs/" + bakeType + "_texture0" + ".tga"), texture.ExportTGA());
+//                FileUtils.writeBytes(new File("openmetaverse_data/logs/" + bakeType + "_addedSkin" + ".tga"), bakedTexture.Image.ExportTGA());
             }
 
             // Apply any alpha wearable textures to make parts of the avatar disappear

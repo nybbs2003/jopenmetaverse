@@ -63,7 +63,6 @@ import com.ngt.jopenmetaverse.shared.types.Enums.WearableType;
 import com.ngt.jopenmetaverse.shared.types.EnumsPrimitive.AttachmentPoint;
 import com.ngt.jopenmetaverse.shared.types.UUID;
 import com.ngt.jopenmetaverse.shared.types.Vector3;
-import com.ngt.jopenmetaverse.shared.util.FileUtils;
 import com.ngt.jopenmetaverse.shared.util.JLogger;
 import com.ngt.jopenmetaverse.shared.util.Utils;
 import com.ngt.jopenmetaverse.shared.sim.visual.VisualParams;
@@ -1803,12 +1802,12 @@ public class AppearanceManager {
 				JLogger.warn("Texture is null for index" + textureIndex.getIndex());
 
 			//TODO need to verfy why original code was sending even Zero textures for baking
-//			if(!texture.TextureID.equals(UUID.Zero))
-//			{
+			if(!texture.TextureID.equals(UUID.Zero))
+			{
 				JLogger.debug("Adding Texture to oven"  + texture.toString());
 				texture.TextureIndex = textureIndex;
 				oven.AddTexture(texture);
-//			}
+			}
 		}
 
 		long start = Utils.getUnixTime();
@@ -1836,8 +1835,8 @@ public class AppearanceManager {
 		JLogger.debug(String.format("Uploaded Bake ID: %s to Server retry no %d", newAssetID, retries));
 
 		//TODO Need to remove only for testing
-        String filepath = "openmetaverse_data/logs/" + newAssetID;
-        FileUtils.writeBytes(new File(filepath+".j2k"), oven.getBakedTexture().AssetData);
+//        String filepath = "openmetaverse_data/logs/" + newAssetID;
+//        FileUtils.writeBytes(new File(filepath+".j2k"), oven.getBakedTexture().AssetData);
 //		Client.assets.Cache.saveAssetToCache(newAssetID, oven.getBakedTexture().AssetData);
 		return true;
 	}
@@ -2114,7 +2113,7 @@ public class AppearanceManager {
 			}
 		}
 
-		JLogger.logPkt("AgentSetAppearancePacket", set.ToBytes());
+//		JLogger.logPkt("AgentSetAppearancePacket", set.ToBytes());
 		Client.network.SendPacket(set);
 		JLogger.debug("Send AgentSetAppearance packet");
 	}

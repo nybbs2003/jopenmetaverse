@@ -31,7 +31,8 @@ public class ThreadPoolFactory {
 		final EventTimer timer = new EventTimer(new TimerTask(){
 			@Override
 			public void run() {
-				JLogger.debug("Waiting for parallel tasks to get finished: Queue Size: " + pool.getQueueSize());
+				JLogger.debug(String.format("Waiting for parallel tasks to get finished: Queue Size: %d Thread Count: %d", 
+						pool.getQueueSize(), pool.getActiveThreadCount()));
 				if(pool.getActiveThreadCount() ==0 && pool.getQueueSize() ==0 )
 				{
 					pool.shutdown();
