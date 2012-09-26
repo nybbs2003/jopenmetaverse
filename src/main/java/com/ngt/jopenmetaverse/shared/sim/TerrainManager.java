@@ -16,6 +16,9 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 
 public class TerrainManager 
 {	
+	/// <summary>Raises the LandPatchReceived event</summary>
+	/// <param name="e">A LandPatchReceivedEventArgs object containing the
+	/// data returned from the simulator</param>
 	private EventObservable<LandPatchReceivedEventArgs> onLandPatchReceived = new EventObservable<LandPatchReceivedEventArgs>();
 	public void registerOnLandPatchReceived(EventObserver<LandPatchReceivedEventArgs> o)
 	{
@@ -70,6 +73,20 @@ public class TerrainManager
 
       }
             
+      
+//      private void printIntArray(int[] array)
+//      {
+//   		int count = 0;
+//   		while(count < array.length)
+//   		{
+//   			System.out.println("");
+//   			for(int x =0 ; x < 50 && count <  array.length	 ; x++)
+//   			{
+//   				System.out.print((int)array[count++] + " ");
+//   			}
+//   		}
+//   	}
+      
       private void DecompressLand(Simulator simulator, BitPack bitpack, TerrainPatch.GroupHeader group)
       {
           int x;
@@ -98,13 +115,14 @@ public class TerrainManager
               // Decode this patch
               TerrainCompressor.DecodePatch(patches, bitpack, header, group.PatchSize);
 
+              //TODO only for debugging
+//              System.out.println("Decoded Patch: ");
+//              printIntArray(patches);
+              
               // Decompress this patch
               float[] heightmap = TerrainCompressor.DecompressPatch(patches, header, group);
 
               count++;
-
-              try { onLandPatchReceived.raiseEvent(new LandPatchReceivedEventArgs(simulator, x, y, group.PatchSize, heightmap)); }
-              catch (Exception e) { JLogger.error(Utils.getExceptionStackTraceAsString(e)); }
 
               if (Client.settings.STORE_LAND_PATCHES)
               {
@@ -114,6 +132,10 @@ public class TerrainManager
                   patch.Y = y;
                   simulator.Terrain[y * 16 + x] = patch;
               }
+              
+              try { onLandPatchReceived.raiseEvent(new LandPatchReceivedEventArgs(simulator, x, y, group.PatchSize, heightmap)); }
+              catch (Exception e) { JLogger.error(Utils.getExceptionStackTraceAsString(e)); }
+
           }
       }
 

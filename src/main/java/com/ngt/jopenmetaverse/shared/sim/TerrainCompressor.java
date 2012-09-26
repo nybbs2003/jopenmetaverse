@@ -112,7 +112,7 @@ public class TerrainCompressor {
 	        private static final int[] CopyMatrix32 = new int[16 * 16];
 	        private static final float[] QuantizeTable16 = new float[16 * 16];
 
-	        public  TerrainCompressor()
+	        static
 	        {
 	            // Initialize the decompression tables
 	            BuildDequantizeTable16();
@@ -647,6 +647,10 @@ public class TerrainCompressor {
 	            float mult = ooq * (float)header.Range;
 	            float addval = mult * (float)(1 << (prequant - 1)) + header.DCOffset;
 
+	            //TODO 
+//	            System.out.println(String.format("Decompressing Land prequant %d quantize %d ooq %f mult %f addval %f"
+//	            		, prequant , quantize, ooq, mult, addval));
+	            
 	            if (group.PatchSize == 16)
 	            {
 	                for (int n = 0; n < 16 * 16; n++)

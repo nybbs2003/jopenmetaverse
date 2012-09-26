@@ -100,7 +100,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 
         /// <summary>Milliseconds without receiving a packet before the 
         /// connection to a simulator is assumed lost</summary>
-        public static int SIMULATOR_TIMEOUT = 30 * 1000;
+        public int SIMULATOR_TIMEOUT = 30 * 1000;
 
         /// <summary>Milliseconds to wait for a simulator info request through
         /// the grid interface</summary>
@@ -145,10 +145,10 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 
         /// <summary>Enable/disable storing terrain heightmaps in the 
         /// TerrainManager</summary>
-        public static boolean STORE_LAND_PATCHES = false;
+        public  boolean STORE_LAND_PATCHES = false;
 
         /// <summary>Enable/disable sending periodic camera updates</summary>
-        public static boolean SEND_AGENT_UPDATES = true;
+        public  boolean SEND_AGENT_UPDATES = true;
 
         /// <summary>Enable/disable automatically setting agent appearance at
         /// login and after sim crossing</summary>
@@ -176,11 +176,11 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         /// decoded. Registering an event handler will force objects for that
         /// type to always be decoded. If this is disabled the object tracking
         /// will have missing or partial prim and avatar information</summary>
-        public static boolean ALWAYS_DECODE_OBJECTS = true;
+        public  boolean ALWAYS_DECODE_OBJECTS = true;
 
         /// <summary>If true, when a cached object check is received from the
         /// server the full object info will automatically be requested</summary>
-        public static boolean ALWAYS_REQUEST_OBJECTS = true;
+        public  boolean ALWAYS_REQUEST_OBJECTS = true;
 
         /// <summary>Whether to establish connections to HTTP capabilities
         /// servers for simulators</summary>
@@ -253,7 +253,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         /// If true, images, and other assets downloaded from the server 
         /// will be cached in a local directory
         /// </summary>
-        public static boolean USE_ASSET_CACHE = true;
+        public  boolean USE_ASSET_CACHE = true;
 
         /// <summary>Path to store cached texture data</summary>
         public String ASSET_CACHE_DIR = RESOURCE_DIR + "/cache";

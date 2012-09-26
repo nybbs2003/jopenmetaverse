@@ -861,7 +861,7 @@ public class ObjectManager {
 			//					InterpolationTimer_Elapsed(null);
 			//				}				
 			//			}, Settings.SIMULATOR_TIMEOUT);
-			createInterpolationTimer(Settings.SIMULATOR_TIMEOUT);
+			createInterpolationTimer(Client.settings.SIMULATOR_TIMEOUT);
 		}
 	}
 

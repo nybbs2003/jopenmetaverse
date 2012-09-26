@@ -238,7 +238,7 @@ public class CoordinateFrame
        public void LookAt(Vector3 origin, Vector3 target, Vector3 upDirection)
        {
            this.origin = origin;
-           Vector3 at = Vector3.substract(target, origin);
+           Vector3 at = Vector3.subtract(target, origin);
            at.normalize();
 
            LookDirection(at, upDirection);
@@ -259,7 +259,7 @@ public class CoordinateFrame
            // Make sure the axis are orthagonal and normalized
            xAxis.normalize();
 //           yAxis -= xAxis * (xAxis * yAxis);
-           yAxis = Vector3.substract(yAxis, Vector3.multiply(xAxis, Vector3.multiply(xAxis, yAxis)));
+           yAxis = Vector3.subtract(yAxis, Vector3.multiply(xAxis, Vector3.multiply(xAxis, yAxis)));
            yAxis.normalize();
            zAxis = Vector3.cross(xAxis, yAxis);
        }

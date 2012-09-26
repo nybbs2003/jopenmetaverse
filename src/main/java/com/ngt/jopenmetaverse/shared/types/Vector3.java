@@ -99,7 +99,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
         /// is less than the given tolerance, otherwise false</returns>
         public boolean approxEquals(Vector3 vec, float tolerance)
         {
-            Vector3 diff = substract(this, vec);
+            Vector3 diff = subtract(this, vec);
             System.out.println(String.format("%f, %f", diff.lengthSquared(), tolerance * tolerance));
             return (diff.lengthSquared() <= tolerance * tolerance);
         }
@@ -358,15 +358,6 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                 Utils.smoothStep(value1.Z, value2.Z, amount));
         }
 
-        public static Vector3 subtract(Vector3 value1, Vector3 value2)
-        {
-        	Vector3 result = new Vector3();
-        	result.X = value1.X - value2.X;
-        	result.Y = value1.Y - value2.Y;
-        	result.Z = value1.Z - value2.Z;
-            return result;
-        }
-
         public static Vector3 transform(Vector3 position, Matrix4 matrix)
         {
             return new Vector3(
@@ -438,6 +429,16 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             return !(value1 == value2);
         }
 
+        public Vector3 add(Vector3 value2)
+        {
+        	Vector3 result = this;
+        	Vector3 value1 = this;
+            result.X = value1.X + value2.X;
+            result.Y = value1.Y + value2.Y;
+            result.Z = value1.Z + value2.Z;
+            return result;
+        }
+        
         public static Vector3 add(Vector3 value1, Vector3 value2)
         {
         	Vector3 result = new Vector3();
@@ -447,16 +448,17 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             return result;
         }
 
-        public static Vector3 substract(Vector3 value)
+        public Vector3 subtract(Vector3 value2)
         {
-        	Vector3 result = new Vector3();
-        	result.X = -value.X;
-        	result.Y = -value.Y;
-        	result.Z = -value.Z;
+        	Vector3 result = this;
+        	Vector3 value1 = this;        	
+        	result.X = value1.X - value2.X;
+        	result.Y = value1.Y - value2.Y;
+        	result.Z = value1.Z - value2.Z;
             return result;
         }
-
-        public static Vector3 substract(Vector3 value1, Vector3 value2)
+        
+        public static Vector3 subtract(Vector3 value1, Vector3 value2)
         {
         	Vector3 result = new Vector3();
         	result.X = value1.X - value2.X;
@@ -474,6 +476,16 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             return result;
         }
 
+        public Vector3 multiply(float scaleFactor)
+        {
+        	Vector3 result = this;
+        	Vector3 value = this;  
+        	result.X = value.X * scaleFactor;
+        	result.Y = value.Y * scaleFactor;
+        	result.Z = value.Z * scaleFactor;
+        	return result;
+        }
+        
         public static Vector3 multiply(Vector3 value, float scaleFactor)
         {
         	Vector3 result = new Vector3();

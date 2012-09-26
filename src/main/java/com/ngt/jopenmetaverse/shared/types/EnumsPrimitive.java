@@ -476,8 +476,6 @@ public class EnumsPrimitive
                 }
                 return ret;
         }
-
-		
     }
 
     /// <summary>

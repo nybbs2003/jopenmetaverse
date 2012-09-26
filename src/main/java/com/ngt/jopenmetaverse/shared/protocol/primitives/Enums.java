@@ -293,6 +293,20 @@ public class Enums
         }
  
         
+        public static long and(EnumSet<TextureAnimMode> enumSet, long v)
+        {
+        	return getIndex(enumSet) & v;
+        }
+
+        public static long and(EnumSet<TextureAnimMode> enumSet, TextureAnimMode v)
+        {
+        	return getIndex(enumSet) & v.getIndex();
+        }
+        
+        public static long and(EnumSet<TextureAnimMode> enumSet1, EnumSet<TextureAnimMode> enumSet2)
+        {
+        	return getIndex(enumSet1) & getIndex(enumSet2);
+        }
     }
     
 }

@@ -2204,6 +2204,19 @@ public class Utils {
 		return Base64.decodeBase64(Utils.stringToBytes(str));
 	}
 	
+	 public static String TrimAt0(String s)
+     {
+         int pos = s.indexOf("\0");
+         if (pos >= 0)
+         {
+             return s.substring(0, pos);
+         }
+         else
+         {
+             return s;
+         }
+     }
+	
 	public static short UByteMaxValue = 0x0ff;
 
 

@@ -707,7 +707,7 @@ public class AgentMovement
 				else parentRot = Client.network.getCurrentSim().ObjectsPrimitives.get(Client.self.getSittingOn()).Rotation;
 			}
 
-			Quaternion between = Vector3.rotationBetween(Vector3.UnitX, Vector3.normalize(Vector3.substract(target, Client.self.getSimPosition())));
+			Quaternion between = Vector3.rotationBetween(Vector3.UnitX, Vector3.normalize(Vector3.subtract(target, Client.self.getSimPosition())));
 			Quaternion rot = Quaternion.multiply(between, Quaternion.divide(Quaternion.Identity, parentRot));
 
 			BodyRotation = rot;
