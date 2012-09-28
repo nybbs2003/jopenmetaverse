@@ -22,10 +22,10 @@ public class AssetTagMapTest {
 		
 		for(UUID assetID :assetIDs)
 		{
-			assetTagMap1.assetAdded(assetID);
+			assetTagMap1.assetAdded(assetID.toString());
 		}
 		
-		List<UUID> sortedAssetIDs = assetTagMap1.getAssets();
+		List<String> sortedAssetIDs = assetTagMap1.getAssets();
 		assertEqualsUUIDArray(assetIDs, sortedAssetIDs);
 		
 		PlatformUtils.sleep(2);

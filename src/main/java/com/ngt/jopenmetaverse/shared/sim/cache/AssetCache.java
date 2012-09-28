@@ -1,12 +1,18 @@
 package com.ngt.jopenmetaverse.shared.sim.cache;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
 import java.util.Observable;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.zip.DeflaterInputStream;
+import java.util.zip.DeflaterOutputStream;
+
 import com.ngt.jopenmetaverse.shared.sim.GridClient;
 import com.ngt.jopenmetaverse.shared.sim.Settings;
 import com.ngt.jopenmetaverse.shared.sim.events.EventObserver;
@@ -202,7 +208,7 @@ public class AssetCache implements IAssetCache
 					data = FileUtils.readBytes(fs);
 				}
 			}
-			assetTagMap.assetAccessed(assetID);
+			assetTagMap.assetAccessed(assetID.toString());
 			return data;
 		}
 		catch (Exception ex)
@@ -212,6 +218,50 @@ public class AssetCache implements IAssetCache
 		}
 	}
 
+	/// <summary>
+	/// Return bytes read from the local asset cache, null if it does not exist
+	/// </summary>
+	/// <param name="assetID">UUID of the asset we want to get</param>
+	/// <returns>Raw bytes of the asset, or null on failure</returns>
+	public byte[] getCachedAssetBytes(String assetID)
+	{
+		if (!Operational())
+		{
+			return null;
+		}
+		try
+		{
+			byte[] data = null;
+			File f = new File(FileName(assetID));
+			if (f.exists())
+			{
+				JLogger.debug("Reading " + FileName(assetID) + " from asset cache.");
+				FileInputStream fs = new FileInputStream(f); 
+				//                    data = File.ReadAllBytes(FileName(assetID));
+				data = FileUtils.readBytes(fs);
+				fs.close();
+			}
+			else
+			{
+				JLogger.debug("Reading " + StaticFileName(assetID) + " from static asset cache.");
+				//                    data = File.ReadAllBytes(StaticFileName(assetID));
+				f = new File(StaticFileName(assetID));
+				if(f.exists())
+				{
+					FileInputStream fs = new FileInputStream(f); 
+					data = FileUtils.readBytes(fs);
+				}
+			}
+			assetTagMap.assetAccessed(assetID.toString());
+			return data;
+		}
+		catch (Exception ex)
+		{
+			JLogger.warn("Failed reading asset from cache (" + ex.getMessage() + ")");
+			return null;
+		}
+	}
+	
 
 	/// <summary>
 	/// Returns ImageDownload object of the
@@ -265,7 +315,7 @@ public class AssetCache implements IAssetCache
 			File f = new File(FileName(assetID));
 			FileOutputStream fos = new FileOutputStream(f);
 			FileUtils.writeBytes(fos, assetData);
-			assetTagMap.assetAdded(assetID);
+			assetTagMap.assetAdded(assetID.toString());
 			fos.close();
 		}
 		catch (Exception ex)
@@ -277,6 +327,46 @@ public class AssetCache implements IAssetCache
 		return true;
 	}
 
+	/// <summary>
+			/// Saves an asset to the local cache
+			/// </summary>
+			/// <param name="assetID">UUID of the asset</param>
+			/// <param name="assetData">Raw bytes the asset consists of</param>
+			/// <returns>Weather the operation was successfull</returns>
+			public boolean saveAssetToCache(String assetID, byte[] assetData)
+			{
+				if (!Operational())
+				{
+					return false;
+				}
+
+				try
+				{
+					JLogger.debug("Saving " + FileName(assetID) + " to asset cache.");
+					File dir = new File(Client.settings.ASSET_CACHE_DIR);
+					if (!dir.exists())
+					{
+						//                    Directory.CreateDirectory(Client.settings.ASSET_CACHE_DIR);
+						new File(Client.settings.ASSET_CACHE_DIR).mkdirs();
+					}
+
+					//                File.WriteAllBytes(FileName(assetID), assetData);
+					File f = new File(FileName(assetID));
+					FileOutputStream fos = new FileOutputStream(f);
+					FileUtils.writeBytes(fos, assetData);
+					assetTagMap.assetAdded(assetID.toString());
+					fos.close();
+				}
+				catch (Exception ex)
+				{
+					JLogger.warn("Failed saving asset to cache (" + ex.getMessage() + ")" + "\n" + Utils.getExceptionStackTraceAsString(ex));
+					return false;
+				}
+
+				return true;
+			}
+			
+	
 	/// <summary>
 	/// Get the file name of the asset stored with gived UUID
 	/// </summary>
@@ -297,6 +387,22 @@ public class AssetCache implements IAssetCache
 			return null;
 	}
 
+	public String AssetFileName(String assetID)
+	{
+		if (!Operational())
+		{
+			return null;
+		}
+
+		String fileName = FileName(assetID);
+		File f = new File(fileName);
+		if (f.exists())
+			return fileName;
+		else
+			return null;
+	}
+	
+	
 	public File getAssetFile(UUID assetID)
 	{
 		if (!Operational())
@@ -311,8 +417,40 @@ public class AssetCache implements IAssetCache
 		else
 			return null;
 	}
+	
+    public File getAssetFile(String assetID)
+    {
+            if (!Operational())
+            {
+                    return null;
+            }
 
+            String fileName = FileName(assetID);
+            File f = new File(fileName);
+            if (f.exists())
+                    return f;
+            else
+                    return null;
+    }
 
+    
+    
+    /// <summary>
+    /// Constructs a file name of the cached asset
+    /// </summary>
+    /// <param name="assetID">UUID of the asset</param>
+    /// <returns>String with the file name of the cahced asset</returns>
+    private String FileName(String assetID)
+    {
+          if (computeAssetCacheFilenameDelegate != null)
+          {
+                  return computeAssetCacheFilenameDelegate.execute(new ComputeAssetCacheFilenameEventArgs(Client.settings.ASSET_CACHE_DIR, assetID));
+          }
+            return Client.settings.ASSET_CACHE_DIR + "/" + assetID.toString();
+    }
+
+	
+	
 	/// <summary>
 	/// Checks if the asset exists in the local cache
 	/// </summary>
@@ -336,6 +474,29 @@ public class AssetCache implements IAssetCache
 		}
 	}
 
+	/// <summary>
+		/// Checks if the asset exists in the local cache
+		/// </summary>
+		/// <param name="assetID">UUID of the asset</param>
+		/// <returns>True is the asset is stored in the cache, otherwise false</returns>
+		public boolean hasAsset(String assetID)
+		{
+			if (!Operational())
+				return false;
+			else
+			{
+				String fileName = FileName(assetID);
+				File f = new File(fileName);
+				if (f.exists())
+					return true;
+				else
+				{
+					fileName = StaticFileName(assetID);
+					return new File(fileName).exists();
+				}
+			}
+		}
+	
 	/// <summary>
 	/// Wipes out entire cache
 	/// </summary>
@@ -390,11 +551,11 @@ public class AssetCache implements IAssetCache
 		if (size > Client.settings.ASSET_CACHE_MAX_SIZE)
 		{
 			//                Array.Sort(files, new SortFilesByAccesTimeHelper());
-			List<UUID> assetIDs = assetTagMap.getAssets();
+			List<String> assetIDs = assetTagMap.getAssets();
 			long targetSize = (long)(Client.settings.ASSET_CACHE_MAX_SIZE * 0.9);
 			int num = 0;
 			File file = null;
-			for (UUID assetID : assetIDs)
+			for (String assetID : assetIDs)
 			{
 				if((file = getAssetFile(assetID))!=null)
 				{
@@ -456,7 +617,7 @@ public class AssetCache implements IAssetCache
 	{
 		if (computeAssetCacheFilenameDelegate != null)
 		{
-			return computeAssetCacheFilenameDelegate.execute(new ComputeAssetCacheFilenameEventArgs(Client.settings.ASSET_CACHE_DIR, assetID));
+			return computeAssetCacheFilenameDelegate.execute(new ComputeAssetCacheFilenameEventArgs(Client.settings.ASSET_CACHE_DIR, assetID.toString()));
 		}
 		return Client.settings.ASSET_CACHE_DIR + "/" + assetID.toString();
 	}
@@ -471,7 +632,17 @@ public class AssetCache implements IAssetCache
 		return Settings.RESOURCE_DIR + "/" + "static_assets" + "/" + assetID.toString();
 	}
 
-
+	/// <summary>
+		/// Constructs a file name of the static cached asset
+		/// </summary>
+		/// <param name="assetID">UUID of the asset</param>
+		/// <returns>String with the file name of the static cached asset</returns>
+		private String StaticFileName(String assetID)
+		{
+			return Settings.RESOURCE_DIR + "/" + "static_assets" + "/" + assetID.toString();
+		}
+	
+	
 	/// <summary>
 	/// Adds up file sizes passes in a FileInfo array
 	/// </summary>
@@ -521,6 +692,112 @@ public class AssetCache implements IAssetCache
 		return size;
 	}
 
+	//region Cached image save and load
+	private final static String COMPRESSED_IMAGE_MAGIC_HEADER = "jomv_compressed_img";
+	
+	private String getCompressedImageName(UUID assetID)
+	{
+		return assetID.toString() + ".imggz";
+	}
+	
+	/*
+	 * use AssetCache LoadCompressedImage method  
+	 */
+	public LoadCachedImageResult loadCompressedImageFromCache(UUID textureID) throws IOException
+	{
+		String textureFileName = getCompressedImageName(textureID);
+		LoadCachedImageResult r = null;
+		if(!hasAsset(textureFileName))
+		{
+			return null;
+		}
+		else
+		{
+			int i = 0;
+			r = new LoadCachedImageResult();
+			byte[] cachedData = getCachedAssetBytes(textureFileName);
+			//Check if the file is actually compressed texture image
+			byte[] header = new byte[36];
+			Utils.arraycopy(cachedData, 0, header, 0, header.length);
+			if (!COMPRESSED_IMAGE_MAGIC_HEADER.equals(Utils.bytesToString(header, 0, COMPRESSED_IMAGE_MAGIC_HEADER.length())))
+			{
+				return null;
+			}
+			
+			i += COMPRESSED_IMAGE_MAGIC_HEADER.length();
+
+			if (header[i++] != 1) // check version
+			{
+				return null;
+			}
+			
+			r.hasAlpha = header[i++] == 1;
+			r.fullAlpha = header[i++] == 1;
+			r.isMask = header[i++] == 1;
+			
+			int uncompressedSize = Utils.bytesToInt(header, i);
+			i += 4;
+
+			textureID = new UUID(header, i);
+			i += 16;
+
+			r.data = new byte[uncompressedSize];
+			ByteArrayInputStream bis = new ByteArrayInputStream(cachedData, i, uncompressedSize); 
+			DeflaterInputStream compressed = new DeflaterInputStream(bis);
+			{
+				int read = 0;
+				while ((read = compressed.read(r.data, read, uncompressedSize - read)) > 0) ;
+			}
+			compressed.close();
+			bis.close();
+		}
+		return r;
+		}
+	
+	public boolean compressAndSaveImageToCache(byte[] tgaData, UUID textureID, boolean hasAlpha, boolean fullAlpha, boolean isMask) throws IOException
+	{
+		
+		ByteArrayOutputStream fis = new ByteArrayOutputStream(); 
+		int i = 0;
+		// magic header
+		fis.write(Utils.stringToBytes(COMPRESSED_IMAGE_MAGIC_HEADER), 0, COMPRESSED_IMAGE_MAGIC_HEADER.length());
+		i += COMPRESSED_IMAGE_MAGIC_HEADER.length();
+
+		// version
+		fis.write((byte)1);
+		i++;
+
+		// texture info
+		fis.write(hasAlpha ? (byte)1 : (byte)0);
+		fis.write(fullAlpha ? (byte)1 : (byte)0);
+		fis.write(isMask ? (byte)1 : (byte)0);
+		i += 3;
+
+		// texture size
+		byte[] uncompressedSize = Utils.intToBytes(tgaData.length);
+		fis.write(uncompressedSize, 0, uncompressedSize.length);
+		i += uncompressedSize.length;
+
+		// texture id
+		byte[] id = new byte[16];
+		textureID.ToBytes(id, 0);
+		fis.write(id, 0, 16);
+		i += 16;
+
+		// compressed texture data
+		DeflaterOutputStream compressed = new DeflaterOutputStream(fis);
+		{
+			compressed.write(tgaData, 0, tgaData.length);
+		}
+		
+		saveAssetToCache(getCompressedImageName(textureID), fis.toByteArray());
+		compressed.close();
+		fis.close();
+		return true;
+	}
+
+	
+	
 	//        /// <summary>
 	//        /// Helper class for sorting files by their last accessed time
 	//        /// </summary>

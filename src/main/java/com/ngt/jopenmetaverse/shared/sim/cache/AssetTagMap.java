@@ -7,42 +7,40 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.TreeMap;
-
-import com.ngt.jopenmetaverse.shared.types.UUID;
 import com.ngt.jopenmetaverse.shared.util.Utils;
 
 public class AssetTagMap {
-    private Map<UUID, Long> assets = new HashMap<UUID, Long>();    
-    private SortedMap<Long, List<UUID>> timestamps = new TreeMap<Long, List<UUID>>();
+    private Map<String, Long> assets = new HashMap<String, Long>();    
+    private SortedMap<Long, List<String>> timestamps = new TreeMap<Long, List<String>>();
     
     public AssetTagMap()
     { }
     
-    public synchronized void assetAdded(UUID assetID)
+    public synchronized void assetAdded(String assetID)
     {	
     	Long currentTime = Utils.getUnixTime();
     	if(assets.containsKey(assetID))
     	{
     		long timestamp = assets.get(assetID);
-    		List<UUID> tmpAssetIds = timestamps.get(timestamp);
+    		List<String> tmpAssetIds = timestamps.get(timestamp);
     		tmpAssetIds.remove(assetID);
     		if(tmpAssetIds.isEmpty())
     			timestamps.remove(timestamp);
     	}
     	
     	if(!timestamps.containsKey(currentTime))
-    		timestamps.put(currentTime, new ArrayList<UUID>());
+    		timestamps.put(currentTime, new ArrayList<String>());
     	
 		assets.put(assetID, currentTime);
 		timestamps.get(currentTime).add(assetID);
     }
 
-    public synchronized void assetRemoved(UUID assetID)
+    public synchronized void assetRemoved(String assetID)
     {
     	if(assets.containsKey(assetID))
     	{
     		long timestamp = assets.get(assetID);
-    		List<UUID> tmpAssetIds = timestamps.get(timestamp);
+    		List<String> tmpAssetIds = timestamps.get(timestamp);
     		tmpAssetIds.remove(assetID);
     		if(tmpAssetIds.isEmpty())
     			timestamps.remove(timestamp);
@@ -51,16 +49,16 @@ public class AssetTagMap {
     	}
     }    
     
-    public synchronized void assetAccessed(UUID assetID)
+    public synchronized void assetAccessed(String assetID)
     {
     	assetAdded(assetID);
     } 
     
-	public synchronized List<UUID> getAssets()
+	public synchronized List<String> getAssets()
     {
-		List<UUID> list = new ArrayList<UUID>();
+		List<String> list = new ArrayList<String>();
 
-		for(Entry<Long, List<UUID>> e :timestamps.entrySet())
+		for(Entry<Long, List<String>> e :timestamps.entrySet())
 		{
 			System.out.println(String.format("Adding Assets= %d for timestamp %d", e.getValue().size(), e.getKey()));
 			list.addAll(e.getValue());

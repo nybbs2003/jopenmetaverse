@@ -1,12 +1,10 @@
 package com.ngt.jopenmetaverse.shared.sim.events.asm;
 
-import com.ngt.jopenmetaverse.shared.types.UUID;
-
 public class ComputeAssetCacheFilenameEventArgs {
 	String cacheDir;
-	UUID assetID;
+	String assetID;
 	
-	public ComputeAssetCacheFilenameEventArgs(String cacheDir, UUID assetID) {
+	public ComputeAssetCacheFilenameEventArgs(String cacheDir, String assetID) {
 		super();
 		this.cacheDir = cacheDir;
 		this.assetID = assetID;
@@ -18,10 +16,10 @@ public class ComputeAssetCacheFilenameEventArgs {
 	public void setCacheDir(String cacheDir) {
 		this.cacheDir = cacheDir;
 	}
-	public UUID getAssetID() {
+	public String getAssetID() {
 		return assetID;
 	}
-	public void setAssetID(UUID assetID) {
+	public void setAssetID(String assetID) {
 		this.assetID = assetID;
 	}
 }
