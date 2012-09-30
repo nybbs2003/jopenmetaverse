@@ -3,9 +3,6 @@ package com.ngt.jopenmetaverse.shared.sim.cache;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.SortedMap;
-import java.util.TreeMap;
-
 import org.junit.Assert;
 import org.junit.Test;
 import com.ngt.jopenmetaverse.shared.types.UUID;
@@ -18,9 +15,9 @@ public class AssetTagMapTest {
 	public void entryAddAndRemoveTests()
 	{
 		AssetTagMap assetTagMap1 = new AssetTagMap();
-		List<UUID> assetIDs = generateUUIDs(10); 
+		List<String> assetIDs = generateUUIDs(10); 
 		
-		for(UUID assetID :assetIDs)
+		for(String assetID :assetIDs)
 		{
 			assetTagMap1.assetAdded(assetID.toString());
 		}
@@ -51,15 +48,15 @@ public class AssetTagMapTest {
 	public void entryAddAndRemove2Tests()
 	{
 		AssetTagMap assetTagMap1 = new AssetTagMap();
-		List<UUID> assetIDs = generateUUIDs(100000); 
+		List<String> assetIDs = generateUUIDs(100000); 
 		
-		for(UUID assetID :assetIDs)
+		for(String assetID :assetIDs)
 		{
 			assetTagMap1.assetAdded(assetID);
 		}
 		
 		long start = Utils.getUnixTime();
-		List<UUID> sortedAssetIDs = assetTagMap1.getAssets();
+		List<String> sortedAssetIDs = assetTagMap1.getAssets();
 		Assert.assertArrayEquals(assetIDs.toArray(new UUID[0]), sortedAssetIDs.toArray(new UUID[0]));
 		
 		System.out.println("System Took time to sort entires: " + (Utils.getUnixTime() - start));
@@ -83,34 +80,34 @@ public class AssetTagMapTest {
 		Assert.assertArrayEquals(assetIDs.toArray(new UUID[0]), assetTagMap1.getAssets().toArray(new UUID[0]));
 	}
 	
-	private void assetAccessed(List<UUID> assetIDs, int index)
+	private void assetAccessed(List<String> assetIDs, int index)
 	{
-		UUID u = assetIDs.remove(index);
+		String u = assetIDs.remove(index);
 		assetIDs.add(u);
 	}
 
-	private void assetAdded(List<UUID> assetIDs, UUID e)
+	private void assetAdded(List<String> assetIDs, String e)
 	{
 		assetIDs.add(e);
 	}
 
-	private void assetRemoved(List<UUID> assetIDs, int index)
+	private void assetRemoved(List<String> assetIDs, int index)
 	{
-		UUID u = assetIDs.remove(index);
+		String u = assetIDs.remove(index);
 	}
 	
-	private List<UUID> generateUUIDs(int size)
+	private List<String> generateUUIDs(int size)
 	{
-		List<UUID> assetIDs = new ArrayList<UUID>();		
+		List<String> assetIDs = new ArrayList<String>();		
 		for(int i = 0; i < size; i++)
-			assetIDs.add(UUID.Random());
+			assetIDs.add(UUID.Random().toString());
 		return assetIDs;
 	}
 	
-	private void assertEqualsUUIDArray(Collection<UUID> expected, Collection<UUID> actual)
+	private void assertEqualsUUIDArray(Collection<String> expected, Collection<String> actual)
 	{
 		Assert.assertEquals(expected.size(), actual.size());
-		for(UUID ele: expected)
+		for(String ele: expected)
 		{
 			Assert.assertTrue(actual.contains(ele));
 		}

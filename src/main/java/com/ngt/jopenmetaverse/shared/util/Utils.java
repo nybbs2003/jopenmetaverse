@@ -13,8 +13,10 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 import java.util.logging.Logger;
 
@@ -2217,7 +2219,19 @@ public class Utils {
          }
      }
 	
+	public static List<Integer> deepCopy(List<Integer> src)
+	{
+		List<Integer> dst = new ArrayList<Integer>();
+		for(Integer i: src)
+		{
+			dst.add(i.intValue());
+		}
+		return dst;
+	}
+	 
 	public static short UByteMaxValue = 0x0ff;
 
 
+	
+	
 }

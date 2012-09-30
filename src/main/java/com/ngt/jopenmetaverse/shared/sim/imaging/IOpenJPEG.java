@@ -79,4 +79,7 @@ public interface IOpenJPEG {
     public  byte[] EncodeFromImage(IBitmap bitmap, boolean lossless) throws Exception;
 
 	public IBitmap DecodeToIBitMap(byte[] encoded) throws Exception;
+	
+	public DecodedTgaImage DecodeToTgaImage(byte[] imageData) throws Exception;
+
 }

@@ -38,7 +38,7 @@ public class DefaultThreadPoolExecutor implements ThreadPool {
     	}
     	catch(Exception e)
     	{
-    		JLogger.debug("Exception while executing the task: " + Utils.getExceptionStackTraceAsString(e));
+    		JLogger.warn("Exception while executing the task: " + Utils.getExceptionStackTraceAsString(e));
     	}
     }
  

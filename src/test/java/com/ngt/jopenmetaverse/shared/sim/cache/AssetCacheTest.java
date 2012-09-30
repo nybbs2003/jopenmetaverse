@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import com.ngt.jopenmetaverse.shared.sim.GridClient;
@@ -16,6 +17,12 @@ import com.ngt.jopenmetaverse.shared.util.PlatformUtils;
 import com.ngt.jopenmetaverse.shared.util.Utils;
 
 public class AssetCacheTest {
+	
+	@Before
+	public void setup()
+	{
+		
+	}
 	
 	@Test
 	public void saveAssetToCacheTests()
@@ -93,9 +100,43 @@ public class AssetCacheTest {
 			Assert.assertNull(bytes);
 		}
 		
+		
 		logout(client);
 	}
 
+	@Test
+	public void compressAndSaveImageToCacheTests()
+	{
+		GridClient client = new GridClient();
+		AssetCache assetCache = new AssetCache(client);
+		Login(client);
+		PlatformUtils.sleep(5000);
+		byte[] bytes;
+		Map<UUID, LoadCachedImageResult> inventory = new HashMap<UUID, LoadCachedImageResult>();
+		
+		try
+		{
+			saveAndTestCompressedData(assetCache, inventory, UUID.Random(), 
+					new LoadCachedImageResult(generateRandomBytes(32000), true, true, false));
+
+			saveAndTestCompressedData(assetCache, inventory, UUID.Random(), 
+					new LoadCachedImageResult(generateRandomBytes(24000), false, true, false));
+			saveAndTestCompressedData(assetCache, inventory, UUID.Random(), 
+					new LoadCachedImageResult(generateRandomBytes(56000), true, false, false));
+			saveAndTestCompressedData(assetCache, inventory, UUID.Random(), 
+					new LoadCachedImageResult(generateRandomBytes(100000), true, true, true));
+			saveAndTestCompressedData(assetCache, inventory, UUID.Random(), 
+					new LoadCachedImageResult(generateRandomBytes(100000), false, false, false));
+			
+		}
+		catch(Exception e)
+		{Assert.fail(Utils.getExceptionStackTraceAsString(e));}
+		
+//		assetCache.clear();
+
+	}
+	
+	
 	/*
 	 * @input 
 	 * 	len: max number of bytes to generates
@@ -121,6 +162,29 @@ public class AssetCacheTest {
 		Assert.assertTrue(status);
 		bytes = assetCache.getCachedAssetBytes(tmpAsset);
 		Assert.assertArrayEquals(inventory.get(tmpAsset), bytes);		
+	}
+
+	private void saveAndTestCompressedData(AssetCache assetCache, Map<UUID, LoadCachedImageResult> inventory,
+			UUID tmpAsset, LoadCachedImageResult img) throws IOException
+	{
+		boolean status;
+		inventory.put(tmpAsset, img);
+		status = assetCache.compressAndSaveImageToCache(tmpAsset, img.data, img.hasAlpha, img.fullAlpha, img.isMask);
+		Assert.assertTrue(status);
+		System.out.println("Saved Image: " + tmpAsset.toString());
+		LoadCachedImageResult result = assetCache.loadCompressedImageFromCache(tmpAsset);
+		assertEquals(img, result);
+	}
+	
+	private void assertEquals(LoadCachedImageResult exp, LoadCachedImageResult target)
+	{
+		System.out.println("Expected Data\n" + Utils.bytesToHexDebugString(exp.data, 900, "Expected"));
+		System.out.println("Actual Data\n" + Utils.bytesToHexDebugString(target.data, 900, "Actual"));
+		
+		Assert.assertArrayEquals(exp.data, target.data);
+		Assert.assertEquals(exp.hasAlpha, target.hasAlpha);
+		Assert.assertEquals(exp.fullAlpha, target.fullAlpha);
+		Assert.assertEquals(exp.isMask, target.isMask);
 	}
 	
 	

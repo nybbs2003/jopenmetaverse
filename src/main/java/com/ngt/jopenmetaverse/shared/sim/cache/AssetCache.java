@@ -12,6 +12,8 @@ import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.zip.DeflaterInputStream;
 import java.util.zip.DeflaterOutputStream;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 import com.ngt.jopenmetaverse.shared.sim.GridClient;
 import com.ngt.jopenmetaverse.shared.sim.Settings;
@@ -717,44 +719,46 @@ public class AssetCache implements IAssetCache
 			r = new LoadCachedImageResult();
 			byte[] cachedData = getCachedAssetBytes(textureFileName);
 			//Check if the file is actually compressed texture image
-			byte[] header = new byte[36];
-			Utils.arraycopy(cachedData, 0, header, 0, header.length);
-			if (!COMPRESSED_IMAGE_MAGIC_HEADER.equals(Utils.bytesToString(header, 0, COMPRESSED_IMAGE_MAGIC_HEADER.length())))
+//			byte[] header = new byte[36];
+//			Utils.arraycopy(cachedData, 0, header, 0, header.length);
+			if (!COMPRESSED_IMAGE_MAGIC_HEADER.equals(Utils.bytesToString(cachedData, 0, COMPRESSED_IMAGE_MAGIC_HEADER.length())))
 			{
 				return null;
 			}
 			
 			i += COMPRESSED_IMAGE_MAGIC_HEADER.length();
 
-			if (header[i++] != 1) // check version
+			if (cachedData[i++] != 1) // check version
 			{
 				return null;
 			}
 			
-			r.hasAlpha = header[i++] == 1;
-			r.fullAlpha = header[i++] == 1;
-			r.isMask = header[i++] == 1;
+			r.hasAlpha = cachedData[i++] == 1;
+			r.fullAlpha = cachedData[i++] == 1;
+			r.isMask = cachedData[i++] == 1;
 			
-			int uncompressedSize = Utils.bytesToInt(header, i);
+			int uncompressedSize = Utils.bytesToInt(cachedData, i);
 			i += 4;
 
-			textureID = new UUID(header, i);
+			textureID = new UUID(cachedData, i);
 			i += 16;
 
 			r.data = new byte[uncompressedSize];
-			ByteArrayInputStream bis = new ByteArrayInputStream(cachedData, i, uncompressedSize); 
-			DeflaterInputStream compressed = new DeflaterInputStream(bis);
-			{
-				int read = 0;
-				while ((read = compressed.read(r.data, read, uncompressedSize - read)) > 0) ;
-			}
-			compressed.close();
-			bis.close();
+//			ByteArrayInputStream bis = new ByteArrayInputStream(cachedData, i, cachedData.length - i); 
+//			GZIPInputStream compressed = new GZIPInputStream(bis);
+//			int read = 0;
+//			while ((read = compressed.read(r.data, read, uncompressedSize - read)) > 0) ;
+//			
+//			compressed.close();
+			
+			Utils.arraycopy(cachedData, i, r.data, 0, cachedData.length - i);
+			
+//			bis.close();
 		}
 		return r;
 		}
 	
-	public boolean compressAndSaveImageToCache(byte[] tgaData, UUID textureID, boolean hasAlpha, boolean fullAlpha, boolean isMask) throws IOException
+	public boolean compressAndSaveImageToCache(UUID textureID, byte[] tgaData, boolean hasAlpha, boolean fullAlpha, boolean isMask) throws IOException
 	{
 		
 		ByteArrayOutputStream fis = new ByteArrayOutputStream(); 
@@ -784,14 +788,21 @@ public class AssetCache implements IAssetCache
 		fis.write(id, 0, 16);
 		i += 16;
 
-		// compressed texture data
-		DeflaterOutputStream compressed = new DeflaterOutputStream(fis);
-		{
-			compressed.write(tgaData, 0, tgaData.length);
-		}
+//		System.out.println("Header Size " + i + " Date to be compressed " + tgaData.length);
 		
+		//FIXME why compression not working
+		// compressed texture data
+//		GZIPOutputStream compressed = new GZIPOutputStream(fis);
+//		compressed.write(tgaData, 0, tgaData.length);
+//		
+//		compressed.finish();
+		
+		fis.write(tgaData);
 		saveAssetToCache(getCompressedImageName(textureID), fis.toByteArray());
-		compressed.close();
+		
+		
+		
+//		compressed.close();
 		fis.close();
 		return true;
 	}
