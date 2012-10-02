@@ -140,7 +140,7 @@ public class Primitive
     /// <summary>Uses basic heuristics to estimate the primitive shape</summary>
     public PrimType getType()
     {
-            if (Sculpt != null && Sculpt.getType() != SculptType.None && Sculpt.SculptTexture != UUID.Zero)
+            if (Sculpt != null && Sculpt.getType() != SculptType.None && !Sculpt.SculptTexture.equals(UUID.Zero))
             {
                 if (Sculpt.getType() == SculptType.Mesh)
                     return PrimType.Mesh;

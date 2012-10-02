@@ -378,6 +378,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 
         //region Overrides
 
+        @Override
         public boolean equals(Object obj)
         {
             return (obj instanceof Vector3) ? equals((Vector3)obj) : false;
@@ -388,7 +389,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             return equals(this, other);
         }
 
-        public int getHashCode()
+        @Override
+        public int hashCode()
         {
             return (new Float(X)).hashCode() ^ (new Float(Y)).hashCode() ^ (new Float(Z)).hashCode() ;
         }
