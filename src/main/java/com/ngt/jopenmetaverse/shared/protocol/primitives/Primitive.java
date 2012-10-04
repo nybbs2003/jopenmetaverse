@@ -555,17 +555,17 @@ public class Primitive
 
     //region Overrides
 
-    public  boolean Equals(Object obj)
+    public  boolean equals(Object obj)
     {
         return (obj instanceof Primitive) ? equals((Primitive)obj) : false;
     }
 
-    public boolean Equals(Primitive other)
+    public boolean equals(Primitive other)
     {
         return equals(this, other);
     }
 
-    public  String ToString()
+    public  String toString()
     {
         switch (PrimData.PCode)
         {
@@ -714,7 +714,7 @@ public class Primitive
 
     public static float UnpackPathScale(byte pathScale)
     {
-        return (float)(200 - pathScale) * SCALE_QUANTA;
+        return (float)(200 - Utils.ubyteToInt(pathScale)) * SCALE_QUANTA;
     }
 
     public static float UnpackPathShear(byte pathShear)
@@ -740,7 +740,7 @@ public class Primitive
 
     public static float UnpackPathRevolutions(byte pathRevolutions)
     {
-        return (float)pathRevolutions * REV_QUANTA + 1f;
+        return (float)Utils.ubyteToInt(pathRevolutions) * REV_QUANTA + 1f;
     }
 
     public static float UnpackProfileHollow(int profileHollow)

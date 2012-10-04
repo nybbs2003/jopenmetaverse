@@ -2340,7 +2340,7 @@ public class ObjectManager {
 					break;
 				case 32:
 					// The data is an array of unsigned shorts
-
+					//TODO need to handle Little Endian Data
 					// Position
 					objectupdate.Position = new Vector3(
 							Utils.UInt16ToFloat(block.ObjectData, pos, -0.5f * 256.0f, 1.5f * 256.0f),
@@ -2376,7 +2376,7 @@ public class ObjectManager {
 					break;
 				case 16:
 					// The data is an array of single bytes (8-bit numbers)
-
+					//TODO need to handle Little Endian Data
 					// Position
 					objectupdate.Position = new Vector3(
 							Utils.byteToFloat(block.ObjectData, pos, -256.0f, 256.0f),
