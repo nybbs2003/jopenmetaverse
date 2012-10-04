@@ -225,7 +225,7 @@ public abstract class UDPBase {
 				{
 					try {
 						DatagramPacket sendPacket = new DatagramPacket(buf.getData(), buf.getDataLength(), buf.getRemoteEndPoint());
-						JLogger.debug(String.format("Data sending to server of length %d \n%s ", buf.getDataLength(), Utils.bytesToHexDebugString(buf.getData(), buf.getDataLength(), "")));
+//						JLogger.debug(String.format("Data sending to server of length %d \n%s ", buf.getDataLength(), Utils.bytesToHexDebugString(buf.getData(), buf.getDataLength(), "")));
 						udpSocket.send(sendPacket);
 						PacketSent(buf, buf.getDataLength());
 					}

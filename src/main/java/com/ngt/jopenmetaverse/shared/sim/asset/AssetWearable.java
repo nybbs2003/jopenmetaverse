@@ -112,7 +112,7 @@ import com.ngt.jopenmetaverse.shared.protocol.primitives.Permissions.PermissionM
                                     // Special handling for -0 edge case
                                     if (!fields[0].equals("-0"))
                                     {
-                                    	JLogger.debug("Going to parse to integer: " + fields[0] + "\n" + Utils.bytesToHexDebugString(Utils.stringToBytes(fields[0]), ""));
+                                    	//JLogger.debug("Going to parse to integer: " + fields[0] + "\n" + Utils.bytesToHexDebugString(Utils.stringToBytes(fields[0]), ""));
                                         id = Integer.parseInt(fields[0]);
                                     }
 

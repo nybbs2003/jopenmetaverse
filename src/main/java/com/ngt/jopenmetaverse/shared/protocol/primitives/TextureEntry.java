@@ -158,9 +158,9 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 
             private void FromBytes(byte[] data, int pos, int length) throws Exception
             {
-            	//TODO need to remove StringBuffer as it is only for debugging 
 //            	StringBuffer sb = new StringBuffer();
-            	JLogger.debug(String.format("data buffer length %d , pos %d, length %d", data.length, pos, length));
+            	//JLogger.debug(String.format("data buffer length %d , pos %d, length %d", data.length, pos, length));
+            	
                 if (length < 16)
                 {
                     // No TextureEntry to process
@@ -357,8 +357,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             /// <returns></returns>
             public byte[] GetBytes() throws IOException
             {
-            	//TODO need to remove StringBuffer as it is only for debugging 
 //            	StringBuilder sb = new StringBuilder(); 
+            	
                 if (DefaultTexture == null)
                     return Utils.EmptyBytes;
                 
@@ -672,7 +672,9 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                     if (i < byteLength - 1)
                         bytes[i] |= 0x80;
                 }
-                JLogger.debug(String.format("Generating GetFaceBitfieldBytes bytes: %s for bitfield %d", Utils.bytesToHexDebugString(bytes, ""),  bitfield));
+                
+                //JLogger.debug(String.format("Generating GetFaceBitfieldBytes bytes: %s for bitfield %d", Utils.bytesToHexDebugString(bytes, ""),  bitfield));
+                
                 return bytes;
             }
 

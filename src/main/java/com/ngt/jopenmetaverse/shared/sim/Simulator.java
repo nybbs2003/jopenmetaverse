@@ -935,7 +935,7 @@ public class Simulator extends UDPBase
 			for (int i = 0; i < packetCount; i++)
 			{
 				byte[] data = datas[i];
-				JLogger.debug("Sending Multi Block Packet of length" +  data.length + "\n" + Utils.bytesToHexDebugString(data, ""));
+				//JLogger.debug("Sending Multi Block Packet of length" +  data.length + "\n" + Utils.bytesToHexDebugString(data, ""));
 				SendPacketData(data, data.length, packet.Type, packet.header.Zerocoded);
 			}
 		}
