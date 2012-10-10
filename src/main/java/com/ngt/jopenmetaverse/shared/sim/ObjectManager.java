@@ -2264,7 +2264,7 @@ public class ObjectManager {
 				nameValues = new NameValue[0];
 			}
 
-			JLogger.debug("Got NameValue String: " + nameValue + " $Parsed Values$ " + NameValue.NameValuesToString(nameValues));
+			//JLogger.debug("Got NameValue String: " + nameValue + " $Parsed Values$ " + NameValue.NameValuesToString(nameValues));
 			
 			//endregion NameValue parsing
 
@@ -2296,6 +2296,9 @@ public class ObjectManager {
 			//region Decode Additional packed parameters in ObjectData
 			int pos = 0;
 			int i = block.ObjectData.length;
+			
+			//TODO following comment is only for debugging
+			JLogger.debug("ObjectUpdateHandler Got Object Length : " + i);
 			boolean search = true;
 			while(search)
 			{
@@ -2411,13 +2414,16 @@ public class ObjectManager {
 
 					break;
 				default:
-					JLogger.warn("Got an ObjectUpdate block with ObjectUpdate field length of " +
+					JLogger.warn("Unhandled: Got an ObjectUpdate block with ObjectUpdate field length of " +
 							block.ObjectData.length);
 					continue;
 				} //switch
 			}
 			//endregion
 
+			if(objectupdate.Position == null)
+				JLogger.warn("ObjectUpdateHandler: Object Position found to be null after update");
+			
 			// Determine the object type and create the appropriate class
 			switch (pcode)
 			{
@@ -2486,7 +2492,17 @@ public class ObjectManager {
 				prim.Textures = objectupdate.Textures;
 
 				prim.TextureAnim = new TextureAnimation(block.TextureAnim, 0);
-				prim.ParticleSys = new ParticleSystem(block.PSBlock, 0);
+				
+				//FIXME need to fix the following exception
+				try{
+					prim.ParticleSys = new ParticleSystem(block.PSBlock, 0);
+				}
+				catch(Exception ex)
+				{
+					JLogger.warn("Error while decoding ParticleSystem from packet: " 
+							+ Utils.getExceptionStackTraceAsString(ex));
+				}
+				
 				prim.SetExtraParamsFromBytes(block.ExtraParams, 0);
 
 				// PCode-specific data
@@ -2516,6 +2532,9 @@ public class ObjectManager {
 				prim.Acceleration = objectupdate.Acceleration;
 				prim.Rotation = objectupdate.Rotation;
 				prim.AngularVelocity = objectupdate.AngularVelocity;
+				
+				JLogger.debug("Primitive " + prim.LocalID + " Position " + prim.Position.toString());
+				
 				//endregion
 
 				final boolean isNewObject2 = isNewObject;
@@ -3589,6 +3608,8 @@ public class ObjectManager {
 	/// <returns></returns>
 	protected Primitive GetPrimitive(Simulator simulator, long localID, UUID fullID)
 	{
+		//TODO only for debugging
+		JLogger.debug("Creating or Fetching Primitive with local ID" + localID);
 		if (Client.settings.OBJECT_TRACKING)
 		{
 			synchronized (simulator.ObjectsPrimitives.getDictionary())

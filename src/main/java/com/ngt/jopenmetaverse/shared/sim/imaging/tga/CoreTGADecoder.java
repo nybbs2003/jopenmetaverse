@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 
 import com.google.common.io.LittleEndianDataInputStream;
 import com.ngt.jopenmetaverse.shared.sim.imaging.tga.CoreTGADecoder;
@@ -506,19 +507,24 @@ public class CoreTGADecoder {
 				long x = 0;
 				for (int j = 0; j < byp; ++j)
 				{
-					x |= ((long)data[rdi]) << (j << 3);
+//					System.out.println(String.format("\tbyp %d rdi %d bits %s", byp, rdi, Utils.bytesToHexDebugString(Utils.int64ToBytes(( (((long)data[rdi] & 0x00ff) << (j << 3) ) )), "")));
+					x |= ( (((long)Utils.ubyteToInt(data[rdi])) << (j << 3) ) );
 					++rdi;
 				}
+				
+//				System.out.println(String.format("Before Unpacking<X = %d,  Y = %d, %d %s>", i, line, linep2 + (i)*4, Utils.bytesToHexDebugString(Utils.int64ToBytes(x), "")));
+				
 				long color = UnpackColor(x, cd);
 				
 //				if(color != 0)
-//					System.out.println(String.format("<X = %d,  Y = %d, %d %s>", i, line, linep2 + (i)*4, Utils.bytesToHexDebugString(Utils.uintToBytes(color), "")));
+//					System.out.println(String.format("After Unpacking<X = %d,  Y = %d, %d %s>", i, line, linep2 + (i)*4, Utils.bytesToHexDebugString(Utils.uintToBytes(color), "")));
 
 				b[linep2 + (i)*4 ] = (byte) (color >> 24);
 				b[linep2 + (i)*4 +1 ] = (byte) (color >> 16);
 				b[linep2 + (i)*4 + 2] = (byte) (color >> 8);
 				b[linep2 + (i)*4 + 3] = (byte)(color & 0xff);   
-//				if(color > 0)
+				
+//				if(color != 0)
 //				System.out.println(Utils.bytesToHexDebugString(new byte[]{b[linep2 + (i)*4 ], b[linep2 + (i)*4 +1],
 //						b[linep2 + (i)*4 +2], b[linep2 + (i)*4 + 3]}, "Decoded ARGB: "));
 

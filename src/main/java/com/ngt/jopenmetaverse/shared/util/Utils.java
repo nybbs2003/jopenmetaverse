@@ -1600,15 +1600,15 @@ public class Utils {
 	}
 
 	public static int ubyteToInt(byte val) {
-		return val & 0xff;
+		return val & 0x00ff;
 	}
 
 	public static int uint16ToInt(short val) {
-		return val & 0xffff;
+		return val & 0x00ffff;
 	}
 
 	public static short ubyteToShort(byte val) {
-		return (short)(val & 0xff);
+		return (short)(val & 0x00ff);
 	}
 	
 	public static float UInt16ToFloat(byte[] bytes, int pos, float lower,

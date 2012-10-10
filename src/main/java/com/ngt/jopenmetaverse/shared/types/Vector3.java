@@ -85,7 +85,21 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 
         public void normalize()
         {
-            normalize(this);
+            final float MAG_THRESHOLD = 0.0000001f;
+            float factor = distance(this, Zero);
+            if (factor > MAG_THRESHOLD)
+            {
+                factor = 1f / factor;
+                this.X = this.X * factor;
+                this.Y = this.Y * factor;
+                this.Z = this.Z * factor;
+            }
+            else
+            {
+            	this.X = 0f;
+            	this.Y = 0f;
+            	this.Z = 0f;
+            }        	
         }
 
         /// <summary>
@@ -278,22 +292,8 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
 
         public static Vector3 normalize(Vector3 value)
         {
-        	Vector3 result = new Vector3();
-            final float MAG_THRESHOLD = 0.0000001f;
-            float factor = distance(value, Zero);
-            if (factor > MAG_THRESHOLD)
-            {
-                factor = 1f / factor;
-                result.X = value.X * factor;
-                result.Y = value.Y * factor;
-                result.Z = value.Z * factor;
-            }
-            else
-            {
-            	result.X = 0f;
-            	result.Y = 0f;
-            	result.Z = 0f;
-            }
+        	Vector3 result = new Vector3(value);
+           result.normalize();
             return result;
         }
 
