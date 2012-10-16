@@ -1676,6 +1676,9 @@ public class NetworkManager {
 						}
 
 						// Fire the callback(s), if any
+						//TODO only for debug
+						if(packet.Type == PacketType.ObjectUpdate)
+							System.out.println("Firing ObjectUpdate. PacketInboxSize " + PacketInbox.size());
 						PacketEvents.RaiseEvent(packet.Type, packet, simulator);
 					}
 				}

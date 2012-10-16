@@ -162,13 +162,13 @@ public class AgentThrottle {
 //            adjData = data;
 //        }
 
-        resend = Utils.bytesToFloat(adjData, pos); pos += 4;
-        land = Utils.bytesToFloat(adjData, pos); pos += 4;
-        wind = Utils.bytesToFloat(adjData, pos); pos += 4;
-        cloud = Utils.bytesToFloat(adjData, pos); pos += 4;
-        task = Utils.bytesToFloat(adjData, pos); pos += 4;
-        texture = Utils.bytesToFloat(adjData, pos); pos += 4;
-        asset = Utils.bytesToFloat(adjData, pos);
+        resend = Utils.bytesToFloatLit(adjData, pos); pos += 4;
+        land = Utils.bytesToFloatLit(adjData, pos); pos += 4;
+        wind = Utils.bytesToFloatLit(adjData, pos); pos += 4;
+        cloud = Utils.bytesToFloatLit(adjData, pos); pos += 4;
+        task = Utils.bytesToFloatLit(adjData, pos); pos += 4;
+        texture = Utils.bytesToFloatLit(adjData, pos); pos += 4;
+        asset = Utils.bytesToFloatLit(adjData, pos);
     }
 
     /// <summary>
@@ -206,13 +206,13 @@ public class AgentThrottle {
         byte[] data = new byte[7 * 4];
         int i = 0;
 
-        Utils.arraycopy(Utils.floatToBytes(resend), 0, data, i, 4); i += 4;
-        Utils.arraycopy(Utils.floatToBytes(land), 0, data, i, 4); i += 4;
-        Utils.arraycopy(Utils.floatToBytes(wind), 0, data, i, 4); i += 4;
-        Utils.arraycopy(Utils.floatToBytes(cloud), 0, data, i, 4); i += 4;
-        Utils.arraycopy(Utils.floatToBytes(task), 0, data, i, 4); i += 4;
-        Utils.arraycopy(Utils.floatToBytes(texture), 0, data, i, 4); i += 4;
-        Utils.arraycopy(Utils.floatToBytes(asset), 0, data, i, 4); i += 4;
+        Utils.arraycopy(Utils.floatToBytesLit(resend), 0, data, i, 4); i += 4;
+        Utils.arraycopy(Utils.floatToBytesLit(land), 0, data, i, 4); i += 4;
+        Utils.arraycopy(Utils.floatToBytesLit(wind), 0, data, i, 4); i += 4;
+        Utils.arraycopy(Utils.floatToBytesLit(cloud), 0, data, i, 4); i += 4;
+        Utils.arraycopy(Utils.floatToBytesLit(task), 0, data, i, 4); i += 4;
+        Utils.arraycopy(Utils.floatToBytesLit(texture), 0, data, i, 4); i += 4;
+        Utils.arraycopy(Utils.floatToBytesLit(asset), 0, data, i, 4); i += 4;
 
         return data;
     }

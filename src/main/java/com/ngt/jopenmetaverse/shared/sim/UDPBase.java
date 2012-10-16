@@ -110,111 +110,36 @@ public abstract class UDPBase {
 
 	private void AsyncBeginReceive()
 	{
-		// allocate a packet buffer
-		//WrappedObject<UDPPacketBuffer> wrappedBuffer = Pool.CheckOut();
-		final UDPPacketBuffer buf = new UDPPacketBuffer();
-
-		if (!shutdownFlag)
-		{
-			threadPool.execute(new Runnable(){
-				public void run()
+		// allocate a dedicated thread.
+		threadPool.execute(new Runnable(){
+			public void run()
+			{
+				//While it is not shutdown
+				while (!shutdownFlag)
 				{
+					final UDPPacketBuffer buf = new UDPPacketBuffer();
 					DatagramPacket receivePacket = new DatagramPacket(buf.getData(), buf.getData().length);
 					try {
 						udpSocket.receive(receivePacket);
 						buf.setDataLength(receivePacket.getLength());
 						buf.setRemoteEndPoint(receivePacket.getSocketAddress());
 						//Start another receiving, it will keep the server going
-						AsyncBeginReceive();
-						
-						PacketReceived(buf);
-					}
 
-					//                	
-					//                    // kick off an async read
-					//                    udpSocket.BeginReceiveFrom(
-					//                        //wrappedBuffer.Instance.Data,
-					//                        buf.Data,
-					//                        0,
-					//                        UDPPacketBuffer.BUFFER_SIZE,
-					//                        SocketFlags.None,
-					//                        ref buf.RemoteEndPoint,
-					//                        AsyncEndReceive,
-					//                        //wrappedBuffer);
-					//                        buf);
-
-						catch (Exception e) {
-							//TODO handle error in a better way
-							JLogger.error("Error while recieving packet\n" + Utils.getExceptionStackTraceAsString(e));
-						
+						//start another thread to process the packet
+						threadPool.execute(new Runnable(){
+							public void run()
+							{
+								PacketReceived(buf);
+							}
+						});
 					}
-					//                catch (SocketException e)
-					//                {
-					//                    if (e.SocketErrorCode == SocketError.ConnectionReset)
-					//                    {
-					//                        Logger.Log("SIO_UDP_CONNRESET was ignored, attempting to salvage the UDP listener on port " + udpPort, Helpers.LogLevel.Error);
-					//                        bool salvaged = false;
-					//                        while (!salvaged)
-					//                        {
-					//                            try
-					//                            {
-					//                                udpSocket.BeginReceiveFrom(
-					//                                    //wrappedBuffer.Instance.Data,
-					//                                    buf.Data,
-					//                                    0,
-					//                                    UDPPacketBuffer.BUFFER_SIZE,
-					//                                    SocketFlags.None,
-					//                                    ref buf.RemoteEndPoint,
-					//                                    AsyncEndReceive,
-					//                                    //wrappedBuffer);
-					//                                    buf);
-					//                                salvaged = true;
-					//                            }
-					//                            catch (SocketException) { }
-					//                            catch (ObjectDisposedException) { return; }
-					//                        }
-					//
-					//                        Logger.Log("Salvaged the UDP listener on port " + udpPort, Helpers.LogLevel.Info);
-					//                    }
-					//                }
-					//                catch (ObjectDisposedException) { }
+					catch (Exception e) {
+						//TODO handle error in a better way
+						JLogger.error("Error while recieving packet\n" + Utils.getExceptionStackTraceAsString(e));	
+					}
 				}
-			});
-
-
-		}
+			}});
 	}
-
-	//    private void AsyncEndReceive(IAsyncResult iar)
-	//    {
-	//        // Asynchronous receive operations will complete here through the call
-	//        // to AsyncBeginReceive
-	//        if (!shutdownFlag)
-	//        {
-	//            // start another receive - this keeps the server going!
-	//            AsyncBeginReceive();
-	//
-	//            // get the buffer that was created in AsyncBeginReceive
-	//            // this is the received data
-	//            //WrappedObject<UDPPacketBuffer> wrappedBuffer = (WrappedObject<UDPPacketBuffer>)iar.AsyncState;
-	//            //UDPPacketBuffer buffer = wrappedBuffer.Instance;
-	//            UDPPacketBuffer buffer = (UDPPacketBuffer)iar.AsyncState;
-	//
-	//            try
-	//            {
-	//                // get the length of data actually read from the socket, store it with the
-	//                // buffer
-	//                buffer.DataLength = udpSocket.EndReceiveFrom(iar, ref buffer.RemoteEndPoint);
-	//
-	//                // call the abstract method PacketReceived(), passing the buffer that
-	//                // has just been filled from the socket read.
-	//                PacketReceived(buffer);
-	//            }
-	//            catch (SocketException) { }
-	//            catch (ObjectDisposedException) { }
-	//            //finally { wrappedBuffer.Dispose(); }
-	//        }
-	//    }
 
 	public void AsyncBeginSend(final UDPPacketBuffer buf)
 	{
@@ -225,7 +150,7 @@ public abstract class UDPBase {
 				{
 					try {
 						DatagramPacket sendPacket = new DatagramPacket(buf.getData(), buf.getDataLength(), buf.getRemoteEndPoint());
-//						JLogger.debug(String.format("Data sending to server of length %d \n%s ", buf.getDataLength(), Utils.bytesToHexDebugString(buf.getData(), buf.getDataLength(), "")));
+						//						JLogger.debug(String.format("Data sending to server of length %d \n%s ", buf.getDataLength(), Utils.bytesToHexDebugString(buf.getData(), buf.getDataLength(), "")));
 						udpSocket.send(sendPacket);
 						PacketSent(buf, buf.getDataLength());
 					}
@@ -235,44 +160,7 @@ public abstract class UDPBase {
 					}
 				}
 			});
-
-			//            try
-			//            {
-			//                // Profiling heavily loaded clients was showing better performance with 
-			//                // synchronous UDP packet sending
-			//                udpSocket.SendTo(
-			//                    buf.Data,
-			//                    0,
-			//                    buf.DataLength,
-			//                    SocketFlags.None,
-			//                    buf.RemoteEndPoint);
-			//
-			//                //udpSocket.BeginSendTo(
-			//                //    buf.Data,
-			//                //    0,
-			//                //    buf.DataLength,
-			//                //    SocketFlags.None,
-			//                //    buf.RemoteEndPoint,
-			//                //    AsyncEndSend,
-			//                //    buf);
-			//            }
-			//            catch (SocketException) { }
-			//            catch (ObjectDisposedException) { }
 		}
 	}
-
-	//void AsyncEndSend(IAsyncResult result)
-	//{
-	//    try
-	//    {
-	//        UDPPacketBuffer buf = (UDPPacketBuffer)result.AsyncState;
-	//        if (!udpSocket.Connected) return;
-	//        int bytesSent = udpSocket.EndSendTo(result);
-
-	//        PacketSent(buf, bytesSent);
-	//    }
-	//    catch (SocketException) { }
-	//    catch (ObjectDisposedException) { }
-	//}
 }
 
