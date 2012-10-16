@@ -469,7 +469,7 @@ public class Avatar extends Primitive
 		Avi.put("profile_statistics", ProfileStatistics.GetOSD());
 		Avi.put("profile_properties", ProfileProperties.GetOSD());
 		Avi.put("profile_interest", ProfileInterests.GetOSD());
-		Avi.put("control_flags", OSD.FromInteger((byte)EnumsPrimitive.PrimFlags.getIndex(Flags)));
+		Avi.put("control_flags", OSD.FromInteger((byte)Flags));
 		Avi.put("visual_parameters", vp);
 		Avi.put("first_name", OSD.FromString(getFirstName()));
 		Avi.put("last_name", OSD.FromString(getLastName()));

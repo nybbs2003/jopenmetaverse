@@ -373,7 +373,7 @@ import com.ngt.jopenmetaverse.shared.types.UUID;
             public Object clone()
             {
                 TextureEntryFace ret = new TextureEntryFace(this.DefaultTexture == null ? null : (TextureEntryFace)this.DefaultTexture.clone());
-                ret.rgba = rgba;
+                ret.rgba = new Color4(rgba);
                 ret.repeatU = repeatU;
                 ret.repeatV = repeatV;
                 ret.offsetU = offsetU;

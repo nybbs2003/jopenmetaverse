@@ -437,7 +437,7 @@ public class Simulator extends UDPBase
 	/// A thread-safe dictionary containing primitives in a simulator
 	/// </summary>
 	//uint
-	public InternalDictionary<Long, Primitive> ObjectsPrimitives = new InternalDictionary<Long, Primitive>();
+	public PrimitiveDictionary ObjectsPrimitives = new PrimitiveDictionary();
 
 	public TerrainPatch[] Terrain;
 

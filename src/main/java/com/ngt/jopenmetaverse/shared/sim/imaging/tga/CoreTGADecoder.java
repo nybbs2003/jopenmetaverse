@@ -508,7 +508,7 @@ public class CoreTGADecoder {
 				for (int j = 0; j < byp; ++j)
 				{
 //					System.out.println(String.format("\tbyp %d rdi %d bits %s", byp, rdi, Utils.bytesToHexDebugString(Utils.int64ToBytes(( (((long)data[rdi] & 0x00ff) << (j << 3) ) )), "")));
-					x |= ( (((long)Utils.ubyteToInt(data[rdi])) << (j << 3) ) );
+					x |= ( (((long)(data[rdi] &  0x00ff)) << (j << 3) ) );
 					++rdi;
 				}
 				

@@ -61,7 +61,8 @@ public class Primitive
     /// <summary></summary>
     public BigInteger RegionHandle;
     /// <summary></summary>
-    public EnumSet<PrimFlags> Flags;
+    //EnumSet<PrimFlags>
+    public long Flags;
     /// <summary>Foliage type for this primitive. Only applicable if this
     /// primitive is foliage</summary>
     public Tree TreeSpecies;
@@ -95,7 +96,8 @@ public class Primitive
     /// active</summary>
     public UUID OwnerID;
     /// <summary></summary>
-    public EnumSet<SoundFlags> SoundFlags;
+    //EnumSet<SoundFlags>
+    public long SoundFlags;
     /// <summary></summary>
     public float SoundGain;
     /// <summary></summary>
@@ -153,6 +155,7 @@ public class Primitive
 
             if (linearPath)
             {
+            	System.out.println("Prim ID " + LocalID + " profilecurve " + PrimData.profileCurve);
                 switch (ProfileCurve.get(PrimData.profileCurve))
                 {
                     case Circle:
@@ -326,14 +329,14 @@ public class Primitive
             prim.put("description", OSD.FromString(""));
         }
         
-        prim.put("phantom", OSD.FromBoolean(((PrimFlags.getIndex(Flags) & PrimFlags.Phantom.getIndex()) != 0)));
-        prim.put("physical", OSD.FromBoolean(((PrimFlags.getIndex(Flags) & PrimFlags.Physics.getIndex()) != 0)));
+        prim.put("phantom", OSD.FromBoolean(((Flags & PrimFlags.Phantom.getIndex()) != 0)));
+        prim.put("physical", OSD.FromBoolean(((Flags & PrimFlags.Physics.getIndex()) != 0)));
         prim.put("position", OSD.FromVector3(Position));
         prim.put("rotation", OSD.FromQuaternion(Rotation));
         prim.put("scale", OSD.FromVector3(Scale));
         prim.put("pcode", OSD.FromInteger((int)PrimData.PCode.getIndex()));
         prim.put("material", OSD.FromInteger((int)PrimData.Material.getIndex()));
-        prim.put("shadows", OSD.FromBoolean(((PrimFlags.getIndex(Flags) & PrimFlags.CastShadows.getIndex()) != 0)));
+        prim.put("shadows", OSD.FromBoolean(((Flags & PrimFlags.CastShadows.getIndex()) != 0)));
         prim.put("state", OSD.FromInteger(PrimData.State));
 
         prim.put("id", OSD.FromUUID(ID));
@@ -400,13 +403,13 @@ public class Primitive
         prim.PrimData = data;
 
         if (map.get("phantom").asBoolean())
-            prim.Flags =  PrimFlags.get(PrimFlags.getIndex(prim.Flags) | PrimFlags.Phantom.getIndex());
+            prim.Flags =  prim.Flags | PrimFlags.Phantom.getIndex();
 
         if (map.get("physical").asBoolean())
-        	prim.Flags =  PrimFlags.get(PrimFlags.getIndex(prim.Flags) | PrimFlags.Physics.getIndex());
+        	prim.Flags =  prim.Flags | PrimFlags.Physics.getIndex();
 
         if (map.get("shadows").asBoolean())
-        	prim.Flags =  PrimFlags.get(PrimFlags.getIndex(prim.Flags) | PrimFlags.CastShadows.getIndex());
+        	prim.Flags =  prim.Flags | PrimFlags.CastShadows.getIndex();
 
         prim.ID = map.get("id").asUUID();
         prim.LocalID = map.get("localid").asLong();
@@ -579,51 +582,53 @@ public class Primitive
     @Override
     public  int hashCode()
     {
-        return
-            Position.hashCode() ^
-            Velocity.hashCode() ^
-            Acceleration.hashCode() ^
-            Rotation.hashCode() ^
-            AngularVelocity.hashCode() ^
-            ClickAction.hashCode() ^
-            (Flexible != null ? Flexible.hashCode() : 0) ^
-            (Light != null ? Light.hashCode() : 0) ^
-            (Sculpt != null ? Sculpt.hashCode() : 0) ^
-            Flags.hashCode() ^
-            PrimData.Material.hashCode() ^
-            MediaURL.hashCode() ^
-            //TODO: NameValues?
-            (Properties != null ? Properties.OwnerID.hashCode() : 0) ^
-            new Long(ParentID).hashCode() ^
-            new Float(PrimData.PathBegin).hashCode() ^
-            PrimData.PathCurve.hashCode() ^
-            new Float(PrimData.PathEnd).hashCode() ^
-            new Float(PrimData.PathRadiusOffset).hashCode() ^
-            new Float(PrimData.PathRevolutions).hashCode() ^
-            new Float(PrimData.PathScaleX).hashCode() ^
-            new Float(PrimData.PathScaleY).hashCode() ^
-            new Float(PrimData.PathShearX).hashCode() ^
-            new Float(PrimData.PathShearY).hashCode() ^
-            new Float(PrimData.PathSkew).hashCode() ^
-            new Float(PrimData.PathTaperX).hashCode() ^
-            new Float(PrimData.PathTaperY).hashCode() ^
-            new Float(PrimData.PathTwist).hashCode() ^
-            new Float(PrimData.PathTwistBegin).hashCode() ^
-            PrimData.PCode.hashCode() ^
-            new Float(PrimData.ProfileBegin).hashCode() ^
-            new Byte(PrimData.profileCurve).hashCode() ^
-            new Float(PrimData.ProfileEnd).hashCode() ^
-            new Float(PrimData.ProfileHollow).hashCode() ^
-            ParticleSys.hashCode() ^
-            TextColor.hashCode() ^
-            TextureAnim.hashCode() ^
-            (Textures != null ? Textures.hashCode() : 0) ^
-            new Float(SoundRadius).hashCode() ^
-            Scale.hashCode() ^
-            Sound.hashCode() ^
-            new Byte(PrimData.State).hashCode() ^
-            Text.hashCode() ^
-            TreeSpecies.hashCode();
+    	
+    	return ID.hashCode();
+//        return
+//            Position.hashCode() ^
+//            Velocity.hashCode() ^
+//            Acceleration.hashCode() ^
+//            Rotation.hashCode() ^
+//            AngularVelocity.hashCode() ^
+//            ClickAction.hashCode() ^
+//            (Flexible != null ? Flexible.hashCode() : 0) ^
+//            (Light != null ? Light.hashCode() : 0) ^
+//            (Sculpt != null ? Sculpt.hashCode() : 0) ^
+//            Flags.hashCode() ^
+//            PrimData.Material.hashCode() ^
+//            MediaURL.hashCode() ^
+//            //TODO: NameValues?
+//            (Properties != null ? Properties.OwnerID.hashCode() : 0) ^
+//            new Long(ParentID).hashCode() ^
+//            new Float(PrimData.PathBegin).hashCode() ^
+//            PrimData.PathCurve.hashCode() ^
+//            new Float(PrimData.PathEnd).hashCode() ^
+//            new Float(PrimData.PathRadiusOffset).hashCode() ^
+//            new Float(PrimData.PathRevolutions).hashCode() ^
+//            new Float(PrimData.PathScaleX).hashCode() ^
+//            new Float(PrimData.PathScaleY).hashCode() ^
+//            new Float(PrimData.PathShearX).hashCode() ^
+//            new Float(PrimData.PathShearY).hashCode() ^
+//            new Float(PrimData.PathSkew).hashCode() ^
+//            new Float(PrimData.PathTaperX).hashCode() ^
+//            new Float(PrimData.PathTaperY).hashCode() ^
+//            new Float(PrimData.PathTwist).hashCode() ^
+//            new Float(PrimData.PathTwistBegin).hashCode() ^
+//            PrimData.PCode.hashCode() ^
+//            new Float(PrimData.ProfileBegin).hashCode() ^
+//            new Byte(PrimData.profileCurve).hashCode() ^
+//            new Float(PrimData.ProfileEnd).hashCode() ^
+//            new Float(PrimData.ProfileHollow).hashCode() ^
+//            ParticleSys.hashCode() ^
+//            TextColor.hashCode() ^
+//            TextureAnim.hashCode() ^
+//            (Textures != null ? Textures.hashCode() : 0) ^
+//            new Float(SoundRadius).hashCode() ^
+//            Scale.hashCode() ^
+//            Sound.hashCode() ^
+//            new Byte(PrimData.State).hashCode() ^
+//            Text.hashCode() ^
+//            TreeSpecies.hashCode();
     }
 
     //endregion Overrides

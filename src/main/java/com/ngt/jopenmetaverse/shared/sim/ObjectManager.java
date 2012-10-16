@@ -108,7 +108,6 @@ import com.ngt.jopenmetaverse.shared.types.EnumsPrimitive.PhysicsShapeType;
 import com.ngt.jopenmetaverse.shared.types.EnumsPrimitive.PrimFlags;
 import com.ngt.jopenmetaverse.shared.types.EnumsPrimitive.PrimType;
 import com.ngt.jopenmetaverse.shared.types.EnumsPrimitive.ProfileCurve;
-import com.ngt.jopenmetaverse.shared.types.EnumsPrimitive.SoundFlags;
 import com.ngt.jopenmetaverse.shared.types.EnumsPrimitive.Tree;
 import com.ngt.jopenmetaverse.shared.types.Quaternion;
 import com.ngt.jopenmetaverse.shared.types.UUID;
@@ -2140,19 +2139,22 @@ public class ObjectManager {
 
 						if (Client.settings.OBJECT_TRACKING)
 						{
-							final Primitive[] primarray = new Primitive[]{null}; 
-							Primitive prim = null;
-							sim.ObjectsPrimitives.foreach(new Action<Entry<Long, Primitive>>()
-									{
-								public void execute(
-										Entry<Long, Primitive> t) {
-									if(t.getValue().ID.equals(primID))
-									{
-										primarray[0] = t.getValue();
-									}
-								}
-									});
-							prim = primarray[0];
+//							final Primitive[] primarray = new Primitive[]{null}; 
+//							Primitive prim = null;
+//							sim.ObjectsPrimitives.foreach(new Action<Entry<Long, Primitive>>()
+//									{
+//								public void execute(
+//										Entry<Long, Primitive> t) {
+//									if(t.getValue().ID.equals(primID))
+//									{
+//										primarray[0] = t.getValue();
+//									}
+//								}
+//									});
+//							prim = primarray[0];
+							
+							Primitive prim = sim.ObjectsPrimitives.get(primID);
+
 							//		                                Find((Primitive p) => { return p.ID == primID; });
 							if (prim != null)
 							{
@@ -2446,17 +2448,17 @@ public class ObjectManager {
 				onObjectDataBlockUpdate.raiseEvent(new ObjectDataBlockUpdateEventArgs(simulator, prim, data, block, objectupdate, nameValues));
 
 				//region Update Prim Info with decoded data
-				prim.Flags = PrimFlags.get(block.UpdateFlags);
+				prim.Flags = block.UpdateFlags;
 				//JLogger.debug("Block UpdateFlags: " + block.UpdateFlags + Utils.bytesToHexDebugString(Utils.int64ToBytes(block.UpdateFlags), ""));
 				
-				if ((PrimFlags.getIndex(prim.Flags) & PrimFlags.ZlibCompressed.getIndex()) != 0)
+				if ((prim.Flags & PrimFlags.ZlibCompressed.getIndex()) != 0)
 				{
 					JLogger.warn("Got a ZlibCompressed ObjectUpdate, implement me!");
 					continue;
 				}
 
 				// Automatically request ObjectProperties for prim if it was rezzed selected.
-				if ((PrimFlags.getIndex(prim.Flags) & PrimFlags.CreateSelected.getIndex()) != 0)
+				if (( prim.Flags & PrimFlags.CreateSelected.getIndex()) != 0)
 				{
 					SelectObject(simulator, prim.LocalID);
 				}
@@ -2476,7 +2478,7 @@ public class ObjectManager {
 
 				// Sound information
 				prim.Sound = block.Sound;
-				prim.SoundFlags = SoundFlags.get(block.Flags);
+				prim.SoundFlags = block.Flags;
 				prim.SoundGain = block.Gain;
 				prim.SoundRadius = block.Radius;
 
@@ -2871,7 +2873,7 @@ public class ObjectManager {
 
 				prim.LocalID = LocalID;
 				prim.ID = FullID;
-				prim.Flags = PrimFlags.get(block.UpdateFlags);
+				prim.Flags = block.UpdateFlags;
 				prim.PrimData.PCode = pcode;
 
 				//region Decode block and update Prim
@@ -2894,21 +2896,22 @@ public class ObjectManager {
 				prim.Rotation = new Quaternion(block.Data, i, true);
 				i += 12;
 				// Compressed flags
-				EnumSet<CompressedFlags> flags = CompressedFlags.get(Utils.bytesToUIntLit(block.Data, i));
+				//EnumSet<CompressedFlags>
+				long flags = Utils.bytesToUIntLit(block.Data, i);
 				i += 4;
 
 				prim.OwnerID = new UUID(block.Data, i);
 				i += 16;
 
 				// Angular velocity
-				if ((CompressedFlags.getIndex(flags) & CompressedFlags.HasAngularVelocity.getIndex()) != 0)
+				if ((flags & CompressedFlags.HasAngularVelocity.getIndex()) != 0)
 				{
 					prim.AngularVelocity = new Vector3(block.Data, i);
 					i += 12;
 				}
 
 				// Parent ID
-				if ((CompressedFlags.getIndex(flags) & CompressedFlags.HasParent.getIndex()) != 0)
+				if ((flags & CompressedFlags.HasParent.getIndex()) != 0)
 				{
 					//		                        prim.ParentID = (uint)(block.Data[i++] + (block.Data[i++] << 8) +
 					//		                        (block.Data[i++] << 16) + (block.Data[i++] << 24));
@@ -2920,13 +2923,13 @@ public class ObjectManager {
 				}
 
 				// Tree data
-				if ((CompressedFlags.getIndex(flags) & CompressedFlags.Tree.getIndex()) != 0)
+				if ((flags & CompressedFlags.Tree.getIndex()) != 0)
 				{
 					prim.TreeSpecies = Tree.get(block.Data[i++]);
 					//prim.ScratchPad = Utils.EmptyBytes;
 				}
 				// Scratch pad
-				else if ((CompressedFlags.getIndex(flags) & CompressedFlags.ScratchPad.getIndex()) != 0)
+				else if ((flags & CompressedFlags.ScratchPad.getIndex()) != 0)
 				{
 					prim.TreeSpecies = Tree.get((byte)0);
 
@@ -2938,7 +2941,7 @@ public class ObjectManager {
 				prim.ScratchPad = Utils.EmptyBytes;
 
 				// Floating text
-				if ((CompressedFlags.getIndex(flags) & CompressedFlags.HasText.getIndex())  != 0)
+				if ((flags & CompressedFlags.HasText.getIndex())  != 0)
 				{
 					String text = "";
 					while (block.Data[i] != 0)
@@ -2961,7 +2964,7 @@ public class ObjectManager {
 				}
 
 				// Media URL
-				if ((CompressedFlags.getIndex(flags) & CompressedFlags.MediaURL.getIndex())  != 0)
+				if ((flags & CompressedFlags.MediaURL.getIndex())  != 0)
 				{
 					String text = "";
 					while (block.Data[i] != 0)
@@ -2975,7 +2978,7 @@ public class ObjectManager {
 				}
 
 				// Particle system
-				if ((CompressedFlags.getIndex(flags) & CompressedFlags.HasParticles.getIndex())  != 0)
+				if ((flags & CompressedFlags.HasParticles.getIndex())  != 0)
 				{
 					prim.ParticleSys = new ParticleSystem(block.Data, i);
 					i += 86;
@@ -2985,20 +2988,20 @@ public class ObjectManager {
 				i += prim.SetExtraParamsFromBytes(block.Data, i);
 
 				//Sound data
-				if ((CompressedFlags.getIndex(flags) & CompressedFlags.HasSound.getIndex())  != 0)
+				if ((flags & CompressedFlags.HasSound.getIndex())  != 0)
 				{
 					prim.Sound = new UUID(block.Data, i);
 					i += 16;
 
 					prim.SoundGain = Utils.bytesToFloatLit(block.Data, i);
 					i += 4;
-					prim.SoundFlags = SoundFlags.get(block.Data[i++]);
+					prim.SoundFlags = block.Data[i++];
 					prim.SoundRadius = Utils.bytesToFloatLit(block.Data, i);
 					i += 4;
 				}
 
 				// Name values
-				if ((CompressedFlags.getIndex(flags) & CompressedFlags.HasNameValues.getIndex())  != 0)
+				if ((flags & CompressedFlags.HasNameValues.getIndex())  != 0)
 				{
 					String text = "";
 					while (block.Data[i] != 0)
@@ -3057,7 +3060,7 @@ public class ObjectManager {
 				i += textureEntryLength;
 
 				// Texture animation
-				if ((CompressedFlags.getIndex(flags) & CompressedFlags.TextureAnimation.getIndex())  != 0)
+				if ((flags & CompressedFlags.TextureAnimation.getIndex())  != 0)
 				{
 					//int textureAnimLength = (int)Utils.BytesToUIntBig(block.Data, i);
 					i += 4;
@@ -3066,7 +3069,7 @@ public class ObjectManager {
 
 				//endregion
 
-				prim.IsAttachment = (CompressedFlags.getIndex(flags) & CompressedFlags.HasNameValues.getIndex())  != 0 && prim.ParentID != 0;
+				prim.IsAttachment = (flags & CompressedFlags.HasNameValues.getIndex())  != 0 && prim.ParentID != 0;
 
 				//region Raise Events
 
@@ -3247,20 +3250,22 @@ public class ObjectManager {
 				//		                    Primitive findPrim = simulator.ObjectsPrimitives.Find(
 				//		                        delegate(Primitive prim) { return prim.ID == props.ObjectID; });
 
-				final Primitive[] primarray = new Primitive[]{null}; 
-				Primitive findPrim = null;
-				simulator.ObjectsPrimitives.foreach(new Action<Entry<Long, Primitive>>()
-						{
-					public void execute(
-							Entry<Long, Primitive> t) {
-						if(t.getValue().ID.equals(props.ObjectID))
-						{
-							primarray[0] = t.getValue();
-						}
-					}
-						});
-				findPrim = primarray[0];
+//				final Primitive[] primarray = new Primitive[]{null}; 
+//				Primitive findPrim = null;
+//				simulator.ObjectsPrimitives.foreach(new Action<Entry<Long, Primitive>>()
+//						{
+//					public void execute(
+//							Entry<Long, Primitive> t) {
+//						if(t.getValue().ID.equals(props.ObjectID))
+//						{
+//							primarray[0] = t.getValue();
+//						}
+//					}
+//						});
+//				findPrim = primarray[0];
 
+				Primitive findPrim = simulator.ObjectsPrimitives.get(props.ObjectID);
+				
 				if (findPrim != null)
 				{
 					onObjectPropertiesUpdated.raiseEvent(new ObjectPropertiesUpdatedEventArgs(simulator, findPrim, props));
@@ -3312,20 +3317,22 @@ public class ObjectManager {
 			//		                Primitive findPrim = simulator.ObjectsPrimitives.Find(
 			//		                        delegate(Primitive prim) { return prim.ID == op.ObjectData.ObjectID; });
 
-			final Primitive[] primarray = new Primitive[]{null}; 
-			Primitive findPrim = null;
-			simulator.ObjectsPrimitives.foreach(new Action<Entry<Long, Primitive>>()
-					{
-				public void execute(
-						Entry<Long, Primitive> t) {
-					if(t.getValue().ID.equals(op.ObjectData.ObjectID))
-					{
-						primarray[0] = t.getValue();
-					}
-				}
-					});
-			findPrim = primarray[0];
+//			final Primitive[] primarray = new Primitive[]{null}; 
+//			Primitive findPrim = null;
+//			simulator.ObjectsPrimitives.foreach(new Action<Entry<Long, Primitive>>()
+//					{
+//				public void execute(
+//						Entry<Long, Primitive> t) {
+//					if(t.getValue().ID.equals(op.ObjectData.ObjectID))
+//					{
+//						primarray[0] = t.getValue();
+//					}
+//				}
+//					});
+//			findPrim = primarray[0];
 
+			Primitive findPrim = simulator.ObjectsPrimitives.get(op.ObjectData.ObjectID);
+			
 			if (findPrim != null)
 			{
 				synchronized (simulator.ObjectsPrimitives.getDictionary())

@@ -8,9 +8,7 @@ import java.util.Map.Entry;
 import com.ngt.jopenmetaverse.shared.types.Action;
 import com.ngt.jopenmetaverse.shared.types.Predicate;
 
-/*
- * Using Apache Commons Predicate See https://discursive.atlassian.net/wiki/display/CJCOOK/Filtering+a+Collection+with+a+Predicate
- */
+
 /// <summary>
 /// The InternalDictionary class is used through the library for storing key/value pairs.
 /// It is intended to be a replacement for the generic Dictionary class and should 
