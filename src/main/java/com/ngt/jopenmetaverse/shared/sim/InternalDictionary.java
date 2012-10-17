@@ -304,7 +304,7 @@ public class InternalDictionary<T, E> {
             }
         }
         
-        public void foreach(Action action)
+        public void foreach(Action<Entry<T, E>> action)
         {
             synchronized (Dictionary)
             {

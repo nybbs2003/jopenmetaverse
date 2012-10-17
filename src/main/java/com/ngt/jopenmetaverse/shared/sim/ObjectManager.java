@@ -3709,9 +3709,10 @@ public class ObjectManager {
 				final float adjSeconds = seconds * sim.Stats.Dilation;
 
 				// Iterate through all of this sims avatars
-				sim.ObjectsAvatars.foreach(new Action<Avatar>()
+				sim.ObjectsAvatars.foreach(new Action<Entry<Long, Avatar>>()
 						{
-					public void execute(Avatar avatar) {
+					public void execute(Entry<Long, Avatar> e) {
+						Avatar avatar = e.getValue();
 						//region Linear Motion
 						// Only do movement interpolation (extrapolation) when there is a non-zero velocity but 
 						// no acceleration
@@ -3728,10 +3729,11 @@ public class ObjectManager {
 						);
 
 				// Iterate through all of this sims primitives
-				sim.ObjectsPrimitives.foreach(new Action<Primitive>()
+				sim.ObjectsPrimitives.foreach(new Action<Entry<Long, Primitive>>()
 						{
-					public void execute(Primitive prim) 
+					public void execute(Entry<Long, Primitive> e) 
 					{
+						Primitive prim = e.getValue();
 						if (prim.Joint.equals(JointType.Invalid))
 						{
 							//region Angular Velocity
