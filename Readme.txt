@@ -1,3 +1,19 @@
+Welcome to JOpenMetaVerse!!!
+
+Introduction
+==============
+* A library to interact with 3d virtual world simulators (ex. OpenSim).
+* Completely written in Java.
+* The core library implements:
+  + Simulator Protocol (Protocol connecting to OpenSim)
+  + Networking (based on HTTP and UDP)
+  + Imaging (Jpeg2000, TGA Images)
+  + Android SDK Compatible
+  + 3D Rendering (Currently being Developed)
+
+
+How to get it
+===============
 
 Setting up Git on BitBucket
 
