@@ -26,14 +26,17 @@ Clone the respository
 git clone ssh://git@bitbucket.org/<account Name>/reponame.git
 
 
+=Some useful Mvn Commands
+
+==Run a specific test case
 mvn clean -Dtest=TWorkflowTaskClientTest test
+
+==Install the project, skipping test cases
 mvn clean install -Dmaven.test.skip=true
 
+==Check and apply license header
+mvn license:check -Ddate=2012
+mvn license:format -Ddate=2012
 
-
-Some nice Regular expressions
-
-use to replace C# getters to Java getters
-public (.*) (.*) \{ get \{ (.*) \} \}
 
 
