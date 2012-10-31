@@ -19,6 +19,11 @@
 package com.ngt.jopenmetaverse.shared.sim.asset;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.zip.InflaterInputStream;
 
 import com.ngt.jopenmetaverse.shared.exception.NotImplementedException;
 import com.ngt.jopenmetaverse.shared.structureddata.OSDMap;
@@ -31,6 +36,7 @@ import com.ngt.jopenmetaverse.shared.types.UUID;
 /// </summary>
 import com.ngt.jopenmetaverse.shared.util.JLogger;
 import com.ngt.jopenmetaverse.shared.util.Utils;
+import com.ngt.jopenmetaverse.shared.util.ZlibCompression;
 public class AssetMesh extends Asset
 {
 	/// <summary>Override the base classes AssetType</summary>
@@ -96,7 +102,10 @@ public class AssetMesh extends Asset
 				Utils.arraycopy(AssetData, partInfo.get("offset").asInteger() + start
 						, part, 0, part.length);
 
-				MeshData.put(partName, BinaryLLSDOSDParser.DeserializeLLSDBinary(data));
+				ByteArrayOutputStream output = new ByteArrayOutputStream();  
+				ZlibCompression.decompressFile(new ByteArrayInputStream(part), output);
+				
+				MeshData.put(partName, BinaryLLSDOSDParser.DeserializeLLSDBinary(output.toByteArray()));
 
 
 				//                        using (MemoryStream input = new MemoryStream(part))
@@ -125,5 +134,5 @@ public class AssetMesh extends Asset
 			JLogger.error("Failed to decode mesh asset\n" + Utils.getExceptionStackTraceAsString(ex));
 			return false;
 		}
-	}
+	}    
 }

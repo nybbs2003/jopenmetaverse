@@ -19,9 +19,13 @@
 package com.ngt.jopenmetaverse.shared.structureddata.llsd;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Calendar;
 import java.util.Date;
@@ -29,9 +33,12 @@ import java.util.TimeZone;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+
+import com.ngt.jopenmetaverse.shared.sim.asset.AssetMesh;
 import com.ngt.jopenmetaverse.shared.structureddata.OSD;
 import com.ngt.jopenmetaverse.shared.structureddata.OSDArray;
 import com.ngt.jopenmetaverse.shared.structureddata.OSDException;
@@ -40,6 +47,8 @@ import com.ngt.jopenmetaverse.shared.structureddata.OSDMap;
 import com.ngt.jopenmetaverse.shared.structureddata.OSDString;
 import com.ngt.jopenmetaverse.shared.structureddata.OSDType;
 import com.ngt.jopenmetaverse.shared.types.UUID;
+import com.ngt.jopenmetaverse.shared.util.FileUtils;
+import com.ngt.jopenmetaverse.shared.util.Utils;
 
 /// </summary>
 public class BinaryLLSDOSDParserTest
@@ -47,6 +56,54 @@ public class BinaryLLSDOSDParserTest
 	//ASCII Bytes
     private static final byte[] binaryHead = "<? llsd/binary ?>".getBytes(Charset.forName("US-ASCII"));
 
+	String fileLocation;
+	String outputLocation;
+
+	@Before
+	public void setup() throws IOException
+	{
+		URL propLoc  =  getClass().getClassLoader().getResource("jomv_test_resources_dir.properties");
+
+		Assert.assertNotNull(propLoc);
+
+		String basePath = org.apache.commons.io.FileUtils.readFileToString(new File(propLoc.getPath())).trim();
+		outputLocation = basePath + "output";
+		File f = new File(outputLocation);
+		if(!f.exists())
+			f.mkdir();
+
+		fileLocation = FileUtils.combineFilePath(new File(basePath).getAbsolutePath(),"files/asset/meshed/");
+	}
+    
+	@Test
+	public void DecodeBinaryMeshedAsset()
+	{
+		File[] files = FileUtils.getFileList(fileLocation, true);
+		try{
+		for(File file: files)
+		{
+			byte[] bytes = FileUtils.readBytes(file);
+			
+			AssetMesh assetMesh  = new AssetMesh();
+			assetMesh.AssetData = bytes;
+			assetMesh.Decode();
+			
+			ByteArrayInputStream baos = new ByteArrayInputStream(assetMesh.AssetData);
+			OSD osd = BinaryLLSDOSDParser.DeserializeLLSDBinary(baos);
+			OSDMap header = (OSDMap) osd;
+			for(String partName : header.keys())
+			{
+				System.out.println(partName);
+			}
+		}
+		}
+		catch(Exception e)
+		{
+			Assert.fail("Decoding failed " + Utils.getExceptionStackTraceAsString(e));
+		}
+	}
+	
+	
     @Test
     public void HelperFunctions() throws IOException
     {

@@ -310,7 +310,7 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
                     osd = ParseLLSDBinaryMap(stream);
                     break;
                 default:
-                    throw new OSDException("Binary LLSD parsing: Unknown type marker.");
+                    throw new OSDException("Binary LLSD parsing: Unknown type marker: " + marker);
 
             }
             return osd;
