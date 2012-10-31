@@ -88,7 +88,10 @@ import com.ngt.jopenmetaverse.shared.util.Utils;
             SkipWhiteSpace(stream);
             if (!FindString(stream, llsdBinaryHead) && !FindString(stream, llsdBinaryHead2))
             {
-                throw new OSDException("Failed to decode binary LLSD");
+            	/*FIXME enabling following line raises error when AssetMesh call this function to decode
+            	 * Meshed Primitives 
+            	*/
+                //throw new OSDException("Failed to decode binary LLSD");
             }
             SkipWhiteSpace(stream);
             return ParseLLSDBinaryElement(stream);
