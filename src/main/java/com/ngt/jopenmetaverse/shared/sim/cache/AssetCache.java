@@ -50,6 +50,7 @@ import com.ngt.jopenmetaverse.shared.types.UUID;
 import com.ngt.jopenmetaverse.shared.util.FileUtils;
 import com.ngt.jopenmetaverse.shared.util.JLogger;
 import com.ngt.jopenmetaverse.shared.util.Utils;
+import com.ngt.jopenmetaverse.shared.util.ZlibCompression;
 
 /// <summary>
 /// Class that handles the local asset cache
@@ -761,16 +762,13 @@ public class AssetCache implements IAssetCache
 			textureID = new UUID(cachedData, i);
 			i += 16;
 
-			r.data = new byte[uncompressedSize];
-//			ByteArrayInputStream bis = new ByteArrayInputStream(cachedData, i, cachedData.length - i); 
-//			GZIPInputStream compressed = new GZIPInputStream(bis);
-//			int read = 0;
-//			while ((read = compressed.read(r.data, read, uncompressedSize - read)) > 0) ;
-//			
-//			compressed.close();
+//			r.data = new byte[uncompressedSize];
+			ByteArrayOutputStream out = new ByteArrayOutputStream(); 
+			ByteArrayInputStream compressed = new ByteArrayInputStream(cachedData, i,  cachedData.length - i); 
+			ZlibCompression.decompressFile(compressed, out);
+			r.data = out.toByteArray();
 			
-			Utils.arraycopy(cachedData, i, r.data, 0, cachedData.length - i);
-			
+//			Utils.arraycopy(cachedData, i, r.data, 0, cachedData.length - i);
 //			bis.close();
 		}
 		return r;
@@ -808,17 +806,11 @@ public class AssetCache implements IAssetCache
 
 //		System.out.println("Header Size " + i + " Date to be compressed " + tgaData.length);
 		
-		//FIXME why compression not working
-		// compressed texture data
-//		GZIPOutputStream compressed = new GZIPOutputStream(fis);
-//		compressed.write(tgaData, 0, tgaData.length);
-//		
-//		compressed.finish();
+		ByteArrayOutputStream compressed = new ByteArrayOutputStream(); 
+		ZlibCompression.compressFile(new ByteArrayInputStream(tgaData), compressed);
 		
-		fis.write(tgaData);
+		fis.write(compressed.toByteArray());
 		saveAssetToCache(getCompressedImageName(textureID), fis.toByteArray());
-		
-		
 		
 //		compressed.close();
 		fis.close();
