@@ -596,12 +596,12 @@ public class LoginResponseData {
 
 	//endregion Parsing Helpers
 	
-	public Map<String, Object> getMap(Object o) throws IllegalArgumentException, IllegalAccessException {
+	public Map<String, Object> getMap() throws IllegalArgumentException, IllegalAccessException {
 	    Map<String, Object> result = new HashMap<String, Object>();
-	    Field[] declaredFields = o.getClass().getDeclaredFields();
+	    Field[] declaredFields = getClass().getDeclaredFields();
 	    for (Field field : declaredFields) {
-	        result.put(field.getName(), field.get(o));
-	        System.out.println(field.getName() + " " + field.get(o));
+	        result.put(field.getName(), field.get(this));
+//	        System.out.println(field.getName() + " " + field.get(this));
 	    }
 	    return result;
 	}

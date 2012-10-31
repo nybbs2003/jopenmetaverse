@@ -812,8 +812,7 @@ public class NetworkManager {
 		}
 		else
 		{
-			//TODO need to implement
-			//region XML-RPC Based Login Code
+			//XML-RPC Based Login Code
 
 			// Create the Hashtable for XmlRpcCs
 			Map<String, Object> loginXmlRpc = new HashMap<String, Object>();
@@ -967,8 +966,8 @@ public class NetworkManager {
 		private void LoginReplyXmlRpcHandler(LoginResponseData reply, LoginParams context) throws Exception
 		{
 			JLogger.debug("Parsing from LoginResponseData");
-			//TODO only for debugging 
-			reply.getMap(reply);
+			 
+			//reply.getMap(reply);
 			
 			int simPort = 0;
 			long regionX = 0;
@@ -1126,8 +1125,7 @@ public class NetworkManager {
 					LoginResponseData data = new LoginResponseData();
 					data.Parse(map);
 
-					//TODO only for debugging 
-					data.getMap(data);
+//					data.getMap(data);
 					
 					if ((osd = map.get("login")) !=null)
 					{
