@@ -92,6 +92,9 @@ public class PlatformUtils {
 
 	}
 
+	/*
+	 * Sleep for given amount of mili seconds
+	 */
 	public static void sleep(int timeout)
 	{
 		try {

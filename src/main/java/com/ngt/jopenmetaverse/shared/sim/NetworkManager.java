@@ -5,6 +5,7 @@ import java.math.BigInteger;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.URI;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,6 +19,10 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
+
+import org.apache.xmlrpc.client.XmlRpcClient;
+import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
+
 import com.ngt.jopenmetaverse.shared.cap.http.CapsHttpClient;
 import com.ngt.jopenmetaverse.shared.cap.http.CapsHttpRequestCompletedArg;
 import com.ngt.jopenmetaverse.shared.cap.http.CapsHttpRequestProgressArg;
@@ -66,6 +71,7 @@ import com.ngt.jopenmetaverse.shared.structureddata.OSDMap;
 import com.ngt.jopenmetaverse.shared.structureddata.OSDType;
 import com.ngt.jopenmetaverse.shared.types.UUID;
 import com.ngt.jopenmetaverse.shared.util.JLogger;
+import com.ngt.jopenmetaverse.shared.util.PlatformUtils;
 import com.ngt.jopenmetaverse.shared.util.Utils;
 
 public class NetworkManager {
@@ -662,6 +668,7 @@ public class NetworkManager {
 		BeginLogin();
 	}
 
+	
 	/// <summary>
 	/// Build a start location URI for passing to the Login function
 	/// </summary>
@@ -682,7 +689,7 @@ public class NetworkManager {
 
 	private void BeginLogin() throws Exception
 	{
-		LoginParams loginParams = CurrentContext;
+		final LoginParams loginParams = CurrentContext;
 		// Generate a random ID to identify this login attempt
 		loginParams.LoginID = UUID.Random();
 		CurrentContext = loginParams;
@@ -788,73 +795,78 @@ public class NetworkManager {
 		else
 		{
 			//TODO need to implement
-			//            //region XML-RPC Based Login Code
-			//
-			//            // Create the Hashtable for XmlRpcCs
-			//            Hashtable loginXmlRpc = new Hashtable();
-			//            loginXmlRpc["first"] = loginParams.FirstName;
-			//            loginXmlRpc["last"] = loginParams.LastName;
-			//            loginXmlRpc["passwd"] = loginParams.Password;
-			//            loginXmlRpc["start"] = loginParams.Start;
-			//            loginXmlRpc["channel"] = loginParams.Channel;
-			//            loginXmlRpc["version"] = loginParams.Version;
-			//            loginXmlRpc["platform"] = loginParams.Platform;
-			//            loginXmlRpc["mac"] = loginParams.MAC;
-			//            if (loginParams.AgreeToTos)
-			//                loginXmlRpc["agree_to_tos"] = "true";
-			//            if (loginParams.ReadCritical)
-			//                loginXmlRpc["read_critical"] = "true";
-			//            loginXmlRpc["id0"] = loginParams.ID0;
-			//            loginXmlRpc["last_exec_event"] = 0;
-			//
-			//            // Create the options array
-			//            ArrayList options = new ArrayList();
-			//            for (int i = 0; i < loginParams.Options.Length; i++)
-			//                options.Add(loginParams.Options[i]);
-			//
-			//            foreach (string[] callbackOpts in CallbackOptions.Values)
-			//            {
-			//                if (callbackOpts != null)
-			//                {
-			//                    for (int i = 0; i < callbackOpts.Length; i++)
-			//                    {
-			//                        if (!options.Contains(callbackOpts[i]))
-			//                            options.Add(callbackOpts[i]);
-			//                    }
-			//                }
-			//            }
-			//            loginXmlRpc["options"] = options;
-			//
-			//            try
-			//            {
-			//                ArrayList loginArray = new ArrayList(1);
-			//                loginArray.Add(loginXmlRpc);
-			//                XmlRpcRequest request = new XmlRpcRequest(CurrentContext.MethodName, loginArray);
-			//
-			//                // Start the request
-			//                Thread requestThread = new Thread(
-			//                    delegate()
-			//                    {
-			//                        try
-			//                        {
-			//                            LoginReplyXmlRpcHandler(
-			//                                request.Send(CurrentContext.URI, CurrentContext.Timeout),
-			//                                loginParams);
-			//                        }
-			//                        catch (Exception e)
-			//                        {
-			//                            UpdateLoginStatus(LoginStatus.Failed, "Error opening the login server connection: " + e.Message);
-			//                        }
-			//                    });
-			//                requestThread.Name = "XML-RPC Login";
-			//                requestThread.Start();
-			//            }
-			//            catch (Exception e)
-			//            {
-			//                UpdateLoginStatus(LoginStatus.Failed, "Error opening the login server connection: " + e);
-			//            }
-			//
-			//            //endregion
+			//region XML-RPC Based Login Code
+
+			// Create the Hashtable for XmlRpcCs
+			Map<String, Object> loginXmlRpc = new HashMap<String, Object>();
+			loginXmlRpc.put("first", loginParams.FirstName);
+			loginXmlRpc.put("last", loginParams.LastName);
+			loginXmlRpc.put("passwd", loginParams.Password);
+			loginXmlRpc.put("start", loginParams.Start);
+			loginXmlRpc.put("channel", loginParams.Channel);
+			loginXmlRpc.put("version", loginParams.Version);
+			loginXmlRpc.put("platform", loginParams.Platform);
+			loginXmlRpc.put("mac", loginParams.MAC);
+			if (loginParams.AgreeToTos)
+				loginXmlRpc.put("agree_to_tos", "true");
+			if (loginParams.ReadCritical)
+				loginXmlRpc.put("read_critical", "true");
+			loginXmlRpc.put("id0", loginParams.ID0);
+			loginXmlRpc.put("last_exec_event", 0);
+
+			// Create the options array
+			List<String> options = new ArrayList<String>();
+			for (int i = 0; i < loginParams.Options.length; i++)
+				options.add(loginParams.Options[i]);
+
+			for (String[] callbackOpts : CallbackOptions.values())
+			{
+				if (callbackOpts != null)
+				{
+					for (int i = 0; i < callbackOpts.length; i++)
+					{
+						if (!options.contains(callbackOpts[i]))
+							options.add(callbackOpts[i]);
+					}
+				}
+			}
+			loginXmlRpc.put("options", options);
+
+			try
+			{
+				final ArrayList<Object> loginArray = new ArrayList<Object>(1);
+				loginArray.add(loginXmlRpc);
+//				XmlRpcClient request = new XmlRpcClient(CurrentContext.MethodName, loginArray);
+				final XmlRpcClient request = new XmlRpcClient();
+			    XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl();
+			    config.setServerURL(new URL(CurrentContext.URI));
+			    request.setConfig(config);
+
+				// Start the request
+				threadPool.execute(new Runnable(){
+					public void run()
+					{
+						try
+						{
+							Object response = request.execute(CurrentContext.MethodName, loginArray);
+					        
+							//System.out.println("Results:" + response);
+							
+							LoginReplyXmlRpcHandler(response ,loginParams);
+						}
+						catch (Exception e)
+						{
+							UpdateLoginStatus(LoginStatus.Failed, "Error opening the login server connection: " + e.getMessage());
+						}
+					}
+				});
+			}
+			catch (Exception e)
+			{
+				UpdateLoginStatus(LoginStatus.Failed, "Error opening the login server connection: " + e);
+			}
+
+			//endregion
 		}
 	}
 
@@ -893,167 +905,188 @@ public class NetworkManager {
 	//	}
 
 
-	//    /// <summary>
-	//    /// Handles response from XML-RPC login replies
-	//    /// </summary>
-	//    private void LoginReplyXmlRpcHandler(XmlRpcResponse response, LoginParams context)
-	//    {
-	//        LoginResponseData reply = new LoginResponseData();
-	//        // Fetch the login response
-	//        if (response == null || !(response.Value is Hashtable))
-	//        {
-	//            UpdateLoginStatus(LoginStatus.Failed, "Invalid or missing login response from the server");
-	//            Logger.Log("Invalid or missing login response from the server", Helpers.LogLevel.Warning);
-	//            return;
-	//        }
-	//
-	//        try
-	//        {
-	//            reply.Parse((Hashtable)response.Value);
-	//            if (context.LoginID != CurrentContext.LoginID)
-	//            {
-	//                Logger.Log("Login response does not match login request. Only one login can be attempted at a time",
-	//                    Helpers.LogLevel.Error);
-	//                return;
-	//            }
-	//        }
-	//        catch (Exception e)
-	//        {
-	//            UpdateLoginStatus(LoginStatus.Failed, "Error retrieving the login response from the server: " + e.Message);
-	//            Logger.Log("Login response failure: " + e.Message + " " + e.StackTrace, Helpers.LogLevel.Warning);
-	//            return;
-	//        }
-	//		LoginReplyXmlRpcHandler(reply, context);
-	//	}
-	//
-	//
-	//	/// <summary>
-	//	/// Handles response from XML-RPC login replies with already parsed LoginResponseData
-	//	/// </summary>
-	//	private void LoginReplyXmlRpcHandler(LoginResponseData reply, LoginParams context)
-	//	{
-	//		ushort simPort = 0;
-	//		uint regionX = 0;
-	//		uint regionY = 0;
-	//		string reason = reply.Reason;
-	//        string message = reply.Message;
-	//
-	//        if (reply.Login == "true")
-	//        {
-	//            // Remove the quotes around our first name.
-	//            if (reply.FirstName[0] == '"')
-	//                reply.FirstName = reply.FirstName.Remove(0, 1);
-	//            if (reply.FirstName[reply.FirstName.Length - 1] == '"')
-	//                reply.FirstName = reply.FirstName.Remove(reply.FirstName.Length - 1);
-	//
-	//            //region Critical Information
-	//
-	//            try
-	//            {
-	//                // Networking
-	//                client.Network.CircuitCode = (uint)reply.CircuitCode;
-	//                regionX = (uint)reply.RegionX;
-	//                regionY = (uint)reply.RegionY;
-	//                simPort = (ushort)reply.SimPort;
-	//                LoginSeedCapability = reply.SeedCapability;
-	//            }
-	//            catch (Exception)
-	//            {
-	//                UpdateLoginStatus(LoginStatus.Failed, "Login server failed to return critical information");
-	//                return;
-	//            }
-	//
-	//            //endregion Critical Information
-	//
-	//            /* Add any blacklisted UDP packets to the blacklist
-	//             * for exclusion from packet processing */
-	//            if (reply.UDPBlacklist != null)
-	//                UDPBlacklist.AddRange(reply.UDPBlacklist.Split(','));
-	//
-	//            // Misc:
-	//            MaxAgentGroups = reply.MaxAgentGroups;
-	//            XMPPHost = reply.XMPPHost;
-	//
-	//            //uint timestamp = (uint)reply.seconds_since_epoch;
-	//            //DateTime time = Helpers.UnixTimeToDateTime(timestamp); // TODO: Do something with this?
-	//
-	//            // Unhandled:
-	//            // reply.gestures
-	//            // reply.event_categories
-	//            // reply.classified_categories
-	//            // reply.event_notifications
-	//            // reply.ui_config
-	//            // reply.login_flags
-	//            // reply.global_textures
-	//            // reply.inventory_lib_root
-	//            // reply.inventory_lib_owner
-	//            // reply.inventory_skeleton
-	//            // reply.inventory_skel_lib
-	//            // reply.initial_outfit
-	//        }
-	//
-	//        bool redirect = (reply.Login == "indeterminate");
-	//
-	//        try
-	//        {
-	//            if (OnLoginResponse != null)
-	//            {
-	//                try { OnLoginResponse(reply.Success, redirect, message, reason, reply); }
-	//                catch (Exception ex) { Logger.Log(ex.toString(), Helpers.LogLevel.Error); }
-	//            }
-	//        }
-	//        catch (Exception ex) { Logger.Log(ex.Message, Helpers.LogLevel.Error, ex); }
-	//
-	//        // Make the next network jump, if needed
-	//        if (redirect)
-	//        {
-	//            UpdateLoginStatus(LoginStatus.Redirecting, "Redirecting login...");
-	//            LoginParams loginParams = CurrentContext;
-	//            loginParams.URI = reply.NextUrl;
-	//            loginParams.MethodName = reply.NextMethod;
-	//            loginParams.Options = reply.NextOptions;
-	//
-	//            // Sleep for some amount of time while the servers work
-	//            int seconds = reply.NextDuration;
-	//            Logger.Log("Sleeping for " + seconds + " seconds during a login redirect",
-	//                Helpers.LogLevel.Info);
-	//            Thread.Sleep(seconds * 1000);
-	//
-	//            CurrentContext = loginParams;
-	//            BeginLogin();
-	//        }
-	//        else if (reply.Success)
-	//        {
-	//            UpdateLoginStatus(LoginStatus.ConnectingToSim, "Connecting to simulator...");
-	//
-	//            ulong handle = Utils.UIntsToLong(regionX, regionY);
-	//
-	//            // Connect to the sim given in the login reply
-	//            if (Connect(reply.SimIP, simPort, handle, true, LoginSeedCapability) != null)
-	//            {
-	//                // Request the economy data right after login
-	//                SendPacket(new EconomyDataRequestPacket());
-	//
-	//                // Update the login message with the MOTD returned from the server
-	//                UpdateLoginStatus(LoginStatus.Success, message);
-	//            }
-	//            else
-	//            {
-	//                UpdateLoginStatus(LoginStatus.Failed, "Unable to connect to simulator");
-	//            }
-	//        }
-	//        else
-	//        {
-	//            // Make sure a usable error key is set
-	//
-	//            if (!String.IsNullOrEmpty(reason))
-	//                InternalErrorKey = reason;
-	//            else
-	//                InternalErrorKey = "unknown";
-	//
-	//            UpdateLoginStatus(LoginStatus.Failed, message);
-	//        }
-	//    }
+	    /// <summary>
+	    /// Handles response from XML-RPC login replies
+	    /// </summary>
+	    private void LoginReplyXmlRpcHandler(Object response, LoginParams context) throws Exception
+	    {
+			JLogger.debug("Parsing from Object Response");
+	        LoginResponseData reply = new LoginResponseData();
+	        
+//	        System.out.println(response.getClass().toString());
+	        
+	        // Fetch the login response
+	        if (response == null || !(response instanceof Map))
+	        {
+	            UpdateLoginStatus(LoginStatus.Failed, "Invalid or missing login response from the server");
+	            JLogger.warn("Invalid or missing login response from the server");
+	            return;
+	        }
+	
+	        try
+	        {
+	            reply.Parse((Map)response);
+	            if (!context.LoginID.equals(CurrentContext.LoginID))
+	            {
+	                JLogger.error("Login response does not match login request. Only one login can be attempted at a time");
+	                return;
+	            }
+	        }
+	        catch (Exception e)
+	        {
+	            UpdateLoginStatus(LoginStatus.Failed, "Error retrieving the login response from the server: " + e.getMessage());
+	            JLogger.warn("Login response failure: " + Utils.getExceptionStackTraceAsString(e));
+	            return;
+	        }
+	        JLogger.debug("Parsed Login Response...");
+			LoginReplyXmlRpcHandler(reply, context);
+		}
+	
+	
+		/// <summary>
+		/// Handles response from XML-RPC login replies with already parsed LoginResponseData
+		/// </summary>
+		private void LoginReplyXmlRpcHandler(LoginResponseData reply, LoginParams context) throws Exception
+		{
+			JLogger.debug("Parsing from LoginResponseData");
+			//TODO only for debugging 
+			reply.getMap(reply);
+			
+			int simPort = 0;
+			long regionX = 0;
+			long regionY = 0;
+			String reason = reply.Reason;
+	        String message = reply.Message;
+	
+	        if (reply.Login.equalsIgnoreCase("true"))
+	        {
+	            // Remove the quotes around our first name.
+	            if (reply.FirstName.indexOf(0) == '"')
+	                reply.FirstName = reply.FirstName.substring(1);
+	            if (reply.FirstName.indexOf(reply.FirstName.length() - 1) == '"')
+	                reply.FirstName = reply.FirstName.substring(0, reply.FirstName.length() - 1);
+	
+	            //region Critical Information
+	
+	            try
+	            {
+	                // Networking
+	                client.network.circuitCode = reply.CircuitCode & Long.MAX_VALUE;
+	                regionX = reply.RegionX & Long.MAX_VALUE;
+	                regionY = reply.RegionY & Long.MAX_VALUE;
+	                simPort = reply.SimPort & Integer.MAX_VALUE;
+	                LoginSeedCapability = reply.SeedCapability;
+	            }
+	            catch (Exception e)
+	            {
+	                UpdateLoginStatus(LoginStatus.Failed, "Login server failed to return critical information " + e.getMessage());
+	                return;
+	            }
+	
+	            //endregion Critical Information
+	
+	            /* Add any blacklisted UDP packets to the blacklist
+	             * for exclusion from packet processing */
+	            
+	            if (reply.UDPBlacklist != null)
+	                for(String p: reply.UDPBlacklist.split(","))
+	                {
+	                	UDPBlacklist.add(p);
+	                }
+	
+	            
+	            // Misc:
+	            MaxAgentGroups = reply.MaxAgentGroups;
+	            XMPPHost = reply.XMPPHost;
+	
+	            //uint timestamp = (uint)reply.seconds_since_epoch;
+	            //DateTime time = Helpers.UnixTimeToDateTime(timestamp); // TODO: Do something with this?
+	
+	            // Unhandled:
+	            // reply.gestures
+	            // reply.event_categories
+	            // reply.classified_categories
+	            // reply.event_notifications
+	            // reply.ui_config
+	            // reply.login_flags
+	            // reply.global_textures
+	            // reply.inventory_lib_root
+	            // reply.inventory_lib_owner
+	            // reply.inventory_skeleton
+	            // reply.inventory_skel_lib
+	            // reply.initial_outfit
+	        }
+	
+	        boolean redirect = (reply.Login.equals("indeterminate"));
+	
+	        try
+	        {
+	            if (OnLoginResponse != null)
+	            {
+	                try 
+	                {
+						LoginResponseCallbackArg lrg = new LoginResponseCallbackArg(reply.Success, redirect, 
+								message, reason, reply);
+						OnLoginResponse.raiseEvent(lrg);
+//	                	OnLoginResponse(reply.Success, redirect, message, reason, reply); 
+	                }
+	                catch (Exception ex) 
+	                { 
+	                	JLogger.error(Utils.getExceptionStackTraceAsString(ex)); 
+	                }
+	            }
+	        }
+	        catch (Exception ex) { JLogger.error(Utils.getExceptionStackTraceAsString(ex)); }
+	
+	        // Make the next network jump, if needed
+	        if (redirect)
+	        {
+	            UpdateLoginStatus(LoginStatus.Redirecting, "Redirecting login...");
+	            LoginParams loginParams = CurrentContext;
+	            loginParams.URI = reply.NextUrl;
+	            loginParams.MethodName = reply.NextMethod;
+	            loginParams.Options = reply.NextOptions;
+	
+	            // Sleep for some amount of time while the servers work
+	            int seconds = reply.NextDuration;
+	            JLogger.info("Sleeping for " + seconds + " seconds during a login redirect");
+	            PlatformUtils.sleep(seconds * 1000);
+	
+	            CurrentContext = loginParams;
+	            BeginLogin();
+	        }
+	        else if (reply.Success)
+	        {
+	            UpdateLoginStatus(LoginStatus.ConnectingToSim, "Connecting to simulator...");
+	
+	            BigInteger handle = Utils.uintsToULong(regionX, regionY);
+	
+	            // Connect to the sim given in the login reply
+	            if (Connect(reply.SimIP, simPort, handle, true, LoginSeedCapability) != null)
+	            {
+	                // Request the economy data right after login
+	                SendPacket(new EconomyDataRequestPacket());
+	
+	                // Update the login message with the MOTD returned from the server
+	                UpdateLoginStatus(LoginStatus.Success, message);
+	            }
+	            else
+	            {
+	                UpdateLoginStatus(LoginStatus.Failed, "Unable to connect to simulator");
+	            }
+	        }
+	        else
+	        {
+	            // Make sure a usable error key is set
+	
+	            if (!Utils.isNullOrEmpty(reason))
+	                InternalErrorKey = reason;
+	            else
+	                InternalErrorKey = "unknown";
+	
+	            UpdateLoginStatus(LoginStatus.Failed, message);
+	        }
+	    }
 
 	/// <summary>
 	/// Handle response from LLSD login replies
@@ -1075,6 +1108,9 @@ public class NetworkManager {
 					LoginResponseData data = new LoginResponseData();
 					data.Parse(map);
 
+					//TODO only for debugging 
+					data.getMap(data);
+					
 					if ((osd = map.get("login")) !=null)
 					{
 						boolean loginSuccess = osd.asBoolean();
@@ -1754,7 +1790,7 @@ public class NetworkManager {
 	{
 		LogoutReplyPacket logout = (LogoutReplyPacket)e.getPacket();
 
-		if ((logout.AgentData.SessionID == client.self.getSessionID()) && (logout.AgentData.AgentID == client.self.getAgentID()))
+		if ((logout.AgentData.SessionID.equals(client.self.getSessionID())) && (logout.AgentData.AgentID.equals(client.self.getAgentID())))
 		{
 			JLogger.debug("Logout reply received");
 
