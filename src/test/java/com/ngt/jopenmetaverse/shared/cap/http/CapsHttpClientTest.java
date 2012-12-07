@@ -34,9 +34,10 @@ import com.ngt.jopenmetaverse.shared.structureddata.OSDFormat;
 import com.ngt.jopenmetaverse.shared.structureddata.llsd.BinaryLLSDOSDParser;
 import com.ngt.jopenmetaverse.shared.structureddata.llsd.JsonLLSDOSDParser;
 import com.ngt.jopenmetaverse.shared.structureddata.llsd.XmlLLSDOSDParser;
+import com.ngt.jopenmetaverse.shared.util.AbstractTest;
 import com.ngt.jopenmetaverse.shared.util.Utils;
 
-public class CapsHttpClientTest {
+public class CapsHttpClientTest extends AbstractTest{
  	public class DownloadProgressObserver extends EventObserver<CapsHttpRequestProgressArg>
  	{
 		public void handleEvent(Observable arg0, CapsHttpRequestProgressArg arg1) {
@@ -70,19 +71,23 @@ public class CapsHttpClientTest {
 	@Before
 	public void setup() throws Exception
 	{
-		 URL url = getClass().getClassLoader().getResource("data/");
-		fileServer = new FileServer(9999, url.getPath());
+		super.setup();
+		fileServer = new FileServer(9999, parentInputLocation);
+		System.out.println("Server Started");	
+		
 		fileServer.start();
 	}
 	
 	@After
 	public void clean() throws Exception
 	{
-		fileServer.stop();
+		super.clean();
+		if(fileServer != null)
+			fileServer.stop();
 	}
 	
  	
-	@Test
+//	@Test
 	public void testGetRequestDefault() throws IOException, URISyntaxException {
 //		 InputStream istream = getClass().getClassLoader().getResourceAsStream("data/files/test.txt");
 //		 Assert.assertNotNull(istream);
@@ -117,7 +122,7 @@ public class CapsHttpClientTest {
 		{Assert.fail();}
 	}
 	
-	@Test
+//	@Test
 	public void testPostRequestDefault() throws IOException, URISyntaxException 
 	{	
 		downloadFileAsync(fileServer.createURI("/files/json/ex1.txt"));
@@ -133,6 +138,30 @@ public class CapsHttpClientTest {
 		}
 	}
 	
+	@Test
+	public void testSecondLifeConnection() throws URISyntaxException, Exception 
+	{
+		String testSD1 = "[ \n" + 
+				"{ \n" + 
+				"\"region_id\": \"67153d5b-3659-afb4-8510-adda2c034649\", \n" + 
+				"\"scale\": \"one minute\", \n" + 
+				"\"simulator statistics\": { \n" + 
+				"\"time dilation\": 0.9878624, \n" + 
+				"\"sim fps\": 44.38898, \n" + 
+//				"\"agent updates per second\": NaN, \n" + 
+				"\"total task count\": 4.0, \n" + 
+				"\"active task count\": 0.0, \n" + 
+				"\"pending uploads\": 0.0001096525 \n" + 
+				"}\n" + 
+				"}\n" + 
+				"]";	
+		
+//		uploadFile(new URI("https://login.agni.lindenlab.com/cgi-bin/login.cgi"), testSD1.getBytes(), 
+//				OSDFormat.Json, false);
+		uploadFile(new URI("https://login.agni.lindenlab.com/cgi-bin/login.cgi"), testSD1.getBytes(), 
+				OSDFormat.Json, false);
+
+	}
 	
 	private void downloadFileAsync(URI url)
 	{
